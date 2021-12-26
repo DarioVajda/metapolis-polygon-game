@@ -101,7 +101,7 @@ function getBuildings() {
         
         // Parks (2):
         new Building(new Coordinate(8, 3), new Coordinate(12, 5), buildingTypes.Park),
-        new Building(new Coordinate(4, 13), new Coordinate(16, 15), buildingTypes.Park),
+        new Building(new Coordinate(14, 13), new Coordinate(16, 15), buildingTypes.Park),
         
         // GYM (1):
         new Building(new Coordinate(11, 6), new Coordinate(12, 7), buildingTypes.Gym)

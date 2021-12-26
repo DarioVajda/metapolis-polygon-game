@@ -32,11 +32,12 @@ function initializeMap(buildings, mapDimensions) {
     const store = 2;
     const superMarket = 3;
     const gym = 3;
+    var park = 0;
     buildings.forEach((element) => {
         switch(element.type) {
-            case buildingTypes.Store: 
-                for(let i = Math.max(0, element.start.y - store); i < Math.min(mapDimensions, element.start.y + store); i++) {
-                    for(let j = Math.max(0, element.start.x - store); j < Math.min(mapDimensions, element.start.x + store); j++) {
+            case buildingTypes.Store:
+                for(let i = Math.max(0, element.start.y - store); i <= Math.min(mapDimensions - 1, element.start.y + store); i++) {
+                    for(let j = Math.max(0, element.start.x - store); j <= Math.min(mapDimensions - 1, element.start.x + store); j++) {
                         if(element.start.y !== i || element.start.x !== j) {
                             map[i][j].storeNerby = true;
                         }
@@ -44,11 +45,23 @@ function initializeMap(buildings, mapDimensions) {
                 }
                 break;
             case buildingTypes.Park: 
-                // ovde treba neka kul formula da se napravi i odredi koliki je krug u kojem se daje boost
+                park = Math.floor(((element.end.x - element.start.x + 1) + (element.start.y - element.end.y + 1)) / 2);
+                console.log(element.end.x + ' ' + element.start.x + ' ' + element.end.y + ' ' + element.start.y);
+                console.log('park = ' + park);
+                for(let i = Math.max(0, element.start.y - park); i <= Math.min(mapDimensions - 1, element.end.y + park); i++) {
+                    for(let j = Math.max(0, element.start.x - park); j <= Math.min(mapDimensions - 1, element.end.x + park); j++) {
+                        if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
+                            map[i][j].productivityBoost += 1;
+                        }
+                    }
+                }
+                console.log(Math.max(0, element.start.x - park) + ' ' + Math.min(mapDimensions - 1, element.end.x + park));
+                console.log(Math.max(0, element.start.y - park) + ' ' + Math.min(mapDimensions - 1, element.end.y + park));
+                console.log();
                 break;
             case buildingTypes.Gym: 
-                for(let i = Math.max(0, element.start.y - gym); i < Math.min(mapDimensions, element.end.y + gym); i++) {
-                    for(let j = Math.max(0, element.start.x - gym); j < Math.min(mapDimensions, element.end.x + gym); j++) {
+                for(let i = Math.max(0, element.start.y - gym); i <= Math.min(mapDimensions - 1, element.end.y + gym); i++) {
+                    for(let j = Math.max(0, element.start.x - gym); j <= Math.min(mapDimensions - 1, element.end.x + gym); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
                             map[i][j].productivityBoost += 1;
                         }
@@ -56,8 +69,8 @@ function initializeMap(buildings, mapDimensions) {
                 }
                 break;
             case buildingTypes.SuperMarket:
-                for(let i = Math.max(0, element.start.y - superMarket); i < Math.min(mapDimensions, element.end.y + superMarket); i++) {
-                    for(let j = Math.max(0, element.start.x - superMarket); j < Math.min(mapDimensions, element.end.x + superMarket); j++) {
+                for(let i = Math.max(0, element.start.y - superMarket); i <= Math.min(mapDimensions - 1, element.end.y + superMarket); i++) {
+                    for(let j = Math.max(0, element.start.x - superMarket); j <= Math.min(mapDimensions - 1, element.end.x + superMarket); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
                             map[i][j].storeNerby = true;
                         }

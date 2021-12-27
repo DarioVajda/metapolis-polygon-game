@@ -4,16 +4,16 @@ incomeCalculator = new EventEmitter();
 // ovo su brojevi koji
 // oznacavaju gradjevine
 const buildingTypes = {
-    Factory: 1,
-    Hotel: 2,
-    Restaurant: 3,
-    Parking: 4,
-    Building: 5,
-    House: 6,
-    Store: 7,
-    SuperMarket: 8,
-    Park: 9,
-    Gym: 10
+    Factory: { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15 },
+    Office: { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25 },
+    Restaurant: { cost: 500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5 },
+    Parking: { cost: 50000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0 },
+    Building: { cost: 40000, normalPeople: 32, educatedPeople: 8, manualWorkers: 0, officeWorkers: 0 },
+    House: { cost: 200000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0 },
+    Store: { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0 },
+    SuperMarket: { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10 },
+    Park: { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0 },
+    Gym: { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0 }
 }
 
 class Coordinate {
@@ -31,7 +31,6 @@ class Building {
     }
 }
 
-
 function getBuildings() {
     // umesto 1, n treba da bude new Coordinate(.., ..), new Coordinate(.., ..) !!!
     var r = [
@@ -41,9 +40,9 @@ function getBuildings() {
         new Building(new Coordinate(18, 7), new Coordinate(19, 10), buildingTypes.Factory),
         new Building(new Coordinate(4, 19), new Coordinate(7, 20), buildingTypes.Factory),
 
-        // Hotels (2):
-        new Building(new Coordinate(9, 7), new Coordinate(10, 9), buildingTypes.Hotel),
-        new Building(new Coordinate(11, 11), new Coordinate(13, 12), buildingTypes.Hotel),
+        // Offices (2):
+        new Building(new Coordinate(9, 7), new Coordinate(10, 9), buildingTypes.Office),
+        new Building(new Coordinate(11, 11), new Coordinate(13, 12), buildingTypes.Office),
         
         // Restaurants (2):
         new Building(new Coordinate(11, 8), new Coordinate(11, 9), buildingTypes.Restaurant),
@@ -115,54 +114,75 @@ function getBuildings() {
     return r;
 }
 
-incomeCalculator.on(buildingTypes.Factory, function(arg) { 
-    arg.element.income = 10;
-});
+function pythagoreanTheorem(a, b) {
+    return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+}
 
-incomeCalculator.on(buildingTypes.Hotel, function(arg) { 
-    arg.element.income = 10;
-});
+function getDistanceFromCenter(building, mapDimensions) {
+    var x = Math.ceil((building.start.x + building.end.x) / 2);
+    var y = Math.ceil((building.start.y + building.end.y) / 2);
+    var r = Math.floor(pythagoreanTheorem(x - mapDimensions / 2, y - mapDimensions / 2));
+    return r;
+}
 
-incomeCalculator.on(buildingTypes.Restaurant, function(arg) { 
-    arg.element.income = 9;
-});
+function initIncomeCalculator() {
+    incomeCalculator.on(buildingTypes.Factory, function(arg) {
+        const minIncome = 150000;
+        const bonus = 5000;
+        var distanceFromCenter = getDistanceFromCenter(arg.element, arg.mapDimensions);
+        arg.element.income = minIncome + bonus * distanceFromCenter;
+    });
 
-incomeCalculator.on(buildingTypes.Parking, function(arg) { 
-    arg.element.income = 9;
-});
+    incomeCalculator.on(buildingTypes.Office, function(arg) {
+        const incomePerCitizen = 100;
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.Building, function(arg) { 
-    arg.element.income = 8;
-});
+    incomeCalculator.on(buildingTypes.Restaurant, function(arg) { 
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.House, function(arg) { 
-    arg.element.income = 7;
-});
+    incomeCalculator.on(buildingTypes.Parking, function(arg) {
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.Store, function(arg) { 
-    arg.element.income = 0;
-});
+    incomeCalculator.on(buildingTypes.Building, function(arg) {
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.SuperMarket, function(arg) { 
-    arg.element.income = 0;
-});
+    incomeCalculator.on(buildingTypes.House, function(arg) {
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.Park, function(arg) { 
-    arg.element.income = 0;
-});
+    incomeCalculator.on(buildingTypes.Store, function(arg) {
+        arg.element.income = 0;
+    });
 
-incomeCalculator.on(buildingTypes.Gym, function(arg) { 
-    arg.element.income = 4;
-});
+    incomeCalculator.on(buildingTypes.SuperMarket, function(arg) {
+        arg.element.income = 0;
+    });
 
-function calculateIncome(buildings) {
+    incomeCalculator.on(buildingTypes.Park, function(arg) {
+        arg.element.income = 0;
+    });
+
+    incomeCalculator.on('' + buildingTypes.Gym.toString(), function(arg) {
+        arg.element.income = 0;
+    });
+}
+
+/// ovu funkciju trebam skoro skroz da promenim i bilo bi dobro da je stavim u novi fajl
+function calculateIncome(buildings, mapDimensions) {
+    initIncomeCalculator();
     var income = 0;
-    var temp = {'buildings': buildings, 'element': 0};
+    var temp =  {'buildings': buildings, 'element': null, 'mapDimensions': mapDimensions}
     buildings.forEach(element => {
+        // console.log( {'buildings': undefined, 'element': element, 'mapDimensions': mapDimensions});
         temp.element = element;
-        incomeCalculator.emit(element.type, temp);
+        incomeCalculator.emit(temp.element.type, temp);
         income += element.income;
     });
+    buildings[0].income = 10;
     return income;
 }
 

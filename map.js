@@ -7,9 +7,9 @@ incomeCalculator = new EventEmitter();
 
 // x i y koordinate su nepotrebne, sluze samo za debagovanje, kasnije ih trebam obrisati!!!
 class MapLand {
-    constructor(occupied, storeNerby, productivityBoost, x, y) {
-        this.occupied = occupied;
-        this.storeNerby = storeNerby;
+    constructor(occupiedBy, storeNearby, productivityBoost, x, y) {
+        this.occupiedBy = occupiedBy;
+        this.storeNearby = storeNearby;
         this.productivityBoost = productivityBoost;
         this.x = x;
         this.y = y;
@@ -24,7 +24,7 @@ function initializeMap(buildings, mapDimensions) {
     }
     for(let i = 0; i < mapDimensions; i++) {
         for(let j = 0; j < mapDimensions; j++) {
-            map[i][j] = new MapLand(false, false, 0, j, i);
+            map[i][j] = new MapLand(null, false, 0, j, i);
         }
     }
 
@@ -39,15 +39,13 @@ function initializeMap(buildings, mapDimensions) {
                 for(let i = Math.max(0, element.start.y - store); i <= Math.min(mapDimensions - 1, element.start.y + store); i++) {
                     for(let j = Math.max(0, element.start.x - store); j <= Math.min(mapDimensions - 1, element.start.x + store); j++) {
                         if(element.start.y !== i || element.start.x !== j) {
-                            map[i][j].storeNerby = true;
+                            map[i][j].storeNearby = true;
                         }
                     }
                 }
                 break;
             case buildingTypes.Park: 
                 park = Math.floor(((element.end.x - element.start.x + 1) + (element.start.y - element.end.y + 1)) / 2);
-                console.log(element.end.x + ' ' + element.start.x + ' ' + element.end.y + ' ' + element.start.y);
-                console.log('park = ' + park);
                 for(let i = Math.max(0, element.start.y - park); i <= Math.min(mapDimensions - 1, element.end.y + park); i++) {
                     for(let j = Math.max(0, element.start.x - park); j <= Math.min(mapDimensions - 1, element.end.x + park); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
@@ -55,9 +53,6 @@ function initializeMap(buildings, mapDimensions) {
                         }
                     }
                 }
-                console.log(Math.max(0, element.start.x - park) + ' ' + Math.min(mapDimensions - 1, element.end.x + park));
-                console.log(Math.max(0, element.start.y - park) + ' ' + Math.min(mapDimensions - 1, element.end.y + park));
-                console.log();
                 break;
             case buildingTypes.Gym: 
                 for(let i = Math.max(0, element.start.y - gym); i <= Math.min(mapDimensions - 1, element.end.y + gym); i++) {
@@ -72,7 +67,7 @@ function initializeMap(buildings, mapDimensions) {
                 for(let i = Math.max(0, element.start.y - superMarket); i <= Math.min(mapDimensions - 1, element.end.y + superMarket); i++) {
                     for(let j = Math.max(0, element.start.x - superMarket); j <= Math.min(mapDimensions - 1, element.end.x + superMarket); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].storeNerby = true;
+                            map[i][j].storeNearby = true;
                         }
                     }
                 }
@@ -85,7 +80,7 @@ function initializeMap(buildings, mapDimensions) {
                     console.log('doslo je do neke greske na koordinatama (' + i + ', ' + j + ')');
                 }
                 else {
-                    map[j][i].occupied = true;
+                    map[j][i].occupiedBy = element;
                 }
             }
         }

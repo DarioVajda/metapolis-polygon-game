@@ -8,7 +8,7 @@ const buildingTypes = {
     Office: { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25 },
     Restaurant: { cost: 500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5 },
     Parking: { cost: 50000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0 },
-    Building: { cost: 40000, normalPeople: 32, educatedPeople: 8, manualWorkers: 0, officeWorkers: 0 },
+    Building: { cost: 40000, normalPeople: 33, educatedPeople: 9, manualWorkers: 0, officeWorkers: 0 },
     House: { cost: 200000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0 },
     Store: { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0 },
     SuperMarket: { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10 },
@@ -58,7 +58,7 @@ function getBuildings() {
         new Building(new Coordinate(8, 6), new Coordinate(10, 6), buildingTypes.Building),
         new Building(new Coordinate(7, 7), new Coordinate(8, 8), buildingTypes.Building),
         new Building(new Coordinate(7, 11), new Coordinate(7, 13), buildingTypes.Building),
-        new Building(new Coordinate(8, 11), new Coordinate(9, 12), buildingTypes.Building),
+        new Building(new Coordinate(9, 11), new Coordinate(9, 12), buildingTypes.Building),
         new Building(new Coordinate(8, 11), new Coordinate(8, 13), buildingTypes.Building),
         new Building(new Coordinate(14, 11), new Coordinate(15, 12), buildingTypes.Building),
         new Building(new Coordinate(11, 13), new Coordinate(11, 15), buildingTypes.Building),
@@ -85,8 +85,6 @@ function getBuildings() {
         new Building(new Coordinate(4, 18), new Coordinate(4, 18), buildingTypes.House),
         new Building(new Coordinate(3, 19), new Coordinate(3, 19), buildingTypes.House),
         new Building(new Coordinate(3, 20), new Coordinate(3, 20), buildingTypes.House),
-        new Building(new Coordinate(16, 9), new Coordinate(16, 9), buildingTypes.House),
-        new Building(new Coordinate(16, 10), new Coordinate(16, 10), buildingTypes.House),
         
         // Stores (3):
         new Building(new Coordinate(2, 7), new Coordinate(2, 7), buildingTypes.Store),

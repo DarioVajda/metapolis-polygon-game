@@ -7,10 +7,10 @@ incomeCalculator = new EventEmitter();
 
 // x i y koordinate su nepotrebne, sluze samo za debagovanje, kasnije ih trebam obrisati!!!
 class MapLand {
-    constructor(occupiedBy, storeNearby, productivityBoost, x, y) {
+    constructor(occupiedBy, storeNearby, productivity, x, y) {
         this.occupiedBy = occupiedBy;
         this.storeNearby = storeNearby;
-        this.productivityBoost = productivityBoost;
+        this.productivity = productivity;
         this.x = x;
         this.y = y;
     }
@@ -24,7 +24,7 @@ function initializeMap(buildings, mapDimensions) {
     }
     for(let i = 0; i < mapDimensions; i++) {
         for(let j = 0; j < mapDimensions; j++) {
-            map[i][j] = new MapLand(null, false, 0, j, i);
+            map[i][j] = new MapLand(null, false, 1, j, i);
         }
     }
 
@@ -49,7 +49,7 @@ function initializeMap(buildings, mapDimensions) {
                 for(let i = Math.max(0, element.start.y - park); i <= Math.min(mapDimensions - 1, element.end.y + park); i++) {
                     for(let j = Math.max(0, element.start.x - park); j <= Math.min(mapDimensions - 1, element.end.x + park); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].productivityBoost += 1;
+                            map[i][j].productivity *= 1.1;
                         }
                     }
                 }
@@ -58,7 +58,7 @@ function initializeMap(buildings, mapDimensions) {
                 for(let i = Math.max(0, element.start.y - gym); i <= Math.min(mapDimensions - 1, element.end.y + gym); i++) {
                     for(let j = Math.max(0, element.start.x - gym); j <= Math.min(mapDimensions - 1, element.end.x + gym); j++) {
                         if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].productivityBoost += 1;
+                            map[i][j].productivity *= 1.2;
                         }
                     }
                 }
@@ -76,8 +76,11 @@ function initializeMap(buildings, mapDimensions) {
         }
         for(let i = element.start.x; i <= element.end.x; i++) {
             for(let j = element.start.y; j <= element.end.y; j++) {
-                if(map[j][i] === true) {
+                if(map[j][i].occupiedBy !== null) {
                     console.log('doslo je do neke greske na koordinatama (' + i + ', ' + j + ')');
+                    console.log(element);
+                    console.log(map[j][i].occupiedBy);
+                    console.log();
                 }
                 else {
                     map[j][i].occupiedBy = element;

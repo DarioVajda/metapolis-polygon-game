@@ -1,3 +1,4 @@
+// INICIJALIZACIJA PROGRAMA:
 // Importovanje:
 const buildingsModule = require('./building');
 const Building = buildingsModule.Building;
@@ -8,17 +9,26 @@ const MapLand = mapModule.MapLand;
 
 const peopleModule = require('./people');
 
-//___________________________________________________________________________
-// Bitne promenljive:
+const incomeModule = require('./income');
+
+// Konstante:
 const mapDimensions = 20;
-var buildings = buildingsModule.getBuildings();
-var people = peopleModule.countPeople(buildings);
-var map = mapModule.initializeMap(buildings, mapDimensions);
-var income = buildingsModule.calculateIncome(buildings, mapDimensions); // ova funkcija ne valjda jos
+var buildings;
+var people;
+var map;
+var income;
 
 //___________________________________________________________________________
+function main() {
+    buildings = buildingsModule.getBuildings();
+    map = mapModule.initializeMap(buildings, mapDimensions);
+    people = peopleModule.countPeople(buildings, map);
+    income = incomeModule.calculateIncome(people); // ova funkcija ne valjda jos
+}
+//___________________________________________________________________________
 // Provera:
-// console.log(people);
-// console.log(map);
+main();
 // console.log(buildings);
-// console.log('total income: ' + income);
+// console.log(map);
+// console.log(people);
+console.log('total income: ' + income);

@@ -1,0 +1,71 @@
+
+const incomeRate = {
+    educated: 100,
+    normal: 50
+};
+
+function sortMap(map) {
+    return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
+}
+
+function calculateIncome(peopleArg) {
+    var educatedIncome = 0;
+    var normalIncome = 0;
+    var people = {
+        normalPeople: new Map([...peopleArg.normalPeople]),
+        educatedPeople: new Map([...peopleArg.educatedPeople]),
+        manualWorkers: peopleArg.manualWorkers,
+        officeWorkers: peopleArg.officeWorkers
+    };
+    var temp = [...people.educatedPeople][0];
+    
+    // calculating income for officeWorkers
+    while(people.officeWorkers > 0 && temp !== undefined) {
+        if(people.officeWorkers < temp[1]) {
+            educatedIncome += incomeRate.educated * people.officeWorkers * temp[0];
+            people.educatedPeople.set(temp[0], temp[1] - people.officeWorkers);
+            people.officeWorkers = 0;
+        }
+        else {
+            educatedIncome += incomeRate.educated * temp[1] * temp[0];
+            people.officeWorkers -= temp[1];
+            people.educatedPeople.delete(temp[0]);
+        }
+        temp = [...people.educatedPeople][0];
+    }
+    // calculating income for the manualWorkers
+    // if there are left office workers we can use them here too
+    temp = [...people.educatedPeople][0];
+    while(temp !== undefined) {
+        if(people.normalPeople.has(temp[0])) {
+            temp[1] += people.normalPeople.get(temp[0]);
+            people.normalPeople.delete(temp[0]);
+            people.normalPeople.set(temp[0], temp[1]);
+        }
+        else {
+            people.normalPeople.set(temp[0], temp[1]);
+        }
+        people.educatedPeople.delete(temp[0]);
+        temp = [...people.educatedPeople][0];
+    }
+    people.normalPeople = sortMap(people.normalPeople);
+    temp = [...people.normalPeople][0];
+    while(people.manualWorkers > 0 && temp !== undefined) {
+        if(people.manualWorkers < temp[1]) {
+            normalIncome += incomeRate.normal * people.manualWorkers * temp[0];
+            people.normalPeople.set(temp[0], temp[1] - people.manualWorkers);
+            people.manualWorkers = 0;
+        }
+        else {
+            normalIncome += incomeRate.normal * temp[1] * temp[0];
+            people.manualWorkers -= temp[1];
+            people.normalPeople.delete(temp[0]);
+        }
+        temp = [...people.normalPeople][0];
+    }
+
+    // NISAM SIGURAN DA LI RADI ALI DELUJE KAO DA RADI SAVRSENO!!!
+    return Math.floor(normalIncome + educatedIncome);
+}
+
+exports.calculateIncome = calculateIncome;

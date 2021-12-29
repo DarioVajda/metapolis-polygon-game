@@ -1,5 +1,6 @@
 const buildingsModule = require('./building');
 const buildingTypes = buildingsModule.buildingTypes;
+const Coordinate = buildingsModule.Coordinate;
 
 const EventEmitter = require('events');
 incomeCalculator = new EventEmitter();
@@ -16,6 +17,29 @@ class MapLand {
     }
 }
 
+function distanceFromStore(building, buildings) {
+    var minDistance = 9999;
+    var x;
+    var y;
+    var storex;
+    var storey;
+    buildings.forEach((element) => {
+        if(element.type == buildingTypes.Store[0] || element.type == buildingTypes.SuperMarket[0]) {
+            storex = (element.start.x + element.end.x) / 2,
+            storey = (element.start.y + element.end.y) / 2,
+            x = (building.start.x + building.end.x) / 2;
+            y = (building.start.y + building.end.y) / 2;
+
+            minDistance = Math.min(Math.abs(x - storex) + Math.abs(y - storey), minDistance);
+        }
+    });
+    return minDistance;
+}
+
+function pythagoreanTheorem(a, b) {
+    return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+}
+
 function initializeMap(buildings, mapDimensions) {
     var map;
     map = Array(mapDimensions);
@@ -29,46 +53,62 @@ function initializeMap(buildings, mapDimensions) {
     }
 
     // effect ranges:
-    const store = 2;
-    const superMarket = 3;
-    const gym = 3;
-    var park = 0;
+    const store = 2; // sqares of effect in every directi
+    const superMarket = 3; // sqares of effect in every direction
+    const gym = 3; // sqares of effect in every direction
+    var park = 0; // sqares of effect in every direction (depends on the dimensions of the park)
+    const factory = 10; // radius of a circle
+    let maxFactoryDecrease = 0.1; // max productivity decrease from the factories pollution (0, 1)
     buildings.forEach((element) => {
         switch(element.type) {
-            case buildingTypes.Store:
+            case buildingTypes.House[0]:
+                map[element.start.y][element.start.x].productivity *= 1.2;
+                break;
+            case buildingTypes.House[1]:
+                map[element.start.y][element.start.x].productivity *= 1.2;
+                break;
+            case buildingTypes.Store[0]:
                 for(let i = Math.max(0, element.start.y - store); i <= Math.min(mapDimensions - 1, element.start.y + store); i++) {
                     for(let j = Math.max(0, element.start.x - store); j <= Math.min(mapDimensions - 1, element.start.x + store); j++) {
-                        if(element.start.y !== i || element.start.x !== j) {
-                            map[i][j].storeNearby = true;
-                        }
+                        map[i][j].storeNearby = true;
                     }
                 }
                 break;
-            case buildingTypes.Park: 
+            case buildingTypes.Park[0]: 
                 park = Math.floor(((element.end.x - element.start.x + 1) + (element.start.y - element.end.y + 1)) / 2);
                 for(let i = Math.max(0, element.start.y - park); i <= Math.min(mapDimensions - 1, element.end.y + park); i++) {
                     for(let j = Math.max(0, element.start.x - park); j <= Math.min(mapDimensions - 1, element.end.x + park); j++) {
-                        if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].productivity *= 1.1;
-                        }
+                        map[i][j].productivity *= 1.1;
                     }
                 }
                 break;
-            case buildingTypes.Gym: 
+            case buildingTypes.Gym[0]:
+            case buildingTypes.Gym[1]:
                 for(let i = Math.max(0, element.start.y - gym); i <= Math.min(mapDimensions - 1, element.end.y + gym); i++) {
                     for(let j = Math.max(0, element.start.x - gym); j <= Math.min(mapDimensions - 1, element.end.x + gym); j++) {
-                        if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].productivity *= 1.2;
-                        }
+                        map[i][j].productivity *= 1.2;
                     }
                 }
                 break;
-            case buildingTypes.SuperMarket:
+            case buildingTypes.SuperMarket[0]:
                 for(let i = Math.max(0, element.start.y - superMarket); i <= Math.min(mapDimensions - 1, element.end.y + superMarket); i++) {
                     for(let j = Math.max(0, element.start.x - superMarket); j <= Math.min(mapDimensions - 1, element.end.x + superMarket); j++) {
-                        if(i < element.start.y || i > element.end.y || j < element.start.x || j > element.end.x) {
-                            map[i][j].storeNearby = true;
-                        }
+                        map[i][j].storeNearby = true;
+                    }
+                }
+                break;
+            case buildingTypes.Factory[0]:
+            case buildingTypes.Factory[1]:
+                for(let i = 0; i < mapDimensions; i++) {
+                    let distanceFromFactory = 0;
+                    for(let j = 0; j < mapDimensions; j++) {
+                        distanceFromFactory = pythagoreanTheorem(
+                            (element.start.x + element.end.x) / 2 - i,
+                            (element.start.y + element.end.y) / 2 - j,
+                        );
+                        if(distanceFromFactory < factory) {
+                            map[i][j].productivity *= 1 - maxFactoryDecrease * distanceFromFactory / factory;
+                        } // 33346 / 26090
                     }
                 }
                 break;
@@ -88,6 +128,26 @@ function initializeMap(buildings, mapDimensions) {
             }
         }
     });
+
+    const maxDecreaseStore = 0.3 // max value the productivity can be decreased by (0, 1)
+    buildings.forEach((element, index) => {
+        var storeNearby = false;
+        for(let i = element.start.x; i <= element.end.x; i++) {
+            for(let j = element.start.y; j <= element.end.y; j++) {
+                if(map[j][i].storeNearby === true) {
+                    storeNearby = true;
+                }
+            }
+        }
+        if(storeNearby === false) {
+            for(let i = element.start.x; i <= element.end.x; i++) {
+                for(let j = element.start.y; j <= element.end.y; j++) {
+                    map[j][i].productivity *= 1 - maxDecreaseStore * distanceFromStore(element, buildings) / (2 * (mapDimensions - store - 1));
+                }
+            }
+        }
+    })
+    
     return map;
 }
 

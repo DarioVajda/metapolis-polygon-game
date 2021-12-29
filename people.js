@@ -9,14 +9,14 @@ function getproductivity(building, map) {
         }
     }
     return productivity;
-}
+} // returning the highest productivity among the lands the building is on
 
 function sortMap(map) {
     return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
 }
 
 function countPeople(buildings, map) {
-    // mozda bih u mape mogao da dodam i vrednost koja predstavlja ukupan broj obicnih i pametnih ljudi
+    // creating the "people" object with the info about the people and the workplaces
     var normalPeople =  new Map();
     var educatedPeople = new Map();
     var manualWorkers =  0;
@@ -47,7 +47,6 @@ function countPeople(buildings, map) {
         manualWorkers += element.type.manualWorkers;
         officeWorkers += element.type.officeWorkers;
     });
-    // nece da mi se sortira kako treba, bude 1.32, 1.2, 1, 1.1 ...
     normalPeople = sortMap(normalPeople);
     educatedPeople = sortMap(educatedPeople);
     return {

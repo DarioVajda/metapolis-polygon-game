@@ -1,8 +1,8 @@
 
 const incomeRate = {
-    educated: 100,
-    normal: 50
-};
+    educated: 10000,
+    normal: 5000
+}; // mothly pays
 
 function sortMap(map) {
     return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
@@ -16,7 +16,7 @@ function calculateIncome(peopleArg) {
         educatedPeople: new Map([...peopleArg.educatedPeople]),
         manualWorkers: peopleArg.manualWorkers,
         officeWorkers: peopleArg.officeWorkers
-    };
+    }; // copying contents of the main people object in a temporary one
     var temp = [...people.educatedPeople][0];
     
     // calculating income for officeWorkers
@@ -47,7 +47,7 @@ function calculateIncome(peopleArg) {
         }
         people.educatedPeople.delete(temp[0]);
         temp = [...people.educatedPeople][0];
-    }
+    } // adding the educated people to the normal people list
     people.normalPeople = sortMap(people.normalPeople);
     temp = [...people.normalPeople][0];
     while(people.manualWorkers > 0 && temp !== undefined) {
@@ -64,7 +64,6 @@ function calculateIncome(peopleArg) {
         temp = [...people.normalPeople][0];
     }
 
-    // NISAM SIGURAN DA LI RADI ALI DELUJE KAO DA RADI SAVRSENO!!!
     return Math.floor(normalIncome + educatedIncome);
 }
 

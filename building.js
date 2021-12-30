@@ -5,8 +5,8 @@ incomeCalculator = new EventEmitter();
 // oznacavaju gradjevine
 const buildingTypes = {
     Factory: [
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15 },
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30 }
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15 },
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1 }
     ],
     Office: [
         { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25 },
@@ -23,21 +23,21 @@ const buildingTypes = {
         { cost: 40000, normalPeople: 80, educatedPeople: 20, manualWorkers: 0, officeWorkers: 0 }
     ],
     House: [
-        { cost: 200000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0 },
-        { cost: 200000, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0 }
+        { cost: 200000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0, boost: 1.2 },
+        { cost: 200000, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0, boost: 1.2 }
     ],
     Store: [
-        { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0 }
+        { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 2, maxDecrease: 0.3 }
     ],
     SuperMarket: [
-        { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10 }
+        { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10, range: 3, maxDecrease: 0.3 }
     ],
     Park: [
-        { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0 }
+        { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0, range: 0 }
     ],
     Gym: [
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0 },
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0 }
+        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3 },
+        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4 }
     ]
 } // const object with information about all the buildings
 // fields contain arrays of the levels a building can be upgraded to
@@ -83,8 +83,7 @@ var buildingList = [
     new Building(new Coordinate(8, 6), new Coordinate(10, 6), buildingTypes.Building[0]),
     new Building(new Coordinate(7, 7), new Coordinate(8, 8), buildingTypes.Building[0]),
     new Building(new Coordinate(7, 11), new Coordinate(7, 13), buildingTypes.Building[0]),
-    new Building(new Coordinate(9, 11), new Coordinate(9, 12), buildingTypes.Building[0]),
-    new Building(new Coordinate(8, 11), new Coordinate(8, 13), buildingTypes.Building[0]),
+    new Building(new Coordinate(8, 11), new Coordinate(9, 12), buildingTypes.Building[0]),
     new Building(new Coordinate(14, 11), new Coordinate(15, 12), buildingTypes.Building[0]),
     new Building(new Coordinate(11, 13), new Coordinate(11, 15), buildingTypes.Building[0]),
     new Building(new Coordinate(12, 13), new Coordinate(13, 14), buildingTypes.Building[0]),
@@ -144,25 +143,25 @@ function addBuilding(building) {
 } // adds building to the list, later it will change some data in the backend
 
 function upgradeBuilding(index) {
-    var temp;
-    switch(buildingList[index].type) {
-        case buildingTypes.Factory[0]:
-            temp = buildingTypes.Factory[1];
-            break;
-        case buildingTypes.Office[0]:
-            temp = buildingTypes.Office[1];
-            break;
-        case buildingTypes.Building[0]:
-            temp = buildingTypes.Building[1];
-            break;
-        case buildingTypes.House[0]:
-            temp = buildingTypes.House[1];
-            break;
-        case buildingTypes.Gym[0]:
-            temp = buildingTypes.Gym[1];
-            break;
+    var upgrades = Object.values(buildingTypes);
+    var found = {i: -1, j: -1};
+    upgrades.forEach((type, i) => {
+        type.forEach((upgrade, j) => {
+            if(upgrade === buildingList[index].type) {
+                found.i = i;
+                found.j = j;
+            }
+        });
+    });
+    if(found.j === upgrades[found.i].length - 1) {
+        console.log('Building is alreade upgraded to max level');
+        return 0;
+        // throwing out an error to the user
     }
-    buildingList[index].type = temp;
+    else {
+        buildingList[index].type = upgrades[found.i][found.j+1];
+        return buildingList[index].type.cost;
+    }
 } // function that upgrades a building if possible
 
 exports.buildingTypes = buildingTypes;

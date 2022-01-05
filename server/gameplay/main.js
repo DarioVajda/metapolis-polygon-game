@@ -61,7 +61,8 @@ function testing() {
         console.log('Ovo su gradjevine: (unesi indeks od 0...)');
         // console.log(buildings);
         var index = prompt('Unesi indeks gradjevine koju zelis da promenis: ');
-        moneyModule.changeMoneyValue(-buildingsModule.upgradeBuilding(index));
+        var enoughMoney = moneyModule.changeMoneyValue(-buildingsModule.upgradeBuilding(index, false));
+        if(enoughMoney) buildingsModule.upgradeBuilding(index, true);
     }
     else if(input == 3) {
         moneyModule.changeMoneyValue(income);
@@ -72,7 +73,7 @@ function testing() {
         return;
     }
     main();
-    print(false, false, false, false, true);
+    print(false, false, false, true, true);
     testing();
 }
 /* Test primer (ovo treba da bude input): 
@@ -80,5 +81,5 @@ function testing() {
 */
 
 main();
-print(false, false, false, false, true);
+print(false, false, false, true, true);
 testing();

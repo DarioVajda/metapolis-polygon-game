@@ -14,6 +14,8 @@ class MapLand {
         this.occupiedBy = occupiedBy;
         this.storeNearby = storeNearby;
         this.productivity = productivity;
+        this.gymBoost = 1;
+        this.parkBoost = 1;
         this.x = x;
         this.y = y;
     }
@@ -70,14 +72,18 @@ function initializeMap(buildings, mapDimensions) {
                 let park = Math.floor(((element.end.x - element.start.x + 1) + (element.end.y - element.start.y + 1)) / 2);
                 for(let i = Math.max(0, element.start.y - park); i <= Math.min(mapDimensions - 1, element.end.y + park); i++) {
                     for(let j = Math.max(0, element.start.x - park); j <= Math.min(mapDimensions - 1, element.end.x + park); j++) {
-                        map[i][j].productivity *= 1.1;
+                        if(1.1 > map[i][j].parkBoost) {
+                            map[i][j].parkBoost = 1.1;
+                        }
                     }
                 }
                 break;
             case buildingTypes.Gym:
                 for(let i = Math.max(0, element.start.y - buildingStats.get(element.type)[element.level].range); i <= Math.min(mapDimensions - 1, element.end.y + element.type.range); i++) {
                     for(let j = Math.max(0, element.start.x - buildingStats.get(element.type)[element.level].range); j <= Math.min(mapDimensions - 1, element.end.x + element.type.range); j++) {
-                        map[i][j].productivity *= 1.2;
+                        if(1.2 > map[i][j].gymBoost) {
+                            map[i][j].productivity = 1.2;
+                        }
                     }
                 }
                 gym = 3;
@@ -119,6 +125,11 @@ function initializeMap(buildings, mapDimensions) {
             }
         }
     });
+    for(let i = 0; i < mapDimensions; i++) {
+        for(let j = 0; j < mapDimensions; j++) {
+            map[i][j].productivity *= map[i][j].gymBoost * map[i][j].parkBoost;
+        }
+    }
 
     buildings.forEach((element) => {
         var storeNearby = false;

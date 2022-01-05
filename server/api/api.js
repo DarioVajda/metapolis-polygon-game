@@ -32,7 +32,9 @@ app.post("/buildings/build", (req, res) => {
 
 	let enoughMoney = moneyModule.changeMoneyValue(-cost);
 	if(enoughMoney) {
-		buildingsModule.addBuilding(req.body);
+		let newBuilding = JSON.parse(JSON.stringify(req.body));
+		console.log(newBuilding);
+		buildingsModule.addBuilding(newBuilding);
 		console.log('Successfully built'); // obrisati kasnije
 		res.status(200).send("Successfully built.");
 	}

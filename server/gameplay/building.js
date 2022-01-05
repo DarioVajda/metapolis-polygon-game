@@ -15,6 +15,30 @@ const buildingTypes = {
     Gym: 'gym'
 }
 
+const buildingDimensions = new Map();
+function dimensionsRange(min, max) {
+    let r = [];
+    for(let i = min; i <= max; i++) {
+        for(let j = min; j <= max; j++) {
+            r.push([i, j]);
+        }
+    }
+    return r;
+}
+function initBuildingDimensions() {
+    buildingDimensions.set(buildingTypes.Factory, [[2, 4], [4, 2]]);
+    buildingDimensions.set(buildingTypes.Office, [[2, 2]]);
+    buildingDimensions.set(buildingTypes.Restaurant, [[2, 1], [1, 2]]);
+    buildingDimensions.set(buildingTypes.Parking, dimensionsRange(2, 4));
+    buildingDimensions.set(buildingTypes.Building, [[1, 3], [3, 1], [2, 2]]);
+    buildingDimensions.set(buildingTypes.House, [[1, 1]]);
+    buildingDimensions.set(buildingTypes.Store, [[1, 1]]);
+    buildingDimensions.set(buildingTypes.SuperMarket, [[2, 2]]);
+    buildingDimensions.set(buildingTypes.Park, dimensionsRange(2, 5));
+    buildingDimensions.set(buildingTypes.Gym, [[2, 2]]);
+}
+initBuildingDimensions();
+
 // ovo su osobine gradjevina
 const buildingStats = new Map();
 function initBuildingStats() {
@@ -155,6 +179,7 @@ function getBuildings() {
 
 function addBuilding(building) {
     buildingList.push(building);
+    console.log('adding building', building);
     return building.type.cost;
 } // adds building to the list, later it will change some data in the database
 
@@ -178,6 +203,7 @@ function upgradeBuilding(index, performUpgrade) {
 
 exports.buildingTypes = buildingTypes;
 exports.buildingStats = buildingStats;
+exports.buildingDimensions = buildingDimensions;
 exports.getBuildings = getBuildings;
 exports.addBuilding = addBuilding;
 exports.upgradeBuilding = upgradeBuilding;

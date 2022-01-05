@@ -1,5 +1,5 @@
 
-var money = 100000000000;
+var money = 0;
 
 function setMoneyValue(value) {
     money = value;

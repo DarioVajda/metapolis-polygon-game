@@ -1,0 +1,7 @@
+get requests:
+    /buildings - returns the list of buildings
+    /money - returns money amount in format {value: x} (typeof x === 'number')
+
+post requests:
+    /buildings/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
+    /buildings/upgrade - {index: i} - i is the index of the building in the building list

@@ -10,16 +10,16 @@ function getproductivity(building, map) {
         }
     }
     return productivity;
-} // returning the highest productivity among the lands the building is on
+} // vraca najvecu produktivnost od svih polja na kojima se nalazi zgrada
 
 function sortMap(map) {
     return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
-}
+} // pomocna funkcija za sortiranje mape po vrednostima kljuceva
 
 function countPeople(buildings, map) {
-    // creating the "people" object with the info about the people and the workplaces
-    var normalPeople =  new Map();
-    var educatedPeople = new Map();
+    // funkcija koja pravi 'people' objekat koji sadrzi podatke o ljudima i radnim mestima
+    var normalPeople =  new Map(); // mapa gde je kljuc produktivnost, a vrednost broj ljudi sa tom produktivnoscu
+    var educatedPeople = new Map(); // mapa gde je kljuc produktivnost, a vrednost broj ljudi sa tom produktivnoscu
     var manualWorkers =  0;
     var officeWorkers =  0;
 
@@ -53,15 +53,15 @@ function countPeople(buildings, map) {
 
         manualWorkers += buildingStats.get(element.type)[element.level].manualWorkers;
         officeWorkers += buildingStats.get(element.type)[element.level].officeWorkers;
-    });
-    normalPeople = sortMap(normalPeople);
-    educatedPeople = sortMap(educatedPeople);
+    }); // racuna se broj ljudi i radnih mesta
+    normalPeople = sortMap(normalPeople); // sortiraju se mape
+    educatedPeople = sortMap(educatedPeople); // sortiraju se mape
     return {
         normalPeople: normalPeople,
         educatedPeople: educatedPeople,
         manualWorkers: manualWorkers,
         officeWorkers: officeWorkers
-    };
+    }; // vraca se objekat sa ovim poljima i vrednostima
 }
 
 exports.countPeople = countPeople;

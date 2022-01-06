@@ -26,7 +26,7 @@ function main() {
     map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
     people = peopleModule.countPeople(buildings, map);
     income = incomeModule.calculateIncome(people, buildings);
-}
+} // racuna sve sto treba da se izracuna
 function print(a, b, c, d, e) {
     if(a) console.log(buildings);
     if(b) console.log(map);
@@ -75,10 +75,7 @@ function testing() {
     main();
     print(false, false, false, true, true);
     testing();
-}
-/* Test primer (ovo treba da bude input): 
-1 5 3 6 3 6 1 5 4 6 4 6 0
-*/
+} // ovo me mrzi da opisujem ali nije ni bitno
 
 main();
 print(false, false, false, true, true);

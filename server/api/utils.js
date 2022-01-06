@@ -9,7 +9,8 @@ function contains(array, element) {
         }
     });
     return r;
-}
+} // pomocna funkcija koja proverava da li niz nizova sa 2 elementa sadrzi niz 
+// sa 2 elementa sa nekim konkretnim vrednostima
 
 function isBuildingFormat(obj) {
     if(
@@ -27,15 +28,18 @@ function isBuildingFormat(obj) {
 
     ) {
         return false;
-    }
+    } // proverava se da li je format gradjevine ispravan, ako se budu menjala neka polja u klasi
+    // building onda ce i ovaj kod morati da se promeni malo
 
     let typeValid = false;
     Object.values(buildingsModule.buildingTypes).forEach(type => {
         if(type === obj.type) {
             typeValid = true;
         }
-    });
+    }); // proverava se da li postoji tip gradjevine kao sto je onaj primljeni, ako ne postoji
+    // onda typeValid ostaje false
 
+     // provera da li su sve koordinate unutar mape:
     let coordinatesValid = true;
     if((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < 20) === false) {
         coordinatesValid = false;
@@ -45,8 +49,9 @@ function isBuildingFormat(obj) {
     }
     
     coordinatesValid = coordinatesValid && contains(dimensions.get(obj.type), [obj.end.x - obj.start.x + 1, obj.end.y - obj.start.y + 1]);
+        // proverava se da li su dimenzije gradjevine dobre za taj konkretan tip
 
-    return coordinatesValid && typeValid;
+    return coordinatesValid && typeValid; // vratice se true samo ako su oba uslova ispunjena
 }
 
 function doesOverlap(building, map) {
@@ -58,7 +63,9 @@ function doesOverlap(building, map) {
         }
     }
     return false;
-}
+} // funkcija kao argument primi mapu koja je matrica i svaki element sadrzi polje 'occupiedBy'
+// i proverava se da li je neko od polja vec zauzeto, ako jeste vraca se true
 
 exports.isBuildingFormat = isBuildingFormat;
 exports.doesOverlap = doesOverlap;
+    // exportovanje funkcija

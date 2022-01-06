@@ -1,7 +1,8 @@
 const EventEmitter = require('events');
 incomeCalculator = new EventEmitter();
 
-// tipovi gradjevina
+// _______________________________________________________________________________________________
+// tipovi gradjevina:
 const buildingTypes = {
     Factory: 'factory',
     Office: 'office',
@@ -14,7 +15,8 @@ const buildingTypes = {
     Park: 'park',
     Gym: 'gym'
 }
-
+// _______________________________________________________________________________________________
+// Dimenzije gradjevina:
 const buildingDimensions = new Map();
 function dimensionsRange(min, max) {
     let r = [];
@@ -24,8 +26,9 @@ function dimensionsRange(min, max) {
         }
     }
     return r;
-}
+} // funkcija koja napravi niz svih mogucih parova mxn gde su m i n izmedju min i max (ukljucujuci i njih)
 function initBuildingDimensions() {
+    // ova funkcija je tu samo da bude lepse, a kasnije se poziva da bi se sve ovo izvrsilo
     buildingDimensions.set(buildingTypes.Factory, [[2, 4], [4, 2]]);
     buildingDimensions.set(buildingTypes.Office, [[2, 2]]);
     buildingDimensions.set(buildingTypes.Restaurant, [[2, 1], [1, 2]]);
@@ -36,12 +39,13 @@ function initBuildingDimensions() {
     buildingDimensions.set(buildingTypes.SuperMarket, [[2, 2]]);
     buildingDimensions.set(buildingTypes.Park, dimensionsRange(2, 5));
     buildingDimensions.set(buildingTypes.Gym, [[2, 2]]);
-}
+} // funkcija koja inizijalizuje moguce vrednosti dimenzija svakih gradjevina, ovo moze da se menja
 initBuildingDimensions();
-
-// ovo su osobine gradjevina
+// _______________________________________________________________________________________________
+// ovo su osobine gradjevina - ljudi, radna mesta, cene, nivoi,...
 const buildingStats = new Map();
 function initBuildingStats() {
+    // Sve ovo je u funkciji da bi program bio lepsi, a kasnije se poziva da se sve ovo izvrsi
     buildingStats.set(buildingTypes.Factory, [
         { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15},
         { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1}
@@ -77,24 +81,25 @@ function initBuildingStats() {
         { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3},
         { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4}
     ]);
-}
+} // funkcija koja inicijalizuje polja u mapi
 initBuildingStats();
+// _______________________________________________________________________________________________
 
 class Coordinate {
     constructor(x, y) {
         this.x = x;
         this.y = y;
     }
-}
+} // klasa koja sadrzi x i y koordinate, koristi se za polozaj gradjevina
 
 class Building {
     constructor(start, end, type, level) {
-        this.start = start;
-        this.end = end;
-        this.type = type;
-        this.level = level;
+        this.start = start; // coordinate
+        this.end = end; // coordinate
+        this.type = type; // jedan od stringova iz buildingTypes objekta
+        this.level = level; // int koji oznacava level gradjevine
     }
-}
+} // klasa koja opisuje jednu gradjevinu
 
 // primer gradjevina: za testiranje: (kasnije ce se ovo ucitavati iz backenda)
 var buildingList = [
@@ -172,16 +177,17 @@ for(let i = 0; i < buildingList.length; i++) {
     buildingList[i].end.x -= 1;
     buildingList[i].end.y -= 1;
 } // ovo je tu samo da bi koordinate bile od 0 do 19, inace nece trebati jer cemo vec tako generisati gradjevine
+// _______________________________________________________________________________________________
 
 function getBuildings() {    
     return buildingList;
-} // function will return something from the database
+} // funkcija koja vraca listu gradjevina, sad je to iz ovog programa a kasnije ce biti iz baze podataka
 
 function addBuilding(building) {
     buildingList.push(building);
     console.log('adding building', building);
     return building.type.cost;
-} // adds building to the list, later it will change some data in the database
+} // dodaje gradjevinu na listu i vraca njenu cenu (to je mozda visak jer mislim da se nigde ne koristi, ali nema veze)
 
 function upgradeBuilding(index, performUpgrade) {
     if(buildingList[index] === undefined) {
@@ -199,7 +205,7 @@ function upgradeBuilding(index, performUpgrade) {
         buildingList[index].level += 1;
     }
     return cost;
-} // function that upgrades a building if possible
+} // funkcija koja upgrade-uje gradjevinu na nekom indeksu ako je moguce i ako je performUpgrade true i na kraju vraca cenu toga
 
 exports.buildingTypes = buildingTypes;
 exports.buildingStats = buildingStats;
@@ -209,3 +215,4 @@ exports.addBuilding = addBuilding;
 exports.upgradeBuilding = upgradeBuilding;
 exports.Building = Building;
 exports.Coordinate = Coordinate;
+    // eksportovanje funkcia, klasa i objekata koji se koriste u drugim fajlovima

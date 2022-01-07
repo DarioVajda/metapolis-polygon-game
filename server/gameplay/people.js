@@ -1,4 +1,4 @@
-const { buildingStats, buildingTypes } = require("./building");
+const { buildingStats, buildingTypes } = require("./building_stats");
 
 function getproductivity(building, map) {
     var productivity = 0;
@@ -39,7 +39,7 @@ function countPeople(buildings, map) {
             normalPeople.set(productivity, temp + tempNormalPeople);
         }
         else {
-            normalPeople.set(productivity, tempNormalPeople);
+            if(tempNormalPeople > 0) normalPeople.set(productivity, tempNormalPeople);
         }
 
         if(educatedPeople.has(productivity)) {
@@ -48,7 +48,7 @@ function countPeople(buildings, map) {
             educatedPeople.set(productivity, temp + tempEducatedPeople);
         }
         else {
-            educatedPeople.set(productivity, tempEducatedPeople);
+            if(tempEducatedPeople > 0) educatedPeople.set(productivity, tempEducatedPeople);
         }
 
         manualWorkers += buildingStats.get(element.type)[element.level].manualWorkers;

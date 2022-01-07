@@ -3,9 +3,10 @@
 const prompt = require('prompt-sync')({sigint: true}); // import for console input
 
 const buildingsModule = require('./building');
-const Building = buildingsModule.Building;
-const Coordinate = buildingsModule.Coordinate;
-const buildingStats = buildingsModule.buildingStats;
+
+const statsModule = require('./building_stats');
+const Coordinate = statsModule.Coordinate;
+const buildingStats = statsModule.buildingStats;
 
 const mapModule = require('./map');
 
@@ -41,9 +42,9 @@ function testing() {
     if(input == 0) return;
     else if(input == 1) {
         console.log('Ovo su mogucnosti za izgradnju: (unesi indeks)');
-        console.log(Object.values(buildingsModule.buildingTypes));
+        console.log(Object.values(statsModule.buildingTypes));
         var type = prompt('');
-        type = Object.values(buildingsModule.buildingTypes)[type];
+        type = Object.values(statsModule.buildingTypes)[type];
         var start = new Coordinate(0, 0);
         start.x = prompt('start.x = ');
         start.y = prompt('start.y = ');

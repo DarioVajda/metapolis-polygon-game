@@ -1,4 +1,4 @@
-const buildingsModule = require('./building');
+const buildingsModule = require('./building_stats');
 const buildingTypes = buildingsModule.buildingTypes;
 const buildingStats = buildingsModule.buildingStats;
 

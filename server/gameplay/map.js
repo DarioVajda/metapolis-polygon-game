@@ -1,7 +1,6 @@
-const buildingsModule = require('./building');
+const buildingsModule = require('./building_stats');
 const buildingTypes = buildingsModule.buildingTypes;
 const buildingStats = buildingsModule.buildingStats;
-const Coordinate = buildingsModule.Coordinate;
 
 const EventEmitter = require('events');
 incomeCalculator = new EventEmitter();
@@ -79,10 +78,10 @@ function initializeMap(buildings, mapDimensions) {
                 }
                 break;
             case buildingTypes.Gym: // povecava se produktivnost ljudi u blizini teretane
-                for(let i = Math.max(0, element.start.y - buildingStats.get(element.type)[element.level].range); i <= Math.min(mapDimensions - 1, element.end.y + element.type.range); i++) {
-                    for(let j = Math.max(0, element.start.x - buildingStats.get(element.type)[element.level].range); j <= Math.min(mapDimensions - 1, element.end.x + element.type.range); j++) {
+                for(let i = Math.max(0, element.start.y - buildingStats.get(element.type)[element.level].range); i <= Math.min(mapDimensions - 1, element.end.y + buildingStats.get(element.type)[element.level].range); i++) {
+                    for(let j = Math.max(0, element.start.x - buildingStats.get(element.type)[element.level].range); j <= Math.min(mapDimensions - 1, element.end.x + buildingStats.get(element.type)[element.level].range); j++) {
                         if(1.2 > map[i][j].gymBoost) {
-                            map[i][j].productivity = 1.2;
+                            map[i][j].gymBoost = 1.2;
                         }
                     }
                 }
@@ -104,7 +103,7 @@ function initializeMap(buildings, mapDimensions) {
                             (element.start.y + element.end.y) / 2 - j,
                         );
                         if(distanceFromFactory < buildingStats.get(element.type)[element.level].radius) {
-                            map[i][j].productivity *= 1 - buildingStats.get(element.type)[element.level].maxDecrease * distanceFromFactory / element.type.radius;
+                            map[i][j].productivity *= 1 - buildingStats.get(element.type)[element.level].maxDecrease * distanceFromFactory / buildingStats.get(element.type)[element.level].radius;
                         }
                     }
                 }
@@ -146,7 +145,7 @@ function initializeMap(buildings, mapDimensions) {
         if(storeNearby === false) {
             for(let i = element.start.x; i <= element.end.x; i++) {
                 for(let j = element.start.y; j <= element.end.y; j++) {
-                    map[j][i].productivity *= 1 - buildingStats.get(buildingTypes.Store)[0].maxDecrease * distanceFromStore(element, buildings) / (2 * (mapDimensions - buildingTypes.Store[0].range - 1));
+                    map[j][i].productivity *= 1 - buildingStats.get(buildingTypes.Store)[0].maxDecrease * distanceFromStore(element, buildings) / (2 * (mapDimensions - buildingStats.get(buildingTypes.Store)[0].range - 1));
                 }
             }
         }

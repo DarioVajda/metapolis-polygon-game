@@ -16,6 +16,8 @@ const incomeModule = require('./income');
 
 const moneyModule = require('./money');
 
+const generateModule = require('../rand_map/generate');
+
 // Main Variables:
 var buildings = buildingsModule.getBuildings();
 var people;
@@ -81,3 +83,37 @@ function testing() {
 main();
 print(false, false, false, true, true);
 testing();
+
+/*
+var maks = 0;
+var min = 9999999999;
+const it = 1000000;
+var sum = 0;
+for(let i = 0; i < it; i++) {
+    buildings = generateModule.generateBuildings();
+    map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
+    people = peopleModule.countPeople(buildings, map);
+    income = incomeModule.calculateIncome(people, buildings);
+    income /= 10000;
+    // console.log(income);
+    if(income > maks) {
+        maks = income;
+    }
+    if(income < min) {
+        min = income;
+    }
+    sum += income;
+
+    if(i % 100 === 0) console.log(income);
+}
+console.log('max income:', maks);
+console.log('min income:', min);
+console.log('avg income:', sum / it);
+
+/*
+Rezultati za 100000 gradova:
+    max income: 79.7108
+    min income: 20.3309
+    avg income: 32.1703919670999
+    * sve je podeljeno sa 10000 *
+*/

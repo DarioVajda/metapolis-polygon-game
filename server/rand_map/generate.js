@@ -49,25 +49,15 @@ function numOfBuildings(probabilities) {
 // CREATE BUILDING:
 function doOverlap(building1, building2) {
     if(
-        ((
-            (building1.start.x <= building2.end.x && building1.start.x >= building2.start.x) ||
-            (building1.end.x <= building2.end.x && building1.end.x >= building2.start.x)
-        ) && (
-            (building1.start.y <= building2.end.y && building1.start.y >= building2.start.y) ||
-            (building1.end.y <= building2.end.y && building1.end.y >= building2.start.y)
-        )) ||
-        ((
-            (building2.start.x <= building1.end.x && building2.start.x >= building1.start.x) ||
-            (building2.end.x <= building1.end.x && building2.end.x >= building1.start.x)
-        ) && (
-            (building2.start.y <= building1.end.y && building2.start.y >= building1.start.y) ||
-            (building2.end.y <= building1.end.y && building2.end.y >= building1.start.y)
-        ))
+        building1.start.x > building2.end.x ||
+        building2.start.x > building1.end.x ||
+        building1.start.y > building2.end.y ||
+        building2.start.y > building1.end.y
     ) {
-        return true;
+        return false;
     }
     else {
-        return false;
+        return true;
     }
 }
 

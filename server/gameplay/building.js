@@ -84,7 +84,7 @@ for(let i = 0; i < buildingList.length; i++) {
     buildingList[i].end.y -= 1;
 } // ovo je tu samo da bi koordinate bile od 0 do 19, inace nece trebati jer cemo vec tako generisati gradjevine
 */
-// OVO IZNAD JE STARI KOD GDE JE BILA HARKODOVANA VREDNOST ZA LISTU ZGRADA, A SAD SE POZIVA FUNKCIJA KOJA RANDOM GENERISE GRAD ZA POCETAK!!!
+// OVO IZNAD JE STARI KOD GDE JE BILA HARdKODOVANA VREDNOST ZA LISTU ZGRADA, A SAD SE POZIVA FUNKCIJA KOJA RANDOM GENERISE GRAD ZA POCETAK!!!
 
 var buildingList = generateModule.generateBuildings();
 // _______________________________________________________________________________________________
@@ -111,6 +111,7 @@ function upgradeBuilding(index, performUpgrade) {
     } // already upgraded to max level
     
     let cost = buildingStats.get(type)[currLevel+1].cost;
+    // here it should be checked if a building is a 'building' or a 'park' and the cost should be multiplied by the number of blocks it occupies!!!
     if(performUpgrade) {
         buildingList[index].level += 1;
     }

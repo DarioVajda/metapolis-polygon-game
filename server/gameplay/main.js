@@ -84,7 +84,7 @@ main();
 print(false, false, false, true, true);
 testing();
 
-/*
+
 var maks = 0;
 var min = 9999999999;
 const it = 1000000;

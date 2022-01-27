@@ -142,7 +142,7 @@ function generate() {
         [[1, 9], [2, 1]],
         [[0, 49], [1, 1]],
         [[1, 7], [2, 3]],
-        [[1, 49], [1, 1]]
+        [[0, 49], [1, 1]]
     ];
     num = numOfBuildings(probabilities);
 

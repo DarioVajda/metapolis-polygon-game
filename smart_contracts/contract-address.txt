@@ -1,0 +1,57 @@
+The deployed contract address on the mumbai testnet is the following:
+0xb3972B3da57728f41EF0Cc4b2a6b8810A650c190
+
+
+
+
+MESSAGE IN THE CONSOLE:
+
+Compiling your contracts...
+===========================
+> Compiling .\contracts\CityContract.sol
+> Compiling .\contracts\CityContract.sol
+> Compiling .\contracts\Migrations.sol
+> Artifacts written to C:\Users\Dario Vajda\OneDrive\Desktop\nft project\nft\smart_contracts\build\contracts
+> Compiled successfully using:
+   - solc: 0.8.11+commit.d7f03943.Emscripten.clang
+
+
+
+Starting migrations...
+======================
+> Network name:    'matic'
+> Network id:      80001
+> Block gas limit: 20000000 (0x1312d00)
+
+
+2_city_contract.js
+==================
+
+   Deploying 'CityContract'
+   ------------------------
+   > transaction hash:    0x1e5dad85a99148a5da3e6e7838d2bc147adf7e6d4a03edfac7827393adbc6985
+   > Blocks: 2            Seconds: 4
+   > contract address:    0xb3972B3da57728f41EF0Cc4b2a6b8810A650c190
+   > block number:        24356066
+   > block timestamp:     1643396865
+   > account:             0x764cDA7eccc6a94C157742e369b3533D15d047c0
+   > balance:             4.971841802398630489
+   > gas used:            5483612 (0x53ac5c)
+   > gas price:           2.500000009 gwei
+   > value sent:          0 ETH
+   > total cost:          0.013709030049352508 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 2 (block: 24356069)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.013709030049352508 ETH
+
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.013709030049352508 ETH

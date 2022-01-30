@@ -12,6 +12,14 @@ import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 // trebam da napravim funkcije za upgradeovanje i gradjenje, ne treba mi provera argumenata jer funkciju moze da pozove samo owner
 // dok api koji poziva ovu funkciju moze da pozove samo osoba koja poseduje nft datog
 
+
+/* TEST PRIMER: 
+instance.safeMint(1, {value: web3.utils.toWei('0.1', 'ether'), from: accounts[1]})
+instance.initializeCity(accounts[1], 1, 2, 0, [3, 4], [3, 4], [3, 4], [3, 4], ['house', 'house'], [], 10000)
+
+*/
+
+
 contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     using SafeMath for uint256;
@@ -70,8 +78,8 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     } // occupies 1 block of 256 bytes
 
     struct City {
-        Building[] buildingList;
-        SpecialBuilding[] specialBuildingList;
+        mapping(uint => Building) buildingList;
+        mapping(uint => SpecialBuilding) specialBuildingList;
         uint64 numOfBuildings;
         uint64 numOfSpecialBuildings;
         uint64 money;
@@ -173,10 +181,13 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             city.specialBuildingList[i-numOfBuildings].endy = uint32(startx[i]);
             city.specialBuildingList[i-numOfBuildings].specialType = uint32(specialType[i-numOfBuildings]);
         }
+        city.numOfBuildings = uint64(numOfBuildings);
+        city.numOfSpecialBuildings = uint64(numOfSpecialBuildings);
         city.income = uint64(income);
         city.money = startingMoney;
         city.owner = owner;
     }
+    
     // ________________________________________________________________________
     // functions that change the cities:
     function upgradeBuilding(uint tokenId, uint buildingIndex) external onlyAdmin {
@@ -222,6 +233,31 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         city.numOfSpecialBuildings += 1;
     }
 
+
+    //_______________________________________________________________________________
+    // funkcije za debagovanje:
+
+    function currId() public view returns(uint) {
+        return _tokenIdCounter.current();
+    }
+
+    function getOwners() external view returns(address[] memory) {
+        address[] memory adrese = new address[](currId());
+        for(uint i = 0; i < currId(); i++) {
+            adrese[i] = cities[i].owner;
+        }
+        return adrese;
+    }
+
+    function getTypes(uint tokenId) external view returns(uint[] memory) {
+        uint[] memory types = new uint[](cities[tokenId].numOfBuildings);
+        for(uint i = 0; i < cities[tokenId].numOfBuildings; i++) {
+            types[i] = uint(cities[tokenId].buildingList[i].buildingType);
+        }
+        return types;
+    }
+
+    //_______________________________________________________________________________
 
 
     // The following modifier is used to check if a user owns the NFT which he wants to change.

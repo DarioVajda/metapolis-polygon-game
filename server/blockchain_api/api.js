@@ -12,34 +12,17 @@ const utils = require('./utils');
 
 const provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
-	);
-	// const mnemonic = 'view protect chapter volcano vote news humble history village wire sunny cheese';
-	const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
-	console.log(wallet);
-	const contractAddress = '0xb3972B3da57728f41EF0Cc4b2a6b8810A650c190';
-	const abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
+);
+const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
+console.log(wallet);
+const contractAddress = '0x5755c8Bdf367Cc4AE6AB3463289B6601842b654e';
+const abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var contract = new ethers.Contract(
 	contractAddress,
 	abi,
 	account
-	);
-
-async function main() {
-	var tx;
-	var reciept;
-	// tx = await contract.withdraw({gasLimit: 1e5});
-	// reciept = await tx.wait();
-	// console.log('Withdrawn! ', reciept);
-	// tx = await contract.safeMint(1, {value: ethers.utils.parseEther('0.1'), gasLimit: 1e7});
-	// reciept = await tx.wait();
-	// console.log('Reciept 2: ', reciept);
-	// let currId = await contract.currId();
-	// tx = await contract.initializeCity(wallet.address, currId-1, 2, 0, [3, 4], [3, 4], [3, 4], [3, 4], ['house', 'house'], [], 10000, {gasLimit: 1e7});
-	// reciept = await tx.wait();
-	// console.log('Reciept 3: ', reciept);
-}
-// main();
+);
 
 const app = express();
 const port = 3000;
@@ -47,36 +30,11 @@ const port = 3000;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/cities/mint", async (req, res) => {
-	var tx;
-	var recipet;
+// TODO:
+// trebam da napravim funkciju u smart contractu koja menja vreme koje je potrebno da se dobije plata u igrici
 
-	tx = await contract.safeMint(1, {value: ethers.utils.parseEther('0.1'), gasLimit: 1e7}); // this is later going to be done in the frontend
-	reciept = await tx.wait();
-	console.log(reciept);
-	let randBuildings = generateModule.generateBuildings();
-	let startx = [];
-	let starty = [];
-	let endx = [];
-	let endy = [];
-	let types = [];
-	let specialTypes = [];
-	randBuildings.forEach((element) => {
-		startx.push(element.start.x);
-		starty.push(element.start.y);
-		endx.push(element.end.x);
-		endy.push(element.end.y);
-		types.push(element.type);
-	});
-	let buildings = buildingsModule.getBuildings();
-    let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
-    let people = peopleModule.countPeople(buildings, map);
-    let income = incomeModule.calculateIncome(people, buildings);
-	let currId = await contract.currId();
-	tx = await contract.initializeCity(wallet.address, currId-1, randBuildings.length, 0, startx, starty, endx, endy, types, specialTypes, income);
-	reciept = await tx.wait();
-	console.log(reciept);
-	res.json(200);
+app.get("/cities/mint", async (req, res) => {
+	
 });
 
 app.get("/cities/:id/cityimage", (req, res) => {
@@ -86,20 +44,49 @@ app.get("/cities/:id/cityimage", (req, res) => {
 	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
 });
 
-app.get("/cities/:id/buildings", (req,res) => {
-
+// the following function returns all the data about the city with the given ID
+app.get("/cities/:id", async (req,res) => {
+	/* The response is an array with the following values
+	[
+        address owner,
+        uint numOfBuildings,
+        uint numOfSpecialBuildings,
+        uint[] startx,
+        uint[] starty,
+        uint[] endx,
+        uint[] endy,
+        string[] buildingType,
+        uint[] specialType,
+        uint money,
+        uint income,
+        uint lastPay,
+    ]
+	*/
+	let city = await contract.getBuildings(req.params.id);
+	console.log(city);
+	res.json(city);
 });
 
 app.get("/cities/:id/money", (req,res) => {
+	// ova funkcija za api je mozda visak
+});
+
+app.post("/cities/:id/build", (req, res) => {
 	
 });
 
-app.post("/cities/:id/buildings/build", (req, res) => {
+app.post("/cities/:id/upgrade", (req, res) => {
 	
 });
 
-app.post("/cities/:id/buildings/upgrade", (req, res) => {
-	
+// the method should be post!!!
+app.get("/cities/:id/getincome", async (req, res) => {
+	// here could be some kind of a check if the player can receive income...
+	let tx = await contract.getIncome(req.params.id);
+	let reciept = await tx.wait();
+	console.log(reciept);
+	console.log('Income received!');
+	res.json('OK');
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

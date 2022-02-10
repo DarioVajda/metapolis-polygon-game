@@ -44,7 +44,7 @@ module.exports = {
       port: 7545,
       network_id: "5777"
     },
-    matic: {
+    mumbai: {
       provider: () => new HDWalletProvider({
         mnemonic: mnemonic, 
         providerOrUrl: `https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44`,

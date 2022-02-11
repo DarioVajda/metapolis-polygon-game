@@ -1,5 +1,8 @@
 const buildingsModule = require('../gameplay/building');
+const { Building, Coordinate } = require('../gameplay/building_stats');
 const dimensions = buildingsModule.buildingDimensions;
+
+//#region FORMAT CHECKING
 
 function contains(array, element) {
     let r = false;
@@ -54,18 +57,127 @@ function isBuildingFormat(obj) {
     return coordinatesValid && typeValid; // vratice se true samo ako su oba uslova ispunjena
 }
 
-function doesOverlap(building, map) {
-    for(let i = building.start.x; i <= building.end.x; i++) {
-        for(let j = building.start.y; j <= building.end.y; j++) {
-            if(map[j][i] !== undefined && map[j][i].occupiedBy !== null) {
-                return true;
-            }
+function isSpecialBuildingFormat(obj) {
+    if(
+        obj.start === undefined ||
+        obj.end === undefined ||
+        typeof obj.start.x !== 'number' ||
+        typeof obj.start.y !== 'number' ||
+        typeof obj.end.x !== 'number' ||
+        typeof obj.end.y !== 'number' ||
+        typeof obj.type !== 'string' ||
+        Object.values(obj).length !== 3 ||
+        Object.values(obj.start).length !== 2 ||
+        Object.values(obj.end).length !== 2
+
+    ) {
+        return false;
+    } // proverava se da li je format gradjevine ispravan
+
+    let typeValid = false;
+    Object.values(buildingsModule.buildingTypes).forEach(type => {
+        if(type === obj.type) {
+            typeValid = true;
         }
+    }); // proverava se da li postoji tip gradjevine kao sto je onaj primljeni, ako ne postoji onda typeValid ostaje false
+
+    // provera da li su sve koordinate unutar mape:
+    let coordinatesValid = true;
+    if((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < 20) === false) {
+        coordinatesValid = false;
     }
+    if((0 <= obj.start.y && obj.start.y <= obj.end.y && obj.end.y < 20) === false) {
+        coordinatesValid = false;
+    }
+    return coordinatesValid && typeValid; // vratice se true samo ako su oba uslova ispunjena
+}
+
+//#endregion
+
+//#region CHECKING FOR OVERLAPS
+
+function overlap(building1, building2) {
+    if(
+        building1.start.x > building2.end.x ||
+        building2.start.x > building1.end.x ||
+        building1.start.y > building2.end.y ||
+        building2.start.y > building1.end.y
+    ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+function doesOverlap(building, city) {
+    city.buildings.forEach(element => {
+        if(overlap(building, element)) {
+            return true;
+        }
+    });
+    city.specialBuildings.forEach(elemet => {
+        if(overlap(building, element)) {
+            return true;
+        }
+    });
     return false;
-} // funkcija kao argument primi mapu koja je matrica i svaki element sadrzi polje 'occupiedBy'
-// i proverava se da li je neko od polja vec zauzeto, ako jeste vraca se true
+} // funkcija kao argument prima gradjevinu i citav grad
+
+//#endregion
+
+//#region FORMATING CITY DATA
+
+function formatBuildingList(data) {
+    let city = { buildings: [], specialBuildings: [] }
+    for(let i = 0; i < data.numOfBuildings; i++) {
+        city.buildings.push(new Building(
+            new Coordinate(data.startx[i], data.starty[i]),
+            new Coordinate(data.endx[i], data.endy[i]),
+            data.type[i],
+            data.level[i]
+        ));
+    }
+    for(let i = 0; i < data.numOfSpecialBuildings; i++) {
+        city.specialBuildings.push(new SpecialBuilding(
+            new Coordinate(data.startx[i + numOfBuildings], data.starty[i + numOfBuildings]),
+            new Coordinate(data.endx[i + numOfBuildings], data.endy[i + numOfBuildings]),
+            data.specialTypes[i]
+        ));
+    }
+    city.money = data.money;
+    city.income = data.income;
+    city.owner = data.owner;
+    city.lastPay = data.lastPay;
+
+    return city;
+}
+
+//#endregion
+
+//#region IS SAME BUILDING
+
+function isSameBuilding(building1, building2) {
+    if(
+        building1.start.x === building2.start.x &&
+        building1.start.y === building2.start.y &&
+        building1.end.x === building2.end.x &&
+        building1.end.y === building2.end.y &&
+        building1.type === building2.type &&
+        building1.level === building2.level
+    ) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+//#endregion
+
 
 exports.isBuildingFormat = isBuildingFormat;
+exports.isSpecialBuildingFormat = isSpecialBuildingFormat;
 exports.doesOverlap = doesOverlap;
-    // exportovanje funkcija
+exports.formatBuildingList = formatBuildingList;
+exports.isSameBuilding = isSameBuilding;

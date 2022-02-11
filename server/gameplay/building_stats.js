@@ -14,6 +14,14 @@ class Building {
     }
 } // klasa koja opisuje jednu gradjevinu
 
+class SpecialBuilding {
+    constructor(start, end, type) {
+        this.start = start; // coordinate
+        this.end = end; // coordinate
+        this.type = type; // integer/string representing the special building
+    }
+}
+
 // _______________________________________________________________________________________________
 // tipovi gradjevina:
 const buildingTypes = {

@@ -8,17 +8,16 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Gameplay is Ownable {
 
-    constructor() {
+    constructor(address _admin) {
         initStringToType();
-        admin = msg.sender; // this should later be passed in as an argument to the contructor
+        admin = _admin;
     }
 
-    // ________________________________________________________________________
+
     enum BuildingTypes {
         Factory,
         Office,
         Restaurant,
-        Parking,
         Building,
         House,
         Store,
@@ -34,7 +33,6 @@ contract Gameplay is Ownable {
         stringToType["factory"] = BuildingTypes.Factory;
         stringToType["office"] = BuildingTypes.Office;
         stringToType["restaurant"] = BuildingTypes.Restaurant;
-        stringToType["parking"] = BuildingTypes.Parking;
         stringToType["building"] = BuildingTypes.Building;
         stringToType["house"] = BuildingTypes.House;
         stringToType["store"] = BuildingTypes.Store;
@@ -45,7 +43,6 @@ contract Gameplay is Ownable {
         typeToString[BuildingTypes.Factory] = "factory";
         typeToString[BuildingTypes.Office] = "office";
         typeToString[BuildingTypes.Restaurant] = "restaurant";
-        typeToString[BuildingTypes.Parking] = "parking";
         typeToString[BuildingTypes.Building] = "building";
         typeToString[BuildingTypes.House] = "house";
         typeToString[BuildingTypes.Store] = "store";
@@ -64,12 +61,12 @@ contract Gameplay is Ownable {
     } // occupies 1 block of 256 bytes
 
     struct SpecialBuilding {
-        uint32 specialType;
+        string specialType;
         uint32 startx;
         uint32 starty;
         uint32 endx;
         uint32 endy;
-    } // occupies 1 block of 256 bytes
+    } // occupies 2 block of 256 bytes
 
     struct City {
         mapping(uint => Building) buildingList;
@@ -80,10 +77,8 @@ contract Gameplay is Ownable {
         uint64 income;
         address owner;
         uint lastPay;
-    } // occupies ( 2 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
-    // ________________________________________________________________________
+    } // occupies ( 3 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
 
-    uint MAX_CITIES = 10000; // max num of cities to be minted
 
     address admin;
     bool editable = true;
@@ -93,7 +88,7 @@ contract Gameplay is Ownable {
     mapping(uint => City) cities; // map (array) containing all the data about the City NFTs
     uint64 startingMoney = 100000; // the amount of in-game money everyone has right after minting
 
-    // ________________________________________________________________________
+
     /**
      * @dev Function used for minting new City NFTs
      * @param tokenId index of the token being initialized
@@ -117,7 +112,7 @@ contract Gameplay is Ownable {
         uint[] memory endx,
         uint[] memory endy,
         string[] memory buildingType,
-        uint[] memory specialType,
+        string[] memory specialType,
         uint income
     ) external onlyAdmin isEditable {
         require(cities[tokenId].owner == address(0), "City is already initialized");
@@ -135,7 +130,7 @@ contract Gameplay is Ownable {
             city.specialBuildingList[i-numOfBuildings].starty = uint32(starty[i]);
             city.specialBuildingList[i-numOfBuildings].endx = uint32(endx[i]);
             city.specialBuildingList[i-numOfBuildings].endy = uint32(endy[i]);
-            city.specialBuildingList[i-numOfBuildings].specialType = uint32(specialType[i-numOfBuildings]);
+            city.specialBuildingList[i-numOfBuildings].specialType = specialType[i-numOfBuildings];
         }
         city.numOfBuildings = uint64(numOfBuildings);
         city.numOfSpecialBuildings = uint64(numOfSpecialBuildings);
@@ -182,11 +177,11 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
-        uint _specialType
+        string memory _specialType
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
         city.specialBuildingList[city.numOfSpecialBuildings] = SpecialBuilding({
-            specialType: uint32(_specialType),
+            specialType: _specialType,
             startx: uint32(_startx),
             starty: uint32(_starty),
             endx: uint32(_endx),
@@ -214,11 +209,13 @@ contract Gameplay is Ownable {
         cities[tokenId].money += uint64(n) * cities[tokenId].income;
         cities[tokenId].lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
     }
-    //_______________________________________________________________________________
+
+
     // funkcije za dobijanje podata iz contract-a:
     function getEditableState() external view returns(bool) {
         return editable;
     } // returns true if the cities are editable, and false if they are not
+
 
     struct CityRepresentation {
         address owner;
@@ -229,13 +226,12 @@ contract Gameplay is Ownable {
         uint[] endx;
         uint[] endy;
         string[] buildingType;
-        uint[] specialType;
+        string[] specialType;
         uint money;
         uint income;
         uint lastPay;
     } // this is a struct used for returning values from the blockchain
-
-    function getBuildings(uint tokenId) external view returns(CityRepresentation memory) {
+    function getCityData(uint tokenId) external view returns(CityRepresentation memory) {
         City storage city = cities[tokenId];
         address owner = city.owner;
         uint numOfBuildings = city.numOfBuildings;
@@ -245,7 +241,7 @@ contract Gameplay is Ownable {
         uint[] memory endx = new uint[](numOfBuildings + numOfSpecialBuildings);
         uint[] memory endy = new uint[](numOfBuildings + numOfSpecialBuildings);
         string[] memory buildingType = new string[](numOfBuildings);
-        uint[] memory specialType = new uint[](numOfSpecialBuildings);
+        string[] memory specialType = new string[](numOfSpecialBuildings);
         uint money;
         uint income;
         uint lastPay;
@@ -265,7 +261,8 @@ contract Gameplay is Ownable {
         }
         income = city.income;
         money = city.money;
-        lastPay = city.lastPay;
+        if(gameStart == 2000000000) lastPay = gameStart;
+        else lastPay = city.lastPay - gameStart;
         return CityRepresentation({
             owner: owner,
             numOfBuildings: numOfBuildings,
@@ -282,24 +279,25 @@ contract Gameplay is Ownable {
         });
     } // returns a struct with all the data about the city with the 'tokenId' ID
 
-    function getMoney(uint tokenId) external view returns(uint) {
-        return cities[tokenId].money;
-    } // returns the money a city owns
-
-    function getLastPay(uint tokenId) external view returns(uint) {
-        return cities[tokenId].lastPay - gameStart;
-    } // returns when was the last time city was payed
-
     function getBlockchainTime() external view returns(uint) {
         return block.timestamp;
     } // returns the timestamp from the blockchain
-    //_______________________________________________________________________________
+
+
+    function changePayPeriod(uint _payPeriod) external onlyAdmin {
+        payPeriod = _payPeriod;
+    } // changes the time required to pass to receive income
 
 
     // The following modifier is used to check if the person who called the function is the Admin
     modifier onlyAdmin() {
         require(msg.sender == admin, 'The caller of the function is not admin');
         _;
+    }
+
+    // function that can change the Admin address in case a proble occurs - can be calles only by the owner
+    function changeAdmin(address newAdmin) external onlyOwner {
+        admin = newAdmin;
     }
 
     // The following modifier is used to check if the cities can be edited - they won't be editable only if a major problem occurs
@@ -311,10 +309,5 @@ contract Gameplay is Ownable {
     // The following function is called to restrict editing data on the blockchain
     function flipEditableState() public onlyOwner {
         editable = !editable;
-    }
-
-    // function that can change the Admin address in case a proble occurs - can be calles only by the owner
-    function changeAdmin(address newAdmin) external onlyOwner {
-        admin = newAdmin;
     }
 }

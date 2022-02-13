@@ -21205,7 +21205,7 @@
         2539
       ],
       "AggregatorV3Interface": [
-        4890
+        4861
       ],
       "CityContract": [
         3566
@@ -21250,7 +21250,7 @@
         104
       ],
       "PriceContract": [
-        4967
+        4938
       ],
       "SafeMath": [
         3186
@@ -21377,7 +21377,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 3567,
-        "sourceUnit": 4968,
+        "sourceUnit": 4939,
         "src": "562:29:18",
         "symbolAliases": [],
         "unitAlias": ""
@@ -21438,7 +21438,7 @@
               "id": 3206,
               "name": "PriceContract",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 4967,
+              "referencedDeclaration": 4938,
               "src": "885:13:18"
             },
             "id": 3207,
@@ -21453,7 +21453,7 @@
         "id": 3566,
         "linearizedBaseContracts": [
           3566,
-          4967,
+          4938,
           104,
           2184,
           2056,
@@ -21760,7 +21760,7 @@
                   "id": 3232,
                   "name": "PriceContract",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 4967,
+                  "referencedDeclaration": 4938,
                   "src": "1197:13:18"
                 },
                 "nodeType": "ModifierInvocation",
@@ -22665,7 +22665,7 @@
                             "name": "mintPriceMatic",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4966,
+                            "referencedDeclaration": 4937,
                             "src": "2496:14:18",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
@@ -25867,7 +25867,7 @@
         2539
       ],
       "AggregatorV3Interface": [
-        4890
+        4861
       ],
       "CityContract": [
         3566
@@ -25912,7 +25912,7 @@
         104
       ],
       "PriceContract": [
-        4967
+        4938
       ],
       "SafeMath": [
         3186
@@ -26039,7 +26039,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 3567,
-        "sourceUnit": 4968,
+        "sourceUnit": 4939,
         "src": "562:29:18",
         "symbolAliases": [],
         "unitAlias": ""
@@ -26100,7 +26100,7 @@
               "id": 3206,
               "name": "PriceContract",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 4967,
+              "referencedDeclaration": 4938,
               "src": "885:13:18"
             },
             "id": 3207,
@@ -26115,7 +26115,7 @@
         "id": 3566,
         "linearizedBaseContracts": [
           3566,
-          4967,
+          4938,
           104,
           2184,
           2056,
@@ -26422,7 +26422,7 @@
                   "id": 3232,
                   "name": "PriceContract",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 4967,
+                  "referencedDeclaration": 4938,
                   "src": "1197:13:18"
                 },
                 "nodeType": "ModifierInvocation",
@@ -27327,7 +27327,7 @@
                             "name": "mintPriceMatic",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 4966,
+                            "referencedDeclaration": 4937,
                             "src": "2496:14:18",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
@@ -30764,12 +30764,12 @@
         }
       },
       "links": {},
-      "address": "0x4C7B2ca5D1E807485457007eB29dE1c7c2293dDD",
-      "transactionHash": "0xec0927000bbd40e5168072a6e3027bb14a9fb15e0f3d1e2aec4ede317f54661c"
+      "address": "0xfFa54608A33A9B91ff4321E67cc0ad713852ed33",
+      "transactionHash": "0xc952da05ab3471b66d44b632e315525e709e1c029a2061484257b4f5e09e2dde"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-07T13:03:50.896Z",
+  "updatedAt": "2022-02-13T15:07:24.174Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

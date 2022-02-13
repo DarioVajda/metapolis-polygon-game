@@ -5,6 +5,8 @@ class Coordinate {
     }
 } // klasa koja sadrzi x i y koordinate, koristi se za polozaj gradjevina
 
+//#region BUILDINGS
+
 class Building {
     constructor(start, end, type, level) {
         this.start = start; // coordinate
@@ -13,14 +15,6 @@ class Building {
         this.level = level; // int koji oznacava level gradjevine
     }
 } // klasa koja opisuje jednu gradjevinu
-
-class SpecialBuilding {
-    constructor(start, end, type) {
-        this.start = start; // coordinate
-        this.end = end; // coordinate
-        this.type = type; // integer/string representing the special building
-    }
-}
 
 // _______________________________________________________________________________________________
 // tipovi gradjevina:
@@ -105,8 +99,46 @@ function initBuildingStats() {
 } // funkcija koja inicijalizuje polja u mapi
 initBuildingStats();
 
+//#endregion
+
+//#region SPECIAL BUILDINGS
+class SpecialBuilding {
+    constructor(start, end, type) {
+        this.start = start; // coordinate
+        this.end = end; // coordinate
+        this.type = type; // integer/string representing the special building
+    }
+}
+
+const specialTypes = {
+    Statue: "statue",
+    Fountain: "fountain"
+}
+
+const specialBuildingDimensions = new Map();
+function initSpecialBuildingDimensions() {
+    specialBuildingDimensions.set(specialTypes.Statue, [[1, 1]]);
+    specialBuildingDimensions.set(specialTypes.Fountain, [[1, 2], [2, 1]]);
+}
+initSpecialBuildingDimensions();
+
+const specialPrices = new Map();
+function initSpecialPrices() {
+    specialPrices.set(specialTypes.Statue, 100000);
+    specialPrices.set(specialTypes.Fountain, 80000);
+}
+initSpecialPrices();
+
+//#endregion
+
 exports.buildingTypes = buildingTypes;
 exports.buildingStats = buildingStats;
 exports.buildingDimensions = buildingDimensions;
+
+exports.specialTypes = specialTypes;
+exports.specialPrices = specialPrices;
+exports.specialBuildingDimensions = specialBuildingDimensions;
+
 exports.Building = Building;
+exports.SpecialBuilding = SpecialBuilding;
 exports.Coordinate = Coordinate;

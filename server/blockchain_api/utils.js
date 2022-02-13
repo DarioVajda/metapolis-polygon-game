@@ -1,8 +1,8 @@
-const buildingsModule = require('../gameplay/building');
-const { Building, Coordinate } = require('../gameplay/building_stats');
+const buildingsModule = require('../gameplay/building_stats');
+const { Building, SpecialBuilding, Coordinate } = require('../gameplay/building_stats');
 const dimensions = buildingsModule.buildingDimensions;
 
-//#region FORMAT CHECKING
+//#region FORMAT CHECKING 
 
 function contains(array, element) {
     let r = false;
@@ -94,7 +94,7 @@ function isSpecialBuildingFormat(obj) {
 
 //#endregion
 
-//#region CHECKING FOR OVERLAPS
+//#region CHECKING FOR OVERLAPS 
 
 function overlap(building1, building2) {
     if(
@@ -126,36 +126,36 @@ function doesOverlap(building, city) {
 
 //#endregion
 
-//#region FORMATING CITY DATA
+//#region FORMATING CITY DATA 
 
 function formatBuildingList(data) {
     let city = { buildings: [], specialBuildings: [] }
     for(let i = 0; i < data.numOfBuildings; i++) {
         city.buildings.push(new Building(
-            new Coordinate(data.startx[i], data.starty[i]),
-            new Coordinate(data.endx[i], data.endy[i]),
-            data.type[i],
-            data.level[i]
+            new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),
+            new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
+            data.buildingType[i], 0
+            // data.level[i]
         ));
     }
     for(let i = 0; i < data.numOfSpecialBuildings; i++) {
         city.specialBuildings.push(new SpecialBuilding(
-            new Coordinate(data.startx[i + numOfBuildings], data.starty[i + numOfBuildings]),
-            new Coordinate(data.endx[i + numOfBuildings], data.endy[i + numOfBuildings]),
-            data.specialTypes[i]
+            new Coordinate(data.startx[i + data.numOfBuildings.toNumber()].toNumber(), data.starty[i + data.numOfBuildings.toNumber()].toNumber()),
+            new Coordinate(data.endx[i + data.numOfBuildings.toNumber()].toNumber(), data.endy[i + data.numOfBuildings.toNumber()].toNumber()),
+            data.specialType[i]
         ));
     }
-    city.money = data.money;
-    city.income = data.income;
+    city.money = data.money.toNumber();
+    city.income = data.income.toNumber();
     city.owner = data.owner;
-    city.lastPay = data.lastPay;
+    city.lastPay = data.lastPay.toNumber();
 
     return city;
 }
 
 //#endregion
 
-//#region IS SAME BUILDING
+//#region IS SAME BUILDING 
 
 function isSameBuilding(building1, building2) {
     if(

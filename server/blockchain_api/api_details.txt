@@ -1,10 +1,22 @@
 get requests:
-    /buildings - returns the list of buildings
-    /money - returns money amount in format {value: x} (typeof x === 'number')
+    /cities/:id - returns the json metadata about the NFT
+    /cities/:id/image.jpg - returns the image of the NFT
+    /cities/:id/data - returns the data about the city from the smart contract
 
 post requests:
-    /buildings/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
-    /buildings/upgrade - {index: i} - i is the index of the building in the building list
+    /cities/:id/initialize - initializing the id-th city with random buildings
+    /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
+    /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type"}
+    /cities/:id/upgrade - {
+            index: i, // index in the building list array
+            data: {
+                start: {x: ..., y: ...},
+                end: {x: ..., y: ...},
+                type: "type",
+                level: 'l'
+            } // data about the building
+        }
+    /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
 
 
 BUGS:

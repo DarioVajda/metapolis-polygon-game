@@ -1,8 +1,11 @@
 const statsModule = require('../gameplay/building_stats');
 const types = statsModule.buildingTypes;
+const specialTypes = statsModule.specialTypes;
 const Building = statsModule.Building;
+const SpecialBuilding = statsModule.SpecialBuilding;
 const Coordinate = statsModule.Coordinate;
 const buildingDimensions = statsModule.buildingDimensions;
+const specialBuildingDimensions = statsModule.specialBuildingDimensions;
 const mapModule = require('../gameplay/map');
 const mapDimensions = mapModule.mapDimensions;
 
@@ -37,9 +40,10 @@ function randomPick(choises) {
 }
 // ________________________________________________________________________________________________
 // NUMBER OF BUILDINGS:
-function numOfBuildings(probabilities) {
+function numOfBuildings(probabilities, normal) {
     let num = [];
-    for(let i = 0; i < Object.values(types).length; i++) {
+    let n = (normal) ? Object.values(types).length : Object.values(specialTypes).length;
+    for(let i = 0; i < n; i++) {
         num.push(randomPick(probabilities[i]));
     }
 
@@ -69,7 +73,12 @@ function buildingValid(buildings, building) {
         building.end.y < 20
     ) {
         let valid = true;
-        buildings.forEach(element => {
+        buildings.normal.forEach(element => {
+            if(doOverlap(building, element)) {
+                valid = false;
+            }
+        });
+        buildings.special.forEach(element => {
             if(doOverlap(building, element)) {
                 valid = false;
             }
@@ -104,35 +113,39 @@ function calculateCoordinates(start, end, shape, direction) {
     }
 }
 
-function createBuilding(buildings, type) {
-    let building = new Building(new Coordinate(-1, -1), new Coordinate(-1, -1), type, 0);
+function createBuilding(buildings, type, normal) {
+    let building;
+    if(normal) building = new Building(new Coordinate(-1, -1), new Coordinate(-1, -1), type, 0);
+    else building = new SpecialBuilding(new Coordinate(-1, -1), new Coordinate(-1, -1), type);
 
     let start = new Coordinate(0, 0);
     let end = new Coordinate(0, 0);
 
+    let tempDimensions = (normal) ? buildingDimensions : specialBuildingDimensions;
 
     while(buildingValid(buildings, building) === false) {
         start.x = random(0, mapDimensions - 1);
         start.y = random(0, mapDimensions - 1);
 
-        let shape = random(0, buildingDimensions.get(type).length - 1);
+        let shape = random(0, tempDimensions.get(type).length - 1);
         let direction = random(0, 3);
         // shape odredjuje koji od oblika ce biti gradjevina ako ih postoji vise
         //direction odredjuje u kom ce smeru biti okrenuta zgrada, start koordinata moze da bude levo-gore(0), desno-gore(1), desno-dole(2) ili levo-dole(3)
         
-        calculateCoordinates(start, end, buildingDimensions.get(type)[shape], direction);
+        calculateCoordinates(start, end, tempDimensions.get(type)[shape], direction);
 
         building.start = start;
         building.end = end;
     } // generisu se random koordinate za levi gornji cosak gradjevine
 
-    buildings.push(building);
+    if(normal) buildings.normal.push(building);
+    else buildings.special.push(building);
 }
 
 //________________________________________________________________________________________________
 function generate() {
-    var buildings = [];
-    var probabilities = [
+    var buildings = {normal: [], special: []};
+    const probabilities = [
         [[1, 1]],
         [[1, 1]],
         [[0, 1]],
@@ -144,18 +157,28 @@ function generate() {
         [[1, 7], [2, 3]],
         [[0, 49], [1, 1]]
     ];
-    num = numOfBuildings(probabilities);
-
-    
+    let num = numOfBuildings(probabilities, true);
     for(let i = 0; i < num.length; i++) {
         while(num[i] > 0) {
-            createBuilding(buildings, Object.values(types)[i]);
+            createBuilding(buildings, Object.values(types)[i], true);
             num[i]--;
+        }
+    }
+
+    const specialProbabilities = [
+        [[1, 1]],
+        [[1, 9], [2, 1]]
+    ];
+    let specialNum = numOfBuildings(specialProbabilities, false);
+    for(let i = 0; i < specialNum.length; i++) {
+        while(specialNum[i] > 0) {
+            createBuilding(buildings, Object.values(specialTypes)[i], false);
+            specialNum[i]--;
         }
     }
     return buildings;
 }
 
-generate();
+// console.log(generate());
 
 exports.generateBuildings = generate;

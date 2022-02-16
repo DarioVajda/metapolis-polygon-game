@@ -219,6 +219,4 @@ app.post("/cities/:id/getincome", async (req, res) => {
 	res.send(receipt);
 }); // DONE
 
-// 10.2331
-
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

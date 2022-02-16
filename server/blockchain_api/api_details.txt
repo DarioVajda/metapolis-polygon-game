@@ -17,7 +17,3 @@ post requests:
             } // data about the building
         }
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
-
-
-BUGS:
- - kad se pozove funkcija za gradjenje, ne uzima se u obzir da se kod zgrada i parka cena mora pomnoziti sa dimenzijama onoga sto se gradi jer se u stats objektu cuvaju vrednost za po jedno polje zgrade/parka

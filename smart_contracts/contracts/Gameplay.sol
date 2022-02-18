@@ -226,6 +226,7 @@ contract Gameplay is Ownable {
         uint[] endx;
         uint[] endy;
         string[] buildingType;
+        uint[] level;
         string[] specialType;
         uint money;
         uint income;
@@ -241,16 +242,18 @@ contract Gameplay is Ownable {
         uint[] memory endx = new uint[](numOfBuildings + numOfSpecialBuildings);
         uint[] memory endy = new uint[](numOfBuildings + numOfSpecialBuildings);
         string[] memory buildingType = new string[](numOfBuildings);
+        uint[] memory level = new uint[](numOfBuildings);
         string[] memory specialType = new string[](numOfSpecialBuildings);
         uint money;
         uint income;
         uint lastPay;
-        for(uint i = 0; i < numOfBuildings; i++) {
+        for(uint i = 0; i < numOfBuildings; i++) {  
             startx[i] = city.buildingList[i].startx;
             starty[i] = city.buildingList[i].starty;
             endx[i] = city.buildingList[i].endx;
             endy[i] = city.buildingList[i].endy;
             buildingType[i] = typeToString[city.buildingList[i].buildingType];
+            level[i] = city.buildingList[i].level;
         }
         for(uint i = numOfBuildings; i < numOfSpecialBuildings + numOfBuildings; i++) {
             startx[i] = city.specialBuildingList[i-numOfBuildings].startx;
@@ -272,6 +275,7 @@ contract Gameplay is Ownable {
             endx: endx,
             endy: endy,
             buildingType: buildingType,
+            level: level,
             specialType: specialType,
             money: money,
             income: income,

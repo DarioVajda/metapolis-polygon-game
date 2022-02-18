@@ -9,6 +9,7 @@ const incomeModule = require('../gameplay/income');
 const generateModule = require('../rand_map/generate');
 const utils = require('./utils');
 
+//#region connecting to the blockchain
 const provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
 );
@@ -22,12 +23,43 @@ var contract = new ethers.Contract(
 	abi,
 	account
 );
+//#endregion
 
 const app = express();
 const port = 3000;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.get("/cities/:id", (req, res) => {
+	res.json({
+		name: `City #${req.params.id}`,
+        description: "This is an image of a city that it's owners built",
+        image: `http://localhost:3000/cities/${req.params.id}/image.jpg`, // this is going to be a different url
+        external_url: `https://docs.openzeppelin.com/contracts/4.x/erc721` // this is going to be something else
+    });
+}); // DONE (for now)
+
+app.get("/cities/:id/image.jpg", (req, res) => {
+	console.log(`/cities/${req.params.id}/city-image.jpg`);
+	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
+}); // DONE (for now)
+
+app.get("/cities/:id/data", async (req,res) => {
+	/* The response is an object with the following values
+	{
+        address owner,
+        Building[] buildings,
+		SpecialBuilding[] specialBuildings,
+        uint money,
+        uint income,
+        uint lastPay,
+    }
+	*/
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+	res.json(city);
+}); // not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
 
 app.post("/cities/:id/initialize", async (req, res) => {
 	let buildings = generateModule.generateBuildings();
@@ -63,8 +95,8 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	}
 
 	let map = mapModule.initializeMap(buildings.normal, mapModule.mapDimensions);
-    let people = peopleModule.countPeople(buildings.normal, map);
-    income = incomeModule.calculateIncome(people, buildings.normal);
+	let people = peopleModule.countPeople(buildings.normal, map);
+	income = incomeModule.calculateIncome(people, buildings.normal);
 
 	let tx = await contract.initializeCity(
 		owner,
@@ -84,41 +116,18 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	res.status(200).send(receipt);
 }); // DONE
 
-app.get("/cities/:id", (req, res) => {
-    res.json({
-        name: `City #${req.params.id}`,
-        description: "This is an image of a city that it's owners built",
-        image: `http://localhost:3000/cities/${req.params.id}/image.jpg`, // this is going to be a different url
-        external_url: `https://docs.openzeppelin.com/contracts/4.x/erc721` // this is going to be something else
-    });
-}); // DONE (for now)
-
-app.get("/cities/:id/image.jpg", (req, res) => {
-	console.log(`/cities/${req.params.id}/city-image.jpg`);
-	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
-}); // DONE (for now)
-
-app.get("/cities/:id/data", async (req,res) => {
-	/* The response is an object with the following values
-	{
-        address owner,
-        Building[] buildings,
-		SpecialBuilding[] specialBuildings,
-        uint money,
-        uint income,
-        uint lastPay,
-    }
-	*/
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
-	// console.log(city);
-	res.json(city);
-}); // DONE
-
 app.post("/cities/:id/build", async (req, res) => {
-	let building = req.body;
+	let building = req.body.building;
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
+
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signerAddr = ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
 	
 	let cost = buildingStats.buildingStats.get(building.type)[0].cost;
 	if(building.type === buildingStats.buildingTypes.Building || building.type === buildingStats.buildingTypes.Park) {
@@ -126,31 +135,31 @@ app.post("/cities/:id/build", async (req, res) => {
 	}
 	
 	if(utils.isBuildingFormat(building) === false) {
-		res.status(400).send("Bad format!");
+		return res.status(400).send("Bad format!");
 	}
-	else if(building.level !== 0) {
-		res.status(400).send("Building is not level 1!");
+	if(building.level !== 0) {
+		return res.status(400).send("Building is not level 1!");
 	}
-	else if(utils.doesOverlap(building, city)) {
-		res.status(400).send("Building overlaps!");
+	if(utils.doesOverlap(building, city)) {
+		return res.status(400).send("Building overlaps!");
 	}
-	else if(cost >= city.money) {
-		res.status(400).send("Not enough money to build!");
+	if(cost > city.money) {
+		return res.status(400).send("Not enough money to build!");
 	}
-	else {
-		let tx = await contract.addBuilding(
-			req.params.id,
-			cost,
-			building.start.x,
-			building.start.y,
-			building.end.x,
-			building.end.y,
-			building.type
-		);
-		let receipt = await tx.wait();
-		
-		res.status(200).send(receipt);
-	}
+	
+	let tx = await contract.addBuilding(
+		req.params.id,
+		cost,
+		building.start.x,
+		building.start.y,
+		building.end.x,
+		building.end.y,
+		building.type
+	);
+	let receipt = await tx.wait();
+	
+	res.status(200).send(receipt);
+	
 }); // DONE
 
 app.post("/cities/:id/buildspecial", async (req, res) => {
@@ -158,51 +167,71 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
 
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signerAddr = await ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
+
 	let cost = buildingStats.specialPrices[building.type];
 
 	if(utils.isSpecialBuildingFormat(building) == false) {
-		res.status(400).send("Bad format!");
+		return res.status(400).send("Bad format!");
 	}
-	else if(utils.doesOverlap(building, city)) {
-		res.status(400).send("Building overlaps!");
+	if(utils.doesOverlap(building, city)) {
+		return res.status(400).send("Building overlaps!");
 	}
-	else if(cost >= city.money) {
-		res.status(400).send("Not enough money to build!");
+	if(cost >= city.money) {
+		return res.status(400).send("Not enough money to build!");
 	}
-	else {
-		let tx = await contract.addSpecialBuilding(
-			req.params.id,
-			cost,
-			building.start.x,
-			building.start.y,
-			building.end.x,
-			building.end.y,
-			building.type
-		);
-		let receipt = await tx.wait();
-		
-		res.status(200).send(receipt);
-	}
+
+	let tx = await contract.addSpecialBuilding(
+		req.params.id,
+		cost,
+		building.start.x,
+		building.start.y,
+		building.end.x,
+		building.end.y,
+		building.type
+	);
+	let receipt = await tx.wait();
+	
+	res.status(200).send(receipt);
 }); // DONE
 
 app.post("/cities/:id/upgrade", async (req, res) => {
 	let index = req.body.index; // integer
-	let building = req.body.data; // 'Building' object
+	let building = req.body.building; // 'Building' object
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData).buildings;
 
-	let cost = buildingStats.buildingStats.get(building.type)[building.level]; // getting the cost of upgrading to the next level
+	if(city[index] === undefined) {
+		return res.status(400).send("Ivalid index")
+	}
+
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signerAddr = await ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
+
+	let cost = buildingStats.buildingStats.get(building.type)[building.level].cost; // getting the cost of upgrading to the next level
 	if(building.type === buildingStats.buildingTypes.Building || building.type === buildingStats.buildingTypes.Park) {
 		cost *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
 	}
 
 	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
-		let tx = await contract.upgradeBuiling(
+		let tx = await contract.upgradeBuilding(
 			req.params.id,
 			cost,
 			index
 		);
 		let receipt = await tx.wait();
+		console.log('nesto se desilo');
 
 		res.status(200).send(receipt);
 	}
@@ -213,7 +242,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 
 app.post("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
-	let tx = await contract.getIncome(req.params.id);
+	let tx = await contract.getIncome(req.params.id, {gasLimit: 1e6});
 	let receipt = await tx.wait();
 	console.log('Income received!');
 	res.send(receipt);

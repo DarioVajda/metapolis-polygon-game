@@ -111,17 +111,19 @@ function overlap(building1, building2) {
 }
 
 function doesOverlap(building, city) {
+    let r = false;
+
     city.buildings.forEach(element => {
         if(overlap(building, element)) {
-            return true;
+            r = true;
         }
     });
-    city.specialBuildings.forEach(elemet => {
+    city.specialBuildings.forEach(element => {
         if(overlap(building, element)) {
-            return true;
+            r = true;
         }
     });
-    return false;
+    return r;
 } // funkcija kao argument prima gradjevinu i citav grad
 
 //#endregion

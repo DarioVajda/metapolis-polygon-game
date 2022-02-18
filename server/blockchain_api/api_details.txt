@@ -1,15 +1,18 @@
-get requests:
+SERVER SE POKRECE SA: 'node /.../api.js' (... je relativna putanja do fajla iz pozicije u konzoli)
+    pokrece se na portu 3000
+
+GET requests:
     /cities/:id - returns the json metadata about the NFT
     /cities/:id/image.jpg - returns the image of the NFT
     /cities/:id/data - returns the data about the city from the smart contract
 
-post requests:
+POST requests:
     /cities/:id/initialize - initializing the id-th city with random buildings
-    /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
-    /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type"}
-    /cities/:id/upgrade - {
+    (*) /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
+    (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type"}
+    (*) /cities/:id/upgrade - {
             index: i, // index in the building list array
-            data: {
+            building: {
                 start: {x: ..., y: ...},
                 end: {x: ..., y: ...},
                 type: "type",
@@ -17,3 +20,24 @@ post requests:
             } // data about the building
         }
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
+
+NAPOMENA:
+    - Kod url-ova sa (*) treba da bude sledeceg oblika: 
+        {
+            navedeni podaci...,
+            signature: '0x... ovo je potpis koji se dobije od korisnika u frontendu',
+            message: 'ovo je potpisana poruka'
+        }
+    - Poruke uvek trebaju da budu drugacije, zato da se ne bi moglo primetiti neko ponavljanje, jer bi onda mogao bilo ko da posalje potpisanu poruku bez da poseduje potreban privatni kljuc.
+    - Primeri:
+        'upgrade at index 18 in city 555' - 18 je index u nizu gradjevina, a 555 je ID tog grada
+        'build 8. house in city 555' - gradi se 8. kuca (vec ih ima 7 u tom gradu)
+        (uopste ne mora da bude ovaj format, radice za bilo kakve poruke, samo treba obratiti paznju na to da se poruke ne ponavljaju)
+
+Kako dobiti potpis korisnika (ovo je primer, ne mora da bude TACNO ovako):
+    await window.ethereum.send("eth_requestAccounts");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(message);
+    const address = await signer.getAddress();
+		- important data from here are the { signer (address), message (string), signature (string/BN) }

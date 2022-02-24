@@ -26,10 +26,18 @@ var contract = new ethers.Contract(
 //#endregion
 
 const app = express();
-const port = 3000;
+const port = 8000;
+
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors(corsOptions))
 
 app.get("/cities/:id", (req, res) => {
 	res.json({

@@ -7,7 +7,7 @@ GET requests:
     /cities/:id/data - returns the data about the city from the smart contract
 
 POST requests:
-    /cities/:id/initialize - initializing the id-th city with random buildings
+    (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
     (*) /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
     (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type"}
     (*) /cities/:id/upgrade - {

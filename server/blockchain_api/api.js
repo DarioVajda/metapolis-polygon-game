@@ -70,11 +70,20 @@ app.get("/cities/:id/data", async (req,res) => {
 }); // not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
 
 app.post("/cities/:id/initialize", async (req, res) => {
-	let buildings = generateModule.generateBuildings();
 	if(req.body.address === undefined) {
 		res.status(400).send("Problem with the request");
 		return;
 	}
+
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signerAddr = ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
+
+	let buildings = generateModule.generateBuildings();
 	let owner = req.body.address;
 	let tokenId = req.params.id;
 	let numOfBuildings = buildings.normal.length;

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 const Leaderboard_list = () => {
 
   const [ cities, setCities ] = useState([]);
+  const [ expanded, setExpanded ] = useState(-1);
   var list = [];
   var element;
 
@@ -36,7 +37,7 @@ const Leaderboard_list = () => {
           {
             cities.map((element, index) => (
               <div key={index}>
-                <Leaderboard_item id={element.index} income={element.income} money={element.money} highestOffer={element.price} price={element.price} rank={index+1}/>
+                <Leaderboard_item id={element.index} city={element} rank={index+1} expanded={expanded===index} setExpanded={() => setExpanded(expanded===index?-1:index)}/>
               </div>
             ))
           }

@@ -3,16 +3,20 @@ pragma solidity ^0.8.11;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
+import "./CityContract.sol";
+
 // there are no checks if the request are valid or possible, it should be done in the backend.
 // maybe later it will be added here too, but for now it is not necessary since only the admin can call the functions
 
 contract Gameplay is Ownable {
 
-    constructor(address _admin) {
+    constructor(address _admin, address _nftContractAddress) {
         initStringToType();
         admin = _admin;
+        nftContractAddress = _nftContractAddress;
+        CityContract contr = CityContract(nftContractAddress);
+        contr.initGameplayContract(address(this));
     }
-
 
     enum BuildingTypes {
         Factory,
@@ -71,16 +75,19 @@ contract Gameplay is Ownable {
     struct City {
         mapping(uint => Building) buildingList;
         mapping(uint => SpecialBuilding) specialBuildingList;
+        bool created;
+        bool initialized;
         uint64 numOfBuildings;
         uint64 numOfSpecialBuildings;
         uint64 money;
         uint64 income;
         address owner;
         uint lastPay;
-    } // occupies ( 3 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
+    } // occupies ( 4 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
 
 
     address admin;
+    address nftContractAddress;
     bool editable = true;
     uint gameStart = 2000000000;
     uint payPeriod = 120; // 1 day = 86400
@@ -88,6 +95,15 @@ contract Gameplay is Ownable {
     mapping(uint => City) cities; // map (array) containing all the data about the City NFTs
     uint64 startingMoney = 100000; // the amount of in-game money everyone has right after minting
 
+    function created(uint tokenId, address addr) external {
+        cities[tokenId].owner = addr;
+        cities[tokenId].created = true;
+    }
+
+    function newOwner(uint tokenId, address _newOwner) public {
+        require(msg.sender == nftContractAddress, 'Has to be sent from the City Contract');
+        cities[tokenId].owner = _newOwner;
+    }
 
     /**
      * @dev Function used for minting new City NFTs
@@ -115,7 +131,9 @@ contract Gameplay is Ownable {
         string[] memory specialType,
         uint income
     ) external onlyAdmin isEditable {
-        require(cities[tokenId].owner == address(0), "City is already initialized");
+        require(cities[tokenId].created == true , "City is not created yet");
+        require(cities[tokenId].initialized == false , "City is already initialized");
+        require(cities[tokenId].owner == owner, "City is owner by someone else");
         
         City storage city = cities[tokenId];
         for(uint i = 0; i < numOfBuildings; i++) {
@@ -137,6 +155,7 @@ contract Gameplay is Ownable {
         city.income = uint64(income);
         city.money = startingMoney;
         city.owner = owner;
+        city.initialized = true;
         if(gameStart != 2000000000) city.lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
         else city.lastPay = 0;
     }
@@ -234,53 +253,39 @@ contract Gameplay is Ownable {
     } // this is a struct used for returning values from the blockchain
     function getCityData(uint tokenId) external view returns(CityRepresentation memory) {
         City storage city = cities[tokenId];
-        address owner = city.owner;
         uint numOfBuildings = city.numOfBuildings;
         uint numOfSpecialBuildings  = city.numOfSpecialBuildings;
-        uint[] memory startx = new uint[](numOfBuildings + numOfSpecialBuildings);
-        uint[] memory starty = new uint[](numOfBuildings + numOfSpecialBuildings);
-        uint[] memory endx = new uint[](numOfBuildings + numOfSpecialBuildings);
-        uint[] memory endy = new uint[](numOfBuildings + numOfSpecialBuildings);
-        string[] memory buildingType = new string[](numOfBuildings);
-        uint[] memory level = new uint[](numOfBuildings);
-        string[] memory specialType = new string[](numOfSpecialBuildings);
-        uint money;
-        uint income;
-        uint lastPay;
-        for(uint i = 0; i < numOfBuildings; i++) {  
-            startx[i] = city.buildingList[i].startx;
-            starty[i] = city.buildingList[i].starty;
-            endx[i] = city.buildingList[i].endx;
-            endy[i] = city.buildingList[i].endy;
-            buildingType[i] = typeToString[city.buildingList[i].buildingType];
-            level[i] = city.buildingList[i].level;
-        }
-        for(uint i = numOfBuildings; i < numOfSpecialBuildings + numOfBuildings; i++) {
-            startx[i] = city.specialBuildingList[i-numOfBuildings].startx;
-            starty[i] = city.specialBuildingList[i-numOfBuildings].starty;
-            endx[i] = city.specialBuildingList[i-numOfBuildings].endx;
-            endy[i] = city.specialBuildingList[i-numOfBuildings].endy;
-            specialType[i-numOfBuildings] = city.specialBuildingList[i-numOfBuildings].specialType;
-        }
-        income = city.income;
-        money = city.money;
-        if(gameStart == 2000000000) lastPay = gameStart;
-        else lastPay = city.lastPay - gameStart;
-        return CityRepresentation({
-            owner: owner,
+        CityRepresentation memory r = CityRepresentation({
+            owner: city.owner,
             numOfBuildings: numOfBuildings,
             numOfSpecialBuildings: numOfSpecialBuildings,
-            startx: startx,
-            starty: starty,
-            endx: endx,
-            endy: endy,
-            buildingType: buildingType,
-            level: level,
-            specialType: specialType,
-            money: money,
-            income: income,
-            lastPay: lastPay
+            startx: new uint[](numOfBuildings + numOfSpecialBuildings),
+            starty: new uint[](numOfBuildings + numOfSpecialBuildings),
+            endx: new uint[](numOfBuildings + numOfSpecialBuildings),
+            endy: new uint[](numOfBuildings + numOfSpecialBuildings),
+            buildingType: new string[](numOfBuildings),
+            level: new uint[](numOfBuildings),
+            specialType: new string[](numOfSpecialBuildings),
+            money: city.money,
+            income: city.income,
+            lastPay: (gameStart == 2000000000) ? gameStart : city.lastPay - gameStart
         });
+        for(uint i = 0; i < numOfBuildings; i++) {  
+            r.startx[i] = city.buildingList[i].startx;
+            r.starty[i] = city.buildingList[i].starty;
+            r.endx[i] = city.buildingList[i].endx;
+            r.endy[i] = city.buildingList[i].endy;
+            r.buildingType[i] = typeToString[city.buildingList[i].buildingType];
+            r.level[i] = city.buildingList[i].level;
+        }
+        for(uint i = numOfBuildings; i < numOfSpecialBuildings + numOfBuildings; i++) {
+            r.startx[i] = city.specialBuildingList[i-numOfBuildings].startx;
+            r.starty[i] = city.specialBuildingList[i-numOfBuildings].starty;
+            r.endx[i] = city.specialBuildingList[i-numOfBuildings].endx;
+            r.endy[i] = city.specialBuildingList[i-numOfBuildings].endy;
+            r.specialType[i-numOfBuildings] = city.specialBuildingList[i-numOfBuildings].specialType;
+        }
+        return r;
     } // returns a struct with all the data about the city with the 'tokenId' ID
 
     function getBlockchainTime() external view returns(uint) {

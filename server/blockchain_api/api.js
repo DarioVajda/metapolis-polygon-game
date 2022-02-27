@@ -15,7 +15,7 @@ const provider = new ethers.providers.JsonRpcProvider(
 );
 const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
 console.log(wallet);
-const contractAddress = '0x0d1164dC6716bcE774e88520a61437f6bfd9DfB7';
+const contractAddress = '0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466';
 const abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var contract = new ethers.Contract(
@@ -75,13 +75,18 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		return;
 	}
 
+	let cityData = await contract.getCityData(req.params.id);
+
 	let message = req.body.message;
 	let signature = req.body.signature;
 	let signer = cityData.owner; // this address could be also sent in the body of the request
 	let signerAddr = ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
+		console.log('The caller of this function must be the owner of the NFT');
+		console.log('The real owner is ', signer);
 		return res.status(400).send("The caller of this function must be the owner of the NFT");
 	}
+	console.log('Signature is correct');
 
 	let buildings = generateModule.generateBuildings();
 	let owner = req.body.address;
@@ -126,11 +131,18 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		endy,
 		buildingType,
 		specialType,
-		income
+		income,
+		{
+			gasLimit: 1e7
+		}
 	);
-	let receipt = await tx.wait();
-
-	res.status(200).send(receipt);
+	try {
+		let receipt = await tx.wait();
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		res.status(400).send(e);
+	}
 }); // DONE
 
 app.post("/cities/:id/build", async (req, res) => {

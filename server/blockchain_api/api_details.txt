@@ -40,4 +40,4 @@ Kako dobiti potpis korisnika (ovo je primer, ne mora da bude TACNO ovako):
     const signer = provider.getSigner();
     const signature = await signer.signMessage(message);
     const address = await signer.getAddress();
-		- important data from here are the { signer (address), message (string), signature (string/BN) }
+		- important data from here are the { signer (address), message (string), signature (hex string - 0x...) }

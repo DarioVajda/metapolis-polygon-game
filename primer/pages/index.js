@@ -10,8 +10,8 @@ import Gameplay from '../../smart_contracts/build/contracts/Gameplay.json'; // i
 import CityContract from '../../smart_contracts/build/contracts/CityContract.json'; // importuje se abi
 // abi je json koji objasnjava sta su argumenti svih funkcija u smart contractu i sta vracaju
 
-const cityContractAddress = '0xfFa54608A33A9B91ff4321E67cc0ad713852ed33'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
-const gameplayContractAddress = '0x0d1164dC6716bcE774e88520a61437f6bfd9DfB7'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
+const cityContractAddress = '0xD251a0b8000Af3262d917c3926Bc38823F1De32C'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
+const gameplayContractAddress = '0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
 
 export default function Home() {
 
@@ -82,7 +82,7 @@ export default function Home() {
   const flipSaleState = async () => {
     let tx = await cityContract.flipSaleState(); // poziva se funkcija sa smart contracta koja flipuje sale state
     let receipt = await tx.wait(); // ceka se da se dobije odgovor
-    console.log('Flip sale state reveipt:', receipt);
+    console.log('Flip sale state receipt:', receipt);
 
     let s = await cityContract.getSaleState(); // dobija se state iz smart contracta
     setSaleState(s); // setuje se sale state

@@ -12,11 +12,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./PriceContract.sol";
-
-/* TEST PRIMER: 
-city.safeMint(1, {value: web3.utils.toWei('0.1', 'ether'), from: accounts[1]})
-game.initializeCity(accounts[1], 0, 2, 0, [3, 4], [4, 5], [5, 6], [6, 7], ['house', 'office'], [], 125000)
-*/
+import "./Gameplay.sol";
 
 contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, PriceContract {
     using Counters for Counters.Counter;
@@ -25,8 +21,16 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Pr
     Counters.Counter private _tokenIdCounter; // counter representing the latest tokenId
 
     IERC20 public weth;
+    Gameplay gameplayContract;
+    bool gameplayContractInitialized = false;
     constructor(address _weth, address _maticPrice, address _ethPrice) ERC721("CityBuilders", "CTB") PriceContract(_ethPrice, _maticPrice) { 
         weth = IERC20(_weth);
+    }
+
+    function initGameplayContract(address _gameplay) external {
+        require(gameplayContractInitialized == false, 'Already initialized');
+        gameplayContract = Gameplay(_gameplay);
+        gameplayContractInitialized = true;
     }
     
     function _baseURI() internal pure override returns (string memory) {
@@ -80,6 +84,8 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Pr
             tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
 
+            gameplayContract.created(tokenId, msg.sender);
+
             _safeMint(msg.sender, tokenId);
             _setTokenURI(tokenId, Strings.toString(tokenId));
         }
@@ -116,6 +122,7 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Pr
 
     // The following functions are overrides required by Solidity.
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
+        gameplayContract.newOwner(tokenId, to);
         super._beforeTokenTransfer(from, to, tokenId);
     }
 

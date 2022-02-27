@@ -1,49 +1,29 @@
-Compiling your contracts...
-===========================
-> Compiling .\contracts\CityContract.sol
-> Compiling .\contracts\CityContract.sol
-> Compiling .\contracts\Gameplay.sol
-> Compiling .\contracts\Migrations.sol
-> Compiling .\contracts\PriceContract.sol
-> Compiling .\contracts\WethTest.sol
-> Artifacts written to C:\Users\Dario Vajda\OneDrive\Desktop\nft project\nft\smart_contracts\build\contracts
-> Compiled successfully using:
-   - solc: 0.8.11+commit.d7f03943.Emscripten.clang
-
-
-
-Starting migrations...
-======================
-> Network name:    'mumbai'
-> Network id:      80001
-> Block gas limit: 20000000 (0x1312d00)
-
-
 1_initial_migration.js
 ======================
 
    Replacing 'Migrations'
    ----------------------
-   > transaction hash:    0x9b2cd1734c9b3de089780db9e2136f793276a509c5a5b3cf221604dc766f912a
-   > Blocks: 3            Seconds: 4
-   > contract address:    0x6E285E7c3e070e91b7cbf1d88cc35BdbAD0b3667
-   > block number:        24893669
-   > block timestamp:     1644764790
+   > transaction hash:    0x663f25db6adf581d1f7c30c0249116d8892c8926adc3bea897ade39c1279e542
+   > Blocks: 2            Seconds: 8
+   > contract address:    0x952b9720031aA5ea199BDE6ec1BcBC7B60D0Be60
+   > block number:        25294237
+   > block timestamp:     1645911415
    > account:             0x764cDA7eccc6a94C157742e369b3533D15d047c0
-   > balance:             10.232488819301408772
+   > balance:             8.316944769819220147
    > gas used:            250142 (0x3d11e)
-   > gas price:           2.500000008 gwei
+   > gas price:           2.500000011 gwei
    > value sent:          0 ETH
-   > total cost:          0.000625355002001136 ETH
+   > total cost:          0.000625355002751562 ETH
 
    Pausing for 2 confirmations...
    ------------------------------
-   > confirmation number: 2 (block: 24893672)
+   > confirmation number: 1 (block: 25294238)
+   > confirmation number: 2 (block: 25294239)
 
    > Saving migration to chain.
    > Saving artifacts
    -------------------------------------
-   > Total cost:     0.000625355002001136 ETH
+   > Total cost:     0.000625355002751562 ETH
 
 
 2_city_contract.js
@@ -51,74 +31,68 @@ Starting migrations...
 
    Replacing 'Weth'
    ----------------
-   > transaction hash:    0x0229b5c1ed8e520f1c437a8df7d3a1c33caa81f2c0f028d1fcab3f270ccbb4d4
-   > Blocks: 2            Seconds: 4
-   > contract address:    0x4939F82d1a412A3ec3A550D3015B898E43634F6A
-   > block number:        24893680
-   > block timestamp:     1644764812
+   > transaction hash:    0xadad586bfb5bef029a5792b39e8933beaeb7a69ca9eb4d7e5dcdc37ef1eeee6a
+   > Blocks: 2            Seconds: 8
+   > contract address:    0x14Dfd909b2E77d2f52228822B1032DF5c2c48631
+   > block number:        25294242
+   > block timestamp:     1645911440
    > account:             0x764cDA7eccc6a94C157742e369b3533D15d047c0
-   > balance:             10.228433104288430484
-   > gas used:            1576373 (0x180db5)
-   > gas price:           2.500000008 gwei
+   > balance:             8.312889084802951494
+   > gas used:            1576361 (0x180da9)
+   > gas price:           2.50000001 gwei
    > value sent:          0 ETH
-   > total cost:          0.003940932512610984 ETH
+   > total cost:          0.00394090251576361 ETH
 
    Pausing for 2 confirmations...
    ------------------------------
-   > confirmation number: 3 (block: 24893684)
+   > confirmation number: 1 (block: 25294243)
+   > confirmation number: 2 (block: 25294244)
 
    Replacing 'CityContract'
    ------------------------
-   > transaction hash:    0xc952da05ab3471b66d44b632e315525e709e1c029a2061484257b4f5e09e2dde
-   > Blocks: 5            Seconds: 8
-   > contract address:    0xfFa54608A33A9B91ff4321E67cc0ad713852ed33
-   > block number:        24893687
-   > block timestamp:     1644764826
+   > transaction hash:    0xd8c5c99bfd18748b38bc5caa99b8d2a3feb3956417cf59d1245d653a9192d7d2
+   > Blocks: 2            Seconds: 8
+   > contract address:    0xD251a0b8000Af3262d917c3926Bc38823F1De32C
+   > block number:        25294246
+   > block timestamp:     1645911460
    > account:             0x764cDA7eccc6a94C157742e369b3533D15d047c0
-   > balance:             10.218068291755263084
-   > gas used:            4145925 (0x3f4305)
-   > gas price:           2.500000008 gwei
+   > balance:             8.302149587259993504
+   > gas used:            4295799 (0x418c77)
+   > gas price:           2.50000001 gwei
    > value sent:          0 ETH
-   > total cost:          0.0103648125331674 ETH
+   > total cost:          0.01073949754295799 ETH
 
    Pausing for 2 confirmations...
    ------------------------------
-   > confirmation number: 2 (block: 24893692)
-
-   > Saving migration to chain.
-   > Saving artifacts
-   -------------------------------------
-   > Total cost:     0.014305745045778384 ETH
-
-
-3_gameplay_contract.js
-======================
+   > confirmation number: 1 (block: 25294247)
+   > confirmation number: 2 (block: 25294248)
 
    Replacing 'Gameplay'
    --------------------
-   > transaction hash:    0x3b42933e828cd694197413a2de9598c8037d891394ae73bc8d3eb9c36868c639
-   > Blocks: 4            Seconds: 8
-   > contract address:    0x0d1164dC6716bcE774e88520a61437f6bfd9DfB7
-   > block number:        24893698
-   > block timestamp:     1644764852
+   > transaction hash:    0x7d50a8d3f15f047cec6c6ed8bfd5bcf337dbdb00e06902ab76f0ce0db4a5f983
+   > Blocks: 1            Seconds: 4
+   > contract address:    0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466
+   > block number:        25294250
+   > block timestamp:     1645911480
    > account:             0x764cDA7eccc6a94C157742e369b3533D15d047c0
-   > balance:             10.208789391725570604
-   > gas used:            3682747 (0x3831bb)
-   > gas price:           2.500000008 gwei
+   > balance:             8.292115527223870888
+   > gas used:            4013624 (0x3d3e38)
+   > gas price:           2.500000009 gwei
    > value sent:          0 ETH
-   > total cost:          0.009206867529461976 ETH
+   > total cost:          0.010034060036122616 ETH
 
    Pausing for 2 confirmations...
    ------------------------------
-   > confirmation number: 5 (block: 24893713)
+   > confirmation number: 1 (block: 25294251)
+   > confirmation number: 2 (block: 25294252)
 
    > Saving migration to chain.
    > Saving artifacts
    -------------------------------------
-   > Total cost:     0.009206867529461976 ETH
+   > Total cost:     0.024714460094844216 ETH
 
 
 Summary
 =======
 > Total deployments:   4
-> Final cost:          0.024137967577241496 ETH
+> Final cost:          0.025339815097595778 ETH

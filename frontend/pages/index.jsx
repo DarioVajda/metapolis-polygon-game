@@ -17,8 +17,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0xfFa54608A33A9B91ff4321E67cc0ad713852ed33';
-  const wethContractAddress = '0x4939F82d1a412A3ec3A550D3015B898E43634F6A';
+  const cityContractAddress = '0xD251a0b8000Af3262d917c3926Bc38823F1De32C';
+  const wethContractAddress = '0x14Dfd909b2E77d2f52228822B1032DF5c2c48631';
   
   async function initContracts() {
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
@@ -27,26 +27,6 @@ export default function Home() {
     cityContract = new ethers.Contract(cityContractAddress, CityContract.abi, signer); // povezivanje sa contractom za mintovanje i slicne stvari
     wethContract = new ethers.Contract(wethContractAddress, Weth.abi, signer);
   }
-  
-  const initCity = async () => {
-    let addr = await connectWallet();
-    let body = JSON.stringify({address: addr});
-    console.log(body);
-    const response = await fetch(`http://localhost:8000/cities/2/initialize`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer',
-      body: body
-    });
-    console.log(response);
-  };
 
   //#region Functions for minting the NFTs
 
@@ -103,6 +83,16 @@ export default function Home() {
     const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });
     return account;
   };
+
+  const mintERC20 = async () => {
+    const addr = await connectWallet();
+    const tx = await wethContract.mint(addr, ethers.utils.parseEther('1'));
+    const reciept = await tx.wait();
+    console.log(receipt);
+    var balance = await wethContract.balanceOf(addr);
+    balance = balance.toString();
+    console.log(balance);
+  }
 
   useEffect(() => {
     initContracts();

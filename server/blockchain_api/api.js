@@ -31,7 +31,7 @@ const port = 8000;
 const cors=require("cors");
 const corsOptions ={
    origin:'*', 
-   credentials:true,            //access-control-allow-credentials:true
+   credentials:true,
    optionSuccessStatus:200,
 }
 
@@ -138,9 +138,11 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	);
 	try {
 		let receipt = await tx.wait();
+		console.log(receipt);
 		res.status(200).send(receipt);
 	}
 	catch(e) {
+		console.log(e);
 		res.status(400).send(e);
 	}
 }); // DONE
@@ -185,7 +187,15 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.y,
 		building.type
 	);
-	let receipt = await tx.wait();
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+	}
 	
 	res.status(200).send(receipt);
 	
@@ -225,7 +235,15 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 		building.end.y,
 		building.type
 	);
-	let receipt = await tx.wait();
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+	}
 	
 	res.status(200).send(receipt);
 }); // DONE
@@ -259,7 +277,15 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 			cost,
 			index
 		);
-		let receipt = await tx.wait();
+		try {
+			let receipt = await tx.wait();
+			console.log(receipt);
+			res.status(200).send(receipt);
+		}
+		catch(e) {
+			console.log(e);
+			res.status(400).send(e);
+		}
 		console.log('nesto se desilo');
 
 		res.status(200).send(receipt);
@@ -272,7 +298,17 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 app.post("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
 	let tx = await contract.getIncome(req.params.id, {gasLimit: 1e6});
-	let receipt = await tx.wait();
+	
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+	}
+
 	console.log('Income received!');
 	res.send(receipt);
 }); // DONE

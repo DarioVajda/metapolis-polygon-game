@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 
 const Leaderboard_list = () => {
 
+  // trebam da promenim nacin ucitavanja gradova, to ne treba da se radi sve odjednom i onda tek da se sortira, mozda cak treba u smart contract-u da budu nekako sortirani, ne znam jos kako bih to uradio, ali treba nesto da se promeni jer bi ovako predugo trajalo da se ucita prvih 100 osoba jer ne znam ko je koji unapred...
+
   const [ cities, setCities ] = useState([]);
   const [ expanded, setExpanded ] = useState(-1);
   var list = [];

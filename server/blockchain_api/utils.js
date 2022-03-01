@@ -136,8 +136,8 @@ function formatBuildingList(data) {
         city.buildings.push(new Building(
             new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),
             new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
-            data.buildingType[i], 0
-            // data.level[i]
+            data.buildingType[i],
+            data.level[i]
         ));
     }
     for(let i = 0; i < data.numOfSpecialBuildings; i++) {

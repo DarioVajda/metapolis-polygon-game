@@ -9,6 +9,10 @@ const incomeModule = require('../gameplay/income');
 const generateModule = require('../rand_map/generate');
 const utils = require('./utils');
 
+// sifra za skolski metamast wallet: nftigrica
+// WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
+// patient pudding valid edit budget equal west pole canyon quality cannon toilet
+
 //#region connecting to the blockchain
 const provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'

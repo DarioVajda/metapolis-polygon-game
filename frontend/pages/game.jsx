@@ -6,7 +6,7 @@ import {ethers} from 'ethers'
 const Game = () => {
 
   const initCity = async () => {
-    let id = 0;
+    let id = 1;
     let message = `Initialize #${id} City NFT`;
 
     await window.ethereum.send("eth_requestAccounts");

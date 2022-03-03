@@ -33,6 +33,7 @@ const plotSize = gridDimensions/gridSize;
 //for mouse
 var raycaster = new THREE.Raycaster(); // create once
 var mouse = new THREE.Vector2(); // create once
+var intersected;
 
 
 // GRID //
@@ -40,7 +41,6 @@ var mouse = new THREE.Vector2(); // create once
 //  scene.add(gridHelper);
 
 // GRID SQUARES
-// const gridSquares = new THREE.Group();
 for (let i = 0; i < gridSize; i++) {
   for (let j = 0; j < gridSize; j++) {
     const plane= new THREE.PlaneGeometry(plotSize-1,plotSize-1);
@@ -54,8 +54,7 @@ for (let i = 0; i < gridSize; i++) {
     scene.add(gridSquare);
   }
 }
-// gridSquares.name="gridSquares";
-// scene.add(gridSquares);
+
 /*
 // ADDING HARDCODED BUILDINGS //
 buildingModule.buildingList.forEach(element => {
@@ -82,8 +81,46 @@ buildingModule.buildingList.forEach(element => {
   } );
 });
 */
-// BUILDING SYSTEM
-/////////////
+
+//*** */ BUILDING SYSTEM ***//
+//////////////////////////////
+// HOVER HIGHLIGHT
+document.addEventListener("mousemove", event=>{
+  event.preventDefault();
+  mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+  raycaster.setFromCamera( mouse, camera );
+
+  var intersects = raycaster.intersectObjects(scene.children);
+
+  // console.log(scene.children);
+  // console.log(intersects);
+
+  //pasted code from an example
+  if ( intersects.length > 0 ){
+    if (intersected != intersects[0].object) {
+      if (intersected) {
+        intersected.object.material.color.set(0xffff00);
+      }
+      intersected = intersects[0];
+      intersected.object.material.color.set(0xffffff);
+    }
+  } else {
+    if (intersected) {
+      intersected.object.material.color.set(0xffff00);
+    }
+    intersected = null;
+  }
+
+// {
+//   var hit=intersects[0];
+//   hit.object.material.color.set(0xffffff);
+// }
+},
+false );
+
+// L-CLICK - BUILD
 document.addEventListener(
   "click",
   event => {
@@ -103,14 +140,16 @@ document.addEventListener(
     console.log("x: ",hit.object.gridx);
     console.log("y: ",(hit.object.position.y));
     console.log("z: ",hit.object.gridy);
-    const geo = new THREE.SphereGeometry(5);
-    const mat = new THREE.MeshBasicMaterial({color:0x0000FF});
-    const sphere = new THREE.Mesh(geo,mat);
-    sphere.position.setX(intersects[0].point.x);
-    // sphere.position.setY(intersects[0].point.y);
-    sphere.position.setZ(intersects[0].point.z);
-    scene.add(sphere);
-    console.log("sphere added at ",intersects[0].point.x);
+
+    //sphere for debugging
+    // const geo = new THREE.SphereGeometry(5);
+    // const mat = new THREE.MeshBasicMaterial({color:0x0000FF});
+    // const sphere = new THREE.Mesh(geo,mat);
+    // sphere.position.setX(intersects[0].point.x);
+    // // sphere.position.setY(intersects[0].point.y);
+    // sphere.position.setZ(intersects[0].point.z);
+    // scene.add(sphere);
+    // console.log("sphere added at ",intersects[0].point.x);
 	}
   },
   false );

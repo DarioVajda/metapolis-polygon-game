@@ -26,7 +26,7 @@ function distanceFromStore(building, buildings) {
     var y;
     var storex;
     var storey;
-    buildings.forEach((element) => {
+    buildings.normal.forEach((element) => {
         if(element.type == buildingTypes.Store || element.type == buildingTypes.SuperMarket) {
             storex = (element.start.x + element.end.x) / 2,
             storey = (element.start.y + element.end.y) / 2,
@@ -55,7 +55,8 @@ function initializeMap(buildings, mapDimensions) {
         }
     } // inicijalizuje mapu
 
-    buildings.forEach((element) => {
+    console.log(buildings);
+    buildings.normal.forEach((element) => {
         switch(element.type) {
             case buildingTypes.House: // povecava se produktivnost ljudi u kucama
                 map[element.start.y][element.start.x].productivity *= buildingStats.get(element.type)[element.level].boost;
@@ -133,7 +134,7 @@ function initializeMap(buildings, mapDimensions) {
         }
     }
 
-    buildings.forEach((element) => {
+    buildings.normal.forEach((element) => {
         var storeNearby = false;
         for(let i = element.start.x; i <= element.end.x; i++) {
             for(let j = element.start.y; j <= element.end.y; j++) {

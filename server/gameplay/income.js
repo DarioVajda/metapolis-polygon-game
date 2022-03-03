@@ -102,7 +102,7 @@ function calculateIncome(peopleArg, buildings) {
     // racuna se zarada objekata koji donose novac (teretane i restorani)
     var buildingsIncome = 0;
     var numOfRestaurants = 0;
-    buildings.forEach((element) => {
+    buildings.normal.forEach((element) => {
         switch(element.type) {
             case buildingTypes.Gym:
                 buildingsIncome += gymIncome(element, buildings);

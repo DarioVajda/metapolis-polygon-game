@@ -84,41 +84,99 @@ buildingModule.buildingList.forEach(element => {
 
 //*** */ BUILDING SYSTEM ***//
 //////////////////////////////
+
+//_________________________________________________________________________________
+// Object following the mouse:
+const geo = new THREE.SphereGeometry(5);
+const mat = new THREE.MeshBasicMaterial({color:0x0000FF});
+const sphere = new THREE.Mesh(geo,mat);
+sphere.position.setX(0);
+sphere.position.setY(0);
+sphere.name = 'sphere';
+sphere.position.setZ(0);
+scene.add(sphere);
+var currCoordinate;
+var prevCoordinate;
+var moving = false;
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+function distance(a, b) {
+  // console.log((a.x-b.x)**2 + (a.z-b.z)**2);
+  return Math.sqrt((a.x-b.x)**2 + (a.z-b.z)**2);
+}
+
+function animateTo() {
+  if(!currCoordinate || !prevCoordinate) return;
+  let d = distance(currCoordinate.position, prevCoordinate.position);
+  // console.log('curr: ', currCoordinate, 'prev: ', prevCoordinate, 'd: ', d);
+
+  let r = distance(sphere.position, currCoordinate.position);
+
+  // console.log('ratio:', r / d);
+  // sad trebam da primenim neke jako kul i komplikovane formule...
+  let deltax = currCoordinate.position.x - sphere.position.x;
+  sphere.position.setX(sphere.position.x + deltax * 0.2);
+  let deltaz = currCoordinate.position.z - sphere.position.z;
+  sphere.position.setZ(sphere.position.z + deltaz * 0.2);
+
+  console.clear();
+  console.log('currCoordinate', currCoordinate.position);
+  console.log('prevCoordinate', prevCoordinate.position);
+  console.log('dir:', {x: deltax, z: deltaz});
+
+  delay(1000/60).then(() => {
+    let epsilon = 0.1;
+    if(Math.abs(sphere.position.x - currCoordinate.position.x) > epsilon || Math.abs(sphere.position.z - currCoordinate.position.z) > epsilon) animateTo();
+    else {
+      prevCoordinate = currCoordinate;
+      moving = false;
+    }
+  });
+}
+
 // HOVER HIGHLIGHT
-document.addEventListener("mousemove", event=>{
+document.addEventListener("mousemove", async event => {
   event.preventDefault();
   mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
   mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
   raycaster.setFromCamera( mouse, camera );
 
-  var intersects = raycaster.intersectObjects(scene.children);
-
-  // console.log(scene.children);
-  // console.log(intersects);
-
-  //pasted code from an example
-  if ( intersects.length > 0 ){
-    if (intersected != intersects[0].object) {
-      if (intersected) {
-        intersected.object.material.color.set(0xffff00);
-      }
-      intersected = intersects[0];
-      intersected.object.material.color.set(0xffffff);
+  let intersects = raycaster.intersectObjects(scene.children);
+  let obj = -1;
+  for (let i = 0; i < intersects.length; i++) {
+    if(intersects[i].object.name == 'gridSquare') {
+      obj = i;
     }
-  } else {
-    if (intersected) {
-      intersected.object.material.color.set(0xffff00);
-    }
-    intersected = null;
+  }
+  if(!intersects[obj]) return;
+  obj = intersects[obj].object;
+  if(
+    currCoordinate && 
+    obj.position.x === currCoordinate.position.x && 
+    obj.position.z === currCoordinate.position.z
+  ) {
+    return;
+  }
+  
+  currCoordinate = obj;
+  if(!prevCoordinate) {
+    prevCoordinate = currCoordinate;
+    console.log(currCoordinate.position);
+    sphere.position.setX(currCoordinate.position.x);
+    sphere.position.setZ(currCoordinate.position.z);
   }
 
-// {
-//   var hit=intersects[0];
-//   hit.object.material.color.set(0xffffff);
-// }
-},
-false );
+  if(!moving) {
+    moving = true;
+    animateTo();
+  }
+  // console.log(sphere.position);
+}, false);
+//_________________________________________________________________________________
 
 // L-CLICK - BUILD
 document.addEventListener(

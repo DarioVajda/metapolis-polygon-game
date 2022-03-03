@@ -25,7 +25,7 @@ function countPeople(buildings, map) {
 
     var productivity;
     var temp;
-    buildings.forEach((element) => {
+    buildings.normal.forEach((element) => {
         productivity = getproductivity(element, map);
         let tempNormalPeople = buildingStats.get(element.type)[element.level].normalPeople;
         let tempEducatedPeople = buildingStats.get(element.type)[element.level].educatedPeople;

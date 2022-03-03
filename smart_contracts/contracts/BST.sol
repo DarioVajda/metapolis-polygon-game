@@ -102,4 +102,19 @@ library BST {
         else if(value < nodes[root].value) return get(nodes, nodes[root].left, value, id);
         else return get(nodes, nodes[root].right, value, id);
     }
+
+    function minValueNode(mapping(uint => Node) storage nodes, uint root) internal returns(uint) {
+        if(nodes[root].left == 10000) {
+            return root;
+        }
+        else {
+            return minValueNode(nodes, nodes[root].left);
+        }
+    }
+
+    function deleteNode(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal returns(uint) {
+        if(nodes[root].value == value && nodes[root].id == id) {
+            
+        }
+    }
 }

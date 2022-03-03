@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MeshBasicMaterial } from 'three';
 import { SphereGeometry } from 'three';
 import { GUI } from 'dat.gui'
+import { Vector2 } from 'three';
 
 // MODEL LOADER //
 const loader = new GLTFLoader();
@@ -86,7 +87,13 @@ for (let i = 0; i < gridSize; i++) {
 
 //GUI ONCHANGE
 var hoverObject;
+var buildOffset=new Vector3(0,0,0);
+var offsetDimensions;
 buildFolder.__controllers[0].onChange(()=>{
+  offsetDimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
+  buildOffset=new Vector3(plotSize*(offsetDimensions[0][0]/2)-plotSize/2,0,plotSize*(offsetDimensions[0][1]/2)-plotSize/2);
+  console.log(buildOffset);
+
   scene.remove(hoverObject);
     loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
       const wholescene = gltf.scene;
@@ -126,18 +133,19 @@ function distance(a, b) {
   return Math.sqrt((a.x-b.x)**2 + (a.z-b.z)**2);
 }
 
+
 function animateTo() {
   if(!currCoordinate || !prevCoordinate) return;
-  let d = distance(currCoordinate.position, prevCoordinate.position);
+  let d = distance(currCoordinate.position+buildOffset, prevCoordinate.position+buildOffset);
   // console.log('curr: ', currCoordinate, 'prev: ', prevCoordinate, 'd: ', d);
 
-  let r = distance(hoverObject.position, currCoordinate.position);
+  let r = distance(hoverObject.position, currCoordinate.position+buildOffset);
 
   // console.log('ratio:', r / d);
   // sad trebam da primenim neke jako kul i komplikovane formule...
-  let deltax = currCoordinate.position.x - hoverObject.position.x;
+  let deltax = currCoordinate.position.x+buildOffset.x - hoverObject.position.x;
   hoverObject.position.setX(hoverObject.position.x + deltax * 0.2);
-  let deltaz = currCoordinate.position.z - hoverObject.position.z;
+  let deltaz = currCoordinate.position.z+buildOffset.z - hoverObject.position.z;
   hoverObject.position.setZ(hoverObject.position.z + deltaz * 0.2);
 
   // console.clear();
@@ -147,7 +155,7 @@ function animateTo() {
 
   delay(1000/60).then(() => {
     let epsilon = 0.1;
-    if(Math.abs(hoverObject.position.x - currCoordinate.position.x) > epsilon || Math.abs(hoverObject.position.z - currCoordinate.position.z) > epsilon) animateTo();
+    if(Math.abs(hoverObject.position.x - currCoordinate.position.x-buildOffset.x) > epsilon || Math.abs(hoverObject.position.z - currCoordinate.position.z-buildOffset.z) > epsilon) animateTo();
     else {
       prevCoordinate = currCoordinate;
       moving = false;
@@ -181,9 +189,10 @@ document.addEventListener("mousemove", async event => {
   }
   
   currCoordinate = obj;
+  // console.log(currCoordinate.position);
   if(!prevCoordinate) {
     prevCoordinate = currCoordinate;
-    // console.log(currCoordinate.position);
+    // console.log(currCoordinate);
     hoverObject.position.setX(currCoordinate.position.x);
     hoverObject.position.setZ(currCoordinate.position.z);
   }

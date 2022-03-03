@@ -18,13 +18,13 @@ class Building {
 
 // _______________________________________________________________________________________________
 // tipovi gradjevina:
-const buildingTypes = {
+const buildingTypes = { //zamenio sam ovde neki redosled jbg
+    House: 'house',
+    Building: 'building',
     Factory: 'factory',
     Office: 'office',
     Restaurant: 'restaurant',
     Parking: 'parking',
-    Building: 'building',
-    House: 'house',
     Store: 'store',
     SuperMarket: 'supermarket',
     Park: 'park',

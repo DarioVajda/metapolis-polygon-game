@@ -1,11 +1,14 @@
 import './style.css'
 import * as THREE from 'three';
 import * as buildingModule from './external/building';
+import * as statsModule from './external/building_stats';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MeshBasicMaterial } from 'three';
 import { SphereGeometry } from 'three';
+import { GUI } from 'dat.gui'
+
 // MODEL LOADER //
 const loader = new GLTFLoader();
 
@@ -35,6 +38,13 @@ var raycaster = new THREE.Raycaster(); // create once
 var mouse = new THREE.Vector2(); // create once
 var intersected;
 
+// GUI SETUP
+const datGui  = new GUI({ autoPlace: true });
+datGui.domElement.id = 'gui' ;
+var buildFolder = datGui.addFolder('Build');
+var guiType={type:0 };
+buildFolder.add(guiType,'type',0,2,1);
+buildFolder.open();
 
 // GRID //
 //  const gridHelper = new THREE.GridHelper(gridDimensions,gridSize);
@@ -99,18 +109,20 @@ document.addEventListener("mousemove", event=>{
 
   //pasted code from an example
   if ( intersects.length > 0 ){
-    if (intersected != intersects[0].object) {
-      if (intersected) {
-        intersected.object.material.color.set(0xffff00);
+    if(intersects[0].object.parent.parent == null){
+      if (intersected != intersects[0].object) {
+        if (intersected) {
+          intersected.object.material.color.set(0xffff00);
+        }
+        intersected = intersects[0];
+        intersected.object.material.color.set(0xffffff);
+      } else {
+        if (intersected) {
+          intersected.object.material.color.set(0xffff00);
+        }
+        intersected = null;
       }
-      intersected = intersects[0];
-      intersected.object.material.color.set(0xffffff);
     }
-  } else {
-    if (intersected) {
-      intersected.object.material.color.set(0xffff00);
-    }
-    intersected = null;
   }
 
 // {
@@ -137,9 +149,21 @@ document.addEventListener(
 	{
     var hit=intersects[0];
     console.log(hit.object.name);
-    console.log("x: ",hit.object.gridx);
-    console.log("y: ",(hit.object.position.y));
-    console.log("z: ",hit.object.gridy);
+    if(hit.object.parent.parent){
+      console.log("x: ",hit.object.parent.parent.gridx);
+      console.log("y: ",(hit.object.parent.parent.position.y));
+      console.log("z: ",hit.object.parent.parent.gridy);
+    }
+    else{
+      console.log("x: ",hit.object.gridx);
+      console.log("y: ",(hit.object.position.y));
+      console.log("z: ",hit.object.gridy);
+      var start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
+      var end = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
+      var buildType = Object.values(statsModule.buildingTypes)[guiType.type];
+      build(start,end,buildType);
+    }
+    
 
     //sphere for debugging
     // const geo = new THREE.SphereGeometry(5);
@@ -153,6 +177,35 @@ document.addEventListener(
 	}
   },
   false );
+
+  function build(start,end,type){
+    buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
+    sceneAdd(start,end,type,0);
+    console.log("built: ",type);
+  }
+
+  function sceneAdd(start,end,elementType,level){
+    loader.load( './models/' + elementType + '_placeholder.glb', function ( gltf ) {
+      const model = gltf.scene.children[0];
+  
+     
+      const posX = (end.x+start.x)/2;
+      const posY = (end.y+end.y)/2;
+
+      model.position.set(plotSize*posX-gridSize*plotSize/2+plotSize/2 , 0 , plotSize*posY-gridSize*plotSize/2-plotSize/2);
+      console.log(model.position);
+
+      model.scale.multiplyScalar(0.5);
+
+      gltf.scene.name=elementType;
+      gltf.scene.gridx=start.x;
+      gltf.scene.gridy=start.y;
+      gltf.scene.buildingType=elementType;
+      scene.add( gltf.scene );
+    }, undefined, function ( error ) {
+      console.error( error );
+    } );
+  }
 
 // LIGHTS //
 const ambientLight = new THREE.AmbientLight(0xFFFFFF,0.8);

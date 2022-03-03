@@ -5,6 +5,8 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 import "./CityContract.sol";
 
+import {BST} from "./BST.sol";
+
 // there are no checks if the request are valid or possible, it should be done in the backend.
 // maybe later it will be added here too, but for now it is not necessary since only the admin can call the functions
 
@@ -95,6 +97,10 @@ contract Gameplay is Ownable {
     mapping(uint => City) cities; // map (array) containing all the data about the City NFTs
     uint64 startingMoney = 100000; // the amount of in-game money everyone has right after minting
 
+    mapping(uint => BST.Node) leaderboard;
+    uint root = 10000;
+    uint id = 0;
+
     function created(uint tokenId, address addr) external {
         cities[tokenId].owner = addr;
         cities[tokenId].created = true;
@@ -158,6 +164,10 @@ contract Gameplay is Ownable {
         city.initialized = true;
         if(gameStart != 2000000000) city.lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
         else city.lastPay = 0;
+
+        BST.insert(leaderboard, root, income, id);
+
+        id++;
     }
     
     // ________________________________________________________________________

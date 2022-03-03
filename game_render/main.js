@@ -4,9 +4,11 @@ import * as buildingModule from './external/building';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
+import { MeshBasicMaterial } from 'three';
+import { SphereGeometry } from 'three';
 // MODEL LOADER //
 const loader = new GLTFLoader();
+
 
 // RENDER/CAMERA INITIALISATION //
 const renderer = new THREE.WebGLRenderer({
@@ -18,7 +20,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 // SETTING DEFAULT VALUES //
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth*0.8, window.innerHeight*0.8);
+renderer.setSize(window.innerWidth, window.innerHeight);
+// renderer.setSize(window.innerWidth*0.8, window.innerHeight*0.8);
 camera.position.setZ(120);
 // camera.position.setX(120);
 camera.position.setY(120);
@@ -27,11 +30,33 @@ const gridDimensions = 200;
 const gridSize = 20;
 const plotSize = gridDimensions/gridSize;
 
+//for mouse
+var raycaster = new THREE.Raycaster(); // create once
+var mouse = new THREE.Vector2(); // create once
+
 
 // GRID //
- const gridHelper = new THREE.GridHelper(gridDimensions,gridSize);
- scene.add(gridHelper);
+//  const gridHelper = new THREE.GridHelper(gridDimensions,gridSize);
+//  scene.add(gridHelper);
 
+// GRID SQUARES
+// const gridSquares = new THREE.Group();
+for (let i = 0; i < gridSize; i++) {
+  for (let j = 0; j < gridSize; j++) {
+    const plane= new THREE.PlaneGeometry(plotSize-1,plotSize-1);
+    const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+    const gridSquare = new THREE.Mesh( plane, material );
+    gridSquare.position.set(i*plotSize-gridSize/2*plotSize+plotSize/2,0,j*plotSize-gridSize/2*plotSize-plotSize/2);
+    gridSquare.rotateX(Math.PI/2);
+    gridSquare.name='gridSquare';
+    gridSquare.gridx=i;
+    gridSquare.gridy=j;
+    scene.add(gridSquare);
+  }
+}
+// gridSquares.name="gridSquares";
+// scene.add(gridSquares);
+/*
 // ADDING HARDCODED BUILDINGS //
 buildingModule.buildingList.forEach(element => {
 
@@ -56,6 +81,39 @@ buildingModule.buildingList.forEach(element => {
     console.error( error );
   } );
 });
+*/
+// BUILDING SYSTEM
+/////////////
+document.addEventListener(
+  "click",
+  event => {
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+    raycaster.setFromCamera( mouse, camera );
+
+    var intersects = raycaster.intersectObjects(scene.children);
+
+    // console.log(scene.children);
+    // console.log(intersects);
+    if ( intersects.length > 0 )
+	{
+    var hit=intersects[0];
+    console.log(hit.object.name);
+    console.log("x: ",hit.object.gridx);
+    console.log("y: ",(hit.object.position.y));
+    console.log("z: ",hit.object.gridy);
+    const geo = new THREE.SphereGeometry(5);
+    const mat = new THREE.MeshBasicMaterial({color:0x0000FF});
+    const sphere = new THREE.Mesh(geo,mat);
+    sphere.position.setX(intersects[0].point.x);
+    // sphere.position.setY(intersects[0].point.y);
+    sphere.position.setZ(intersects[0].point.z);
+    scene.add(sphere);
+    console.log("sphere added at ",intersects[0].point.x);
+	}
+  },
+  false );
 
 // LIGHTS //
 const ambientLight = new THREE.AmbientLight(0xFFFFFF,0.8);
@@ -76,5 +134,7 @@ scene.add(directionalLight);
 
   renderer.render(scene, camera,);
 }
+
+
 
 animate();

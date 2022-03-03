@@ -80,6 +80,81 @@ for (let i = 0; i < gridSize; i++) {
 
 //*** */ BUILDING SYSTEM ***//
 //////////////////////////////
+
+//_________________________________________________________________________________
+// Object following the mouse:
+
+//GUI ONCHANGE
+var hoverObject;
+buildFolder.__controllers[0].onChange(()=>{
+  scene.remove(hoverObject);
+    loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
+      const wholescene = gltf.scene;
+      hoverObject=wholescene;
+      wholescene.scale.multiplyScalar(0.5/3);
+
+      gltf.scene.name='hoverObject';
+      gltf.scene.buildingType=Object.values(statsModule.buildingTypes)[guiType.type];
+      scene.add( gltf.scene );
+    }, undefined, function ( error ) {
+      console.error( error );
+    } );
+})
+///// SAME FUNCTION BUT INITIALIZING
+loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
+  const wholescene = gltf.scene;
+  hoverObject=wholescene;
+  wholescene.scale.multiplyScalar(0.5/3);
+
+  gltf.scene.name='hoverObject';
+  gltf.scene.buildingType=Object.values(statsModule.buildingTypes)[guiType.type];
+  scene.add( gltf.scene );
+}, undefined, function ( error ) {
+  console.error( error );
+} );
+
+var currCoordinate;
+var prevCoordinate;
+var moving = false;
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+function distance(a, b) {
+  // console.log((a.x-b.x)**2 + (a.z-b.z)**2);
+  return Math.sqrt((a.x-b.x)**2 + (a.z-b.z)**2);
+}
+
+function animateTo() {
+  if(!currCoordinate || !prevCoordinate) return;
+  let d = distance(currCoordinate.position, prevCoordinate.position);
+  // console.log('curr: ', currCoordinate, 'prev: ', prevCoordinate, 'd: ', d);
+
+  let r = distance(hoverObject.position, currCoordinate.position);
+
+  // console.log('ratio:', r / d);
+  // sad trebam da primenim neke jako kul i komplikovane formule...
+  let deltax = currCoordinate.position.x - hoverObject.position.x;
+  hoverObject.position.setX(hoverObject.position.x + deltax * 0.2);
+  let deltaz = currCoordinate.position.z - hoverObject.position.z;
+  hoverObject.position.setZ(hoverObject.position.z + deltaz * 0.2);
+
+  // console.clear();
+  // console.log('currCoordinate', currCoordinate.position);
+  // console.log('prevCoordinate', prevCoordinate.position);
+  // console.log('dir:', {x: deltax, z: deltaz});
+
+  delay(1000/60).then(() => {
+    let epsilon = 0.1;
+    if(Math.abs(hoverObject.position.x - currCoordinate.position.x) > epsilon || Math.abs(hoverObject.position.z - currCoordinate.position.z) > epsilon) animateTo();
+    else {
+      prevCoordinate = currCoordinate;
+      moving = false;
+    }
+  });
+}
+
 // HOVER HIGHLIGHT
 document.addEventListener("mousemove", async event => {
   event.preventDefault();
@@ -88,27 +163,29 @@ document.addEventListener("mousemove", async event => {
 
   raycaster.setFromCamera( mouse, camera );
 
-  var intersects = raycaster.intersectObjects(scene.children);
-
-  // console.log(scene.children);
-  // console.log(intersects);
-
-  //pasted code from an example
-  if ( intersects.length > 0 ){
-    if(intersects[0].object.parent.parent == null){
-      if (intersected != intersects[0].object) {
-        if (intersected) {
-          intersected.object.material.color.set(0xcccccc);
-        }
-        intersected = intersects[0];
-        intersected.object.material.color.set(0x777777);
-      } else {
-        if (intersected) {
-          intersected.object.material.color.set(0xcccccc);
-        }
-        intersected = null;
-      }
+  let intersects = raycaster.intersectObjects(scene.children);
+  let obj = -1;
+  for (let i = 0; i < intersects.length; i++) {
+    if(intersects[i].object.name == 'gridSquare') {
+      obj = i;
     }
+  }
+  if(!intersects[obj]) return;
+  obj = intersects[obj].object;
+  if(
+    currCoordinate && 
+    obj.position.x === currCoordinate.position.x && 
+    obj.position.z === currCoordinate.position.z
+  ) {
+    return;
+  }
+  
+  currCoordinate = obj;
+  if(!prevCoordinate) {
+    prevCoordinate = currCoordinate;
+    // console.log(currCoordinate.position);
+    hoverObject.position.setX(currCoordinate.position.x);
+    hoverObject.position.setZ(currCoordinate.position.z);
   }
 
   if(!moving) {
@@ -128,49 +205,27 @@ document.addEventListener(
 
     raycaster.setFromCamera( mouse, camera );
 
-    var intersects = raycaster.intersectObjects(scene.children);
-
-    // console.log(scene.children);
-    // console.log(intersects);
-    if ( intersects.length > 0 )
-	{
-    var hit=intersects[0];
-    // console.log(hit.object.name);
-    if(hit.object.parent.parent){
-      // console.log("x: ",hit.object.parent.parent.gridx);
-      // console.log("y: ",(hit.object.parent.parent.position.y));
-      // console.log("z: ",hit.object.parent.parent.gridy);
+    let intersects = raycaster.intersectObjects(scene.children);
+    let obj = -1;
+    for (let i = 0; i < intersects.length; i++) {
+      if(intersects[i].object.name == 'gridSquare') {
+        obj = i;
+        console.log("hit");
+      }
     }
-    else{
-      // console.log("x: ",hit.object.gridx);
-      // console.log("y: ",(hit.object.position.y));
-      // console.log("z: ",hit.object.gridy);
-      var objectdimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
-      var start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
-      var end = new buildingModule.Coordinate(hit.object.gridx+objectdimensions[0][0]-1, hit.object.gridy+objectdimensions[0][1]-1);
-      // console.log(start,end);
-      var buildType = Object.values(statsModule.buildingTypes)[guiType.type];
-      build(start,end,buildType);
-    }
-    
-
-    //sphere for debugging
-    // const geo = new THREE.SphereGeometry(5);
-    // const mat = new THREE.MeshBasicMaterial({color:0x0000FF});
-    // const sphere = new THREE.Mesh(geo,mat);
-    // sphere.position.setX(intersects[0].point.x);
-    // // sphere.position.setY(intersects[0].point.y);
-    // sphere.position.setZ(intersects[0].point.z);
-    // scene.add(sphere);
-    // console.log("sphere added at ",intersects[0].point.x);
-	}
-  },
+    if(!intersects[obj]) return;
+    var hit=intersects[obj];
+    var objectdimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
+    var start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
+    var end = new buildingModule.Coordinate(hit.object.gridx+objectdimensions[0][0]-1, hit.object.gridy+objectdimensions[0][1]-1);
+    var buildType = Object.values(statsModule.buildingTypes)[guiType.type];
+    build(start,end,buildType);
+	},
   false );
 
   function build(start,end,type){
     buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
     sceneAdd(start,end,type,0);
-    console.log(buildingModule.getBuildings());
     // console.log("built: ",type);
   }
 
@@ -182,8 +237,6 @@ document.addEventListener(
       const posX = (end.x+start.x)/2;
       // console.log(start.x,end.x)
       const posY = (end.y+start.y)/2;
-      
-      wholescene.rotateY(Math.PI);
 
       wholescene.position.set(plotSize*posX-gridSize*plotSize/2+plotSize/2 , 0 , plotSize*posY-gridSize*plotSize/2-plotSize/2);
       // console.log(model.position);

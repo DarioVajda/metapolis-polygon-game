@@ -134,11 +134,11 @@ document.addEventListener(
     if ( intersects.length > 0 )
 	{
     var hit=intersects[0];
-    console.log(hit.object.name);
+    // console.log(hit.object.name);
     if(hit.object.parent.parent){
-      console.log("x: ",hit.object.parent.parent.gridx);
-      console.log("y: ",(hit.object.parent.parent.position.y));
-      console.log("z: ",hit.object.parent.parent.gridy);
+      // console.log("x: ",hit.object.parent.parent.gridx);
+      // console.log("y: ",(hit.object.parent.parent.position.y));
+      // console.log("z: ",hit.object.parent.parent.gridy);
     }
     else{
       // console.log("x: ",hit.object.gridx);
@@ -147,7 +147,7 @@ document.addEventListener(
       var objectdimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
       var start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
       var end = new buildingModule.Coordinate(hit.object.gridx+objectdimensions[0][0]-1, hit.object.gridy+objectdimensions[0][1]-1);
-      console.log(start,end);
+      // console.log(start,end);
       var buildType = Object.values(statsModule.buildingTypes)[guiType.type];
       build(start,end,buildType);
     }
@@ -169,6 +169,7 @@ document.addEventListener(
   function build(start,end,type){
     buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
     sceneAdd(start,end,type,0);
+    console.log(buildingModule.getBuildings());
     // console.log("built: ",type);
   }
 
@@ -180,6 +181,8 @@ document.addEventListener(
       const posX = (end.x+start.x)/2;
       // console.log(start.x,end.x)
       const posY = (end.y+start.y)/2;
+      
+      wholescene.rotateY(Math.PI);
 
       wholescene.position.set(plotSize*posX-gridSize*plotSize/2+plotSize/2 , 0 , plotSize*posY-gridSize*plotSize/2-plotSize/2);
       // console.log(model.position);

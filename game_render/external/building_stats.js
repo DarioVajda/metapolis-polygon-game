@@ -48,7 +48,7 @@ function initBuildingDimensions() {
     buildingDimensions.set(buildingTypes.Office, [[2, 2]]);
     buildingDimensions.set(buildingTypes.Restaurant, [[2, 1], [1, 2]]);
     buildingDimensions.set(buildingTypes.Parking, dimensionsRange(2, 4));
-    buildingDimensions.set(buildingTypes.Building, [[3, 3], [3, 1], [2, 2]]);
+    buildingDimensions.set(buildingTypes.Building, [[2, 2], [3, 1], [1,3]]);
     buildingDimensions.set(buildingTypes.House, [[1, 1]]);
     buildingDimensions.set(buildingTypes.Store, [[1, 1]]);
     buildingDimensions.set(buildingTypes.SuperMarket, [[2, 2]]);

@@ -27,7 +27,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 // renderer.setSize(window.innerWidth*0.8, window.innerHeight*0.8);
-camera.position.setX(-120);
+camera.position.setX(120);
 // camera.position.setX(120);
 camera.position.setY(120);
 camera.lookAt(0,0,0);            //points camera at (0,0,0)
@@ -35,34 +35,34 @@ const gridDimensions = 100;
 const gridSize = 10;
 const plotSize = gridDimensions/gridSize;
 
+//SETTING UP RENDERER SHADOWS
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+
 //for mouse
-var raycaster = new THREE.Raycaster(); // create once
-var mouse = new THREE.Vector2(); // create once
-var intersected;
+let raycaster = new THREE.Raycaster(); // create once
+let mouse = new THREE.Vector2(); // create once
+let intersected;
 
 // GUI SETUP
 const datGui  = new GUI({ autoPlace: true });
 datGui.domElement.id = 'gui' ;
-var buildFolder = datGui.addFolder('Build');
-var guiType={type:0 };  
+let buildFolder = datGui.addFolder('Build');
+let guiType={type:0 };  
 buildFolder.add(guiType,'type',0,2,1);
 buildFolder.open();
 
 // LANDSCAPE MODEL
 loader.load( './models/valley_lanscape2.glb', function ( gltf ) {
   gltf.scene.name='landscape';
-  gltf.scene.position.set(20,-23,-22);
-  gltf.scene.rotateY(Math.PI)
+  gltf.scene.position.set(-20,-23,2);
+  // gltf.scene.rotateY(Math.PI)
   gltf.scene.scale.multiplyScalar(120);
   scene.add( gltf.scene );
 }, undefined, function ( error ) {
   console.error( error );
 } );
-
-
-// GRID //
-//  const gridHelper = new THREE.GridHelper(gridDimensions,gridSize);
-//  scene.add(gridHelper);
 
 // GRID SQUARES
 for (let i = 0; i < gridSize; i++) {
@@ -86,26 +86,32 @@ for (let i = 0; i < gridSize; i++) {
 // Object following the mouse:
 
 //GUI ONCHANGE
-var hoverObject;
-var buildOffset=new Vector3(0,0,0);
-var offsetDimensions;
+let hoverObject;
+let buildOffset=new Vector3(0,0,0);
+let offsetDimensions;
+let change=1;  //to fix some weird bug where it spawns a lot of objects on holding gui
 buildFolder.__controllers[0].onChange(()=>{
-  offsetDimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
-  buildOffset=new Vector3(plotSize*(offsetDimensions[0][0]/2)-plotSize/2,0,plotSize*(offsetDimensions[0][1]/2)-plotSize/2);
-  console.log(buildOffset);
+  if(change)
+  {
+    change=0;
+    offsetDimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
+    buildOffset=new Vector3(plotSize*(offsetDimensions[0][0]/2)-plotSize/2,0,plotSize*(offsetDimensions[0][1]/2)-plotSize/2);
+    // console.log(buildOffset);
 
-  scene.remove(hoverObject);
-    loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
-      const wholescene = gltf.scene;
-      hoverObject=wholescene;
-      wholescene.scale.multiplyScalar(0.5/3);
+    scene.remove(hoverObject);
+      loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
+        const wholescene = gltf.scene;
+        hoverObject=wholescene;
+        wholescene.scale.multiplyScalar(0.5/3);
 
-      gltf.scene.name='hoverObject';
-      gltf.scene.buildingType=Object.values(statsModule.buildingTypes)[guiType.type];
-      scene.add( gltf.scene );
-    }, undefined, function ( error ) {
-      console.error( error );
-    } );
+        gltf.scene.name='hoverObject';
+        gltf.scene.buildingType=Object.values(statsModule.buildingTypes)[guiType.type];
+        scene.add( gltf.scene );
+        change=1;
+      }, undefined, function ( error ) {
+        console.error( error );
+      } );
+  }
 })
 ///// SAME FUNCTION BUT INITIALIZING
 loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type] + '_placeholder.glb', function ( gltf ) {
@@ -120,9 +126,9 @@ loader.load( './models/' + Object.values(statsModule.buildingTypes)[guiType.type
   console.error( error );
 } );
 
-var currCoordinate;
-var prevCoordinate;
-var moving = false;
+let currCoordinate;
+let prevCoordinate;
+let moving = false;
 
 function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -219,22 +225,44 @@ document.addEventListener(
     for (let i = 0; i < intersects.length; i++) {
       if(intersects[i].object.name == 'gridSquare') {
         obj = i;
-        console.log("hit");
+        // console.log("hit");
       }
     }
     if(!intersects[obj]) return;
-    var hit=intersects[obj];
-    var objectdimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
-    var start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
-    var end = new buildingModule.Coordinate(hit.object.gridx+objectdimensions[0][0]-1, hit.object.gridy+objectdimensions[0][1]-1);
-    var buildType = Object.values(statsModule.buildingTypes)[guiType.type];
+    let hit=intersects[obj];
+    let objectdimensions = statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
+    let start = new buildingModule.Coordinate(hit.object.gridx, hit.object.gridy);
+    let end = new buildingModule.Coordinate(hit.object.gridx+objectdimensions[0][0]-1, hit.object.gridy+objectdimensions[0][1]-1);
+    let buildType = Object.values(statsModule.buildingTypes)[guiType.type];
     build(start,end,buildType);
 	},
   false );
 
   function build(start,end,type){
-    buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
-    sceneAdd(start,end,type,0);
+    let occupied=find(start,end);
+    if(occupied===undefined)
+    {
+      buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
+      sceneAdd(start,end,type,0);
+    }
+    else /// COOL COLOR CUBE TO RED AND BACK
+    {
+      const posX = (end.x+start.x)/2;
+      const posY = (end.y+start.y)/2;
+
+      let cubedimensions =statsModule.buildingDimensions.get(Object.values(statsModule.buildingTypes)[guiType.type]);
+      let cube=new THREE.BoxGeometry(plotSize*cubedimensions[0][0],plotSize*(cubedimensions[0][0]>cubedimensions[0][1]?cubedimensions[0][0]:cubedimensions[0][1]),plotSize*cubedimensions[0][1],1,1,1);
+      let cubemat = new THREE.MeshBasicMaterial({color: 0xcc5555,opacity:0.5,transparent:true, side: THREE.DoubleSide})
+      let errorCube= new THREE.Mesh(cube,cubemat);
+      errorCube.position.set(plotSize*posX-gridSize*plotSize/2+plotSize/2 , errorCube.geometry.parameters.height/2, plotSize*posY-gridSize*plotSize/2-plotSize/2);
+      scene.add(errorCube);
+      delay(1000).then(() => {
+        scene.remove(errorCube);
+        console.log("back");
+      });
+    }
+    
+    // console.log(buildingModule.buildingList);
     // console.log("built: ",type);
   }
 
@@ -262,11 +290,28 @@ document.addEventListener(
     } );
 }
 
+/// FUNCTION TO FIND A BUILDING, IF IT EXISTS --- RETURNS UNDEFINED IF DOESNT EXIST
+function find(start,end) {
+  var found=undefined;
+  buildingModule.buildingList.forEach(element => {
+    for (let i = start.x; i <= end.x; i++) {
+      for(let j = start.y; j<=end.y;j++){
+      // console.log(i,j)
+        // console.log(i-element.start.x>=0, element.end.x-i>=0, j-element.start.y>=0, element.end.y-j>=0)
+        if(i-element.start.x>=0 && element.end.x-i>=0 && j-element.start.y>=0 && element.end.y-j>=0){
+          found=element;
+        }
+      }
+    }
+  })
+  return found;
+}
+
 // LIGHTS //
 const ambientLight = new THREE.AmbientLight(0xFFFFFF,0.8);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xFFFFFF,0.8);
+const directionalLight = new THREE.DirectionalLight(0xF3FFE3,1);
 directionalLight.position.set(100,300,100);
 directionalLight.lookAt(0,0,0);
 scene.add(directionalLight);

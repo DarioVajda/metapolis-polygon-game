@@ -55,7 +55,7 @@ class Building {
 }
 
 // primer gradjevina: za testiranje: (kasnije ce se ovo ucitavati iz backenda)
-var buildingList = [
+let buildingList = [
     // // Factories (4):
     // new Building(new Coordinate(1, 3), new Coordinate(2, 6), buildingTypes.Factory[0]),
     // new Building(new Coordinate(13, 4), new Coordinate(14, 7), buildingTypes.Factory[0]),
@@ -141,8 +141,8 @@ function addBuilding(building) {
 } // adds building to the list, later it will change some data in the backend
 
 function upgradeBuilding(index) {
-    var upgrades = Object.values(buildingTypes);
-    var found = {i: -1, j: -1};
+    let upgrades = Object.values(buildingTypes);
+    let found = {i: -1, j: -1};
     upgrades.forEach((type, i) => {
         type.forEach((upgrade, j) => {
             if(upgrade === buildingList[index].type) {

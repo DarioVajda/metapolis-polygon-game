@@ -238,13 +238,40 @@ document.addEventListener(
 	},
   false );
 
+// R-CLICK - DEMOLISH
+document.addEventListener(
+  "mousedown",
+  event => {
+    if(event.button===2)
+    {
+      mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+      mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+      raycaster.setFromCamera( mouse, camera );
+
+      let intersects = raycaster.intersectObjects(scene.children);
+      let obj = -1;
+      for (let i = 0; i < intersects.length; i++) {
+        if(intersects[i].object.name == 'gridSquare') {
+          obj = i;
+          // console.log("hit");
+        }
+      }
+      if(!intersects[obj]) return;
+      let hit=intersects[obj];
+      demolish(hit.object.gridx,hit.object.gridy);
+  }
+  },
+  false );
+
+
   function build(start,end,type){
     let occupied=find(start,end);
-    if(occupied===undefined)
+    if(!(start.x<0 || end.x>=gridSize || start.y<0 || end.y>=gridSize) && occupied===undefined)
     {
       buildingModule.addBuilding(new buildingModule.Building(start, end, type, 0));
       sceneAdd(start,end,type,0);
-    }
+    } 
     else /// COOL COLOR CUBE TO RED AND BACK
     {
       const posX = (end.x+start.x)/2;
@@ -258,12 +285,31 @@ document.addEventListener(
       scene.add(errorCube);
       delay(1000).then(() => {
         scene.remove(errorCube);
-        console.log("back");
       });
     }
     
     // console.log(buildingModule.buildingList);
     // console.log("built: ",type);
+  }
+
+  /// FUNCTION  TO REMOVE A BUILDING IN THE MAP
+  function demolish(x,y)
+  {
+    let occupied=find(new buildingModule.Coordinate(x,y),new buildingModule.Coordinate(x,y))
+    if(!(occupied===undefined)) //IF OCCUPIED
+    {
+      scene.children.forEach(element => {
+        if(element.gridx)
+        {
+          if(element.gridx==occupied.start.x && element.gridy==occupied.start.y && element.name!='gridSquare')
+          {
+            scene.remove(element);
+          }
+        }
+      });
+      buildingModule.buildingList.splice(buildingModule.buildingList.findIndex(element => element==occupied),1);
+    }
+
   }
 
   function sceneAdd(start,end,elementType,level){
@@ -293,10 +339,10 @@ document.addEventListener(
 /// FUNCTION TO FIND A BUILDING, IF IT EXISTS --- RETURNS UNDEFINED IF DOESNT EXIST
 function find(start,end) {
   var found=undefined;
+
   buildingModule.buildingList.forEach(element => {
     for (let i = start.x; i <= end.x; i++) {
       for(let j = start.y; j<=end.y;j++){
-      // console.log(i,j)
         // console.log(i-element.start.x>=0, element.end.x-i>=0, j-element.start.y>=0, element.end.y-j>=0)
         if(i-element.start.x>=0 && element.end.x-i>=0 && j-element.start.y>=0 && element.end.y-j>=0){
           found=element;

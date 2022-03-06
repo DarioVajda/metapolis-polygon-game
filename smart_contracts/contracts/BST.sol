@@ -55,66 +55,102 @@ library BST {
         else return(right - left, false);
     }
 
-    function insert(mapping(uint => Node) storage nodes, uint node, uint value, uint id) internal returns(uint) {
-        if(node == 10000) {
+    function insert(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal returns(uint) {
+        if(root == 10000) {
             nodes[id] = Node({value: value, id: id, left: 10000, right: 10000, height: 1});
             return id;
         }
 
-        if(value <= nodes[node].value) {
-            nodes[node].left = insert(nodes, nodes[node].left, value, id);
+        if(value <= nodes[root].value) {
+            nodes[root].left = insert(nodes, nodes[root].left, value, id);
         }
         else {
-            nodes[node].right = insert(nodes, nodes[node].right, value, id);
+            nodes[root].right = insert(nodes, nodes[root].right, value, id);
         }
 
-        nodes[node].height = height(nodes, node);
+        nodes[root].height = height(nodes, root);
 
-        (uint balance, bool positive) = getBalance(nodes, node);
+        (uint balance, bool positive) = getBalance(nodes, root);
 
-        if(balance > 1 && positive && value <= nodes[nodes[node].left].value) {
-            return rightRotate(nodes, node);
+        if(balance > 1 && positive && value <= nodes[nodes[root].left].value) {
+            return rightRotate(nodes, root);
         }
 
-        if(balance > 1 && !positive && value > nodes[nodes[node].right].value) {
-            return leftRotate(nodes, node);
+        if(balance > 1 && !positive && value > nodes[nodes[root].right].value) {
+            return leftRotate(nodes, root);
         }
 
-        if(balance > 1 && positive && value > nodes[nodes[node].left].value) {
-            nodes[node].left = leftRotate(nodes, nodes[node].left);
-            return rightRotate(nodes, node);
+        if(balance > 1 && positive && value > nodes[nodes[root].left].value) {
+            nodes[root].left = leftRotate(nodes, nodes[root].left);
+            return rightRotate(nodes, root);
         }
 
-        if(balance > 1 && !positive && value <= nodes[nodes[node].right].value) {
-            nodes[node].right = rightRotate(nodes, nodes[node].right);
-            return leftRotate(nodes, node);
+        if(balance > 1 && !positive && value <= nodes[nodes[root].right].value) {
+            nodes[root].right = rightRotate(nodes, nodes[root].right);
+            return leftRotate(nodes, root);
         }
 
-        return node;
+        return root;
     }
 
-    function remove(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal {
-        // ovde treba da se implementira funkcija za brisanje cvora iz stabla
+    function minNode(mapping(uint => Node) storage nodes, uint root)internal returns(uint) {
+        if(nodes[root].left == 10000) return nodes[root].value;
+        else return minNode(nodes, nodes[root].left);
+    }
+
+    function remove(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal returns(uint) {
+        if(root == 10000) return root;
+        
+        if(value <= nodes[root].value && id != nodes[root].id) {
+            nodes[root].left = remove(nodes, nodes[root].left, value, id);
+        }
+        else if(value > nodes[root].value) {
+            nodes[root].right = remove(nodes, nodes[root].right, value, id);
+        }
+        else {
+            if(nodes[root].left == 10000 || nodes[root].right == 10000) {
+                uint temp = (nodes[root].left == 10000) ? nodes[root].right : nodes[root].left;
+                nodes[root] = Node({value: 0, id: 0, left: 0, right: 0, height: 0});
+                return temp;
+            }
+            else {
+                uint temp = minNode(nodes, nodes[root].right);
+                nodes[root] = nodes[temp];
+                // nodes[root].right = remove(nodes, nodes[root].right, nodes[temp].value, nodes[temp].id);
+                nodes[temp] = Node({value: 0, id: 0, left: 0, right: 0, height: 0});
+            }
+        }
+
+        if(root == 10000) return root;
+
+        nodes[root].height = height(nodes, root);
+
+        (uint balance, bool positive) = getBalance(nodes, root);
+
+        if(balance > 1 && positive && value <= nodes[nodes[root].left].value) {
+            return rightRotate(nodes, root);
+        }
+
+        if(balance > 1 && !positive && value > nodes[nodes[root].right].value) {
+            return leftRotate(nodes, root);
+        }
+
+        if(balance > 1 && positive && value > nodes[nodes[root].left].value) {
+            nodes[root].left = leftRotate(nodes, nodes[root].left);
+            return rightRotate(nodes, root);
+        }
+
+        if(balance > 1 && !positive && value <= nodes[nodes[root].right].value) {
+            nodes[root].right = rightRotate(nodes, nodes[root].right);
+            return leftRotate(nodes, root);
+        }
+
+        return root;
     }
 
     function get(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal returns(uint) {
-        if(nodes[root].value == id) return id;
+        if(nodes[root].value == value && nodes[root].id == id) return id;
         else if(value < nodes[root].value) return get(nodes, nodes[root].left, value, id);
         else return get(nodes, nodes[root].right, value, id);
-    }
-
-    function minValueNode(mapping(uint => Node) storage nodes, uint root) internal returns(uint) {
-        if(nodes[root].left == 10000) {
-            return root;
-        }
-        else {
-            return minValueNode(nodes, nodes[root].left);
-        }
-    }
-
-    function deleteNode(mapping(uint => Node) storage nodes, uint root, uint value, uint id) internal returns(uint) {
-        if(nodes[root].value == value && nodes[root].id == id) {
-            
-        }
     }
 }

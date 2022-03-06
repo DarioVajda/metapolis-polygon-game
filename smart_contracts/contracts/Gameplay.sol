@@ -5,7 +5,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 import "./CityContract.sol";
 
-import {BST} from "./BST.sol";
+import { BST } from "./BST.sol";
 
 // there are no checks if the request are valid or possible, it should be done in the backend.
 // maybe later it will be added here too, but for now it is not necessary since only the admin can call the functions
@@ -165,16 +165,22 @@ contract Gameplay is Ownable {
         if(gameStart != 2000000000) city.lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
         else city.lastPay = 0;
 
-        BST.insert(leaderboard, root, income, id);
+        root = BST.insert(leaderboard, root, income, id);
 
         id++;
     }
     
     // ________________________________________________________________________
     // functions that change the cities:
-    function upgradeBuilding(uint tokenId, uint price, uint buildingIndex) external onlyAdmin isEditable {
+    function upgradeBuilding(uint tokenId, uint price, uint buildingIndex, uint newIncome) external onlyAdmin isEditable {
         cities[tokenId].buildingList[buildingIndex].level += 1;
         cities[tokenId].money = cities[tokenId].money - uint64(price);
+
+        uint score = cities[tokenId].income;
+        root = BST.remove(leaderboard, root, score, tokenId);
+        cities[tokenId].income = uint64(newIncome);
+        score = cities[tokenId].income;
+        root = BST.insert(leaderboard, root, score, tokenId);
     }
 
     function addBuilding(
@@ -184,7 +190,8 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
-        string calldata _buildingType
+        string calldata _buildingType, 
+        uint newIncome
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
         city.buildingList[city.numOfBuildings] = Building({
@@ -197,6 +204,12 @@ contract Gameplay is Ownable {
         });
         city.numOfBuildings += 1;
         city.money = city.money - uint64(price);
+
+        uint score = cities[tokenId].income;
+        root = BST.remove(leaderboard, root, score, tokenId);
+        cities[tokenId].income = uint64(newIncome);
+        score = cities[tokenId].income;
+        root = BST.insert(leaderboard, root, score, tokenId);
     }
 
     function addSpecialBuilding(
@@ -297,6 +310,14 @@ contract Gameplay is Ownable {
         }
         return r;
     } // returns a struct with all the data about the city with the 'tokenId' ID
+
+    function getTree() external view returns(BST.Node[] memory) {
+        BST.Node[] memory r = new BST.Node[](id);
+        for(uint i = 0; i < id; i++) {
+            r[i] = leaderboard[i];
+        }
+        return r;
+    } // returns an array of indices that correspod to the IDs of the sorted cities
 
     function getBlockchainTime() external view returns(uint) {
         return block.timestamp;

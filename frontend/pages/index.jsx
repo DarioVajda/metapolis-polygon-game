@@ -17,8 +17,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0xD251a0b8000Af3262d917c3926Bc38823F1De32C';
-  const wethContractAddress = '0x14Dfd909b2E77d2f52228822B1032DF5c2c48631';
+  const cityContractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
+  const wethContractAddress = '0x774EBC799E346de4b992764b85d0073a1A4C4143';
   
   async function initContracts() {
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
@@ -66,10 +66,16 @@ export default function Home() {
     
     let balance = await wethContract.balanceOf(account);
     console.log('balance1: ', balance);
-    let tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther('0.1'));
-    let reciept = await tx.wait();
+
+    let reciept
+    let tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther('0.1')); // there should be a check if the current allowance is enough
+    try { reciept = await tx.wait(); }
+    catch(e) { console.log('error', e); }
+
     tx = await cityContract.wethMint(1, {gasLimit: 1e7});
-    reciept = await tx.wait();
+    try { reciept = await tx.wait(); }
+    catch(e) { console.log('error', e); }
+
     console.log(reciept);
     balance = await wethContract.balanceOf(account);
     console.log('balance2: ', balance);
@@ -123,6 +129,17 @@ export default function Home() {
             This is the function used for connecting the ethereum wallet
             {/* Ova funkcija ce se nalaziti negde desno gore recimo i pokazivace da li je povezan wallet */}
           </h4>
+          <div>
+            <br />
+            <h4>Dev options:</h4>
+            <h5 onClick={() => mintERC20()}>Get 1 weth token</h5>
+            <h5 onClick={() => mintERC20()}>Set NFT price in contract</h5>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </div>
         </div>
       </main>
     </div>

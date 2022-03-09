@@ -10,15 +10,16 @@ import Gameplay from '../../smart_contracts/build/contracts/Gameplay.json'; // i
 import CityContract from '../../smart_contracts/build/contracts/CityContract.json'; // importuje se abi
 // abi je json koji objasnjava sta su argumenti svih funkcija u smart contractu i sta vracaju
 
-const cityContractAddress = '0xD251a0b8000Af3262d917c3926Bc38823F1De32C'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
-const gameplayContractAddress = '0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466'; // adresa se nalazi u contract_address.txt fajlu u smart_contracts folderu
+
+var cityContractAddress;
+var gameplayContractAddress;
 
 export default function Home() {
-
   var cityContract;
   var gameplayContract;
   
   async function initCityContract() {
+    cityContractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
     const signer = provider.getSigner(); // signer koji se daje kao argument pri povezivanju sa contractom
     cityContract = new ethers.Contract(cityContractAddress, CityContract.abi, signer); // povezivanje sa contractom za mintovanje i slicne stvari
@@ -29,6 +30,7 @@ export default function Home() {
   }
 
   async function initGameplayContract() {
+    gameplayContractAddress = '0xBB399a4629a0714bD5182d21FDEDD8d4875FAb4C';
     // ovaj contract ne znam da li ce trebati bilo gde u frontendu, zavisi da li ce se ovo pozivati sa backenda, sto se jos ne zna
     // inace isto funkcionise ova funkcija kao initCityContract
     const provider = new ethers.providers.Web3Provider(window.ethereum);

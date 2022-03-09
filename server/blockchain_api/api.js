@@ -9,6 +9,8 @@ const incomeModule = require('../gameplay/income');
 const generateModule = require('../rand_map/generate');
 const utils = require('./utils');
 
+const addressJSON = require('../../smart_contracts/contract-address.json');
+
 // sifra za skolski metamast wallet: nftigrica
 // WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
 // patient pudding valid edit budget equal west pole canyon quality cannon toilet
@@ -19,7 +21,8 @@ const provider = new ethers.providers.JsonRpcProvider(
 );
 const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
 console.log(wallet);
-const contractAddress = '0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466';
+const contractAddress = addressJSON.gameplay;
+console.log(contractAddress)
 const abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var contract = new ethers.Contract(
@@ -57,6 +60,26 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
 }); // DONE (for now)
 
+app.get("/leaderboard", async (req, res) => {
+	let leaderboard = [];
+	let tree = await contract.getTree();
+	console.log('tree:', tree);
+	const inorder = (root) => {
+		if(root == 10000) return;
+		if(tree[root].left && tree[root].left != 10000) inorder(tree[root].left);
+		leaderboard.unshift(tree[root].id.toNumber()); // should insert in the front of the array to have it be sorted in a descending order!
+		if(tree[root].right && tree[root].right != 10000) inorder(tree[root].right);
+	}
+	let root = 0;
+	// THE ROOT SHOULD BE RECEIVED FROM THE CONTRACT!!!
+	for(let i = 0; i < tree.length; i++) {
+		if(tree[i].height > tree[root].height) root = i;
+	}
+	inorder(root);
+	console.log('leaderboard:', leaderboard);
+	res.send(leaderboard);
+});
+
 app.get("/cities/:id/data", async (req,res) => {
 	/* The response is an object with the following values
 	{
@@ -71,7 +94,7 @@ app.get("/cities/:id/data", async (req,res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
 	res.json(city);
-}); // not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
+}); // FIXED - not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
 
 app.post("/cities/:id/initialize", async (req, res) => {
 	if(req.body.address === undefined) {
@@ -120,9 +143,9 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		specialType.push(buildings.special[i].type);
 	}
 
-	let map = mapModule.initializeMap(buildings.normal, mapModule.mapDimensions);
-	let people = peopleModule.countPeople(buildings.normal, map);
-	income = incomeModule.calculateIncome(people, buildings.normal);
+	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
+	let people = peopleModule.countPeople(buildings, map);
+	income = incomeModule.calculateIncome(people, buildings);
 
 	let tx = await contract.initializeCity(
 		owner,

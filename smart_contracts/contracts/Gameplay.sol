@@ -165,7 +165,7 @@ contract Gameplay is Ownable {
         if(gameStart != 2000000000) city.lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
         else city.lastPay = 0;
 
-        root = BST.insert(leaderboard, root, income, id);
+        root = BST.insert(leaderboard, root, income, id); // income should be the 'score' of the player
 
         id++;
     }

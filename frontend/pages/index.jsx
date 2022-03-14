@@ -10,6 +10,10 @@ import { ethers } from 'ethers';
 import CityContract from '../../smart_contracts/build/contracts/CityContract.json'
 import Weth from '../../smart_contracts/build/contracts/Weth.json'
 
+import Nav from '../components/Nav';
+import DevOptions from '../components/DevOptions';
+import MintSection from '../components/MintSection';
+
 // trebalo bi da postoji promenljiva koja pokazuje koliko je do sad NFT-ova mintovano (samo treba cityContract.currId() da se pozove)
 
 export default function Home() {
@@ -110,37 +114,12 @@ export default function Home() {
         <title>Ciy Builder</title>
       </Head>
       <main>
-        <div> { /* This is going to be the top bar */ }
-          <Link href="/"><a><h1>City Builder</h1></a></Link>
-          <Link href="/game"><a><h2>Game</h2></a></Link>
-          <Link href="#mint"><a><h2>Mint</h2></a></Link>
-          <Link href="#roadmap"><a><h2>Roadmap</h2></a></Link>
-          <Link href="#walkthrough"><a><h2>Walkthrough</h2></a></Link>
-          <Link href="#faqs"><a><h2>FAQs</h2></a></Link>
+        <div>
+          <Nav />
+          <div id="mint"><MintSection maticMint={() => maticMint()} wethMint={() => wethMint()} /></div>
+          <DevOptions mintERC20={() => mintERC20()} />
         </div>
-        <div id="mint">
-          <h4 onClick={() => maticMint()}>
-            This is the function used for minting with the MATIC token
-          </h4>
-          <h4 onClick={() => wethMint()}>
-            This is the function used for minting with the WETH token
-          </h4>
-          <h4 onClick={() => connectWallet()}>
-            This is the function used for connecting the ethereum wallet
-            {/* Ova funkcija ce se nalaziti negde desno gore recimo i pokazivace da li je povezan wallet */}
-          </h4>
-          <div>
-            <br />
-            <h4>Dev options:</h4>
-            <h5 onClick={() => mintERC20()}>Get 1 weth token</h5>
-            <h5 onClick={() => mintERC20()}>Set NFT price in contract</h5>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-          </div>
-        </div>
+        
       </main>
     </div>
   )

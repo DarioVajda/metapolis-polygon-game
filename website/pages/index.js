@@ -14,7 +14,7 @@ export default function Home() {
 
       <main>
         <Nav />
-        <Header />
+        {/* <Header /> */}
         <h2 id="about" className={styles["pad"]}>About</h2>
         <p>About us section</p>
         <h2 id="faq" className={styles["pad"]}>FAQ</h2>
@@ -25,7 +25,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -48,7 +47,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -75,7 +73,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -102,7 +99,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -129,7 +125,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -156,7 +151,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -183,7 +177,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -210,7 +203,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -233,7 +225,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -260,7 +251,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -287,7 +277,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -314,7 +303,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -341,7 +329,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -374,7 +361,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -397,7 +383,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -424,7 +409,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -451,7 +435,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -478,7 +461,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -505,7 +487,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -532,7 +513,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -559,7 +539,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -582,7 +561,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -609,7 +587,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -636,7 +613,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -663,7 +639,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -690,7 +665,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -723,7 +697,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -746,7 +719,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -773,7 +745,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -800,7 +771,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -827,7 +797,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -854,7 +823,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -881,7 +849,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -908,7 +875,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -931,7 +897,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -958,7 +923,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -985,7 +949,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1012,7 +975,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1039,7 +1001,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1072,7 +1033,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1095,7 +1055,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1122,7 +1081,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1149,7 +1107,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1176,7 +1133,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1203,7 +1159,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1230,7 +1185,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1257,7 +1211,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1280,7 +1233,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1307,7 +1259,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1334,7 +1285,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1361,7 +1311,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1388,7 +1337,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1421,7 +1369,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1444,7 +1391,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1471,7 +1417,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1498,7 +1443,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1525,7 +1469,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1552,7 +1495,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1579,7 +1521,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1606,7 +1547,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1629,7 +1569,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1656,7 +1595,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1683,7 +1621,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1710,7 +1647,6 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
         zdenja
         zdenja
         zdenja
@@ -1737,7 +1673,136 @@ export default function Home() {
         zdenja
         zdenja
         zdenja
-        zdenjazdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
+        zdenja
         zdenja
         zdenja
         zdenja

@@ -16,6 +16,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: stretch;
+    border-bottom: 1px solid black
 }
 
 .navButton {

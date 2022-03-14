@@ -14,3 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+div {
+  background-color: rgb(255, 255, 255);
+}

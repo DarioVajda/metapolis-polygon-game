@@ -3,16 +3,20 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default class ViewGL{
   constructor(canvasRef) {
+    let width = 700;
+    let height = 350;
+
     this.scene = new THREE.Scene();
 
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvasRef,
       antialias: false,
+      alpha: true
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(width, height);
 
     this.camera.position.setZ(30);
 
@@ -20,6 +24,7 @@ export default class ViewGL{
     this.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
     this.torus = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.torus);
+    this.torus.position.set(0, 0, 0);
 
     this.pointLight = new THREE.PointLight(0x33ff33);
     this.pointLight.position.set(10, 20, 5);
@@ -39,7 +44,8 @@ export default class ViewGL{
   }
 
   onMouseMove() {
-    // Mouse moves
+    // Mouse moves]
+    // ovo je jako brutalno
   }
 
   onWindowResize(vpW, vpH) {
@@ -53,9 +59,9 @@ export default class ViewGL{
 
     this.controls.update();
 
-    // this.torus.rotation.x += 0.005;
-    // this.torus.rotation.y += 0.005;
-    // this.torus.rotation.z += 0.01;
+    this.torus.rotation.x += 0.005;
+    this.torus.rotation.y += 0.005;
+    this.torus.rotation.z += 0.01;
 
     // console.log(this.camera.position);
   }

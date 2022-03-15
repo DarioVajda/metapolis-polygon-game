@@ -13,6 +13,9 @@ import Weth from '../../smart_contracts/build/contracts/Weth.json'
 import Nav from '../components/Nav';
 import DevOptions from '../components/DevOptions';
 import MintSection from '../components/MintSection';
+import HomeCity from '../components/HomeCity';
+
+import styles from "../styles/Home.module.css";
 
 // trebalo bi da postoji promenljiva koja pokazuje koliko je do sad NFT-ova mintovano (samo treba cityContract.currId() da se pozove)
 
@@ -128,7 +131,10 @@ export default function Home() {
       <main>
         <div>
           <Nav />
-          <div id="mint"><MintSection maticMint={maticMint} wethMint={wethMint} numOfNFTs={numOfNFTs} /></div>
+          <div id="mint" className={styles.div1}>
+            <MintSection maticMint={maticMint} wethMint={wethMint} numOfNFTs={numOfNFTs} />
+            <HomeCity />
+          </div>
           <DevOptions mintERC20={() => mintERC20()} />
         </div>
         

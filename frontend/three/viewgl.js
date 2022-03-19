@@ -3,8 +3,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default class ViewGL{
   constructor(canvasRef) {
-    let width = 700;
-    let height = 350;
+    this.ratio = 3;
+    let width = window.innerWidth / this.ratio;
+    // let height = window.innerHeight / 1.5;
+    let height = width;
+    // console.log(height, width);
 
     this.scene = new THREE.Scene();
 
@@ -18,7 +21,7 @@ export default class ViewGL{
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
 
-    this.camera.position.setZ(30);
+    this.camera.position.setZ(25);
 
     this.geometry = new THREE.TorusGeometry(10, 3, 16, 100);
     this.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
@@ -33,7 +36,7 @@ export default class ViewGL{
     this.ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     this.scene.add(this.ambientLight);
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.update();
   }
@@ -44,12 +47,16 @@ export default class ViewGL{
   }
 
   onMouseMove() {
-    // Mouse moves]
-    // ovo je jako brutalno
+    // Mouse moves
   }
 
   onWindowResize(vpW, vpH) {
-    this.renderer.setSize(vpW, vpH);
+    let width = window.innerWidth / this.ratio;
+    let height = width;
+    this.renderer.setSize(width, width);
+    // console.log(width);
+    this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
+    this.camera.position.setZ(25);
   }
 
   // ******************* RENDER LOOP ******************* //
@@ -57,12 +64,10 @@ export default class ViewGL{
     requestAnimationFrame(this.update.bind(this));
     this.renderer.render(this.scene, this.camera);
 
-    this.controls.update();
+    // this.controls.update();
 
-    this.torus.rotation.x += 0.005;
-    this.torus.rotation.y += 0.005;
-    this.torus.rotation.z += 0.01;
-
-    // console.log(this.camera.position);
+    // this.torus.rotation.x += 0.005;
+    this.torus.rotation.y += 0.01;
+    // this.torus.rotation.z += 0.01;
   }
 }

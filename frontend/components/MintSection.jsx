@@ -6,7 +6,7 @@ import style from './styles/mintSection.module.css'
 const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
   const [citiesLeft, setCitiesLeft] = useState(10000);
   const [num, setNum] = useState(1);
-  const [token, setToken] = useState(true); // false-MATIC, true-WETH
+  const [token, setToken] = useState(false); // true-MATIC, false-WETH
 
   const [price, setPrice] = useState(0);
   

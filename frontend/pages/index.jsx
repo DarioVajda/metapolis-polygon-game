@@ -14,6 +14,7 @@ import Nav from '../components/Nav';
 import DevOptions from '../components/DevOptions';
 import MintSection from '../components/MintSection';
 import HomeCity from '../components/HomeCity';
+import Roadmap from '../components/Roadmap';
 
 import styles from "../styles/Home.module.css";
 
@@ -131,10 +132,23 @@ export default function Home() {
       <main>
         <div>
           <Nav />
-          <div id="mint" className={styles.div1}>
-            <MintSection maticMint={maticMint} wethMint={wethMint} numOfNFTs={numOfNFTs} />
-            <HomeCity />
+          <div className={styles.wrapper}>
+            <div className={styles.scrollable}>
+              <div id="mint">
+                <MintSection maticMint={maticMint} wethMint={wethMint} numOfNFTs={numOfNFTs} />
+              </div>
+              <div id="roadmap">
+                <Roadmap />
+              </div>
+            </div>
+            <div className={styles.city}>
+              <HomeCity />
+            </div>
           </div>
+          <DevOptions mintERC20={() => mintERC20()} />
+          <DevOptions mintERC20={() => mintERC20()} />
+          <DevOptions mintERC20={() => mintERC20()} />
+          <DevOptions mintERC20={() => mintERC20()} />
           <DevOptions mintERC20={() => mintERC20()} />
         </div>
         

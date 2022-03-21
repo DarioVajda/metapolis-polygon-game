@@ -1,9 +1,8 @@
 .roadmap {
-    margin: 100px 0 0 0;
     border: 1px solid black;
     height: fit-content;
     width: 100%;
-    padding: 0 50px 0 50px;
+    padding: 4.5em 0 0 50px;
     display: flex;
     flex-direction: row;
 }
@@ -12,7 +11,6 @@
     background-color: rgb(212, 212, 212);
     /* height: 100%; /* OVO MI UOPSTE NIJE JASNO ZASTO POKVARI SVE ALI NECU DA BRINEM O TOME*/
     width: 10px;
-    z-index: 4;
     border-radius: 5px;
 }
 
@@ -24,7 +22,7 @@
 }
 
 .item {
-    margin: 60px 0 60px 0;
+    padding: 30px 0 30px 0;
     display: flex;
     flex-direction: row;
     align-items: center;

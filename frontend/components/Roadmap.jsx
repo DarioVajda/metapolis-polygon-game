@@ -15,9 +15,6 @@ const Roadmap = () => {
     {date: 'May 22th', title: 'Game start', description: 'The game officially starts and everyone may start building and upgrading their city'},
   ]
 
-  let moguće = true;
-  console.log(moguće);
-
   return (
     <div className={styles.roadmap}>
       <div className={styles.leftLine} />

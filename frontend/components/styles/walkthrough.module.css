@@ -1,0 +1,61 @@
+.walkthrough {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.walkthrough h1 {
+    /* font-size: 10px; */
+    padding-top: 18vh;
+    /* width: 100%; */
+    text-align: center;
+}
+
+.walkthrough h1::after {
+    content: "?";
+    position: absolute;
+    height: 1.5em;
+    width: 1.5em;
+    margin: 0 0 0 1em;
+    border: 1px solid rgb(145, 145, 145);
+    color: rgb(145, 145, 145);
+    padding: 0.1em;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 50%;
+}
+
+.walkthrough h1:hover::after {
+    content: "See how every building affects your city and what it does to help you develop the winning strategy";
+    position: absolute;
+    height: fit-content;
+    width: 30vw;
+    margin: 0 0 0 1em;
+    border: 2px solid rgb(145, 145, 145);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.canv {
+    border: 1px solid black;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+.btn {
+    align-self: flex-end;
+    margin: 0 1em 2em 1em;
+}
+
+.btn svg {
+    width: fit-content;
+    height: fit-content;
+    font-size: 5rem;
+    color: gray;
+    border-radius: 50%;
+}

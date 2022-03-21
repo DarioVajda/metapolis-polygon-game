@@ -2,12 +2,12 @@
 /* ovo deluje bas kul */
 
 .spacer {
-    height: 1em;
+    /* height: 1em; */
 }
 /* this should be changed!!! */
 
 .navbar {
-    position: sticky;
+    position: fixed;
     width: 100%;
     height: 4em;
     background-color: rgb(131, 205, 255);

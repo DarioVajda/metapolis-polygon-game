@@ -16,6 +16,7 @@ import MintSection from '../components/MintSection';
 import HomeCity from '../components/HomeCity';
 import Roadmap from '../components/Roadmap';
 import Walkthrough from '../components/Walkthrough/Walkthrough';
+import FAQs from '../components/FAQs'
 
 import styles from "../styles/Home.module.css";
 
@@ -149,10 +150,9 @@ export default function Home() {
           <div id="walkthrough">
             <Walkthrough />
           </div>
-          <DevOptions mintERC20={() => mintERC20()} />
-          <DevOptions mintERC20={() => mintERC20()} />
-          <DevOptions mintERC20={() => mintERC20()} />
-          <DevOptions mintERC20={() => mintERC20()} />
+          <div id="faqs">
+            <FAQs />
+          </div>
           <DevOptions mintERC20={() => mintERC20()} />
         </div>
         

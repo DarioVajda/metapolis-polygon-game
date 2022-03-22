@@ -1,0 +1,63 @@
+.faqs {
+    font-size: 1rem;
+    border: 1px solid black;
+    padding: 5em 0 0 0;
+}
+
+.faqs h1 {
+    color: black;
+    padding-left: 3em;
+}
+
+.item {
+    font-size: 1rem;
+    padding: 1em 0 1em 0;
+    user-select: none; /* ovo ne znam da li je potrebno */
+}
+
+.question {
+    font-size: 1.5rem;
+    color: black;
+    cursor: pointer;
+    padding: 0 1em 0 2em;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.question span {
+    font-weight: 600;
+    font-size: 2.5rem;
+}
+
+@keyframes show {
+    0% {
+        opacity: 1; /* ovde je inace bilo 0 */
+        display: block;
+        /* height: 0; */
+    }
+    100% {
+        opacity: 1;
+        /* height: 10em; */
+    }
+}
+
+.answer {
+    opacity: 0;
+    display: none;
+    font-size: 1.2rem;
+    color: rgb(95, 95, 95);
+    max-height: fit-content;
+    padding: 0 4em 0 4em;
+    /* border: 1px solid black; */
+}
+
+.showAnswer {
+    display: flex;
+    max-height: fit-content;
+    animation-name: show;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    transition-timing-function: ease-in-out;
+}

@@ -1,19 +1,21 @@
 .walkthrough {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
 }
 
 .walkthrough h1 {
-    /* font-size: 10px; */
     padding-top: 18vh;
-    /* width: 100%; */
-    text-align: center;
+    margin: 0 0 0 15vw;
+    /* display: flex;
+    align-items: center; problem sa ovim je sto ne znam kako da napravim da bude ono sa strane*/
 }
 
 .walkthrough h1::after {
     content: "?";
-    position: absolute;
+    position: absolute; /* problem sa ovim je sto ne znam kako da centriram, tj da sredina ovoga bude u ravni sa sredinom teksta */
+    transform: translate(0, 0.5em);
+    text-align: center;
     height: 1.5em;
     width: 1.5em;
     margin: 0 0 0 1em;
@@ -26,10 +28,14 @@
 }
 
 .walkthrough h1:hover::after {
-    content: "See how every building affects your city and what it does to help you develop the winning strategy";
+    content: "See how every building affects your city and what it does to help you develop the winning strategy!";
     position: absolute;
+    min-height: 2em;
     height: fit-content;
-    width: 30vw;
+    width: fit-content;
+    max-width: 40vw;
+    background-color: white;
+    transform: none;
     margin: 0 0 0 1em;
     border: 2px solid rgb(145, 145, 145);
     font-weight: 600;
@@ -39,7 +45,7 @@
 
 .canv {
     border: 1px solid black;
-    height: fit-content;
+    /* height: fit-content; */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -50,6 +56,7 @@
 .btn {
     align-self: flex-end;
     margin: 0 1em 2em 1em;
+    user-select: none;
 }
 
 .btn svg {
@@ -58,4 +65,14 @@
     font-size: 5rem;
     color: gray;
     border-radius: 50%;
+    transition: all .2s ease-in-out;
+}
+
+.btn svg:hover {
+    transform: scale(1.1);
+}
+
+.btn svg:active {
+    transition: all 0s ease-in-out;
+    color: rgb(104, 104, 104);
 }

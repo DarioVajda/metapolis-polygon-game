@@ -1,8 +1,16 @@
+.wrapper {
+    padding-top: 4em;
+}
+
+.wrapper h1 {
+    padding-left: 1em;
+}
+
 .roadmap {
     border: 1px solid black;
     height: fit-content;
     width: 100%;
-    padding: 4.5em 0 0 50px;
+    padding: 0 0 0 50px;
     display: flex;
     flex-direction: row;
 }

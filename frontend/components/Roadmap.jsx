@@ -16,16 +16,19 @@ const Roadmap = () => {
   ]
 
   return (
-    <div className={styles.roadmap}>
-      <div className={styles.leftLine} />
-      <div className={styles.list}>
-        {
-          items.map((item, index) => (
-            <div key={index}>
-             <RoadmapItem data={item} />
-            </div>
-          ))
-        }
+    <div className={styles.wrapper}>
+      <h1>Roadmap</h1>
+      <div className={styles.roadmap}>
+        <div className={styles.leftLine} />
+        <div className={styles.list}>
+          {
+            items.map((item, index) => (
+              <div key={index}>
+              <RoadmapItem data={item} />
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
   )

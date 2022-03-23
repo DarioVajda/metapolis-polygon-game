@@ -6,8 +6,6 @@ const FAQuestion = ({q, a, i}) => {
 
   const [show, setShow ] = useState(false);
 
-  console.log(show);
-
   return (
     <div className={styles.item}>
       <div className={styles.question}  onClick={() => setShow(!show)}>

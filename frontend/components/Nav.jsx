@@ -7,9 +7,6 @@ const Nav = () => {
       <Link href="/">
         <a className={`${styles.navButton} ${styles.homeButton}`}>City Builder</a>
       </Link>
-      <Link href="#mint">
-        <a className={styles.navButton}>Mint</a>
-      </Link>
       <Link href="#roadmap">
         <a className={styles.navButton}>Roadmap</a>
       </Link>
@@ -18,6 +15,9 @@ const Nav = () => {
       </Link>
       <Link href="#faqs">
         <a className={styles.navButton}>FAQs</a>
+      </Link>
+      <Link href="#about-us">
+        <a className={styles.navButton}>About us</a>
       </Link>
       <Link href="/game">
         <a className={styles.navButton}>Game</a>

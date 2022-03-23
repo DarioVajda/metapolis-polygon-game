@@ -2,11 +2,11 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
+    padding-top: 4em
 }
 
 .walkthrough h1 {
-    padding-top: 18vh;
-    margin: 0 0 0 15vw;
+    padding-left: 1em
     /* display: flex;
     align-items: center; problem sa ovim je sto ne znam kako da napravim da bude ono sa strane*/
 }

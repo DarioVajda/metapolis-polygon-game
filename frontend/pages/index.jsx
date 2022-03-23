@@ -16,7 +16,8 @@ import MintSection from '../components/MintSection';
 import HomeCity from '../components/HomeCity';
 import Roadmap from '../components/Roadmap';
 import Walkthrough from '../components/Walkthrough/Walkthrough';
-import FAQs from '../components/FAQs'
+import FAQs from '../components/FAQs';
+import AboutUs from '../components/AboutUs';
 
 import styles from "../styles/Home.module.css";
 
@@ -152,6 +153,9 @@ export default function Home() {
           </div>
           <div id="faqs">
             <FAQs />
+          </div>
+          <div id="about-us">
+            <AboutUs />
           </div>
           <DevOptions mintERC20={() => mintERC20()} />
         </div>

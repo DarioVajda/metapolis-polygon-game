@@ -1,7 +1,7 @@
 import ViewGL from "../three/viewgl.js";
 import React from 'react';
 
-// import style from './styles/homeCity.module.css';
+import styles from './styles/homeCity.module.css';
 
 export default class Scene extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export default class Scene extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={styles.wrapper}>
         <canvas ref={this.canvasRef} />
       </div>
     );

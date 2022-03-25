@@ -32,6 +32,10 @@ export default function Home() {
   const wethContractAddress = '0x774EBC799E346de4b992764b85d0073a1A4C4143';
   
   async function initContracts() {
+    if(!window.ethereum) return { error: 'no wallet' };
+
+    console.log('sad se inicijalizuju contractovi');
+
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
     const signer = provider.getSigner(); // signer koji se daje kao argument pri povezivanju sa contractom
     
@@ -50,57 +54,72 @@ export default function Home() {
     return ethPrice / price;
   }
   
-  const maticMint = async (onlyPrice) => {
-    if(!window.ethereum || cityContract === undefined) {
-      return;
-    }
-    await connectWallet();
-    
+  const maticMint = async (onlyPrice, num) => {
     let ethPrice = 0.001; // this should be loaded from somewhere
     
-    let maticPrice = await ethToMatic(ethPrice);
-    // console.log(maticPrice);
+    let maticPrice = await ethToMatic(ethPrice * num);
     let epsilon = 0.1;
-
+    
     if(onlyPrice) {
-      return (maticPrice + epsilon);
+      return {maticPrice: maticPrice, epsilon: epsilon};
     }
-
-    let tx = await cityContract.maticMint(1, { value: ethers.utils.parseEther(`${maticPrice + epsilon}`) });
-    let receipt = await tx.wait();
-    console.log('Mint receipt:', receipt);
-
-    // initCity();
+    
+    let res = await connectWallet();
+    if(res.error !== undefined) {
+      return res;
+    }
+    
+    try {
+      let tx = await cityContract.maticMint(num, { value: ethers.utils.parseEther(`${maticPrice + epsilon}`) });
+      let receipt = await tx.wait();
+      console.log('Mint receipt:', receipt);
+    }
+    catch(e) {
+      console.log(e);
+      return { error: 'tx1 rejected' };
+    }
+    
+    return {};
   };
   
-  const wethMint = async (onlyPrice) => {
-    if(!window.ethereum || cityContract === undefined) {
-      return;
-    }
+  const wethMint = async (onlyPrice, num) => {
     let account = await connectWallet();
+    if(account.error !== undefined) {
+      return account;
+    }
     
     let balance = await wethContract.balanceOf(account);
     console.log('balance1: ', balance);
 
-    let wethPrice = 0.1;
+    let wethPrice = 0.1 * num;
     if(onlyPrice) return wethPrice; // this returns the price if the function is called like this: wethMint(true);
 
-    let reciept
-    let tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice}`)); // there should be a check if the current allowance is enough
-    try { reciept = await tx.wait(); }
-    catch(e) { console.log('error', e); }
+    let reciept;
+    let tx;
+    try {
+      tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice}`)); // there should be a check if the current allowance is enough
+      reciept = await tx.wait();
+    }
+    catch(e) { 
+      console.log('error', e); 
+      return { error: 'tx1 rejected' };
+    }
 
-    tx = await cityContract.wethMint(1, {gasLimit: 1e7});
-    try { reciept = await tx.wait(); }
-    catch(e) { console.log('error', e); }
+    try { 
+      tx = await cityContract.wethMint(num, {gasLimit: 1e7});
+      reciept = await tx.wait(); 
+    }
+    catch(e) {
+      console.log('error', e); 
+      return { error: 'tx1 rejected' }; 
+    }
 
     console.log(reciept);
     balance = await wethContract.balanceOf(account);
     console.log('balance2: ', balance);
 
-    // initCity();
+    return {};
   }
-
   //#endregion
 
   const numOfNFTs = async () => {
@@ -109,6 +128,10 @@ export default function Home() {
   }
 
   const connectWallet = async () => {
+    let res;
+    if(cityContract === undefined) res = await initContracts();
+    if(res !== undefined && res.error !== undefined) return res;
+
     const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });
     return account;
   };
@@ -124,7 +147,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    initContracts();
+    // initContracts();
   }, []);
 
   return (

@@ -1,0 +1,11 @@
+.wrapper {
+    height: 100vh;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper canvas {
+    border: 1px solid black;
+}

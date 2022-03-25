@@ -3,7 +3,6 @@ import React from 'react'
 import styles from './styles/aboutUs.module.css';
 
 const AboutUsPerson = ({ data }) => {
-  console.log(data, data.nickname);
   return (
     <div className={styles.person}>
       <svg 

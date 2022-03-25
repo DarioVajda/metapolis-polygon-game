@@ -3,10 +3,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default class ViewGL{
   constructor(canvasRef) {
-    this.ratio = 3;
+    this.ratio = 2.5;
     let width = window.innerWidth / this.ratio;
-    // let height = window.innerHeight / 1.5;
-    let height = width;
+    let height = window.innerHeight / 1.5;
+    // let height = width * 2.5 / 3;
     // console.log(height, width);
 
     this.scene = new THREE.Scene();
@@ -52,8 +52,8 @@ export default class ViewGL{
 
   onWindowResize(vpW, vpH) {
     let width = window.innerWidth / this.ratio;
-    let height = width;
-    this.renderer.setSize(width, width);
+    let height = window.innerHeight / 1.5;
+    this.renderer.setSize(width, height);
     // console.log(width);
     this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
     this.camera.position.setZ(25);

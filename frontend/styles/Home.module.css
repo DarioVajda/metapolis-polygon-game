@@ -14,10 +14,8 @@
 }
 
 .city {
-  border: 2px solid blue; 
-
   position: sticky;
-  bottom: 10%;
+  bottom: 0;
   align-self: flex-end;
   height: fit-content;
 }

@@ -1,0 +1,49 @@
+.wrapper {
+    padding-top: 4em;
+    background: rgb(20, 20, 20);
+    color: white;
+}
+
+.wrapper h1 {
+    padding: 0 1em 0 1em;
+    font-size: 2.5rem;
+}
+
+.wrapper p {
+    margin: 0;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+}
+
+.token {
+    position: relative;
+    transition: all .2s ease-in-out;
+    width: fit-content;
+    background-color: transparent;
+    padding: 0 0.35em;
+}
+
+.token:hover {
+    transform: scale(1.12);
+    /* font-size: 3rem; ovo nije dobro jer se sav tekst ispomera */
+    /* trebam da smislim neki bolji efekat ali i ovo je ok za sad */
+}
+
+.matic {
+    padding-top: 4em;
+    background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0), rgb(20, 20, 20)), -webkit-linear-gradient(top, rgb(20, 20, 20), rgb(94, 0, 138) 10em);
+    /* background-image:  -webkit-linear-gradient(top, rgb(20, 20, 20), rgb(94, 0, 138) 10em); */
+    /* background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0) 50%, rgb(20, 20, 20)); */
+
+    height: fit-content;
+}
+
+.weth {
+    padding-top: 4em;
+    background: rgb(42, 108, 184);;
+    background: -webkit-linear-gradient(left, rgb(0, 0, 0, 0), rgb(20, 20, 20)), -webkit-linear-gradient(top, rgb(94, 0, 138), rgb(0, 52, 110) 10em);
+    height: fit-content;
+}

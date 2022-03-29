@@ -182,7 +182,6 @@ export default function Home() {
           </div>
           <DevOptions mintERC20={() => mintERC20()} />
         </div>
-        
       </main>
     </div>
   )

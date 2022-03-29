@@ -18,6 +18,10 @@ const AboutUs = () => {
       <h1>
         About Us
       </h1>
+      <p>
+        Our goal with this project is to... It is on the polygon network, the reasons,... <br />
+        Eu fugiat ad amet veniam. Ipsum aliquip adipisicing consequat do ex adipisicing minim mollit sint. Esse ut ipsum elit proident velit laborum occaecat duis qui nostrud dolore ipsum nostrud veniam. Est adipisicing proident aliquip excepteur velit occaecat elit eiusmod consequat tempor est exercitation. Qui duis ex aliquip Lorem aute qui. Pariatur Lorem voluptate nisi laborum culpa duis. Cillum irure culpa veniam ullamco reprehenderit pariatur sit in proident elit culpa anim exercitation.
+      </p>
       <div className={styles.people}>
         <AboutUsPerson data={person1} />
         <AboutUsPerson data={person2} />

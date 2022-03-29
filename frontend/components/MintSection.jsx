@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import Link from 'next/link';
 
 import style from './styles/mintSection.module.css'
 
@@ -81,6 +82,11 @@ const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
       </div>
       <div className={style.maxMint}>Max per wallet: 10</div>
       <div className={style.mintEnds}>Minting ends on May 18th at 2pm CET</div>
+     <div> 
+        Check the following hyperlink for{' '}
+        <Link href='/help'><a className={style.help}>HELP</a></Link>
+        {' '}with minting
+      </div>
     </div>
   )
 }

@@ -6,12 +6,16 @@
     justify-content: flex-start;
     height: fit-content;
     min-height: 100vh;
-    border: 1px solid black;
     padding: 25vh 0 0 0;
 }
 
+.mintSection p {
+    margin: 0;
+    color: var(--light-text);
+}
+
 .mintButton {
-    background-color: rgb(131, 205, 255);
+    background-color: var(--primary);
     cursor: pointer;
     height: 80px;
     width: 300px;
@@ -22,13 +26,20 @@
     font-size: 3rem;
     font-weight: 600;
     user-select: none;
-    box-shadow: 0 0 8px grey;
+    border: none;
+    color: inherit;
+    /* box-shadow: 0 0 8px grey; */
     margin: 10px 0 10px 0;
     letter-spacing: 0.05em;
 }
 
+.mintButton:active {
+    background-color: var(--primary-dark)
+    /* box-shadow: 0 0 3px grey; */
+}
+
 .error {
-    color: red;
+    color: var(--error);
     font-weight: 500;
 }
 
@@ -47,19 +58,19 @@
 
 @keyframes wethBackground {
     0% {
-        background-color: rgb(153, 0, 255);
+        background-color: var(--matic);
     }
     100% {
-        background-color: rgb(42, 108, 184);
+        background-color: var(--weth);
     }
 }
 
 @keyframes maticBackground {
     0% {
-        background-color: rgb(42, 108, 184);
+        background-color: var(--weth);
     }
     100% {
-        background-color: rgb(153, 0, 255);
+        background-color: var(--matic);
     }
 }
 
@@ -71,7 +82,7 @@
     align-items: center;
     cursor: pointer;
     margin: 0 0.3em 0 0.3em;
-    box-shadow: 0 0 4px grey;
+    /* box-shadow: 0 0 4px grey; */
 }
 
 .switchMatic {
@@ -110,7 +121,7 @@
     border-radius: 50%;
     height: 1.2em;
     width: 1.2em;
-    background-color: white;
+    background-color: var(--text);
 }
 
 .circleMatic {
@@ -125,11 +136,6 @@
     animation-fill-mode: forwards;
 }
 /* chosing the token for payment */
-
-.mintButton:active {
-    background-color: rgb(81, 185, 255);
-    box-shadow: 0 0 3px grey;
-}
 
 .slider {
     width: 100%;
@@ -155,6 +161,6 @@
 
 .help {
     text-decoration: underline;
-    color: #0000EE;
+    color: var(--link);
     cursor: pointer;
 }

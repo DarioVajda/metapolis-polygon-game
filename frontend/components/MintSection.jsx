@@ -65,7 +65,7 @@ const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
   return (
     <div className={style.mintSection}>
       <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>
-      <div className={style.mintButton} onClick={() => mint()}>Mint: {num}</div>
+      <button className={style.mintButton} onClick={() => mint()}>Mint: {num}</button>
       <div className={style.error}>{error}</div>
       <div className={style.slider}>
         <input type="range" value={num} min="0" max="10" onChange={(e) => { setNum((e.target.value>0)?e.target.value:1);  } } />
@@ -80,13 +80,13 @@ const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
         </div>
         WETH
       </div>
-      <div className={style.maxMint}>Max per wallet: 10</div>
-      <div className={style.mintEnds}>Minting ends on May 18th at 2pm CET</div>
-     <div> 
+      <p className={style.maxMint}>Max per wallet: 10</p>
+      <p className={style.mintEnds}>Minting ends on May 18th at 2pm CET</p>
+      <p> 
         Check the following hyperlink for{' '}
         <Link href='/help'><a className={style.help}>HELP</a></Link>
         {' '}with minting
-      </div>
+      </p>
     </div>
   )
 }

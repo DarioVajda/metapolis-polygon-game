@@ -5,7 +5,6 @@
 }
 
 .faqs h1 {
-    color: black;
     padding-left: 1em;
 }
 
@@ -17,7 +16,6 @@
 
 .question {
     font-size: 1.5rem;
-    color: black;
     cursor: pointer;
     padding: 0 1em 0 2em;
     display: flex;
@@ -47,7 +45,7 @@
     opacity: 0;
     display: none;
     font-size: 1.2rem;
-    color: rgb(95, 95, 95);
+    color: var(--light-text);
     max-height: fit-content;
     padding: 0 4em 0 4em;
     /* border: 1px solid black; */

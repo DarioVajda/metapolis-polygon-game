@@ -6,9 +6,7 @@
 }
 
 .walkthrough h1 {
-    padding-left: 1em
-    /* display: flex;
-    align-items: center; problem sa ovim je sto ne znam kako da napravim da bude ono sa strane*/
+    padding-left: 1em;
 }
 
 .walkthrough h1::after {
@@ -20,7 +18,7 @@
     width: 1.5em;
     margin: 0 0 0 1em;
     border: 1px solid rgb(145, 145, 145);
-    color: rgb(145, 145, 145);
+    color: var(--light-text);
     padding: 0.1em;
     font-weight: 600;
     font-size: 1rem;
@@ -34,10 +32,9 @@
     height: fit-content;
     width: fit-content;
     max-width: 40vw;
-    background-color: white;
     transform: none;
     margin: 0 0 0 1em;
-    border: 2px solid rgb(145, 145, 145);
+    border: 1px solid var(--text);
     font-weight: 600;
     font-size: 1rem;
     border-radius: 5px;
@@ -63,7 +60,7 @@
     width: fit-content;
     height: fit-content;
     font-size: 5rem;
-    color: gray;
+    color: var(--walkthrough-btn);
     border-radius: 50%;
     transition: all .2s ease-in-out;
 }
@@ -74,5 +71,5 @@
 
 .btn svg:active {
     transition: all 0s ease-in-out;
-    color: rgb(104, 104, 104);
+    color: var(--walkthrough-btn-hover);
 }

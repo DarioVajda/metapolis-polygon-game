@@ -11,7 +11,7 @@ const Help = () => {
   return (
     <>
       <Head>
-        <title>Ciy Builder - Mint Tutorial</title>
+        <title>City Builder - Mint Tutorial</title>
       </Head>
       <main>
         <Nav />
@@ -53,6 +53,9 @@ const Help = () => {
             <p>How to mint with the WETH token...</p>
           </div>
           <br />
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>

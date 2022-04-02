@@ -1,7 +1,7 @@
 .wrapper {
     padding-top: 4em;
-    background: rgb(20, 20, 20);
-    color: white;
+    background-color: var(--background);
+    color: var(--text);
 }
 
 .wrapper h1 {
@@ -34,9 +34,7 @@
 
 .matic {
     padding-top: 4em;
-    background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0), rgb(20, 20, 20)), -webkit-linear-gradient(top, rgb(20, 20, 20), rgb(94, 0, 138) 10em);
-    /* background-image:  -webkit-linear-gradient(top, rgb(20, 20, 20), rgb(94, 0, 138) 10em); */
-    /* background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0) 50%, rgb(20, 20, 20)); */
+    background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0), var(--background)), -webkit-linear-gradient(top, var(--background), var(--matic-bg) 10em);
 
     height: fit-content;
 }
@@ -44,6 +42,6 @@
 .weth {
     padding-top: 4em;
     background: rgb(42, 108, 184);;
-    background: -webkit-linear-gradient(left, rgb(0, 0, 0, 0), rgb(20, 20, 20)), -webkit-linear-gradient(top, rgb(94, 0, 138), rgb(0, 52, 110) 10em);
+    background: -webkit-linear-gradient(left, rgb(0, 0, 0, 0), var(--background)), -webkit-linear-gradient(top, var(--matic-bg), var(--weth-bg) 10em);
     height: fit-content;
 }

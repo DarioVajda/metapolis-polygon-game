@@ -153,7 +153,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Ciy Builder</title>
+        <title>City Builder</title>
       </Head>
       <main>
         <div>

@@ -20,10 +20,10 @@ function Box(props){
   )
 }
 
-function Plane(){
+function Plane(props){
   return(
-    <mesh position={[0,0,0]} rotation={[-Math.PI/2,0,0]}>
-      <planeBufferGeometry attach="geometry" args={[100,100]}/>
+    <mesh {...props} position={[0,0,0]} rotation={[-Math.PI/2,0,0]}>
+      <boxBufferGeometry attach="geometry" args={[10,10,1]}/>
       <meshLambertMaterial attach="material" color="lime"/>
     </mesh>
   )
@@ -43,20 +43,22 @@ const gameplay = () => {
         transform: 'translate(-50%, -50%)'}}>
           
 
-          <Canvas 
-          // pixelRatio={window.devicePixelRatio}
-          onCreated={({ gl, scene }) => {
+          <Canvas shadows
+          onCreated={({ gl, scene, camera }) => {
             gl.toneMapping = THREE.ACESFilmicToneMapping
             gl.outputEncoding = THREE.sRGBEncoding
             scene.background = new THREE.Color('#373740')
-          }}>
+            camera.lookAt([0,0,0])
+          }}
+          camera={{fov:90, position:[10,2,0]}}>
 
             <OrbitControls/>
             <Stars/>
-            <ambientLight intensity={0.5}/>
-            <spotLight position={[10,15,10]} angle={0.3}/>
-            <Box position={[0,1,0]}/>
-            <Plane/>
+            <ambientLight intensity={0.1}/>
+            <hemisphereLight intensity={0.250} color="white" groundColor="skyblue" />
+            <spotLight castShadow position={[-10,10,5]} angle={0.3} shadow-mapSize={[300, 300]} shadow-bias={0.00005}/>
+            <Box castShadow receiveShadow position={[0,1,0]}/>
+            <Plane receiveShadow/>
           </Canvas>
       </div>
     </>

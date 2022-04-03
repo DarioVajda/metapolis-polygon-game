@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import style from './styles/mintSection.module.css'
 
-const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
+const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   const [citiesLeft, setCitiesLeft] = useState(10000);
   const [num, setNum] = useState(1);
   const [token, setToken] = useState(false); // true-MATIC, false-WETH
@@ -37,8 +37,13 @@ const MintSection = ({maticMint, wethMint, numOfNFTs}) => {
   }
 
   const mint = async () => {
-    console.log(mintPressed);
+    console.log('mintPressed: ', mintPressed);
     if(mintPressed) return;
+
+    if(networkCheck() === false) {
+      showError('wrong network');
+      return;
+    }
     
     let res;
     let func = token?maticMint:wethMint;

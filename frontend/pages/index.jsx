@@ -21,6 +21,8 @@ import AboutUs from '../components/AboutUs';
 
 import styles from "../styles/Home.module.css";
 
+const networkID = 80001; // ovo je sad ID od mumbai testneta, ali kasnije ce biti ID od polygon mainneta!
+
 // trebalo bi da postoji promenljiva koja pokazuje koliko je do sad NFT-ova mintovano (samo treba cityContract.currId() da se pozove)
 
 export default function Home() {
@@ -44,6 +46,18 @@ export default function Home() {
   }
 
   //#region Functions for minting the NFTs
+  const isRightNetwork = () => {
+    console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
+    if(parseInt(window.ethereum.networkVersion) === networkID) {
+      console.log('right network');
+      return true;
+    }
+    else {
+      console.log('wrong network');
+      return false;
+    }
+  }
+
   const ethToMatic = async (ethPrice) => {
     var res = await (await fetch("https://api.binance.com/api/v3/aggTrades?symbol=MATICETH")).json();
     var price = 0;
@@ -148,6 +162,8 @@ export default function Home() {
 
   useEffect(() => {
     // initContracts();
+    console.log('window.ethereum:', window.ethereum);
+    console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
   }, []);
 
   return (
@@ -161,7 +177,7 @@ export default function Home() {
           <div className={styles.wrapper}>
             <div className={styles.scrollable}>
               <div id="mint">
-                <MintSection maticMint={maticMint} wethMint={wethMint} numOfNFTs={numOfNFTs} />
+                <MintSection maticMint={maticMint} wethMint={wethMint} networkCheck={isRightNetwork} numOfNFTs={numOfNFTs} />
               </div>
               <div id="roadmap">
                 <Roadmap />

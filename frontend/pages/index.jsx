@@ -123,7 +123,7 @@ export default function Home() {
   //#endregion
 
   const numOfNFTs = async () => {
-    let list = await (await fetch('http://localhost:8000/leaderboard')).json();
+    let list = await (await fetch('http://0.0.0.0:8000/leaderboard')).json();
     return list.length;
   }
 

@@ -9,7 +9,7 @@ const Leaderboard_list = () => {
   const [ expanded, setExpanded ] = useState(-1);
 
   const getCityList = async () => {
-    let list = await (await fetch('http://localhost:8000/leaderboard')).json();
+    let list = await (await fetch('http://0.0.0.0:8000/leaderboard')).json();
     console.log('SORTED LIST:', list);
     setCities(list); // sets the city list to an array with IDs sorted by their score
   }

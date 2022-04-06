@@ -1,5 +1,6 @@
 import {React, useState,useCallback, useRef, useEffect} from 'react'
 import { useBuildingStore, demolishOnGrid } from './BuildingStore';
+import {gridDimensions,gridSize,plotSize} from './gridData'
 
 function GridSquare(props){
     const gridDimensions = props.gridDimensions;
@@ -36,7 +37,7 @@ function GridSquare(props){
         // onWheel={onWheel}
         >
         <boxBufferGeometry attach="geometry"/>
-        <meshLambertMaterial attach="material" color={hovered?0x88FF88:'lightgray'} transparent opacity={(hovered?0.618:0)} />
+        <meshLambertMaterial attach="material" color={hovered?0x88FF88:'lightgray'} transparent opacity={props.built?0:(hovered?0.8:0.6)} />
         </mesh>
     )
 }
@@ -54,12 +55,11 @@ function buildingBox(props){
         </mesh>
     )
 }
+// buildingBox might be used in the future for ground - probably will be replaced with better landscape model
 
 export default function Grid() {
-    const gridDimensions = 100;
-    const gridSize = 10;
-    const plotSize = gridDimensions/gridSize;
     const grid = useBuildingStore(state=>state.grid)
+    const buildings =useBuildingStore(state=>state.buildings) //ovo je bitno jer se zbog ovoga refreshuje
     let position;
     let x;
     let y;
@@ -67,6 +67,6 @@ export default function Grid() {
         x=Math.floor(index/gridSize)
         y=index%gridSize;
         position = [(plotSize*x-gridSize*plotSize/2+plotSize/2),0,(plotSize*y-gridSize*plotSize/2-plotSize/2)];
-        return <GridSquare gridSize={gridSize} gridDimensions={gridDimensions} plotSize={plotSize} key={index} position={position} scale={[plotSize,0.3,plotSize]} x={x} y={y}/>
+        return <GridSquare gridSize={gridSize} gridDimensions={gridDimensions} plotSize={plotSize} key={index} position={position} scale={[plotSize*0.9,0.6,plotSize*0.9]} x={x} y={y} built={element?true:false}/>
     })
 }

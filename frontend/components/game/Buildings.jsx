@@ -2,10 +2,7 @@ import React from 'react'
 import House from './House'
 import Factory from './Factory'
 import { useBuildingStore } from './BuildingStore'
-
-const gridDimensions = 100;
-const gridSize = 10;
-const plotSize = gridDimensions/gridSize;
+import {gridDimensions,gridSize,plotSize} from './gridData'
 
 
 export default function Buildings() {

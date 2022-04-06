@@ -1,8 +1,3 @@
-// import Head from 'next/head'
-// import Image from 'next/image'
-// import styles from '../styles/Home.module.css'
-
-import Link from 'next/link'
 import Head from 'next/head';
 import { useEffect, useState } from "react"
 import { ethers } from 'ethers';
@@ -26,12 +21,23 @@ const networkID = 80001; // ovo je sad ID od mumbai testneta, ali kasnije ce bit
 // trebalo bi da postoji promenljiva koja pokazuje koliko je do sad NFT-ova mintovano (samo treba cityContract.currId() da se pozove)
 
 export default function Home() {
-
+  
+  //#region Minting the NFTs
+  
   var cityContract;
   var wethContract;
   
   const cityContractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
   const wethContractAddress = '0x774EBC799E346de4b992764b85d0073a1A4C4143';
+  
+  const connectWallet = async () => {
+    let res;
+    if(cityContract === undefined) res = await initContracts();
+    if(res !== undefined && res.error !== undefined) return res;
+    
+    const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    return account;
+  };
   
   async function initContracts() {
     if(!window.ethereum) return { error: 'no wallet' };
@@ -45,8 +51,9 @@ export default function Home() {
     wethContract = new ethers.Contract(wethContractAddress, Weth.abi, signer);
   }
 
-  //#region Functions for minting the NFTs
   const isRightNetwork = () => {
+    // function that is checking for the connected network so that you can't mint with z
+    if(window.ethereum === undefined) return;
     console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
     if(parseInt(window.ethereum.networkVersion) === networkID) {
       console.log('right network');
@@ -59,31 +66,35 @@ export default function Home() {
   }
 
   const ethToMatic = async (ethPrice) => {
-    var res = await (await fetch("https://api.binance.com/api/v3/aggTrades?symbol=MATICETH")).json();
+    var res = await (await fetch("https://api.binance.com/api/v3/aggTrades?symbol=MATICETH")).json(); // request to the binance api for the matic-eth price
+    
+    // calculating the average price:
     var price = 0;
     for(let i = 0; i < res.length; i++) {
       price = price + Number(res[i].p);
     }
     price /= res.length;
-    return ethPrice / price;
+
+    return ethPrice / price; // returning the price in 'MATIC'
   }
   
   const maticMint = async (onlyPrice, num) => {
     let ethPrice = 0.001; // this should be loaded from somewhere
     
-    let maticPrice = await ethToMatic(ethPrice * num);
-    let epsilon = 0.1;
+    let maticPrice = await ethToMatic(ethPrice * num); // converting the eth price to matic
+    let epsilon = 0.1; // extra value to prevent unsuccessful mint transactions because of a price inagreement
     
     if(onlyPrice) {
-      return {maticPrice: maticPrice, epsilon: epsilon};
+      return {maticPrice: maticPrice, epsilon: epsilon}; // returning the price if onlyPrice is true
     }
     
-    let res = await connectWallet();
+    let res = await connectWallet(); // getting the wallet address
     if(res.error !== undefined) {
-      return res;
+      return res; // handling errors (e.g. no connected wallet)
     }
     
     try {
+      // calling the mint function in the smart contract
       let tx = await cityContract.maticMint(num, { value: ethers.utils.parseEther(`${maticPrice + epsilon}`) });
       let receipt = await tx.wait();
       console.log('Mint receipt:', receipt);
@@ -100,17 +111,18 @@ export default function Home() {
     let account = await connectWallet();
     if(account.error !== undefined) {
       return account;
-    }
+    } // checking for errors
     
-    let balance = await wethContract.balanceOf(account);
+    let balance = await wethContract.balanceOf(account); // getting the weth balance of the account
     console.log('balance1: ', balance);
 
-    let wethPrice = 0.1 * num;
+    let wethPrice = 0.1 * num; // this should be loaded from somewhere (the price which may vary)
     if(onlyPrice) return wethPrice; // this returns the price if the function is called like this: wethMint(true);
 
     let reciept;
     let tx;
     try {
+      // increasing the allowance
       tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice}`)); // there should be a check if the current allowance is enough
       reciept = await tx.wait();
     }
@@ -120,6 +132,7 @@ export default function Home() {
     }
 
     try { 
+      // calling the mint function
       tx = await cityContract.wethMint(num, {gasLimit: 1e7});
       reciept = await tx.wait(); 
     }
@@ -127,8 +140,8 @@ export default function Home() {
       console.log('error', e); 
       return { error: 'tx1 rejected' }; 
     }
-
     console.log(reciept);
+
     balance = await wethContract.balanceOf(account);
     console.log('balance2: ', balance);
 
@@ -141,14 +154,7 @@ export default function Home() {
     return list.length;
   }
 
-  const connectWallet = async () => {
-    let res;
-    if(cityContract === undefined) res = await initContracts();
-    if(res !== undefined && res.error !== undefined) return res;
-
-    const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    return account;
-  };
+  //#region Dev Options
 
   const mintERC20 = async () => {
     const addr = await connectWallet();
@@ -160,10 +166,18 @@ export default function Home() {
     console.log(balance);
   }
 
+  //#endregion
+
+  //#region Handling Popup Components 
+
+
+
+  //#endregion
+
   useEffect(() => {
     // initContracts();
     console.log('window.ethereum:', window.ethereum);
-    console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
+    if(window.ethereumt) console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
   }, []);
 
   return (
@@ -172,7 +186,7 @@ export default function Home() {
         <title>City Builder</title>
       </Head>
       <main>
-        <div>
+        <body>
           <Nav />
           <div className={styles.wrapper}>
             <div className={styles.scrollable}>
@@ -197,7 +211,7 @@ export default function Home() {
             <AboutUs />
           </div>
           <DevOptions mintERC20={() => mintERC20()} />
-        </div>
+        </body>
       </main>
     </div>
   )

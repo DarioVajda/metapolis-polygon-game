@@ -2,6 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Link from 'next/link';
 
+import MintPopup from './MintPopup';
+
 import style from './styles/mintSection.module.css'
 
 const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
@@ -20,6 +22,28 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
     return new Promise(resolve => setTimeout(resolve, time));
   }
 
+  // #region popup functions
+  const disableScroll = () => {
+    // To get the scroll position of current webpage
+    let TopScroll = window.pageYOffset || document.documentElement.scrollTop;
+    let LeftScroll = window.pageXOffset || document.documentElement.scrollLeft;
+    
+    
+    // if scroll happens, set it to the previous value
+    window.onscroll = function() {
+      window.scrollTo({
+        top: TopScroll,
+        left: LeftScroll, 
+        behavior: 'auto'
+      });
+    };
+  }
+
+  const enableScroll = () => {
+    window.onscroll = function() {};
+  }
+  // #endregion
+
   const showError = async (err) => {
     setError(err);
     await delay(5000);
@@ -28,6 +52,7 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   }
 
   const getPrice = async () => {
+    // funkcija koja set-uje cenu u MATICU
     let p;
     await delay(50);
     p = await maticMint(true, 1);
@@ -46,14 +71,21 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
     }
     
     let res;
-    let func = token?maticMint:wethMint;
-    
+    let func = token?maticMint:wethMint; // bira se odgovarajuci nacin mintovanja
+
     setMintPressed(true);
+    document.body.style.overflow = 'hidden';
+    document.body.style.marginRight = '15px';
+    // document.body.style.border = '10px solid yellow'
+    // disableScroll();
     res = await func(false, num);
     if(res.error !== undefined) {
       showError(res.error);
     }
+    // enableScroll();
     setMintPressed(false);
+    document.body.style.overflow = 'visible';
+    document.body.style.marginRight = '0'
 
   }
 
@@ -68,31 +100,37 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   }, []);
 
   return (
-    <div className={style.mintSection}>
-      <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>
-      <button className={style.mintButton} onClick={() => mint()}>Mint: {num}</button>
-      <div className={style.error}>{error}</div>
-      <div className={style.slider}>
-        <input type="range" value={num} min="0" max="10" onChange={(e) => { setNum((e.target.value>0)?e.target.value:1);  } } />
-      </div>
-      <div>
-        {token?Math.round((num*price+epsilon)*100)/100:Math.round(num*0.1*100)/100} {token?'MATIC':'WETH'}
-      </div>
-      <div className={style.tokenChoice}>
-        MATIC
-        <div className={`${style.switch} ${token?style.switchMatic:style.switchWeth}`} onClick={() => {setToken(!token); }} >
-          <div className={`${style.switchCircle} ${token?style.circleMatic:style.circleWeth}`} />
+    <>
+      {
+        mintPressed &&
+        <MintPopup />
+      }
+      <div className={style.mintSection}>
+        <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>
+        <button className={style.mintButton} onClick={() => mint()}>Mint: {num}</button>
+        <div className={style.error}>{error}</div>
+        <div className={style.slider}>
+          <input type="range" value={num} min="0" max="10" onChange={(e) => { setNum((e.target.value>0)?e.target.value:1);  } } />
         </div>
-        WETH
+        <div>
+          {token?Math.round((num*price+epsilon)*100)/100:Math.round(num*0.1*100)/100} {token?'MATIC':'WETH'}
+        </div>
+        <div className={style.tokenChoice}>
+          MATIC
+          <div className={`${style.switch} ${token?style.switchMatic:style.switchWeth}`} onClick={() => {setToken(!token); }} >
+            <div className={`${style.switchCircle} ${token?style.circleMatic:style.circleWeth}`} />
+          </div>
+          WETH
+        </div>
+        <p className={style.maxMint}>Max per wallet: 10</p>
+        <p className={style.mintEnds}>Minting ends on May 18th at 2pm CET</p>
+        <p> 
+          Check the following hyperlink for{' '}
+          <Link href='/help'><a className={style.help}>HELP</a></Link>
+          {' '}with minting
+        </p>
       </div>
-      <p className={style.maxMint}>Max per wallet: 10</p>
-      <p className={style.mintEnds}>Minting ends on May 18th at 2pm CET</p>
-      <p> 
-        Check the following hyperlink for{' '}
-        <Link href='/help'><a className={style.help}>HELP</a></Link>
-        {' '}with minting
-      </p>
-    </div>
+    </>
   )
 }
 

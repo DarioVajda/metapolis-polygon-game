@@ -1,3 +1,9 @@
+.popupActive {
+  height: 100vh;
+  overflow: hidden;
+  border: 10px solid yellow;
+}
+
 .wrapper {
   display: flex;
   flex-direction: row;

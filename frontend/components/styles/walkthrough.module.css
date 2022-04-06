@@ -11,13 +11,12 @@
 
 .walkthrough h1::after {
     content: "?";
-    position: absolute; /* problem sa ovim je sto ne znam kako da centriram, tj da sredina ovoga bude u ravni sa sredinom teksta */
+    position: relative; /* problem sa ovim je sto ne znam kako da centriram, tj da sredina ovoga bude u ravni sa sredinom teksta */
     transform: translate(0, 0.5em);
     text-align: center;
     height: 1.5em;
     width: 1.5em;
     margin: 0 0 0 1em;
-    border: 1px solid rgb(145, 145, 145);
     color: var(--light-text);
     padding: 0.1em;
     font-weight: 600;
@@ -27,7 +26,7 @@
 
 .walkthrough h1:hover::after {
     content: "See how every building affects your city and what it does to help you develop the winning strategy!";
-    position: absolute;
+    position: relative;
     min-height: 2em;
     height: fit-content;
     width: fit-content;

@@ -1,0 +1,62 @@
+.popup {
+    top: 50%;
+    left: 50%;
+    z-index: 11;
+    left: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(0, -50%);
+    background-color: rgba(0, 0, 0, 0.557);
+}
+
+.window {
+    padding: 0.5em 1em;
+    min-height: 40%;
+    max-height: 70%;
+    width: 60%;
+    background-color: var(--light-background);
+    border-radius: 20px;
+    border: 1px solid white;
+    overflow: scroll;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.window::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+}
+
+.closeIcon {
+    border-radius: 50%;
+    color: var(--light-text);
+    background-color: transparent;
+    width: fit-content;
+    user-select: none;
+    cursor: pointer;
+}
+
+.content {
+    background-color: transparent;
+    /* height: 50vh; */
+}
+
+.list {
+    background-color: transparent;
+    padding: 0 0 0 1em;
+    font-size: 1.2rem;
+    color: var(--light-text);
+}

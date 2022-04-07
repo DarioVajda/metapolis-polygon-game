@@ -186,32 +186,30 @@ export default function Home() {
         <title>City Builder</title>
       </Head>
       <main>
-        <body>
-          <Nav />
-          <div className={styles.wrapper}>
-            <div className={styles.scrollable}>
-              <div id="mint">
-                <MintSection maticMint={maticMint} wethMint={wethMint} networkCheck={isRightNetwork} numOfNFTs={numOfNFTs} />
-              </div>
-              <div id="roadmap">
-                <Roadmap />
-              </div>
+        <Nav />
+        <div className={styles.wrapper}>
+          <div className={styles.scrollable}>
+            <div id="mint">
+              <MintSection maticMint={maticMint} wethMint={wethMint} networkCheck={isRightNetwork} numOfNFTs={numOfNFTs} />
             </div>
-            <div className={styles.city}>
-              <HomeCity />
+            <div id="roadmap">
+              <Roadmap />
             </div>
           </div>
-          <div id="walkthrough">
-            <Walkthrough />
+          <div className={styles.city}>
+            <HomeCity />
           </div>
-          <div id="faqs">
-            <FAQs />
-          </div>
-          <div id="about-us">
-            <AboutUs />
-          </div>
-          <DevOptions mintERC20={() => mintERC20()} />
-        </body>
+        </div>
+        <div id="walkthrough">
+          <Walkthrough />
+        </div>
+        <div id="faqs">
+          <FAQs />
+        </div>
+        <div id="about-us">
+          <AboutUs />
+        </div>
+        <DevOptions mintERC20={() => mintERC20()} />
       </main>
     </div>
   )

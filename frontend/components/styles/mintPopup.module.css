@@ -14,22 +14,14 @@
 }
 
 .window {
-    padding: 0.5em 1em;
-    min-height: 40%;
-    max-height: 70%;
+    padding: 0em 1em;
+    /* min-height: 40%;
+    max-height: 70%; */
+    height: fit-content;
     width: 60%;
     background-color: var(--light-background);
     border-radius: 20px;
-    border: 1px solid white;
-    overflow: scroll;
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-    
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.window::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    border: 1px solid var(--text);
 }
 
 .top {
@@ -49,9 +41,25 @@
     cursor: pointer;
 }
 
+.content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
 .content {
     background-color: transparent;
-    /* height: 50vh; */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* min-height: 35vh; */
+    max-height: 65vh;
+    padding: 0 0 3em 0;
+
+    overflow: scroll;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .list {
@@ -59,4 +67,34 @@
     padding: 0 0 0 1em;
     font-size: 1.2rem;
     color: var(--light-text);
+}
+
+.confirm {
+    margin: 0.5em 0.5em 0 0;
+    background-color: var(--primary);
+    font-size: 2em;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.2em 1em 0.2em 0;
+    align-self: flex-end;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+}
+
+.confirm:active {
+    background-color: var(--primary-dark);
+    border: 1px solid white;
+    border: none;
+}
+
+.confirm svg {
+    margin-right: 0.5em;
+    margin-left: 0.3em;
+}
+
+.spinner {
+    transform: scale(1.8);
 }

@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import Link from 'next/link';
+import useScrollbarSize from 'react-scrollbar-size';
 
 import MintPopup from './MintPopup';
 
-import style from './styles/mintSection.module.css'
+import style from './styles/mintSection.module.css';
+
 
 const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   const [citiesLeft, setCitiesLeft] = useState(10000);
@@ -15,34 +17,15 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   const [epsilon, setEpsilon] = useState(0);
   
   const [mintPressed, setMintPressed] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
 
   const [error, setError] = useState('');
+  
+  const scrollBar = useScrollbarSize();
 
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
   }
-
-  // #region popup functions
-  const disableScroll = () => {
-    // To get the scroll position of current webpage
-    let TopScroll = window.pageYOffset || document.documentElement.scrollTop;
-    let LeftScroll = window.pageXOffset || document.documentElement.scrollLeft;
-    
-    
-    // if scroll happens, set it to the previous value
-    window.onscroll = function() {
-      window.scrollTo({
-        top: TopScroll,
-        left: LeftScroll, 
-        behavior: 'auto'
-      });
-    };
-  }
-
-  const enableScroll = () => {
-    window.onscroll = function() {};
-  }
-  // #endregion
 
   const showError = async (err) => {
     setError(err);
@@ -61,8 +44,21 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
     setPrice(p.maticPrice);
   }
 
+  const openPopup = () => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.marginRight = `${scrollBar.width}px`;
+
+    setPopupOpen(true);
+  }
+
+  const closePopup = () => {
+    document.body.style.overflow = 'visible';
+    document.body.style.marginRight = '0';
+
+    setPopupOpen(false);
+  }
+
   const mint = async () => {
-    console.log('mintPressed: ', mintPressed);
     if(mintPressed) return;
 
     if(networkCheck() === false) {
@@ -74,19 +70,14 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
     let func = token?maticMint:wethMint; // bira se odgovarajuci nacin mintovanja
 
     setMintPressed(true);
-    document.body.style.overflow = 'hidden';
-    document.body.style.marginRight = '15px';
-    // document.body.style.border = '10px solid yellow'
-    // disableScroll();
+
     res = await func(false, num);
     if(res.error !== undefined) {
       showError(res.error);
     }
-    // enableScroll();
+    
     setMintPressed(false);
-    document.body.style.overflow = 'visible';
-    document.body.style.marginRight = '0'
-
+    closePopup();
   }
 
   const getCitiesLeft = async () => {
@@ -102,12 +93,12 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
   return (
     <>
       {
-        mintPressed &&
-        <MintPopup />
+        popupOpen &&
+        <MintPopup token={token} closePopup={closePopup} mintFunction={mint} mintPressed={() => mintPressed}/>
       }
       <div className={style.mintSection}>
         <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>
-        <button className={style.mintButton} onClick={() => mint()}>Mint: {num}</button>
+        <button className={style.mintButton} onClick={openPopup}>Mint: {num}</button>
         <div className={style.error}>{error}</div>
         <div className={style.slider}>
           <input type="range" value={num} min="0" max="10" onChange={(e) => { setNum((e.target.value>0)?e.target.value:1);  } } />

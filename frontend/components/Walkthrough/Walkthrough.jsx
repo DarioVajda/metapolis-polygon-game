@@ -59,7 +59,6 @@ export default class Scene extends React.Component {
       <div className={styles.walkthrough}>
         <h1>
           Walkthrough
-          <div className={styles.info} onClick={() => {}}>?</div>
         </h1>
         <div className={styles.canv}>
           <div className={styles.btn}>
@@ -81,11 +80,12 @@ export default class Scene extends React.Component {
               height="1em" 
               viewBox="0 0 24 24"
               onClick={this.rightBtn}
-            >
+              >
               <path fill="currentColor" fillRule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1ZM9.793 8.707a1 1 0 0 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414-1.414L13.086 12L9.793 8.707Z" clipRule="evenodd"/>
             </svg>
           </div>
         </div>
+        <p>See how every building affects your city and what it does to help you develop the winning strategy!</p>
       </div>
     );
   }

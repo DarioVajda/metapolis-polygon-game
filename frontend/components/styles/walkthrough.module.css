@@ -12,18 +12,9 @@
     align-items: center;
 }
 
-.info {
-    margin: 0.3em 0.5em 0 0.5em;
-    font-weight: 400;
-    font-size: 1.2rem;
-    border: 2px solid var(--light-text);
-    width: 1.2em;
-    height: 1.2em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
+.walkthrough p {
+    /* padding-left: 2em; */
+    align-self: center;
 }
 
 .canv {

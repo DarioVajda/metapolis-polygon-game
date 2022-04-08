@@ -42,8 +42,6 @@ export default function Home() {
   async function initContracts() {
     if(!window.ethereum) return { error: 'no wallet' };
 
-    console.log('sad se inicijalizuju contractovi');
-
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
     const signer = provider.getSigner(); // signer koji se daje kao argument pri povezivanju sa contractom
     
@@ -54,13 +52,10 @@ export default function Home() {
   const isRightNetwork = () => {
     // function that is checking for the connected network so that you can't mint with z
     if(window.ethereum === undefined) return;
-    console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
     if(parseInt(window.ethereum.networkVersion) === networkID) {
-      console.log('right network');
       return true;
     }
     else {
-      console.log('wrong network');
       return false;
     }
   }
@@ -97,10 +92,8 @@ export default function Home() {
       // calling the mint function in the smart contract
       let tx = await cityContract.maticMint(num, { value: ethers.utils.parseEther(`${maticPrice + epsilon}`) });
       let receipt = await tx.wait();
-      console.log('Mint receipt:', receipt);
     }
     catch(e) {
-      console.log(e);
       return { error: 'tx1 rejected' };
     }
     
@@ -114,21 +107,24 @@ export default function Home() {
     } // checking for errors
     
     let balance = await wethContract.balanceOf(account); // getting the weth balance of the account
-    console.log('balance1: ', balance);
 
     let wethPrice = 0.1 * num; // this should be loaded from somewhere (the price which may vary)
     if(onlyPrice) return wethPrice; // this returns the price if the function is called like this: wethMint(true);
 
     let reciept;
     let tx;
-    try {
-      // increasing the allowance
-      tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice}`)); // there should be a check if the current allowance is enough
-      reciept = await tx.wait();
-    }
-    catch(e) { 
-      console.log('error', e); 
-      return { error: 'tx1 rejected' };
+
+    let allowance = await wethContract.allowance(account, cityContract.address); // the current allowance
+    allowance /= 1e18;
+    if(allowance < wethPrice) {
+      try {
+        // increasing the allowance
+        tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice-allowance}`)); // there should be a check if the current allowance is enough
+        reciept = await tx.wait();
+      }
+      catch(e) { 
+        return { error: 'tx1 rejected' };
+      }
     }
 
     try { 
@@ -137,13 +133,10 @@ export default function Home() {
       reciept = await tx.wait(); 
     }
     catch(e) {
-      console.log('error', e); 
-      return { error: 'tx1 rejected' }; 
+      return { error: 'tx2 rejected' }; 
     }
-    console.log(reciept);
 
     balance = await wethContract.balanceOf(account);
-    console.log('balance2: ', balance);
 
     return {};
   }
@@ -160,10 +153,10 @@ export default function Home() {
     const addr = await connectWallet();
     const tx = await wethContract.mint(addr, ethers.utils.parseEther('1'));
     const receipt = await tx.wait();
-    console.log(receipt);
+    // console.log(receipt);
     var balance = await wethContract.balanceOf(addr);
     balance = balance.toString();
-    console.log(balance);
+    console.log('curr balance: ', balance);
   }
 
   //#endregion
@@ -176,8 +169,6 @@ export default function Home() {
 
   useEffect(() => {
     // initContracts();
-    console.log('window.ethereum:', window.ethereum);
-    if(window.ethereumt) console.log('window.ethereum.networkVersion:', window.ethereum.networkVersion);
   }, []);
 
   return (

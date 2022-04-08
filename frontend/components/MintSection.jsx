@@ -39,7 +39,7 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
     let p;
     await delay(50);
     p = await maticMint(true, 1);
-    console.log(p);
+    // console.log(p);
     setEpsilon(p.epsilon);
     setPrice(p.maticPrice);
   }

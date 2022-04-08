@@ -49,10 +49,18 @@ export default class Scene extends React.Component {
     console.log("ovde ce biti funkcija kojom se ode jedan korak unapred");
   }
 
+  // Ideja kako da se resi problem sa pojavljivanjem dodatnog objasnjenja kad se klikne na upitnik:
+  //   - treba da se pojavi taj mali prozor sa relative pozicijom
+  //   - osim tog prozora ce se pojaviti jedan providan div preko celog ekrana koji kad se klikne, zatvara taj prozorcic
+  //   - i treba da se doda scroll listener ili tako nesto da nestane prozorcic i kad se skroluje
+
   render() {
     return (
       <div className={styles.walkthrough}>
-        <h1>Walkthrough</h1>
+        <h1>
+          Walkthrough
+          <div className={styles.info} onClick={() => {}}>?</div>
+        </h1>
         <div className={styles.canv}>
           <div className={styles.btn}>
             <svg 

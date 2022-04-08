@@ -20,7 +20,7 @@ const MintPopup = ({token, closePopup, mintFunction, mintPressed}) => {
     <>
       <h3>When minting with Polygon ETH token, there will be 2 transactions:</h3>
       <div className={style.list}>
-        <p>1. The first transaction is for preprocessing and getting connected with your Polygon ETH wallet, <span style={{fontWeight: '700'}}>no funds will be sent from it</span>, only the minimal gas fee (≈$0.1) on the polygon network.</p>
+        <p>1. The first transaction is for preprocessing and getting connected with your Polygon ETH wallet, <span style={{fontWeight: '700'}}>no funds will be sent from it</span>, only the minimal gas fee (≈$0.1) on the polygon network. This transaction has to be completed only once per wallet.</p>
         <p>2. The second transation is the one confirming the minting of the NFT, you will be charged the full mint price (0.1 WETH) and you will receive your unique City NFT.</p>
       </div>
     </>

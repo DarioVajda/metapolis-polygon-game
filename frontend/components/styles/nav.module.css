@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: stretch;
     border-bottom: 1px solid var(--text);
-    z-index: 10;
+    z-index: 100;
 }
 
 .navButton {

@@ -85,7 +85,7 @@ export default class Scene extends React.Component {
             </svg>
           </div>
         </div>
-        <p>See how every building affects your city and what it does to help you develop the winning strategy!</p>
+        <p>See how every building affects your city to help you develop the winning strategy!</p>
       </div>
     );
   }

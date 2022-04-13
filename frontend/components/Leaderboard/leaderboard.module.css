@@ -1,0 +1,62 @@
+.city {
+    padding: 0.5em 0;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1em 0;
+    font-size: 1.2rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.id {
+    width: min(10em, 20%);
+}
+
+.money {
+    width: min(15em, 30%);
+}
+
+.income {
+    width: min(15em, 30%);
+}
+
+.id, .money, .income {
+    text-align: center;
+    margin: 0 0.5em;
+}
+
+.arrow {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1em;
+    transition: all 0.3s ease-in-out;
+}
+
+.arrow svg {
+    transform: scale(2);
+}
+
+.arrowUp {
+    transform: rotateX(180deg);
+}
+
+.more {
+    transition: all 0.3s ease-in-out;
+    max-height: 10em;
+}
+
+.hide {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.temp {
+    height: 10em;
+    background-color: darkgray;
+}

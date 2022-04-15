@@ -28,3 +28,5 @@ export default function Buildings() {
     //add more later
   })
 }
+
+///// MOZDA SCALE DA SE RACUNA NA OSNOVU PLOTSIZE, OVAKO JE MALO GLUPO...

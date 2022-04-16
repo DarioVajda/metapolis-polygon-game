@@ -1,6 +1,6 @@
 import { generateUUID } from 'three/src/math/MathUtils'
 import create from 'zustand'
-import {gridDimensions,gridSize,plotSize} from './gridData'
+import {gridDimensions,gridSize,plotSize} from './GridData'
 
 
 const useBuildingStore = create((set) => ({
@@ -13,10 +13,6 @@ const useBuildingStore = create((set) => ({
     removeBuilding: (uuid) => set((state) => ({buildings: state.buildings.filter(building => building.uuid!=uuid),
                                                grid: removeBuildingFromGrid(state.grid,uuid)}))
   }))
-
-  //// BUG: ako se stavi 2 puta gradjevina na isto mesto, ne moze da se deletuje
-  // ovo je zato sto se generisu 2 razlicita uuid, u buildings, a grid sadrzi samo poslednji
-  // vrv bi bilo reseno da postoji provera...
 
 
 //Function to add building to grid

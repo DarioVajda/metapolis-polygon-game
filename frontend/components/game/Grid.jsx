@@ -1,8 +1,12 @@
 import {React, useState,useCallback, useRef, useEffect} from 'react'
-import { useBuildingStore, demolishOnGrid } from './BuildingStore';
-import {gridDimensions,gridSize,plotSize} from './gridData'
+import { useBuildingStore, demolishOnGrid } from './BuildingStore.js';
+import {gridDimensions,gridSize,plotSize} from './GridData'
+import { buildingTypes } from './BuildingTypes.js';
+import { useSelectedBuildingStore } from './selectedBuildingStore.js';
 
 function GridSquare(props){
+    const selectedBuilding = useSelectedBuildingStore(state=> state.selectedBuilding)
+    let selectedBuildingType = selectedBuilding?buildingTypes[selectedBuilding][0]:null //checks if selectedBuilding is null
     const gridDimensions = props.gridDimensions;
     const gridSize = props.gridSize;
     const plotSize = props.plotSize;
@@ -12,21 +16,52 @@ function GridSquare(props){
     const grid = useBuildingStore(state=>state.grid)
     const addBuilding = useBuildingStore(state=>state.addBuilding)
     const demolishBuilding = useBuildingStore(state=>state.removeBuilding);
+    console.log(selectedBuilding)
 
-    // ONCLICK ONLY ADDS HOUSE FOR NOW ///////////// TODO
-    // ALSO SHOULD ADD CHECKS HERE, RIGTH NOW ONLY ADDS BUILDING WITH NO CHECKS
+    const build = (x,y,grid,selectedBuildingType)=>{
+        let buildable=true;
+        if (selectedBuildingType === null){
+            buildable=false
+            console.log('no building type selected')
+        }
+        else if (x+selectedBuildingType.width>gridSize || y+selectedBuildingType.height>gridSize) {
+            buildable=false;
+            console.log('error: trying to build out of bounds')
+        }
+        else{
+            for (let i = x; i < x+selectedBuildingType.width; i++) {
+                for(let j = y; j< y+selectedBuildingType.height; j++){
+                    if(grid[i*gridSize+j] != null && grid[i*gridSize+j] != undefined){
+                        buildable=false
+                    }
+                }
+            }
+        }
+        if(buildable){
+            addBuilding([x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+        }
+        else
+            console.log('can\'t build')
+    }
+    const remove = (x,y,grid)=>{
+        let notEmpty=true;
+        if(grid[x*gridSize+y] === null || grid[x*gridSize+y] === undefined)
+            notEmpty=false;
+        if(notEmpty)
+            demolishBuilding(grid[x*gridSize+y])
+        else
+            console.log('this grid square is empty already')
+    }
+
     const onClick = useCallback((e) => {
         e.stopPropagation()
-        addBuilding([x,y],[x,y],'House')
+        build(x,y,grid,selectedBuildingType)
     }, [])
     const onContextMenu = useCallback((e) => {
         e.stopPropagation()
-        demolishBuilding(grid[x*gridSize+y])
+        remove(x,y,grid)
     }, [])
-    // const onWheel = useCallback((e) => {
-    //     e.stopPropagation()
-    // }, [])
-    // DEBUG FUNCTION
+
     return(
         <mesh
         {...props}
@@ -34,28 +69,12 @@ function GridSquare(props){
         onPointerOut={(event)=>setHover(false)}
         onClick={onClick}
         onContextMenu={onContextMenu}
-        // onWheel={onWheel}
         >
         <boxBufferGeometry attach="geometry"/>
         <meshLambertMaterial attach="material" color={hovered?0x88FF88:'lightgray'} transparent opacity={props.built?0:(hovered?0.8:0.6)} />
         </mesh>
     )
 }
-function buildingBox(props){
-    const gridDimensions = props.gridDimensions;
-    const gridSize = props.gridSize;
-    const plotSize = props.plotSize;
-    const x=props.x;
-    const y=props.y;
-    return(
-        <mesh
-        {...props}>
-        <boxBufferGeometry attach="geometry"/>
-        <meshLambertMaterial attach="material" color={'lightGreen'}/>
-        </mesh>
-    )
-}
-// buildingBox might be used in the future for ground - probably will be replaced with better landscape model
 
 export default function Grid() {
     const grid = useBuildingStore(state=>state.grid)

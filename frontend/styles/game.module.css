@@ -1,0 +1,38 @@
+.roundedFixedBtn{
+    position:absolute;
+    text-decoration: none;
+    z-index: 999;
+    
+    height: 12%;
+    line-height: 60px;  
+    width: 8%;    
+    font-size:1em;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 30%;
+    background-color: #1dcfdb;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+  }
+  .container {
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100vh;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0);
+  }
+  .container .btnHolder {
+    justify-content: flex-end;
+    display: flex;
+  }
+  .blog-link {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    text-decoration: none;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: palevioletred;
+    z-index: 999;
+  }

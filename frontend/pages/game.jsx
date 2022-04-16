@@ -7,14 +7,14 @@ import Link from "next/link"
 import Buildings from '../components/game/Buildings';
 
 //----COMPONENTS----//
-// import {Model} from '../components/game/Valley_lanscape2_real'
 import Lights from '../components/game/Lights'
 import WorldCanvas from '../components/game/WorldCanvas';
 import Landscape from '../components/game/Valley_lanscape2_real'
-import { generateUUID } from 'three/src/math/MathUtils';
+import HTMLContent from '../components/game/HTMLContent'
 import Grid from '../components/game/Grid';
 
 //----CONSTANTS----//
+
 
 //MAIN COMPONENT
 const gameplay = () => {
@@ -23,10 +23,14 @@ const gameplay = () => {
       <div style={{position: "fixed",
         height: '90%',
         width: '90%',
+        margin:'0px',
+        padding:'0px',
+        overflow:'hidden',
         left: '50%',
         top: '50%',
-        transform: 'translate(-50%, -50%)'}}>
-
+        transform: 'translate(-50%, -50%)'
+      }}>
+        <HTMLContent/>
           <WorldCanvas>
             <OrbitControls/>
             <Lights/>
@@ -39,7 +43,6 @@ const gameplay = () => {
             </Suspense>
           </WorldCanvas>
       </div>
-      {/* <GameRender/> */}
       <Link href="/"><a>Home</a></Link>      
     </>
   )

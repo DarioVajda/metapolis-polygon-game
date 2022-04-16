@@ -7,6 +7,7 @@ import RoadmapItem from './RoadmapItem';
 const Roadmap = () => {
   
   let items = [
+    {unix: 0, date: 'STO PRE', title: 'TODO', description: 'Trebam da osmislim deo sajta koji objasnjava nagrade (skica) i da ga napravim.'},
     {unix: 0, date: 'STO PRE', title: 'TODO', description: 'MOZDA BI TREBALO DA SE NAPRAVI DA SE SNAPUJE EKRAN KOD WALKTHROUGH DELA NA SREDINU KAO'},
     {unix: 0, date: 'STO PRE', title: 'TODO', description: 'MOGAO BIH DA NAPRAVIM DA SE I BOJA DUGMETA I SLIDERA MENJAJU U ZAVISNOSTI OD IZABRANOG TOKENA'},
     {unix: 0, date: 'STO PRE', title: 'TODO', description: 'MOZDA DA SE NAPRAVI DOLE ZAGLAVLJE SA JOS NEKIM PODACIMA, TIPA BIZNIS MEJL I SLICNO, MADA MOZDA JE TO NEPOTREBNO U OVOJ SITUACIJI'},

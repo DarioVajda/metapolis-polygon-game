@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import LeaderboardItem from './LeaderboardItem';
 
+import style from './leaderboard.module.css';
+
+// potencijalne nagrade:
+// 1		        10
+// 2-5	      	4
+// 6-100	    	1
+// 101-500		  0.3
+// 501-1250	    0.15
+// 1251-2500	  0.1
+
 const LeaderboardList = () => {
   const [list, setList] = useState(Array(10).fill(-1));
   const loaded = useRef(0);
@@ -41,7 +51,7 @@ const LeaderboardList = () => {
   }, []);
 
   return (
-    <div>
+    <div className={style.leaderboard}>
       {
         list.map((element, index) =>
           <div key={index}>

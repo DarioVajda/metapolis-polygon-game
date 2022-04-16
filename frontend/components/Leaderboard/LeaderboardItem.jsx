@@ -8,6 +8,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
   const idLoaded = useRef(false);
   const dataLoaded = useRef(false);
 
+  const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
+
   const getData = async () => {
     loadCity(id, index).then(res => {
       if(dataLoaded.current) return;
@@ -24,10 +26,10 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
   }
 
   return (
-    <div className={style.city}>
+    <div className={style.item}>
       <div className={style.top} onClick={() => expand(index)}>
         <div className={style.id}>
-          {index+1}. City #{id}
+          {index+1}. City #{id!==-1 && id}
         </div>
         <div className={style.money}>
           Money: ${data.money}
@@ -42,7 +44,17 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
         </div>
       </div>
       <div className={`${style.more} ${!expanded&&style.hide}`}>
-        <div className={style.temp}></div>
+        <div className={style.city}>
+          city
+        </div>
+        <div className={style.data}>
+          <div className={style.price}>
+            Price: {1000}ETH
+          </div>
+          <div className={style.opensea}>
+            See on <a href={`https://opensea.io/assets/${address}/${id}`} target='_blank'>Opensea</a>
+          </div>
+        </div>
       </div>
     </div>
   )

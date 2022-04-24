@@ -2,10 +2,9 @@ import {React, useState,useCallback, useRef, useEffect} from 'react'
 import { useBuildingStore, demolishOnGrid } from './BuildingStore.js';
 import {gridDimensions,gridSize,plotSize} from './GridData'
 import { buildingTypes } from './BuildingTypes.js';
-import { useSelectedBuildingStore } from './selectedBuildingStore.js';
 
 function GridSquare(props){
-    const selectedBuilding = useSelectedBuildingStore(state=> state.selectedBuilding)
+    const selectedBuilding = useBuildingStore(state=> state.selectedBuilding)
     let selectedBuildingType = selectedBuilding?buildingTypes[selectedBuilding][0]:null //checks if selectedBuilding is null
     const gridDimensions = props.gridDimensions;
     const gridSize = props.gridSize;
@@ -16,9 +15,9 @@ function GridSquare(props){
     const grid = useBuildingStore(state=>state.grid)
     const addBuilding = useBuildingStore(state=>state.addBuilding)
     const demolishBuilding = useBuildingStore(state=>state.removeBuilding);
-    console.log(selectedBuilding)
+    const buildMode = useBuildingStore(state=>state.buildMode);
 
-    const build = (x,y,grid,selectedBuildingType)=>{
+    function build(x,y,grid,selectedBuildingType){
         let buildable=true;
         if (selectedBuildingType === null){
             buildable=false
@@ -53,14 +52,10 @@ function GridSquare(props){
             console.log('this grid square is empty already')
     }
 
-    const onClick = useCallback((e) => {
+    function onClick(e){
         e.stopPropagation()
-        build(x,y,grid,selectedBuildingType)
-    }, [])
-    const onContextMenu = useCallback((e) => {
-        e.stopPropagation()
-        remove(x,y,grid)
-    }, [])
+        buildMode?build(x,y,grid,selectedBuildingType):remove(x,y,grid);
+    }
 
     return(
         <mesh
@@ -68,10 +63,9 @@ function GridSquare(props){
         onPointerOver={(event)=>setHover(true)}
         onPointerOut={(event)=>setHover(false)}
         onClick={onClick}
-        onContextMenu={onContextMenu}
         >
         <boxBufferGeometry attach="geometry"/>
-        <meshLambertMaterial attach="material" color={hovered?0x88FF88:'lightgray'} transparent opacity={props.built?0:(hovered?0.8:0.6)} />
+        <meshLambertMaterial attach="material" color={hovered?(buildMode?0x88FF88:0xFF8888):'lightgray'} transparent opacity={props.built?0:(hovered?0.8:0.6)} />
         </mesh>
     )
 }

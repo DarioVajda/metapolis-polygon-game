@@ -7,6 +7,10 @@ const useBuildingStore = create((set) => ({
     buildings: [],
     grid: Array(gridSize*gridSize).fill(null,0,gridSize*gridSize),
     uuid: generateUUID(),
+    selectedBuilding: null,
+    buildMode:true,
+    selectBuilding: (type) => set(() => ({selectedBuilding:type})),
+    setBuildMode: (mode)=>  set(()=>  ({buildMode:mode})),
     addBuilding: ([x0,y0],[x1,y1], type) => set((state) => ({ uuid:generateUUID(),
                                                               buildings: [...state.buildings, {start:[x0,y0],end:[x1,y1],type:type,uuid:state.uuid}],
                                                               grid: buildingToGrid([x0,y0],[x1,y1],state.uuid,state.grid)})),
@@ -35,5 +39,7 @@ function removeBuildingFromGrid(grid,uuid){
   }
   return grid;
 }
+
+
 
 export {useBuildingStore};

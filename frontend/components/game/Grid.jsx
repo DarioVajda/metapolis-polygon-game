@@ -16,6 +16,7 @@ function GridSquare(props){
     const addBuilding = useBuildingStore(state=>state.addBuilding)
     const demolishBuilding = useBuildingStore(state=>state.removeBuilding);
     const buildMode = useBuildingStore(state=>state.buildMode);
+    const setHoveredXY = useBuildingStore(state=>state.setHoveredXY)
 
     function build(x,y,grid,selectedBuildingType){
         let buildable=true;
@@ -60,7 +61,7 @@ function GridSquare(props){
     return(
         <mesh
         {...props}
-        onPointerOver={(event)=>setHover(true)}
+        onPointerOver={(event)=>{setHover(true),setHoveredXY(props.x,props.y)}}
         onPointerOut={(event)=>setHover(false)}
         onClick={onClick}
         >

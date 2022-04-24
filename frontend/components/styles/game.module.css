@@ -15,6 +15,22 @@
     text-align: center;
     cursor: pointer;
   }
+  .roundedFixedBtn2{
+    position:absolute;
+    text-decoration: none;
+    z-index: 999;
+    
+    height: 12%;
+    line-height: 60px;  
+    width: 8%;    
+    font-size:1em;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 30%;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+  }
   .container {
     justify-content: space-between;
     flex-direction: column;

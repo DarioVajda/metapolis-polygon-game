@@ -7,7 +7,7 @@ import { useGLTF } from '@react-three/drei'
 
 export default function Landscape({ ...props }) {
   const group = useRef()
-  const { nodes, materials } = useGLTF('/valley_lanscape2_real.glb')
+  const { nodes, materials } = useGLTF('/Valley_lanscape2_real.glb')
   return (
     <group ref={group} {...props} dispose={null}>
       <mesh receiveShadow geometry={nodes.Landscape_1.geometry} material={materials.rock} />
@@ -5166,4 +5166,4 @@ export default function Landscape({ ...props }) {
   )
 }
 
-useGLTF.preload('/valley_lanscape2_real.glb')
+useGLTF.preload('/Valley_lanscape2_real.glb')

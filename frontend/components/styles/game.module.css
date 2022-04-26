@@ -15,7 +15,7 @@
     text-align: center;
     cursor: pointer;
   }
-  .roundedFixedBtn2{
+  .roundedFixedBtnClicked{
     position:absolute;
     text-decoration: none;
     z-index: 999;
@@ -27,6 +27,7 @@
     font-weight: normal;
     font-family: Arial, Helvetica, sans-serif;
     border-radius: 30%;
+    background-color: #95eaf0;
     color: white;
     text-align: center;
     cursor: pointer;

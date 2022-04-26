@@ -4,9 +4,9 @@ import { useBuildingStore } from './BuildingStore.js'
 import { buildingTypes } from './BuildingTypes.js';
 import { useGLTF } from '@react-three/drei'
 import {gridDimensions,gridSize,plotSize} from './GridData'
-import House from './models/House'
-import Factory from './models/Factory'
-import Building from './models/Building'
+import House from './modelComponents/House'
+import Factory from './modelComponents/Factory'
+import Building from './modelComponents/Building'
 
 export default function HoverObject() {
     const selectedBuilding=useBuildingStore(state=>state.selectedBuilding)

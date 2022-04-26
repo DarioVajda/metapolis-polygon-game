@@ -9,7 +9,7 @@ import Buildings from '../components/game/Buildings';
 //----COMPONENTS----//
 import Lights from '../components/game/Lights'
 import WorldCanvas from '../components/game/WorldCanvas';
-import Landscape from '../components/game/models/ValleyLandscape'
+import Landscape from '../components/game/modelComponents/ValleyLandscape'
 import HTMLContent from '../components/game/HTMLContent'
 import Grid from '../components/game/Grid';
 import HoverObject from '../components/game/HoverObject.jsx';

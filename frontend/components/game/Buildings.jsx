@@ -1,9 +1,9 @@
 import React from 'react'
 import { useBuildingStore } from './BuildingStore.js'
 import {gridDimensions,gridSize,plotSize} from './GridData'
-import House from './models/House'
-import Factory from './models/Factory'
-import Building from './models/Building'
+import House from './modelComponents/House'
+import Factory from './modelComponents/Factory'
+import Building from './modelComponents/Building'
 
 
 export default function Buildings() {

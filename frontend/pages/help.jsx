@@ -53,7 +53,7 @@ const Help = () => {
             <p>How to mint with the WETH token...</p>
           </div>
           <br />
-          <p>asfkdjllksdfaklsafkjasljksfl amogus?</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>

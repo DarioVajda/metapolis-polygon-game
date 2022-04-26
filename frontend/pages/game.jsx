@@ -1,53 +1,48 @@
+import React from 'react'
+import Link from 'next/link'
 
-import React, {useState, useRef, Suspense} from 'react'
-import * as THREE from 'three';
-import {OrbitControls, Bounds} from "@react-three/drei"
-import Link from "next/link"
+import { useState } from 'react'
+import {ethers} from 'ethers'
 
-import Buildings from '../components/game/Buildings';
+const Game = () => {
 
-//----COMPONENTS----//
-import Lights from '../components/game/Lights'
-import WorldCanvas from '../components/game/WorldCanvas';
-import Landscape from '../components/game/models/ValleyLandscape'
-import HTMLContent from '../components/game/HTMLContent'
-import Grid from '../components/game/Grid';
-import HoverObject from '../components/game/HoverObject.jsx';
+  const [tokenId, setTokenId] = useState(0);
 
-//----CONSTANTS----//
+  const initCity = async (id) => {
+    const message = `Initialize #${id} City NFT`;
 
+    await window.ethereum.send("eth_requestAccounts");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(message);
+    const address = await signer.getAddress();
 
-//MAIN COMPONENT
-const gameplay = () => {
+    let body = JSON.stringify({address: address, message: message, signature: signature});
+    console.log(body);
+    const response = await fetch(`http://localhost:8000/cities/${id}/initialize`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: body
+    });
+    console.log(response);
+  };
+
   return (
-    <>
-      <div style={{position: "fixed",
-        height: '90%',
-        width: '90%',
-        margin:'0px',
-        padding:'0px',
-        overflow:'hidden',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)'
-      }}>
-          <HTMLContent/>
-          <WorldCanvas>
-            <OrbitControls/>
-            <Lights/>
-            <Grid/>
-            <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1}>
-                <Landscape scale={120} position={[-20,-23,2]}/>
-                <Buildings/>
-                <HoverObject/>
-              </Bounds>
-            </Suspense>
-          </WorldCanvas>
-      </div>
-      <Link href="/"><a>Home</a></Link>      
-    </>
+    <div>
+        <h1>Game</h1>
+        <Link href='/'><a>Home</a></Link> <br />
+        <Link href='/leaderboard'><a>Leaderboard</a></Link> <br />
+        <input type="number" placeholder='id' value={tokenId} onChange={(e) => setTokenId(e.target.value) } />
+        <h2 onClick={() => initCity(tokenId) }>Initialize city</h2>  { /* Ideja je da se pre nego sto je inicijalizovan grad prikaze nesto prazno i da na sred grada bude poruka da treba da se inicijalizuje i dugme tamo da bude i da ono poziva ovu funkciju. Ideja za prikaz tog praznog grada - neki bilbord na kojem to pise i moze on sam da se pritisne ili nesto slicno */}
+    </div>
   )
 }
 
-export default gameplay
+export default Game

@@ -102,6 +102,11 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		return;
 	}
 
+	if(req.params.id < 0) {
+		res.status(400).send("Index is smaller than 0");
+		return;
+	}
+
 	let cityData = await contract.getCityData(req.params.id);
 
 	let message = req.body.message;

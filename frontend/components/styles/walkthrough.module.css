@@ -7,42 +7,17 @@
 
 .walkthrough h1 {
     padding-left: 1em;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
 }
 
-.walkthrough h1::after {
-    content: "?";
-    position: absolute; /* problem sa ovim je sto ne znam kako da centriram, tj da sredina ovoga bude u ravni sa sredinom teksta */
-    transform: translate(0, 0.5em);
-    text-align: center;
-    height: 1.5em;
-    width: 1.5em;
-    margin: 0 0 0 1em;
-    border: 1px solid rgb(145, 145, 145);
-    color: var(--light-text);
-    padding: 0.1em;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 50%;
-}
-
-.walkthrough h1:hover::after {
-    content: "See how every building affects your city and what it does to help you develop the winning strategy!";
-    position: absolute;
-    min-height: 2em;
-    height: fit-content;
-    width: fit-content;
-    max-width: 40vw;
-    transform: none;
-    margin: 0 0 0 1em;
-    border: 1px solid var(--text);
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 5px;
+.walkthrough p {
+    /* padding-left: 2em; */
+    align-self: center;
 }
 
 .canv {
-    border: 1px solid black;
-    /* height: fit-content; */
     width: 100%;
     display: flex;
     justify-content: center;

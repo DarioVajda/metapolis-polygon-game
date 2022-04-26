@@ -1,12 +1,12 @@
 :root {
-    /* --background: #0A0A0F; */
-    /* FUJ BRATE */
+    --background: #0A0A0F;
+    --light-background: #1c1c30;
     --text: #FFF;
     --light-text: #b1b1b1;
     --primary: #017DEB;
     --primary-variant: #1994FF;
     --primary-dark: #00549E;
-    --secondary: #EBA536;
+    --secondary: #ffba24;
     --secondary-dark: #9E6100;
     --error: #ff0000;
     --link: #0000EE;
@@ -18,14 +18,7 @@
 
     /* Token colors */
     --matic: #9900ff;
+    --matic-bg: #5e008a;
     --weth: #2a6cb8;
+    --weth-bg: #00346e;
 }
-
-
-/* 
-    DONE:
-    global.css
-    nav
-    mint
-    roadmap
-*/

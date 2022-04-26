@@ -49,10 +49,17 @@ export default class Scene extends React.Component {
     console.log("ovde ce biti funkcija kojom se ode jedan korak unapred");
   }
 
+  // Ideja kako da se resi problem sa pojavljivanjem dodatnog objasnjenja kad se klikne na upitnik:
+  //   - treba da se pojavi taj mali prozor sa relative pozicijom
+  //   - osim tog prozora ce se pojaviti jedan providan div preko celog ekrana koji kad se klikne, zatvara taj prozorcic
+  //   - i treba da se doda scroll listener ili tako nesto da nestane prozorcic i kad se skroluje
+
   render() {
     return (
       <div className={styles.walkthrough}>
-        <h1>Walkthrough</h1>
+        <h1>
+          Walkthrough
+        </h1>
         <div className={styles.canv}>
           <div className={styles.btn}>
             <svg 
@@ -73,11 +80,12 @@ export default class Scene extends React.Component {
               height="1em" 
               viewBox="0 0 24 24"
               onClick={this.rightBtn}
-            >
+              >
               <path fill="currentColor" fillRule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1ZM9.793 8.707a1 1 0 0 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414-1.414L13.086 12L9.793 8.707Z" clipRule="evenodd"/>
             </svg>
           </div>
         </div>
+        <p>See how every building affects your city to help you develop the winning strategy!</p>
       </div>
     );
   }

@@ -1,0 +1,217 @@
+.leaderboard {
+    min-height: 100vh;
+}
+
+.item {
+    padding: 0.5em 0;
+}
+
+.top {
+    margin-left: min(3em, 3%);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1em 0;
+    font-size: 1.2rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.id {
+    width: min(10em, 20%);
+}
+
+.money {
+    width: min(15em, 30%);
+}
+
+.income {
+    width: min(15em, 30%);
+}
+
+.id, .money, .income {
+    text-align: start;
+    margin: 0 0.5em;
+}
+
+.arrow {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1em;
+    transition: all 0.3s ease-in-out;
+}
+
+.arrow svg {
+    transform: scale(2);
+}
+
+.arrowUp {
+    transform: rotateX(180deg);
+}
+
+.more {
+    transition: all 0.3s ease-in-out;
+    max-height: 20em;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /* flex-wrap: wrap; */
+}
+
+.hide {
+    max-height: 0;
+}
+
+.city {
+    min-height: 20em;
+    min-width: 20em;
+    margin: 0 2em;
+    border: 1px solid white;
+}
+
+.data {
+    flex-grow: 1;
+    /* border: 1px solid green; */
+    height: 20em;
+    min-width: 10em;
+}
+
+.dataTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0.5em;
+    align-items: stretch;
+}
+
+.price {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin: 1px;
+    padding: 1em;
+    background-color: var(--primary);
+    border-radius: 10px;
+    border: 1px solid var(--light-text);
+}
+
+.price:hover {
+    border: 2px solid var(--light-text);
+    margin: 0
+}
+
+.price:active {
+    background-color: var(--primary-dark);
+}
+
+.price span {
+    color: var(--light-text);
+}
+
+.price div {
+    font-size: 1.8rem;
+    background-color: transparent;
+}
+
+.score, .totalValue {
+    padding: 0 0.5em;
+    margin: 0 0 0 1em;
+    border: 1px solid var(--light-text);
+    font-size: 1.6rem;
+    background-color: var(--light-background);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.score>div {
+    font-size: 0.8rem;
+    color: var(--light-text);
+    padding-top: 0.5em;
+    background-color: transparent;
+}
+
+.stats {
+    padding: 1em;
+}
+
+.peopleSection {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    width: 100%;
+    /* border: 1px solid red; */
+    padding: 1em 0;
+}
+
+.people {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.peopleBar {
+    width: 80%;
+    height: 16px;
+    background-color: var(--light-background);
+}
+
+.peopleBar, .peopleBarFill {
+    border-radius: 8px;
+}
+
+.peopleBarFill {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid transparent;
+}
+
+.peopleBarFill>span {
+    position: relative;
+    opacity: 0;
+    min-width: 20vw;
+    visibility: hidden;
+    transition: all 0.2s linear;
+    top: 140%;
+    align-self: center;
+    background-color: var(--light-background);
+    border: 1px solid var(--light-text);
+    padding: 0.5em;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.peopleBarFill>span::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent var(--light-text) transparent;
+  }
+
+.peopleBarFill:hover {
+    border: 1px solid var(--text);
+}
+
+.peopleBarFill:hover>span {
+    visibility: visible;
+    opacity: 1;
+}

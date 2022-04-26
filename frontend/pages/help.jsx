@@ -11,7 +11,7 @@ const Help = () => {
   return (
     <>
       <Head>
-        <title>Ciy Builder - Mint Tutorial</title>
+        <title>City Builder - Mint Tutorial</title>
       </Head>
       <main>
         <Nav />
@@ -54,6 +54,9 @@ const Help = () => {
           </div>
           <br />
           <p>asfkdjllksdfaklsafkjasljksfl amogus?</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
+          <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>
           <p>asfkdjllksdfaklsafkjasljksfl</p>

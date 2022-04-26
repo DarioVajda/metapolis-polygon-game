@@ -1,0 +1,100 @@
+.popup {
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    left: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(0, -50%);
+    background-color: rgba(0, 0, 0, 0.557);
+}
+
+.window {
+    padding: 0em 1em;
+    /* min-height: 40%;
+    max-height: 70%; */
+    height: fit-content;
+    width: 60%;
+    background-color: var(--light-background);
+    border-radius: 20px;
+    border: 1px solid var(--text);
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+}
+
+.closeIcon {
+    border-radius: 50%;
+    color: var(--light-text);
+    background-color: transparent;
+    width: fit-content;
+    user-select: none;
+    cursor: pointer;
+}
+
+.content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.content {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* min-height: 35vh; */
+    max-height: 65vh;
+    padding: 0 0 3em 0;
+
+    overflow: scroll;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.list {
+    background-color: transparent;
+    padding: 0 0 0 1em;
+    font-size: 1.2rem;
+    color: var(--light-text);
+}
+
+.confirm {
+    margin: 0.5em 0.5em 0 0;
+    background-color: var(--primary);
+    font-size: 2em;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.2em 1em 0.2em 0;
+    align-self: flex-end;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+}
+
+.confirm:active {
+    background-color: var(--primary-dark);
+    border: 1px solid white;
+    border: none;
+}
+
+.confirm svg {
+    margin-right: 0.5em;
+    margin-left: 0.3em;
+}
+
+.spinner {
+    transform: scale(1.8);
+}

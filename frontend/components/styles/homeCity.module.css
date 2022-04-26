@@ -1,11 +1,7 @@
 .wrapper {
-    height: 100vh;
+    height: calc(100vh - 4em);
     width: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.wrapper canvas {
-    border: 1px solid black;
 }

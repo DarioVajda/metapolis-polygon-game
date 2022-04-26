@@ -3,10 +3,9 @@
     flex-direction: column;
     align-items: flex-start;
     max-width: fit-content;
-    justify-content: flex-start;
+    justify-content: center;
     height: fit-content;
-    min-height: 100vh;
-    padding: 25vh 0 0 0;
+    min-height: calc(100vh - 4em);
 }
 
 .mintSection p {
@@ -56,24 +55,6 @@
     margin: 0.3em 0 0.5em 0;
 }
 
-@keyframes wethBackground {
-    0% {
-        background-color: var(--matic);
-    }
-    100% {
-        background-color: var(--weth);
-    }
-}
-
-@keyframes maticBackground {
-    0% {
-        background-color: var(--weth);
-    }
-    100% {
-        background-color: var(--matic);
-    }
-}
-
 .switch {
     width: 3.5em;
     height: 1.5em;
@@ -82,58 +63,33 @@
     align-items: center;
     cursor: pointer;
     margin: 0 0.3em 0 0.3em;
-    /* box-shadow: 0 0 4px grey; */
-}
-
-.switchMatic {
-    animation-name: maticBackground;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
+    transition: all 0.3s ease-in-out;
 }
 
 .switchWeth {
-    animation-name: wethBackground;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
+    background-color: var(--weth);
 }
 
-@keyframes wethCircle {
-    0% {
-        left: 0.15em;
-    }
-    100% {
-        left: 2.15em;
-    }
-}
-
-@keyframes maticCircle {
-    0% {
-        left: 2.15em;
-    }
-    100% {
-        left: 0.15em;
-    }
+.switchMatic {
+    background-color: var(--matic);
 }
 
 .switchCircle {
     position: relative;
-    left: 4%;
+    left: 0.15em;
     border-radius: 50%;
     height: 1.2em;
     width: 1.2em;
     background-color: var(--text);
+    transition: all 0.3s ease-in-out;
 }
 
 .circleMatic {
-    animation-name: maticCircle;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
+    left: 0.15em;
 }
 
 .circleWeth {
-    animation-name: wethCircle;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
+    left: 2.15em;
 }
 /* chosing the token for payment */
 

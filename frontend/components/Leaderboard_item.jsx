@@ -3,9 +3,7 @@ import styles from './styles/item.module.css'
 // import Link from 'next/link'
 
 const Leaderboard_item = ({ id, rank, expanded, setExpanded }) => {
-  const [lastPrice, setLastPrice] = useState(0);
   const [price, setPrice] = useState({});
-  const [tokenSymbol, setTokenSymbol] = useState('ETH');
   const [city, setCity] = useState({});
 
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';

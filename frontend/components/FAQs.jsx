@@ -7,27 +7,27 @@ import FAQuestion from './FAQuestion';
 const FAQs = () => {
   let faqs = [
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     },
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     },
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     },
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     },
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     },
     {
-      q: 'This is a frequantly asked question that needs to be answered?',
+      q: 'This is a frequently asked question that needs to be answered?',
       a: 'This is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question this is the answer to the question.'
     }
   ]

@@ -130,6 +130,31 @@ function doesOverlap(building, city) {
 
 //#region FORMATING CITY DATA 
 
+function calculatePeople(data) {
+    console.log(data);
+
+    let buildings = data.buildings;
+
+    let normalPeople = 0;
+    let educatedPeople = 0;
+    let manualWorkers = 0;
+    let officeWorkers = 0;
+
+    buildings.forEach((element) => {
+        normalPeople += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].normalPeople;
+        educatedPeople += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].educatedPeople;
+        manualWorkers += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].manualWorkers;
+        officeWorkers += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].officeWorkers;
+    });
+    
+    return {
+        normalPeople: normalPeople,
+        educatedPeople: educatedPeople,
+        manualWorkers: manualWorkers,
+        officeWorkers: officeWorkers
+    }; // vraca se objekat sa ovim poljima i vrednostima
+}
+
 function formatBuildingList(data) {
     let city = { buildings: [], specialBuildings: [] }
     for(let i = 0; i < data.numOfBuildings; i++) {
@@ -151,6 +176,14 @@ function formatBuildingList(data) {
     city.income = data.income.toNumber();
     city.owner = data.owner;
     city.lastPay = data.lastPay.toNumber();
+
+    let people = calculatePeople(city);
+
+    // the names of the fieds are different because it is how they were named in the frontend
+    city.normal = people.normalPeople;
+    city.educated = people.educatedPeople;
+    city.normalWorkers = people.manualWorkers;
+    city.educatedWorkers = people.officeWorkers;
 
     return city;
 }

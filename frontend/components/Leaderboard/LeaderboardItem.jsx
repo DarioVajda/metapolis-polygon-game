@@ -9,14 +9,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
   const dataLoaded = useRef(false);
 
   const [price, setPrice] = useState({});
-  const [people, setPeople] = useState({
-    educated: 0, 
-    normal: 0, 
-    educatedWorkers: 0, 
-    normalWorkers: 0, 
-    educatedRemainder: 0, 
-    educatedHelping: 0 
-  });
+  const [people, setPeople] = useState(false);
 
   // #region Getting the prices
 
@@ -100,6 +93,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
 
       // console.log(res);
       idLoaded.current = true;
+      calculatePeople(res);
       setData(res);
       dataLoaded.current = true;
       getPrices();
@@ -113,17 +107,18 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
   // #endregion
 
   // #region Working with the data
-  const calculatePeople = () => {
+  const calculatePeople = (_data) => {
 
     // ...
     // this data should be pulled from somewhere or calculated here...
     // ...
+    console.log(_data);
 
     let _people = {
-      educated: 69,
-      normal: 113,
-      educatedWorkers: 51,
-      normalWorkers: 132
+      educated: _data.educated,
+      normal: _data.normal,
+      educatedWorkers: _data.educatedWorkers,
+      normalWorkers: _data.normalWorkers
     };
 
     let educatedRemainder = _people.educated - _people.educatedWorkers; // the number of educated people not having an adequate job
@@ -161,7 +156,12 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
     let _people = t?people.educated:people.normal;
     let _workers = t?people.educatedWorkers:people.normalWorkers;
 
-    _people -= people.educatedHelping;
+    if(t) {
+      _people -= people.educatedHelping;
+    }
+    else {
+      _people += people.educatedHelping;
+    }
 
     if(Math.abs(1 - _people / _workers) > 0.4) return 'red';
     else if(Math.abs(1 - _people / _workers) > 0.15) return 'yellow';
@@ -193,8 +193,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
       if(people.normal > people.normalWorkers) {
         message = `There are ${people.normal-people.normalWorkers} people doing nothing while waiting for a job as manual workers.`
       }
-      else if(people.normal - people.normalWorkers) {
-        message = 'There is 1 person doing nothing while waiting for a job as a manual worker.'
+      else if(people.normal - people.normalWorkers === 1) {
+        message = 'There is 1 person doing nothing while waiting for a job as a manual worker.';
       }
       else if(people.normal === people.normalWorkers) {
         message = 'There are exactly enough manual workers in the city.';
@@ -234,7 +234,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
   // #endregion
 
   useEffect(() => {
-    calculatePeople();
+    // calculatePeople();
   }, []);
 
   return (
@@ -266,7 +266,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
               <div>{price.price} {price.token}</div>
             </a>
             <div className={style.score}>
-              Score: {data.money + 7*data.income}
+              Score: {data.money?data.money + 7*data.income:0}
               <div>
                 Score = money + 7*income
               </div>

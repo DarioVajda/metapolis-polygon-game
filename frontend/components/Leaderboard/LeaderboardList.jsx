@@ -41,7 +41,6 @@ const LeaderboardList = () => {
       await delay(index * 50); // da bi se u pocetku na vreme ucitalo sve, a kasnije ce se oni gradovi dole dovoljno brzo ucitati
     }
     let data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
-    // await delay(500);
     loaded.current = index + 1;
     return data;
   }

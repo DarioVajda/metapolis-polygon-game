@@ -171,8 +171,12 @@
     background-color: var(--light-background);
 }
 
-.peopleBar, .peopleBarFill {
+.peopleBar {
     border-radius: 8px;
+}
+
+.peopleBarFill {
+    border-radius: 8px 0 0 8px;
 }
 
 .peopleBarFill {

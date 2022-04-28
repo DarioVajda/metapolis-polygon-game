@@ -145,17 +145,19 @@ function createBuilding(buildings, type, normal) {
 //________________________________________________________________________________________________
 function generate() {
     var buildings = {normal: [], special: []};
+    
+    // [num, chance]
     const probabilities = [
-        [[1, 1]],
-        [[1, 1]],
-        [[0, 1]],
-        [[0, 1]],
-        [[1, 19], [2, 1]],
-        [[3, 90], [4, 9], [5, 1]],
-        [[1, 9], [2, 1]],
-        [[0, 49], [1, 1]],
-        [[1, 7], [2, 3]],
-        [[0, 49], [1, 1]]
+        [[3, 90], [4, 9], [5, 1]], // house
+        [[1, 19], [2, 1]], // building
+        [[1, 1]], // factory
+        [[1, 1]], // office
+        [[0, 1]], // restaurant
+        [[0, 1]], // parking
+        [[1, 9], [2, 1]], // store
+        [[0, 49], [1, 1]], // supermarket
+        [[1, 7], [2, 3]], // park
+        [[0, 49], [1, 1]] // gym
     ];
     let num = numOfBuildings(probabilities, true);
     for(let i = 0; i < num.length; i++) {
@@ -166,8 +168,8 @@ function generate() {
     }
 
     const specialProbabilities = [
-        [[1, 1]],
-        [[1, 9], [2, 1]]
+        [[1, 1]], // statue
+        [[1, 9], [2, 1]] // fountain
     ];
     let specialNum = numOfBuildings(specialProbabilities, false);
     for(let i = 0; i < specialNum.length; i++) {

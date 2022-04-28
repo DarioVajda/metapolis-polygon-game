@@ -63,7 +63,7 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 app.get("/leaderboard", async (req, res) => {
 	let leaderboard = [];
 	let tree = await contract.getTree();
-	console.log('tree:', tree);
+	// console.log('tree:', tree);
 	const inorder = (root) => {
 		if(root == 10000) return;
 		if(tree[root].left && tree[root].left != 10000) inorder(tree[root].left);
@@ -71,17 +71,16 @@ app.get("/leaderboard", async (req, res) => {
 		if(tree[root].right && tree[root].right != 10000) inorder(tree[root].right);
 	}
 	let root = 0;
-	// THE ROOT SHOULD BE RECEIVED FROM THE CONTRACT!!!
 	for(let i = 0; i < tree.length; i++) {
 		if(tree[i].height > tree[root].height) root = i;
 	}
 	inorder(root);
-	console.log('leaderboard:', leaderboard);
+	// console.log('leaderboard:', leaderboard);
 	res.send(leaderboard);
 });
 
 app.get("/cities/:id/data", async (req,res) => {
-	/* The response is an object with the following values
+	/* The response is an object with the following values: 
 	{
         address owner,
         Building[] buildings,
@@ -93,6 +92,7 @@ app.get("/cities/:id/data", async (req,res) => {
 	*/
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
+	console.log(city);
 	res.json(city);
 }); // FIXED - not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
 

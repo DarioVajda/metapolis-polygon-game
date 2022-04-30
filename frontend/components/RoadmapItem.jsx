@@ -6,8 +6,8 @@ const RoadmapItem = ({data}) => {
   const inPast = () => {
     let d = new Date();
     let unix = d.getTime() / 1000;
-    console.log(unix, data.unix);
-    console.log(unix > data.unix);
+    // console.log(unix, data.unix);
+    // console.log(unix > data.unix);
     return unix > data.unix;
   }
 

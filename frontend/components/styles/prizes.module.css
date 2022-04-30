@@ -1,11 +1,115 @@
-.prizes {
-    padding-top: 4em;
+.popup {
+    top: 50%;
+    left: 50%;
+    transform: translate(0, -50%);
+    z-index: 1000;
+    left: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.557);
 }
 
-.prizes h1 {
-    padding-left: 1em;
+.window {
+    padding: 0em 1em;
+    height: fit-content;
+    width: 60%;
+    height: 70%;
+    background-color: var(--light-background);
+    border-radius: 20px;
+    border: 1px solid var(--text);
+    
+    display: flex;
+    flex-direction: column;
 }
 
-.prizes p {
-    padding: 0 2em;
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: transparent;
+}
+
+.top>div {
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.content {
+    flex-grow: 1;
+    border: 1px solid white;
+    background-color: transparent;
+}
+
+.prizeRange {
+    font-size: 1.5rem;
+    background-color: transparent;
+}
+
+.prizeRange>span {
+    font-size: 1rem;
+}
+
+.stages {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: transparent;
+    margin-bottom: 1em;
+    user-select: none;
+    padding: 0 1em;
+}
+
+.stages>div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.selectedRange, .range {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: fit-content;
+    height: 2em;
+    border-radius: 1em;
+    padding: 0.5em;
+    background-color: var(--primary);
+    user-select: none;
+    cursor: pointer;
+}
+
+.range {
+    border: 1px solid var(--light-text);
+}
+
+.selectedRange {
+    border: 2px solid var(--text);
+}
+
+.achivedRange {
+    background-color: var(--secondary-dark);
+}
+
+.horizontalLine {
+    position: relative;
+    margin: 0 1em 0 1em;
+    width: calc(100%-2em);
+    height: 0.5em;
+    border-radius: 0.5em;
+    background-color: var(--primary-variant);
+    top: 1.25em;
+}
+
+.completedHorizontalLine {
+    background-color: var(--secondary);
+    height: 0.5em;
+    border-radius: 0.5em;
 }

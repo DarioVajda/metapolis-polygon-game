@@ -10,7 +10,7 @@ import DevOptions from '../components/DevOptions';
 import MintSection from '../components/MintSection';
 import HomeCity from '../components/HomeCity';
 import Roadmap from '../components/Roadmap';
-import Prizes from '../components/Prizes';
+// import Prizes from '../components/Prizes';
 import Walkthrough from '../components/Walkthrough/Walkthrough';
 import FAQs from '../components/FAQs';
 import AboutUs from '../components/AboutUs';
@@ -192,9 +192,9 @@ export default function Home() {
             <HomeCity />
           </div>
         </div>
-        <div id="prizes">
+        {/* <div id="prizes">
           <Prizes />
-        </div>
+        </div> */}
         <div id="walkthrough">
           <Walkthrough />
         </div>

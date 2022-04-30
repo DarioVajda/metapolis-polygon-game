@@ -1,18 +1,18 @@
 :root {
-    --background: #0A0A0F;
-    --light-background: #1c1c30;
+    --background: #1a1a1e;
+    --light-background: #2e2e34;
     --text: #FFF;
     --light-text: #b1b1b1;
     --primary: #017DEB;
-    --primary-variant: #1994FF;
-    --primary-dark: #00549E;
+    --primary-variant: #40a6ff;
+    --primary-dark: #006cca;
     --secondary: #ffba24;
-    --secondary-dark: #9E6100;
+    --secondary-dark: #ed9200;
     --error: #ff0000;
     --link: #0000EE;
 
     /* Color values for specific elements */
-    --navbar: #05050a;
+    --navbar: #121216;
     --walkthrough-btn: #5f5f5f;
     --walkthrough-btn-hover: #707070;
 

@@ -134,7 +134,7 @@ function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
-function distance(a, b) {
+function distance(a, b) {     // x and y are from 0 to 19 
   // console.log((a.x-b.x)**2 + (a.z-b.z)**2);
   return Math.sqrt((a.x-b.x)**2 + (a.z-b.z)**2);
 }
@@ -291,27 +291,6 @@ document.addEventListener(
     // console.log(buildingModule.buildingList);
     // console.log("built: ",type);
   }
-
-  /// FUNCTION  TO REMOVE A BUILDING IN THE MAP
-  function demolish(x,y)
-  {
-    let occupied=find(new buildingModule.Coordinate(x,y),new buildingModule.Coordinate(x,y))
-    if(!(occupied===undefined)) //IF OCCUPIED
-    {
-      scene.children.forEach(element => {
-        if(element.gridx)
-        {
-          if(element.gridx==occupied.start.x && element.gridy==occupied.start.y && element.name!='gridSquare')
-          {
-            scene.remove(element);
-          }
-        }
-      });
-      buildingModule.buildingList.splice(buildingModule.buildingList.findIndex(element => element==occupied),1);
-    }
-
-  }
-
   function sceneAdd(start,end,elementType,level){
     loader.load( './models/' + elementType + '_placeholder.glb', function ( gltf ) {
       const model = gltf.scene.children[0];
@@ -334,6 +313,26 @@ document.addEventListener(
     }, undefined, function ( error ) {
       console.error( error );
     } );
+}
+
+/// FUNCTION  TO REMOVE A BUILDING IN THE MAP
+function demolish(x,y)
+{
+  let occupied=find(new buildingModule.Coordinate(x,y),new buildingModule.Coordinate(x,y))
+  if(!(occupied===undefined)) //IF OCCUPIED
+  {
+    scene.children.forEach(element => {
+      if(element.gridx)
+      {
+        if(element.gridx==occupied.start.x && element.gridy==occupied.start.y && element.name!='gridSquare')
+        {
+          scene.remove(element);
+        }
+      }
+    });
+    buildingModule.buildingList.splice(buildingModule.buildingList.findIndex(element => element==occupied),1);
+  }
+
 }
 
 /// FUNCTION TO FIND A BUILDING, IF IT EXISTS --- RETURNS UNDEFINED IF DOESNT EXIST

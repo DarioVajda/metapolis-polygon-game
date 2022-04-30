@@ -107,6 +107,7 @@ export default function Home() {
       return account;
     } // checking for errors
     
+    console.log(wethContract);
     let balance = await wethContract.balanceOf(account); // getting the weth balance of the account
 
     let wethPrice = 0.1 * num; // this should be loaded from somewhere (the price which may vary)
@@ -144,7 +145,7 @@ export default function Home() {
   //#endregion
 
   const numOfNFTs = async () => {
-    let list = await (await fetch('http://0.0.0.0:8000/leaderboard')).json();
+    let list = await (await fetch('http://localhost:8000/leaderboard')).json();
     return list.length;
   }
 
@@ -152,12 +153,13 @@ export default function Home() {
 
   const mintERC20 = async () => {
     const addr = await connectWallet();
-    const tx = await wethContract.mint(addr, ethers.utils.parseEther('1'));
+    const tx = await wethContract.mint(addr, ethers.utils.parseEther('20'));
     const receipt = await tx.wait();
     // console.log(receipt);
     var balance = await wethContract.balanceOf(addr);
     balance = balance.toString();
     console.log('curr balance: ', balance);
+    console.log('addr: ', addr);
   }
 
   //#endregion

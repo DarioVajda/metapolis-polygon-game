@@ -39,19 +39,40 @@
     background-color: transparent;
 }
 
+
+.content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
 .content {
     flex-grow: 1;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     background-color: transparent;
+
+    overflow: scroll;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .prizeRange {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.prizeTable {
     background-color: transparent;
 }
 
-.prizeRange>span {
-    font-size: 1rem;
+.firstColumn, .secondColumn {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 0.4em;
 }
 
 .stages {

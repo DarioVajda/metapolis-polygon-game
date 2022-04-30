@@ -1,9 +1,14 @@
 .leaderboard {
     min-height: 100vh;
+    padding-bottom: 15vh;
 }
 
 .item {
-    padding: 0.5em 0;
+    margin: 1em;
+    /* border: 1px solid white; */
+    border-radius: 2em;
+    overflow: hidden;
+    background-color: var(--light-background);
 }
 
 .top {
@@ -15,6 +20,7 @@
     font-size: 1.2rem;
     user-select: none;
     cursor: pointer;
+    background-color: transparent;
 }
 
 .id {
@@ -32,9 +38,11 @@
 .id, .money, .income {
     text-align: start;
     margin: 0 0.5em;
+    background-color: transparent;
 }
 
 .arrow {
+    background-color: transparent;
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -59,6 +67,7 @@
     flex-direction: row;
     justify-content: space-around;
     /* flex-wrap: wrap; */
+    background-color: transparent;
 }
 
 .hide {
@@ -70,6 +79,7 @@
     min-width: 20em;
     margin: 0 2em;
     border: 1px solid white;
+    background-color: transparent;
 }
 
 .data {
@@ -77,6 +87,7 @@
     /* border: 1px solid green; */
     height: 20em;
     min-width: 10em;
+    background-color: transparent;
 }
 
 .dataTop {
@@ -85,6 +96,7 @@
     justify-content: flex-start;
     padding: 0.5em;
     align-items: stretch;
+    background-color: transparent;
 }
 
 .price {
@@ -111,6 +123,11 @@
 
 .price span {
     color: var(--light-text);
+    padding-bottom: 0.3em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .price div {
@@ -118,12 +135,18 @@
     background-color: transparent;
 }
 
+.price svg {
+    margin-left: 0.6em;
+    color: var(--text);
+    transform: scale(1.4);
+}
+
 .score, .totalValue {
     padding: 0 0.5em;
     margin: 0 0 0 1em;
     border: 1px solid var(--light-text);
     font-size: 1.6rem;
-    background-color: var(--light-background);
+    background-color: var(--lightest-background);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -146,6 +169,7 @@
 
 .stats {
     padding: 1em;
+    background-color: transparent;
 }
 
 .peopleSection {
@@ -155,6 +179,7 @@
     width: 100%;
     /* border: 1px solid red; */
     padding: 1em 0;
+    background-color: transparent;
 }
 
 .people {
@@ -163,12 +188,13 @@
     align-items: center;
     justify-content: flex-start;
     width: 50%;
+    background-color: transparent;
 }
 
 .peopleBar {
     width: 80%;
     height: 16px;
-    background-color: var(--light-background);
+    background-color: var(--lightest-background);
 }
 
 .peopleBar {

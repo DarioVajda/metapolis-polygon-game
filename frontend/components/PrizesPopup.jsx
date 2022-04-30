@@ -70,7 +70,6 @@ const PrizesPopup = ({closePopup, cities}) => {
     }
     
     setStage(_range + 1);
-    console.log(stage);
 
     if(_range === -1) _range = 0;
     
@@ -93,8 +92,6 @@ const PrizesPopup = ({closePopup, cities}) => {
     totalPrizePool += (element.end-element.start+1) * element.prize * price;
   })
 
-  console.log(`${stage/prizes.length*100}%`);
-
   return (
     <div className={styles.popup}>
       <div className={styles.window}>
@@ -109,13 +106,23 @@ const PrizesPopup = ({closePopup, cities}) => {
           </div>
         </div>
         <div className={styles.content}>
-          {
-            prizes[range].list.map((element, index) => (
-              <div key={index} className={styles.prizeRange}>
-                #{element.start}{element.start!=element.end && `-${element.end}`} → {round(element.prize * price)} ETH
-              </div>
-            ))
-          }
+          <h2>
+            Play the game and win up to {prizes[range].list[0].prize * price} ETH!
+          </h2>
+          <div className={styles.prizeTable}>
+            {
+              prizes[range].list.map((element, index) => (
+                <div key={index} className={styles.prizeRange}>
+                  <div className={styles.firstColumn}>
+                    #{element.start}{element.start!=element.end && `-${element.end}`}
+                  </div>
+                  <div className={styles.secondColumn}>
+                    {round(element.prize * price)} ETH
+                  </div>
+                </div>
+              ))
+            }
+          </div>
           <h2>
             Total prize pool: {totalPrizePool} ETH
           </h2>

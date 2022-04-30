@@ -29,7 +29,7 @@
 }
 
 .leftLine {
-    background-color: rgb(212, 212, 212);
+    background-color: var(--light-text);
     min-width: 10px;
     max-width: 10px;
     position: relative;
@@ -39,7 +39,7 @@
 }
 
 .inPastLine {
-    background-color: var(--primary);
+    background-color: var(--secondary);
 }
 
 .circle {
@@ -49,7 +49,7 @@
     min-width: 60px;
     max-width: 60px;
     border-radius: 50%;
-    border: 4px solid rgb(212, 212, 212);
+    border: 4px solid var(--light-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,7 +57,7 @@
 }
 
 .inPastCircle {
-    border: 4px solid var(--primary);
+    border: 4px solid var(--secondary);
 }
 
 .date {

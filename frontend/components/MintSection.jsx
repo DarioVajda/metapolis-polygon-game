@@ -106,7 +106,7 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
       }
       <div className={style.wrapper}>
         <h2 className={style.prizes}>
-          Compete for a part of the <span className={style.ethSpan} onClick={() => openPopup('prizes')} >300 ETH</span> prize pool!
+          Compete for a part of the <span className={style.ethSpan} onClick={() => { if(citiesLeft) openPopup('prizes') } } >300 ETH</span> prize pool!
         </h2>
         <div className={style.mintSection}>
           <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>
@@ -128,7 +128,7 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
           <p className={style.maxMint}>Max per wallet: 10</p>
           <p className={style.mintEnds}>Minting ends on May 18th at 2pm CET</p>
           <p> 
-            Check the following hyperlink for{' '}
+            Check the following link for{' '}
             <Link href='/help'><a className={style.help}>HELP</a></Link>
             {' '}with minting
           </p>

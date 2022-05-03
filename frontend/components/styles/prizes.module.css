@@ -17,7 +17,7 @@
     padding: 0em 1em;
     height: fit-content;
     width: 60%;
-    height: 70%;
+    height: 75%;
     background-color: var(--light-background);
     border-radius: 20px;
     border: 1px solid var(--text);
@@ -56,6 +56,10 @@
     scrollbar-width: none;  /* Firefox */
 }
 
+.content>h2 {
+    margin: 0 0 0.3em 0;
+}
+
 .prizeRange {
     font-size: 1.4rem;
     background-color: transparent;
@@ -80,7 +84,6 @@
     flex-direction: row;
     justify-content: space-around;
     background-color: transparent;
-    margin-bottom: 1em;
     user-select: none;
     padding: 0 1em;
 }
@@ -133,4 +136,10 @@
     background-color: var(--secondary);
     height: 0.5em;
     border-radius: 0.5em;
+}
+
+.left {
+    background-color: transparent;
+    padding-left: 2em;
+    margin: 0.5em 0 1em 0
 }

@@ -180,7 +180,7 @@ export default function Home() {
         <title>City Builder</title>
       </Head>
       <main>
-        <Nav />
+        <Nav connectWallet={false} />
         <div className={styles.wrapper}>
           <div className={styles.scrollable}>
             <div id="mint">

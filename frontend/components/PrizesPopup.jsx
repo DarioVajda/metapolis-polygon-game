@@ -76,8 +76,8 @@ const PrizesPopup = ({closePopup, cities}) => {
     setRange(_range);
   }
 
-  const [range, setRange] = useState(0); // treba da se izracuna trenutni range umesto da se inicijalizuje na prvi
-  const [stage, setStage] = useState(0);
+  const [range, setRange] = useState(0); // trenutno se ovaj prikazuje na ekranu
+  const [stage, setStage] = useState(0); // stage na kojem je mintovanje
 
   const round = (x) => {
     return Math.round(x*1000)/1000;
@@ -107,7 +107,7 @@ const PrizesPopup = ({closePopup, cities}) => {
         </div>
         <div className={styles.content}>
           <h2>
-            Play the game and win up to {prizes[range].list[0].prize * price} ETH!
+            Total prize pool: {totalPrizePool} ETH
           </h2>
           <div className={styles.prizeTable}>
             {
@@ -123,29 +123,37 @@ const PrizesPopup = ({closePopup, cities}) => {
               ))
             }
           </div>
-          <h2>
-            Total prize pool: {totalPrizePool} ETH
-          </h2>
         </div>
         <div className={styles.horizontalLine}>
           <div className={styles.completedHorizontalLine} style={{maxWidth: `${stage/prizes.length*100}%`}}></div>
         </div>
         <div className={styles.stages}>
-        {
-          prizes.map((element, index) => (
-            <div key={index} >
-              <div
-                className={`${index===range?styles.selectedRange:styles.range} ${index<stage&&styles.achivedRange}`}
-                onClick={() => setRange(index)}
-              >
-                {
-                  element.min
-                }
+          {
+            prizes.map((element, index) => (
+              <div key={index} >
+                <div
+                  className={`${index===range?styles.selectedRange:styles.range} ${index<stage&&styles.achivedRange}`}
+                  onClick={() => setRange(index)}
+                >
+                  {
+                    element.min
+                  }
+                </div>
               </div>
-            </div>
-          ))
-        }
+            ))
+          }
         </div>
+        <h3 className={styles.left}>
+          {
+            stage < prizes.length ?
+            (
+              stage === 1?
+              <>{prizes[stage].min - cities} NFTs left to mint to earn prizes for playing.</> :
+              <>{prizes[stage].min - cities} NFTs left to mint to increase the prize pool.</>
+            ) :
+            <>All NFTs are minted.</>
+          }
+        </h3>
       </div>
     </div>
   )

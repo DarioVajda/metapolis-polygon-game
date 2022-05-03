@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import style from './leaderboard.module.css';
 
-const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
+const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned }) => {
 
   const [data, setData] = useState(false);
   const idLoaded = useRef(false);
@@ -108,11 +108,6 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
 
   // #region Working with the data
   const calculatePeople = (_data) => {
-
-    // ...
-    // this data should be pulled from somewhere or calculated here...
-    // ...
-    console.log(_data);
 
     let _people = {
       educated: _data.educated,
@@ -239,7 +234,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand }) => {
 
   return (
     <div className={style.item}>
-      <div className={style.top} onClick={() => expand(index)}>
+      <div className={`${style.top} ${owned?style.topOwned:''}`} onClick={() => expand(index)}>
         <div className={style.id}>
           {index+1}. City #{id!==-1 && id}
         </div>

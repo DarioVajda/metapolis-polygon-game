@@ -12,7 +12,6 @@
 }
 
 .top {
-    margin-left: min(3em, 3%);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -20,11 +19,17 @@
     font-size: 1.2rem;
     user-select: none;
     cursor: pointer;
+    transition: background-color 0.4s linear;
     background-color: transparent;
 }
 
+.topOwned {
+    background-color: var(--primary-dark);
+}
+
 .id {
-    width: min(10em, 20%);
+    padding-left: min(3em, 3%);
+    width: min(12em, 20%);
 }
 
 .money {
@@ -67,11 +72,15 @@
     flex-direction: row;
     justify-content: space-around;
     /* flex-wrap: wrap; */
+    margin-top: 1em;
+    margin-bottom: 1em;
     background-color: transparent;
 }
 
 .hide {
     max-height: 0;
+    margin-top: 0em;
+    margin-bottom: 0em;
 }
 
 .city {
@@ -80,6 +89,7 @@
     margin: 0 2em;
     border: 1px solid white;
     background-color: transparent;
+    background-color: rgba(0, 179, 255, 0.08);
 }
 
 .data {
@@ -178,7 +188,7 @@
     height: fit-content;
     width: 100%;
     /* border: 1px solid red; */
-    padding: 1em 0;
+    /* padding: 1em 0; */
     background-color: transparent;
 }
 
@@ -192,7 +202,7 @@
 }
 
 .peopleBar {
-    width: 80%;
+    width: 90%;
     height: 16px;
     background-color: var(--lightest-background);
 }

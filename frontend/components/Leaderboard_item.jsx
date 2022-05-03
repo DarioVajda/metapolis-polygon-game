@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import styles from './styles/item.module.css'
-// import Link from 'next/link'
+import React, { useContext, useEffect, useState } from 'react'
+import styles from './styles/item.module.css';
+import { ExpandedContext } from './Leaderboard_list';
 
 const Leaderboard_item = ({ id, rank, expanded, setExpanded }) => {
   const [price, setPrice] = useState({});
   const [city, setCity] = useState({});
 
+  // #region logic
+
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
 
   const getCityData = async () => {
-    let element = await (await fetch(`http://0.0.0.0:8000/cities/${id}/data`)).json();
+    let element = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     // console.log(id, element);
     setCity(element);
   }
@@ -84,10 +86,20 @@ const Leaderboard_item = ({ id, rank, expanded, setExpanded }) => {
     if(r.price > 0) setPrice(r);
   }
 
+  // #endregion
+
   useEffect(() => {
     getCityData();
     getPrices();
   }, []);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const expandedContext = useContext(ExpandedContext);
+
+  useEffect(() => {
+    console.log('expandedContext', expandedContext);
+    setIsExpanded(expandedContext);
+  }, [expandedContext]);
 
   return (
     <div>
@@ -98,7 +110,7 @@ const Leaderboard_item = ({ id, rank, expanded, setExpanded }) => {
           <h5 onClick={setExpanded}>Click to expand!</h5>
         </div>
         {
-          expanded && <>
+          isExpanded && <>
             buy: <a href={`https://opensea.io/assets/${address}/${id}`} target='_blank'>See on Opensea</a> <br />
             {price.price>0 && <>price: {price.price} {price.tokenSymbol} ({price.message})<br /></>}
             City image and other stats...

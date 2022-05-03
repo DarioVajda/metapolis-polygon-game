@@ -1,7 +1,7 @@
 import styles from './styles/nav.module.css';
 import Link from 'next/link';
 
-const Nav = () => {
+const Nav = ({connectWallet}) => {
   return (
     <div className={styles.navbar}>
       <Link href="/">
@@ -22,6 +22,11 @@ const Nav = () => {
       <Link href="/game">
         <a className={styles.navButton}>Game</a>
       </Link>
+      {
+        connectWallet?
+        <span className={styles.navButton} onClick={connectWallet}>Connect</span>:
+        <></>
+      }
     </div>
   )
 }

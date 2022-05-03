@@ -12,7 +12,7 @@ import style from './leaderboard.module.css';
 // 501-1250	    0.15
 // 1251-2500	  0.1
 
-const LeaderboardList = () => {
+const LeaderboardList = ({nfts}) => {
   const [list, setList] = useState(Array(10).fill(-1));
   const loaded = useRef(0);
   
@@ -49,12 +49,21 @@ const LeaderboardList = () => {
     getList();
   }, []);
 
+  console.log('nfts:', nfts);
+
   return (
     <div className={style.leaderboard}>
       {
         list.map((element, index) =>
           <div key={index}>
-            <LeaderboardItem id={element} index={index} expanded={index===expanded} loadCity={loadCity} expand={expand} />  
+            <LeaderboardItem 
+              id={element} 
+              index={index} 
+              expanded={index===expanded} 
+              loadCity={loadCity} 
+              expand={expand}
+              owned={nfts.includes(element)} 
+            />  
           </div>
         )
       }

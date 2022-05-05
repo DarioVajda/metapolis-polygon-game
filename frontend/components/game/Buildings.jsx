@@ -13,7 +13,7 @@ export default function Buildings() {
   const buildings = useBuildingStore(state=>state.buildings)
 
   async function getCityData (id) {
-    let response = await fetch(`http://0.0.0.0:8000/cities/0/data`)
+    let response = await fetch(`http://localhost:8000/cities/0/data`)
     console.log('got response')
     if(response.ok){
       let json = await response.json()

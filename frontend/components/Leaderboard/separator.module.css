@@ -1,0 +1,45 @@
+.separator {
+    background-color: var(--lightest-background);
+    font-size: 1.25rem;
+    height: 1.75em;
+    margin: 0 2em;
+    border-radius: 10000em;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.arrow {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transform: rotateX(180deg);
+}
+
+.arrow svg {
+    transform: scale(1.75);
+}
+
+.text, .prize {
+    padding-left: 1em;
+    background-color: transparent;
+}
+
+.prize {
+    padding-left: 0.4em;
+}
+
+.eth {
+    padding-left: 1em;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eth svg {
+    transform: scale(1.3);
+}

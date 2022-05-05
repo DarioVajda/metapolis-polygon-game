@@ -11,8 +11,6 @@ import styles from '../styles/leaderboard.module.css'
 
 const leaderboard = () => {
 
-  var timeLeft = 86400*3; // this is how much time is left until the next round of elimination (in seconds), it could be moved to a seperate component and have a state changing every second showing the time
-
   const [nfts, setNfts] = useState([]);
 
   var cityContract;

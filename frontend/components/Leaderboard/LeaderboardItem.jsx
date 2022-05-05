@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 
+import { prizes, getRange } from '../utils/prizes';
+
 import style from './leaderboard.module.css';
 
-const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned }) => {
+const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
 
   const [data, setData] = useState(false);
   const idLoaded = useRef(false);
@@ -130,7 +132,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned }) => {
 
   // #endregion
 
-  // #region Util functions
+  // #region People functions
 
   const percentage = (t) => {
     // true -> educated, false -> normal
@@ -228,9 +230,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned }) => {
 
   // #endregion
 
-  useEffect(() => {
-    // calculatePeople();
-  }, []);
+  // console.log(getRange(nfts, index+1).prize);
 
   return (
     <div className={style.item}>

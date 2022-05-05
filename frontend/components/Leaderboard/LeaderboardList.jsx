@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import LeaderboardItem from './LeaderboardItem';
+import Separator from './Separator';
+
+import { prizes, getRange, price } from '../utils/prizes';
 
 import style from './leaderboard.module.css';
-
-// potencijalne nagrade:
-// 1		        10
-// 2-5	      	4
-// 6-100	    	1
-// 101-500		  0.3
-// 501-1250	    0.15
-// 1251-2500	  0.1
 
 const LeaderboardList = ({nfts}) => {
   const [list, setList] = useState(Array(10).fill(-1));
@@ -49,7 +44,12 @@ const LeaderboardList = ({nfts}) => {
     getList();
   }, []);
 
-  console.log('nfts:', nfts);
+  // console.log('nfts:', nfts);
+  const funkcija = (i) => { 
+    let res = getRange(list.length, i);
+    // console.log('res', res);
+    return res;
+  };
 
   return (
     <div className={style.leaderboard}>
@@ -62,8 +62,19 @@ const LeaderboardList = ({nfts}) => {
               expanded={index===expanded} 
               loadCity={loadCity} 
               expand={expand}
-              owned={nfts.includes(element)} 
-            />  
+              owned={nfts.includes(element)}
+              nfts={loaded?list.length:0}
+              />  
+              {
+                element !== -1 &&
+                <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />
+              }
+              {
+                // // temp = getRange(list.length, index) ?
+                // (funkcija(index+1).check || index === list.length-1) && element !== -1 ?
+                // <>_____________________________________________________________________________</> :
+                // <>nothing</>
+              }
           </div>
         )
       }

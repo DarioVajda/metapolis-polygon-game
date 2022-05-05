@@ -106,13 +106,13 @@ class SpecialBuilding {
     constructor(start, end, type) {
         this.start = start; // coordinate
         this.end = end; // coordinate
-        this.type = type; // integer/string representing the special building
+        this.type = type; // string representing the special building
     }
 }
 
 const specialTypes = {
-    Statue: "statue",
-    Fountain: "fountain"
+    Statue: 'statue',
+    Fountain: 'fountain'
 }
 
 const specialBuildingDimensions = new Map();

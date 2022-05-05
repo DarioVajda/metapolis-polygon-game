@@ -181,6 +181,6 @@ function generate() {
     return buildings;
 }
 
-// console.log(generate());
+// console.dir(generate(), {depth: null});
 
 exports.generateBuildings = generate;

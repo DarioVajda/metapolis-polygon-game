@@ -1,14 +1,14 @@
 :root {
     --background: #202225;
     --light-background: #292c30;
-    --lightest-background: #383c43;
+    --lightest-background: #3b3f46;
     --text: #FFF;
     --light-text: #b1b1b1;
     --primary: #017DEB;
     --primary-variant: #40a6ff;
     --primary-dark: #0059a667;
     --secondary: #ffba24;
-    --secondary-dark: #ed9200;
+    --secondary-dark: #edaa00;
     --error: #ff0000;
     --link: #0000EE;
 
@@ -22,4 +22,12 @@
     --matic-bg: #5e008a;
     --weth: #2a6cb8;
     --weth-bg: #00346e;
+
+    /* Colors for the eth svg */
+    --eth-left2: #ddd;
+    --eth-left1: #888;
+    --eth-left2: #ddd;
+    --eth-right2: #888;
+    --eth-right1: #555;
+    --eth-right2: #888;
 }

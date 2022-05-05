@@ -1,61 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 
+import { prizes, price } from './utils/prizes';
+
 import styles from './styles/prizes.module.css';
 
 const PrizesPopup = ({closePopup, cities}) => {
-  
-  const price = 0.1;
-
-  const prizes = [
-    {
-      min: 100,
-      list: [
-        { start: 1, end: 1, prize: 10 },
-        { start: 2, end: 10, prize: 3 },
-        { start: 11, end: 20, prize: 1 }
-      ]
-    },
-    {
-      min: 500,
-      list: [
-        { start: 1, end: 1, prize: 20 },
-        { start: 2, end: 20, prize: 5 },
-        { start: 21, end: 50, prize: 3 },
-        { start: 51, end: 150, prize: 1 }
-      ]
-    },
-    {
-      min: 2500,
-      list: [
-        { start: 1, end: 1, prize: 40 },
-        { start: 2, end: 50, prize: 8 },
-        { start: 51, end: 100, prize: 5 },
-        { start: 101, end: 200, prize: 3 },
-        { start: 201, end: 750, prize: 1 }
-      ]
-    },
-    {
-      min: 5000,
-      list: [
-        { start: 1, end: 1, prize: 60 },
-        { start: 2, end: 50, prize: 10 },
-        { start: 51, end: 100, prize: 5 },
-        { start: 101, end: 200, prize: 2 },
-        { start: 201, end: 1500, prize: 1 },
-      ]
-    },
-    {
-      min: 10000,
-      list: [
-        { start: 1, end: 1, prize: 100 },
-        { start: 2, end: 50, prize: 20 },
-        { start: 51, end: 100, prize: 8 },
-        { start: 101, end: 200, prize: 5 },
-        { start: 201, end: 1000, prize: 2 },
-        { start: 1001, end: 2500, prize: 1 },
-      ]
-    },
-  ];
 
   const getRange = () => {
     let _range = -1;
@@ -90,7 +39,7 @@ const PrizesPopup = ({closePopup, cities}) => {
   let totalPrizePool = 0;
   prizes[range].list.forEach((element) => {
     totalPrizePool += (element.end-element.start+1) * element.prize * price;
-  })
+  });
 
   return (
     <div className={styles.popup}>

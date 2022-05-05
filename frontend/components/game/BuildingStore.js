@@ -19,8 +19,13 @@ const useBuildingStore = create((set) => ({
                                                               grid: buildingToGrid([x0,y0],[x1,y1],state.uuid,state.grid)})),
     removeBuilding: (uuid) => set((state) => ({buildings: state.buildings.filter(building => building.uuid!=uuid),
                                                grid: removeBuildingFromGrid(state.grid,uuid)})),
-    initializeBuildings: (buildings) => set((state)=> ({ buildings: buildings.map(building => ({...building,uuid:generateUUID()})),
-                                                         grid: initializeGrid(state.buildings,state.grid)}))
+    // initializeBuildings: (buildings) => {
+    //   let initializedBuildings=buildings.map(building => ({...building,uuid:generateUUID()}),
+    //   set((state)=> ({  buildings: initializedBuildings,
+    //                     grid: initializeGrid(initializedBuildings,state.grid)}))
+    //   }
+    initializeBuildings: (buildings) => set((state)=> ({  buildings: buildings,
+                                                          grid: initializeGrid(buildings,state.grid)}))
   }))
 
 
@@ -47,7 +52,8 @@ function removeBuildingFromGrid(grid,uuid){
 
 function initializeGrid(buildings,grid) {
   buildings.forEach(element => {
-    buildingToGrid([element.start.x,element.start.y],[element.end.x,element.end.y],element.uuid,grid)
+    grid=buildingToGrid([element.start.x,element.start.y],[element.end.x,element.end.y],element.uuid,grid)
+    console.log(element)
   });
   return grid;
 }

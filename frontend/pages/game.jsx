@@ -82,5 +82,6 @@ const gameplay = () => {
     </>
   )
 }
+  ///CAMERA IS FUCKED UP BECAUSE OF MODELS, THEIR SCALE FUCKS SHIT UP
 
 export default gameplay

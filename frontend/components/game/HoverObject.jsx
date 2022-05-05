@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useBuildingStore } from './BuildingStore.js'
 import { buildingTypes } from './BuildingTypes.js';
 import { useGLTF } from '@react-three/drei'
-import {gridDimensions,gridSize,plotSize} from './GridData'
+import {gridDimensions,gridSize,plotSize,Scale} from './GridData'
 import House from './modelComponents/House'
 import Factory from './modelComponents/Factory'
 import Building from './modelComponents/Building'
@@ -44,17 +44,17 @@ export default function HoverObject() {
       })
 
     if (selectedBuildingType && buildMode) {
-        if(selectedBuildingType.type=='House')
+        if(selectedBuildingType.type=='house')
         {
-            return <House ref={hoverObjectRef} scale={1/6} key={'hoverObject'}/>
+            return <House ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
         }
-        else if(selectedBuildingType.type=='Factory')
+        else if(selectedBuildingType.type=='factory')
         {
-            return <Factory ref={hoverObjectRef} scale={1/6} key={'hoverObject'}/>
+            return <Factory ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
         }
-        else if(selectedBuildingType.type=='Building')
+        else if(selectedBuildingType.type=='building')
         {
-            return <Building ref={hoverObjectRef} scale={1/6} key={'hoverObject'}/>
+            return <Building ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
         }
         else
         {

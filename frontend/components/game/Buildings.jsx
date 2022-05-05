@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import { useBuildingStore } from './BuildingStore.js'
-import {gridDimensions,gridSize,plotSize} from './GridData'
+import {gridDimensions,gridSize,plotSize,Scale} from './GridData'
 import House from './modelComponents/House'
 import Factory from './modelComponents/Factory'
 import Building from './modelComponents/Building'
@@ -18,7 +18,7 @@ export default function Buildings() {
     if(response.ok){
       let json = await response.json()
       console.log(json)
-      initializeBuildings(json.buildings)
+      initializeBuildings(json.buildings.map(building => ({...building,uuid:generateUUID()})))
     }
     else{
       alert("HTTP-Error: "+ response.status)
@@ -28,8 +28,6 @@ export default function Buildings() {
   useEffect(() => {
     getCityData()
   }, [])
-
-  const Scale=plotSize/60 //this is only for the current models
   
   //CURRENTLY UUID GENERATION IS NOT USED ANYWHERE
 

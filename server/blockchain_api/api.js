@@ -217,7 +217,9 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.start.y,
 		building.end.x,
 		building.end.y,
-		building.type
+		building.type,
+		1000000,/////////////////dariov zajeb
+		{gasLimit:5e6}
 	);
 	try {
 		let receipt = await tx.wait();
@@ -226,6 +228,7 @@ app.post("/cities/:id/build", async (req, res) => {
 	}
 	catch(e) {
 		console.log(e);
+		console.log('MAJMUNE')
 		res.status(400).send(e);
 	}
 	

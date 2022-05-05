@@ -2,6 +2,38 @@ import {React, useState,useCallback, useRef, useEffect} from 'react'
 import { useBuildingStore, demolishOnGrid } from './BuildingStore.js';
 import {gridDimensions,gridSize,plotSize} from './GridData'
 import { buildingTypes } from './BuildingTypes.js';
+import { generateUUID } from 'three/src/math/MathUtils';
+import {ethers} from 'ethers'
+
+
+
+const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
+    const message = `Building ${type} in city ${id}, messageUUID:${generateUUID()}`;
+  
+    await window.ethereum.send("eth_requestAccounts");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(message);
+    const address = await signer.getAddress();
+  
+    console.log(type)
+    let body = JSON.stringify({building:{start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,level:0},signature: signature,message: message });
+    console.log(body);
+    const response = await fetch(`http://localhost:8000/cities/${id}/build`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: body
+    });
+    console.log(response);
+    return response
+  };
 
 function GridSquare(props){
     const selectedBuilding = useBuildingStore(state=> state.selectedBuilding)
@@ -18,7 +50,7 @@ function GridSquare(props){
     const buildMode = useBuildingStore(state=>state.buildMode);
     const setHoveredXY = useBuildingStore(state=>state.setHoveredXY)
 
-    function build(x,y,grid,selectedBuildingType){
+    async function build(x,y,grid,selectedBuildingType){
         let buildable=true;
         if (selectedBuildingType === null){
             buildable=false
@@ -38,7 +70,14 @@ function GridSquare(props){
             }
         }
         if(buildable){
-            addBuilding([x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+            ////HERE ADD API CALL THEN ADDBUILDING IF RESPONSE IS OK //// ID IS ONLY 9 FOR NOW
+            let response = await apiAddBuilding(9,[x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+            if(response.ok){
+                addBuilding([x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+            }
+            else{
+                alert("HTTP-Error: "+ response.status)
+            }
         }
         else
             console.log('can\'t build')
@@ -48,6 +87,7 @@ function GridSquare(props){
         if(grid[x*gridSize+y] === null || grid[x*gridSize+y] === undefined)
             notEmpty=false;
         if(notEmpty)
+            ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
             demolishBuilding(grid[x*gridSize+y])
         else
             console.log('this grid square is empty already')

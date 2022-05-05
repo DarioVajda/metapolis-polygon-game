@@ -53,7 +53,6 @@ function removeBuildingFromGrid(grid,uuid){
 function initializeGrid(buildings,grid) {
   buildings.forEach(element => {
     grid=buildingToGrid([element.start.x,element.start.y],[element.end.x,element.end.y],element.uuid,grid)
-    console.log(element)
   });
   return grid;
 }

@@ -13,11 +13,10 @@ export default function Buildings() {
   const buildings = useBuildingStore(state=>state.buildings)
 
   async function getCityData (id) {
-    let response = await fetch(`http://localhost:8000/cities/0/data`)
+    let response = await fetch(`http://localhost:8000/cities/9/data`)
     console.log('got response')
     if(response.ok){
       let json = await response.json()
-      console.log(json)
       initializeBuildings(json.buildings.map(building => ({...building,uuid:generateUUID()})))
     }
     else{

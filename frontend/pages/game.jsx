@@ -16,6 +16,39 @@ import HoverObject from '../components/game/HoverObject.jsx';
 
 //----CONSTANTS----//
 
+//----VARIABLES----//
+let initialised=false;
+
+//----FUNCTIONS----//
+const initCity = async (id) => {
+  const message = `Initialize #${id} City NFT`;
+
+  await window.ethereum.send("eth_requestAccounts");
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const signature = await signer.signMessage(message);
+  const address = await signer.getAddress();
+
+  let body = JSON.stringify({address: address, message: message, signature: signature});
+  console.log(body);
+  const response = await fetch(`http://localhost:8000/cities/${id}/initialize`, {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: body
+  });
+  console.log(response);
+};
+
+
+
+
 
 //MAIN COMPONENT
 const gameplay = () => {
@@ -49,5 +82,6 @@ const gameplay = () => {
     </>
   )
 }
+  ///CAMERA IS FUCKED UP BECAUSE OF MODELS, THEIR SCALE FUCKS SHIT UP
 
 export default gameplay

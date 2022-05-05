@@ -106,7 +106,7 @@ export default function Home() {
     if(account.error !== undefined) {
       return account;
     } // checking for errors
-    
+    console.log(wethContract)
     let balance = await wethContract.balanceOf(account); // getting the weth balance of the account
 
     let wethPrice = 0.1 * num; // this should be loaded from somewhere (the price which may vary)

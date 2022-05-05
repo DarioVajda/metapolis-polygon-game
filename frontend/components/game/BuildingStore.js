@@ -15,10 +15,12 @@ const useBuildingStore = create((set) => ({
     setBuildMode: (mode)=>  set(()=>  ({buildMode:mode})),
     setHoveredXY: (x,y)=> set((state)=>  ({hoveredXYPrevious:state.hoveredXYCurrent,hoveredXYCurrent:{x:x,y:y}})),
     addBuilding: ([x0,y0],[x1,y1], type) => set((state) => ({ uuid:generateUUID(),
-                                                              buildings: [...state.buildings, {start:[x0,y0],end:[x1,y1],type:type,uuid:state.uuid}],
+                                                              buildings: [...state.buildings, {start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,uuid:state.uuid}],
                                                               grid: buildingToGrid([x0,y0],[x1,y1],state.uuid,state.grid)})),
     removeBuilding: (uuid) => set((state) => ({buildings: state.buildings.filter(building => building.uuid!=uuid),
-                                               grid: removeBuildingFromGrid(state.grid,uuid)}))
+                                               grid: removeBuildingFromGrid(state.grid,uuid)})),
+    initializeBuildings: (buildings) => set((state)=> ({ buildings: buildings.map(building => ({...building,uuid:generateUUID()})),
+                                                         grid: initializeGrid(state.buildings,state.grid)}))
   }))
 
 
@@ -43,6 +45,28 @@ function removeBuildingFromGrid(grid,uuid){
   return grid;
 }
 
+function initializeGrid(buildings,grid) {
+  buildings.forEach(element => {
+    buildingToGrid([element.start.x,element.start.y],[element.end.x,element.end.y],element.uuid,grid)
+  });
+  return grid;
+}
+
+
+const post = async (body,link) => {
+  const response = await fetch(link, {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: body
+  });
+}
 
 
 export {useBuildingStore};

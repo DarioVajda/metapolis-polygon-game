@@ -78,7 +78,8 @@ const gameplay = () => {
             </Suspense>
           </WorldCanvas>
       </div>
-      <Link href="/"><a>Home</a></Link>      
+      <Link href="/"><a>Home</a></Link> <br />
+      <Link href='/leaderboard'><a>Leaderboard</a></Link> <br />
     </>
   )
 }

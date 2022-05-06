@@ -13,8 +13,7 @@ export default function Buildings() {
   const buildings = useBuildingStore(state=>state.buildings)
 
   async function getCityData (id) {
-    let response = await fetch(`http://localhost:8000/cities/9/data`)
-    console.log('got response')
+    let response = await fetch(`http://localhost:8000/cities/${id}/data`)
     if(response.ok){
       let json = await response.json()
       initializeBuildings(json.buildings.map(building => ({...building,uuid:generateUUID()})))
@@ -25,7 +24,7 @@ export default function Buildings() {
   }
 
   useEffect(() => {
-    getCityData()
+    getCityData(9)
   }, [])
   
   //CURRENTLY UUID GENERATION IS NOT USED ANYWHERE

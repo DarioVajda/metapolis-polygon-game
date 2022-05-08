@@ -4,6 +4,8 @@ import styles from '../styles/game.module.css'
 import { Group } from 'three'
 import {useBuildingStore} from './BuildingStore'
 import GoldDiv from './HTMLComponents/goldIcon.jsx'
+import EducatedWorkers from './HTMLComponents/educatedWorkers'
+import UnEducatedWorkers from './HTMLComponents/unEducatedWorkers'
 
 
 
@@ -19,6 +21,7 @@ function HTMLContent() {
         if(response.ok){
         let json = await response.json()
         setData(json);
+        console.log(json)
         dataLoaded.current=true;
         }
         else{
@@ -43,6 +46,8 @@ function HTMLContent() {
     <>
     <div id='income' style={{pointerEvents:'none'}}>
         <GoldDiv value={data?data.money:'...'}/>
+        <EducatedWorkers value={data?data.educatedWorkers:'...'}/>
+        <UnEducatedWorkers value={data?data.normalWorkers:'...'}/>
     </div>
     <div id='menuButtons' style={{pointerEvents:'none'}}>
         <button className={styles.roundedFixedBtn} style={{bottom:'2%',left:'2%'}} onClick={toggleBuildings}>Buildings</button>

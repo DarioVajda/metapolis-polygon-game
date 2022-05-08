@@ -61,7 +61,7 @@
     color: palevioletred;
     z-index: 999;
   }
-  .incomeDiv{
+  .dataContainer{
     position:absolute;
     z-index: 999;
     
@@ -70,7 +70,7 @@
     border-radius: 5%;
     background: none;
 }
-  .goldDiv{
+  .dataDiv{
     position:absolute;
     text-decoration: none;
     z-index: 999;
@@ -88,7 +88,7 @@
     text-align: center;
     cursor: pointer;
 }
-.goldTextDiv{
+.dataTextDiv{
   position:absolute;
   text-decoration: none;
   z-index: 999;
@@ -105,7 +105,7 @@
   text-align: center;
   cursor: pointer;
 }
-.goldImgDiv{
+.imgDiv{
   position:absolute;
   z-index: 999;
   
@@ -116,7 +116,7 @@
   margin:0px;
   background: none;
 }
-.goldAmmountDiv{
+.ammountDiv{
   position:absolute;
   z-index: 999;
   

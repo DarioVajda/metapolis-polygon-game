@@ -222,7 +222,9 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.start.y,
 		building.end.x,
 		building.end.y,
-		building.type
+		building.type,
+		1000000,/////////////////dariov zajeb
+		{gasLimit:5e6}
 	);
 	let receipt;
 	try {

@@ -2,13 +2,8 @@
 pragma solidity ^0.8.11;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-
 import "./CityContract.sol";
-
 import { BST } from "./BST.sol";
-
-// there are no checks if the request are valid or possible, it should be done in the backend.
-// maybe later it will be added here too, but for now it is not necessary since only the admin can call the functions
 
 contract Gameplay is Ownable {
 
@@ -19,6 +14,8 @@ contract Gameplay is Ownable {
         CityContract contr = CityContract(nftContractAddress);
         contr.initGameplayContract(address(this));
     }
+
+    // #region Util functions, structs,...
 
     enum BuildingTypes {
         Factory,
@@ -77,6 +74,7 @@ contract Gameplay is Ownable {
     struct City {
         mapping(uint => Building) buildingList;
         mapping(uint => SpecialBuilding) specialBuildingList;
+        string username;
         bool created;
         bool initialized;
         uint64 numOfBuildings;
@@ -87,12 +85,13 @@ contract Gameplay is Ownable {
         uint lastPay;
     } // occupies ( 4 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
 
-
+    // #endregion
+    // #region Variables
     address admin;
     address nftContractAddress;
     bool editable = true;
     uint gameStart = 2000000000;
-    uint payPeriod = 120; // 1 day = 86400
+    uint payPeriod = 60; // 1 day = 86400
 
     mapping(uint => City) cities; // map (array) containing all the data about the City NFTs
     uint64 startingMoney = 100000; // the amount of in-game money everyone has right after minting
@@ -100,12 +99,25 @@ contract Gameplay is Ownable {
     mapping(uint => BST.Node) leaderboard;
     uint root = 10000;
     uint id = 0;
+    // #endregion
+    // #region Minting and transfering NFTs
 
+    /**
+     * @dev Function can only be called by the City Contract, it is called when initializing the city and giving it an owner
+     * @param tokenId id of the city
+     * @param addr is the address of the owner (person who just minted the city)
+     */
     function created(uint tokenId, address addr) external {
+        require(msg.sender == nftContractAddress, 'Has to be sent from the City Contract');
         cities[tokenId].owner = addr;
         cities[tokenId].created = true;
     }
 
+    /**
+     * @dev Function can only be called by the City Cotract, it is called beforeTokenTransfer and reassignes the owner value of the city nft
+     * @param tokenId id of the city
+     * @param _newOwner is the new owner of the nft with that id
+     */
     function newOwner(uint tokenId, address _newOwner) public {
         require(msg.sender == nftContractAddress, 'Has to be sent from the City Contract');
         cities[tokenId].owner = _newOwner;
@@ -129,6 +141,7 @@ contract Gameplay is Ownable {
         uint tokenId,
         uint numOfBuildings,
         uint numOfSpecialBuildings,
+        // string calldata username,
         uint[] memory startx,
         uint[] memory starty,
         uint[] memory endx,
@@ -158,6 +171,7 @@ contract Gameplay is Ownable {
         }
         city.numOfBuildings = uint64(numOfBuildings);
         city.numOfSpecialBuildings = uint64(numOfSpecialBuildings);
+        city.username = "Player";
         city.income = uint64(income);
         city.money = startingMoney;
         city.owner = owner;
@@ -169,13 +183,27 @@ contract Gameplay is Ownable {
 
         id++;
     }
-    
-    // ________________________________________________________________________
-    // functions that change the cities:
-    function upgradeBuilding(uint tokenId, uint price, uint buildingIndex, uint newIncome) external onlyAdmin isEditable {
-        cities[tokenId].buildingList[buildingIndex].level += 1;
-        cities[tokenId].money = cities[tokenId].money - uint64(price);
 
+    // #endregion
+    // #region Changing the cities
+    
+    /**
+     * @dev Function to change the username
+     * @param tokenId id of the nft
+     * @param _username new username
+     */
+    function changeusername(uint tokenId, string calldata _username) external {
+        require(msg.sender == cities[tokenId].owner);
+
+        cities[tokenId].username = _username;
+    }
+
+    /**
+     * @dev Function that will change the income of a city - should be called when building, upgrading or deleting something
+     * @param tokenId id of the city
+     * @param newIncome new income
+     */
+    function changeIncome(uint tokenId, uint newIncome) external onlyAdmin isEditable {
         uint score = cities[tokenId].income;
         root = BST.remove(leaderboard, root, score, tokenId);
         cities[tokenId].income = uint64(newIncome);
@@ -183,6 +211,27 @@ contract Gameplay is Ownable {
         root = BST.insert(leaderboard, root, score, tokenId);
     }
 
+    /**
+     * @dev Function upgrading a building at the index in the list
+     * @param tokenId id of the city
+     * @param price the price of upgrading the building
+     * @param buildingIndex the index of the building in the list 
+     */
+    function upgradeBuilding(uint tokenId, uint price, uint buildingIndex) external onlyAdmin isEditable {
+        cities[tokenId].buildingList[buildingIndex].level += 1;
+        cities[tokenId].money = cities[tokenId].money - uint64(price);
+    }
+
+    /**
+     * @dev Function adding a new building into the city
+     * @param tokenId id of the city
+     * @param price of the building
+     * @param _startx x starting coordinate
+     * @param _starty y starting coordinate
+     * @param _endx x ending coordinate
+     * @param _endy y ending coordinate
+     * @param _buildingType a string that represents a building type
+     */
     function addBuilding(
         uint tokenId,
         uint price,
@@ -190,8 +239,7 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
-        string calldata _buildingType, 
-        uint newIncome
+        string calldata _buildingType
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
         city.buildingList[city.numOfBuildings] = Building({
@@ -205,13 +253,24 @@ contract Gameplay is Ownable {
         city.numOfBuildings += 1;
         city.money = city.money - uint64(price);
 
-        uint score = cities[tokenId].income;
-        root = BST.remove(leaderboard, root, score, tokenId);
-        cities[tokenId].income = uint64(newIncome);
-        score = cities[tokenId].income;
-        root = BST.insert(leaderboard, root, score, tokenId);
+        // Ovo je zakomentarisano jer ce se izvrsavati u posebnoj funkciji
+        // uint score = cities[tokenId].money + cities[tokenId].income * 7;
+        // root = BST.remove(leaderboard, root, score, tokenId);
+        // cities[tokenId].income = uint64(newIncome);
+        // score = cities[tokenId].income;
+        // root = BST.insert(leaderboard, root, score, tokenId);
     }
 
+    /**
+     * @dev Function adding a new building into the city
+     * @param tokenId id of the city
+     * @param price of the building
+     * @param _startx x starting coordinate
+     * @param _starty y starting coordinate
+     * @param _endx x ending coordinate
+     * @param _endy y ending coordinate
+     * @param _specialType a string that represents a building type
+     */
     function addSpecialBuilding(
         uint tokenId,
         uint price,
@@ -219,7 +278,7 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
-        string memory _specialType
+        string calldata _specialType
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
         city.specialBuildingList[city.numOfSpecialBuildings] = SpecialBuilding({
@@ -233,6 +292,50 @@ contract Gameplay is Ownable {
         city.money = city.money - uint64(price);
     }
 
+    /**
+     * @dev Function used for removing a building from a city
+     * @param tokenId id of the city
+     * @param value that will be refunded for selling/removing a building from the city
+     * @param buildingIndex is the index of the building in the list
+     */
+    function removeBuilding(uint tokenId, uint value, uint buildingIndex) external onlyAdmin isEditable {
+        // curr building getting values from last building in the list
+        cities[tokenId].buildingList[buildingIndex].buildingType = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].buildingType;
+        cities[tokenId].buildingList[buildingIndex].startx = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].startx;
+        cities[tokenId].buildingList[buildingIndex].starty = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].starty;
+        cities[tokenId].buildingList[buildingIndex].endx = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endx;
+        cities[tokenId].buildingList[buildingIndex].endy = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endy;
+        cities[tokenId].buildingList[buildingIndex].level = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].level;
+        
+        // cities[tokenId].buildingList[buildingIndex] = cities[tokenId].buildingList[cities[tokenId].numOfBuildings];
+
+        cities[tokenId].money = cities[tokenId].money + uint64(value);
+
+        cities[tokenId].numOfBuildings = cities[tokenId].numOfBuildings - 1;
+    }
+    
+    /**
+     * @dev Function used for removing a building from a city
+     * @param tokenId id of the city
+     * @param value that will be refunded for selling/removing a building from the city
+     * @param buildingIndex is the index of the building in the list
+     */
+    function removeSpecialBuilding(uint tokenId, uint value, uint buildingIndex) external onlyAdmin isEditable {
+        // curr building getting values from last building in the list
+        cities[tokenId].specialBuildingList[buildingIndex].specialType = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].specialType;
+        cities[tokenId].specialBuildingList[buildingIndex].startx = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].startx;
+        cities[tokenId].specialBuildingList[buildingIndex].starty = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].starty;
+        cities[tokenId].specialBuildingList[buildingIndex].endx = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endx;
+        cities[tokenId].specialBuildingList[buildingIndex].endy = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endy;
+        
+        cities[tokenId].money = cities[tokenId].money + uint64(value);
+
+        cities[tokenId].numOfSpecialBuildings = cities[tokenId].numOfSpecialBuildings - 1;
+    }
+
+    /**
+     * @dev Function that starts the game, income will begin to be calculated and received (this happens by chaning the 'gameStart' value to current block.timestamp and setting at 'lastPay' for all cities)
+     */
     function startGameIncome() external onlyAdmin isEditable {
         require(gameStart == 2000000000, "Game was already started");
         gameStart = block.timestamp;
@@ -243,6 +346,10 @@ contract Gameplay is Ownable {
         }
     }
 
+    /**
+     * @dev Function getting the income for a city if conditions are met
+     * @param tokenId id of the city
+     */
     function getIncome(uint tokenId) external onlyAdmin isEditable {
         require(block.timestamp > gameStart, "Game did not start yet.");
         require(block.timestamp - cities[tokenId].lastPay > payPeriod, "Can't get income yet.");
@@ -252,17 +359,21 @@ contract Gameplay is Ownable {
         cities[tokenId].lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
     }
 
+    // #endregion
+    // #region Getting data from the contract
 
-    // funkcije za dobijanje podata iz contract-a:
+    /**
+     * @dev Function returns true if the cities are editable, and false if they are not
+     */
     function getEditableState() external view returns(bool) {
         return editable;
-    } // returns true if the cities are editable, and false if they are not
-
+    }
 
     struct CityRepresentation {
         address owner;
         uint numOfBuildings;
         uint numOfSpecialBuildings;
+        string username;
         uint[] startx;
         uint[] starty;
         uint[] endx;
@@ -282,6 +393,7 @@ contract Gameplay is Ownable {
             owner: city.owner,
             numOfBuildings: numOfBuildings,
             numOfSpecialBuildings: numOfSpecialBuildings,
+            username: city.username,
             startx: new uint[](numOfBuildings + numOfSpecialBuildings),
             starty: new uint[](numOfBuildings + numOfSpecialBuildings),
             endx: new uint[](numOfBuildings + numOfSpecialBuildings),
@@ -311,25 +423,29 @@ contract Gameplay is Ownable {
         return r;
     } // returns a struct with all the data about the city with the 'tokenId' ID
 
+    // returns an array of indices that correspod to the IDs of the sorted cities
     function getTree() external view returns(BST.Node[] memory) {
         BST.Node[] memory r = new BST.Node[](id);
         for(uint i = 0; i < id; i++) {
             r[i] = leaderboard[i];
         }
         return r;
-    } // returns an array of indices that correspod to the IDs of the sorted cities
+    } 
 
+    // #endregion
+    // #region Modifiers and other functions
+
+    // returns the timestamp from the blockchain
     function getBlockchainTime() external view returns(uint) {
         return block.timestamp;
-    } // returns the timestamp from the blockchain
+    }
 
-
+    // changes the time required to pass to receive income
     function changePayPeriod(uint _payPeriod) external onlyAdmin {
         payPeriod = _payPeriod;
-    } // changes the time required to pass to receive income
+    }
 
-
-    // The following modifier is used to check if the person who called the function is the Admin
+    // modifier is used to check if the person who called the function is the Admin
     modifier onlyAdmin() {
         require(msg.sender == admin, 'The caller of the function is not admin');
         _;
@@ -340,14 +456,33 @@ contract Gameplay is Ownable {
         admin = newAdmin;
     }
 
-    // The following modifier is used to check if the cities can be edited - they won't be editable only if a major problem occurs
+    // modifier is used to check if the cities can be edited - they won't be editable only if a major problem occurs
     modifier isEditable() {
         require(editable == true, 'The blockchain database can not be edited at the moment');
         _;
     }
 
-    // The following function is called to restrict editing data on the blockchain
+    // function is called to restrict editing data on the blockchain
     function flipEditableState() public onlyOwner {
         editable = !editable;
     }
+
+    // #endregion
+    // #region Dev options
+
+    function devSetMoney(uint tokenId, uint _money) external {
+        require(msg.sender == cities[tokenId].owner);
+
+        cities[tokenId].money = uint64(_money);
+    }
+
+    // City gone, reduced to atoms...
+    function devDemolishCity(uint tokenId) external {
+        require(msg.sender == cities[tokenId].owner);
+
+        cities[tokenId].numOfBuildings = 0;
+        cities[tokenId].numOfSpecialBuildings = 0;
+    }
+
+    // #endregion
 }

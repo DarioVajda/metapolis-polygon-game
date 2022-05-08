@@ -63,7 +63,11 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 app.get("/leaderboard", async (req, res) => {
 	let leaderboard = [];
 	let tree = await contract.getTree();
-	// console.log('tree:', tree);
+	if(tree.length === 0) {
+		res.send([]);
+		return;
+	}
+	console.log('tree:', tree);
 	const inorder = (root) => {
 		if(root == 10000) return;
 		if(tree[root].left && tree[root].left != 10000) inorder(tree[root].left);
@@ -210,6 +214,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		return res.status(400).send("Not enough money to build!");
 	}
 	
+	// calling the function that adds a building to the list
 	let tx = await contract.addBuilding(
 		req.params.id,
 		cost,
@@ -219,18 +224,31 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.y,
 		building.type
 	);
+	let receipt;
 	try {
-		let receipt = await tx.wait();
+		receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
 	}
 	catch(e) {
 		console.log(e);
-		res.status(400).send(e);
+		res.status(400).send(e, 'Blockchain error');
+	}
+
+	// calling the function that changes the income
+	let newIncome = 100000; // this should be calculated
+	tx = await contract.changeIncome(req.params.id, newIncome);
+	try {
+		receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e, 'Blockchain error');
 	}
 	
-	res.status(200).send(receipt);
-	
+	res.status(200).send('Success');
 }); // DONE
 
 app.post("/cities/:id/buildspecial", async (req, res) => {
@@ -309,8 +327,9 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 			cost,
 			index
 		);
+		let receipt;
 		try {
-			let receipt = await tx.wait();
+			receipt = await tx.wait();
 			console.log(receipt);
 			res.status(200).send(receipt);
 		}
@@ -318,7 +337,19 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 			console.log(e);
 			res.status(400).send(e);
 		}
-		console.log('nesto se desilo');
+
+		let newIncome = 100000; // this should be calculated
+		tx = await contract.changeIncome(req.params.id, newIncome);
+		try {
+			receipt = await tx.wait();
+			console.log(receipt);
+			res.status(200).send(receipt);
+		}
+		catch(e) {
+			console.log(e);
+			res.status(400).send(e);
+		}
+		
 
 		res.status(200).send(receipt);
 	}
@@ -326,6 +357,10 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		res.status(400).send("Data sent is not correct");
 	}
 }); // DONE
+
+app.post("/cities/:id/remove", async (req, res) => {
+	
+});
 
 app.post("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...

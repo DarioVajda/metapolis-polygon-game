@@ -19,7 +19,7 @@ export default function Home() {
   var gameplayContract;
   
   async function initCityContract() {
-    cityContractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
+    cityContractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
     const signer = provider.getSigner(); // signer koji se daje kao argument pri povezivanju sa contractom
     cityContract = new ethers.Contract(cityContractAddress, CityContract.abi, signer); // povezivanje sa contractom za mintovanje i slicne stvari
@@ -30,7 +30,7 @@ export default function Home() {
   }
 
   async function initGameplayContract() {
-    gameplayContractAddress = '0xBB399a4629a0714bD5182d21FDEDD8d4875FAb4C';
+    gameplayContractAddress = '0xc20f0dcbe9219d7c1e5b3b6fce1ba6cafe8305d90b09ab202dc11ec3a1dabeaa';
     // ovaj contract ne znam da li ce trebati bilo gde u frontendu, zavisi da li ce se ovo pozivati sa backenda, sto se jos ne zna
     // inace isto funkcionise ova funkcija kao initCityContract
     const provider = new ethers.providers.Web3Provider(window.ethereum);

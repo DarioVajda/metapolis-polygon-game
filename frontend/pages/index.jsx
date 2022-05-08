@@ -28,8 +28,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
-  const wethContractAddress = '0x774EBC799E346de4b992764b85d0073a1A4C4143';
+  const cityContractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
+  const wethContractAddress = '0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d';
   
   const connectWallet = async () => {
     let res;
@@ -162,6 +162,13 @@ export default function Home() {
     console.log('addr: ', addr);
   }
 
+  const withdrawTokens = async () => {
+    console.log(cityContract);
+    let tx = await cityContract.withdraw();
+    let receipt = await tx.wait();
+    console.log(receipt);
+  }
+
   //#endregion
 
   //#region Handling Popup Components 
@@ -206,7 +213,7 @@ export default function Home() {
         <div id="about-us">
           <AboutUs />
         </div>
-        <DevOptions mintERC20={() => mintERC20()} />
+        <DevOptions mintERC20={() => mintERC20()} withdraw={withdrawTokens} />
       </main>
     </div>
   )

@@ -8,7 +8,7 @@ const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02e
 var contractAddress;
 var abi
 
-contractAddress = '0xd33492774322634Cc12ae7ABe9e5218aFC537906';
+contractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var city = new ethers.Contract(
@@ -17,7 +17,7 @@ var city = new ethers.Contract(
 	account
 );
 
-contractAddress = '0x774EBC799E346de4b992764b85d0073a1A4C4143';
+contractAddress = '0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
 var weth = new ethers.Contract(
     contractAddress,

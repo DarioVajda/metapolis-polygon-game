@@ -71,7 +71,7 @@ function GridSquare(props){
         }
         if(buildable){
             ////HERE ADD API CALL THEN ADDBUILDING IF RESPONSE IS OK //// ID IS ONLY 9 FOR NOW
-            let response = await apiAddBuilding(9,[x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+            let response = await apiAddBuilding(0,[x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
             if(response.ok){
                 addBuilding([x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
             }

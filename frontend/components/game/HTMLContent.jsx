@@ -41,7 +41,7 @@ function HTMLContent() {
     const setBuildMode = useBuildingStore(state=>state.setBuildMode)
     const buildMode = useBuildingStore(state=>state.buildMode)
     if(!dataLoaded.current)
-        getCityData(9)
+        getCityData(0)
   return (
     <>
     <div id='income' style={{pointerEvents:'none'}}>

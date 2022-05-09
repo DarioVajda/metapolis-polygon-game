@@ -96,7 +96,7 @@ app.get("/cities/:id/data", async (req,res) => {
 	*/
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
-	console.log(city);
+	// console.log(city);
 	res.json(city);
 }); // FIXED - not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
 
@@ -223,7 +223,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.x,
 		building.end.y,
 		building.type,
-		1000000,/////////////////dariov zajeb
+		// 1000000,/////////////////dariov zajeb
 		{gasLimit:5e6}
 	);
 	let receipt;
@@ -247,7 +247,7 @@ app.post("/cities/:id/build", async (req, res) => {
 	}
 	catch(e) {
 		console.log(e);
-		res.status(400).send(e, 'Blockchain error');
+		res.status(400).send(e);
 	}
 	
 	res.status(200).send('Success');

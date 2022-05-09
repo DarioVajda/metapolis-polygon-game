@@ -24,7 +24,7 @@ export default function Buildings() {
   }
 
   useEffect(() => {
-    getCityData(9)
+    getCityData(0)
   }, [])
   
   //CURRENTLY UUID GENERATION IS NOT USED ANYWHERE

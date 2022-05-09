@@ -18,11 +18,12 @@ export default function HoverObject() {
     const hoveredXYCurrent=useBuildingStore(state=>state.hoveredXYCurrent)      ///KADA SE I JEDAN OD OVA DVA PROMENI ONDA SE RERENDERUJE COMPONENT
     const hoveredXYPrevious=useBuildingStore(state=>state.hoveredXYPrevious)    ///KADA SE I JEDAN OD OVA DVA PROMENI ONDA SE RERENDERUJE COMPONENT
     const buildMode=useBuildingStore(state=>state.buildMode)
+    const hoverObjectMove=useBuildingStore(state=>state.hoverObjectMove)
     const hoverObjectRef = useRef() ///REF KOJI SE VEZE ZA HOVEROBJECT
 
     useFrame(() => {
         
-        if (selectedBuildingType && hoverObjectRef.current){
+        if (hoverObjectMove && selectedBuildingType && hoverObjectRef.current){
             let epsilon = 0.1;  //epsilon to optimize movement, so it doesn't move infinitely (allowed mistake)
             let moving=false;
             

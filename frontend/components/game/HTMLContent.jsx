@@ -1,4 +1,4 @@
-import React, {useState,useRef} from 'react'
+import React, {useState,useRef, useEffect} from 'react'
 import { Html } from '@react-three/drei'
 import styles from '../styles/game.module.css'
 import { Group } from 'three'
@@ -6,8 +6,35 @@ import {useBuildingStore} from './BuildingStore'
 import GoldDiv from './HTMLComponents/goldIcon.jsx'
 import EducatedWorkers from './HTMLComponents/educatedWorkers'
 import UnEducatedWorkers from './HTMLComponents/unEducatedWorkers'
+import { generateUUID } from 'three/src/math/MathUtils'
+import { ethers } from 'ethers'
 
-
+const getIncome = async (id) => {
+    const message = `getting moola for #${id} City NFT, messageid: ` + generateUUID();
+  
+    await window.ethereum.send("eth_requestAccounts");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(message);
+    const address = await signer.getAddress();
+  
+    let body = JSON.stringify({params:{id:id},address: address, message: message, signature: signature});
+    console.log(body);
+    const response = await fetch(`http://localhost:8000/cities/${id}/getincome`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: body
+    });
+    if(response.ok)
+        dataLoaded.current=false; /// need to refresh data if everything went through
+  };
 
 
 function HTMLContent() {
@@ -20,9 +47,8 @@ function HTMLContent() {
         let response = await fetch(`http://localhost:8000/cities/${id}/data`)
         if(response.ok){
         let json = await response.json()
-        setData(json);
-        console.log(json)
         dataLoaded.current=true;
+        setData(json);
         }
         else{
         alert("HTTP-Error: "+ response.status)
@@ -40,14 +66,18 @@ function HTMLContent() {
     const selectBuilding = useBuildingStore(state=>state.selectBuilding)
     const setBuildMode = useBuildingStore(state=>state.setBuildMode)
     const buildMode = useBuildingStore(state=>state.buildMode)
-    if(!dataLoaded.current)
-        getCityData(0)
-  return (
+
+    useEffect(() => {
+        getCityData(1)
+        console.log('new data')
+    }, [dataLoaded.current])
+
+        return (
     <>
-    <div id='income' style={{pointerEvents:'none'}}>
-        <GoldDiv value={data?data.money:'...'}/>
-        <EducatedWorkers value={data?data.educatedWorkers:'...'}/>
-        <UnEducatedWorkers value={data?data.normalWorkers:'...'}/>
+    <div id='data' style={{pointerEvents:'none'}}>
+        <GoldDiv value={(data && dataLoaded.current)?data.money:'...'}/>
+        <EducatedWorkers value={(data && dataLoaded.current)?data.educated + ' / ' + data.educatedWorkers:'...'}/>
+        <UnEducatedWorkers value={(data && dataLoaded.current)?data.normal + ' / ' + data.normalWorkers:'...'}/>
     </div>
     <div id='menuButtons' style={{pointerEvents:'none'}}>
         <button className={styles.roundedFixedBtn} style={{bottom:'2%',left:'2%'}} onClick={toggleBuildings}>Buildings</button>
@@ -58,6 +88,9 @@ function HTMLContent() {
         <button className={selectedBuildingInList===1?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'2%'}} onClick={() =>{selectBuilding('house'),setSelectedBuildingInList(1)}}>House</button>
         <button className={selectedBuildingInList===2?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'12%'}} onClick={() =>{selectBuilding('factory'),setSelectedBuildingInList(2)}}>Factory</button>
         <button className={selectedBuildingInList===3?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'22%'}} onClick={() =>{selectBuilding('building'),setSelectedBuildingInList(3)}}>Building</button>
+    </div>
+    <div id='utils' style={{pointerEvents:'none'}}>
+        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(1)}}>Get income</button>
     </div>
     </>
         )

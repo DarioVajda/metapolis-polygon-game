@@ -141,10 +141,10 @@ function calculatePeople(data) {
     let officeWorkers = 0;
 
     buildings.forEach((element) => {
-        normalPeople += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].normalPeople;
-        educatedPeople += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].educatedPeople;
-        manualWorkers += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].manualWorkers;
-        officeWorkers += buildingsModule.buildingStats.get(element.type)[element.level.toNumber()].officeWorkers;
+        normalPeople += buildingsModule.buildingStats.get(element.type)[element.level].normalPeople;
+        educatedPeople += buildingsModule.buildingStats.get(element.type)[element.level].educatedPeople;
+        manualWorkers += buildingsModule.buildingStats.get(element.type)[element.level].manualWorkers;
+        officeWorkers += buildingsModule.buildingStats.get(element.type)[element.level].officeWorkers;
     });
     
     return {
@@ -162,7 +162,7 @@ function formatBuildingList(data) {
             new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),
             new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
             data.buildingType[i],
-            data.level[i],
+            data.level[i].toNumber(),
             1
         ));
     }
@@ -194,6 +194,7 @@ function formatBuildingList(data) {
 //#region IS SAME BUILDING 
 
 function isSameBuilding(building1, building2) {
+    console.log(building1.level+'  :  '+building2.level)
     if(
         building1.start.x === building2.start.x &&
         building1.start.y === building2.start.y &&

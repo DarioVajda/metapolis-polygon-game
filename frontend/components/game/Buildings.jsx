@@ -16,6 +16,7 @@ export default function Buildings() {
     let response = await fetch(`http://localhost:8000/cities/${id}/data`)
     if(response.ok){
       let json = await response.json()
+      console.log(json)
       initializeBuildings(json.buildings.map(building => ({...building,uuid:generateUUID()})))
     }
     else{
@@ -24,44 +25,31 @@ export default function Buildings() {
   }
 
   useEffect(() => {
-    getCityData(0)
+    getCityData(1)
   }, [])
   
   //CURRENTLY UUID GENERATION IS NOT USED ANYWHERE
-
   if(buildings.length >0)
   {
-    return buildings.map((building) => {
+    console.log(buildings)
+    return buildings.map((building,index) => {
+      // console.log(index+':'+building.type)
       let Type=building.type;
+      const posX=(building.start.x+building.end.x)/2
+      const posY=(building.start.y+building.end.y)/2
+      const position = [(plotSize*posX-gridSize*plotSize/2+plotSize/2),0,(plotSize*posY-gridSize*plotSize/2-plotSize/2)];
+      const rotation=((Math.PI/2)*building.orientation)
       if(Type==='house')
       {
-          // const posX=(building.start[0]+building.end[0])/2
-          // const posY=(building.start[1]+building.end[1])/2
-          const posX=(building.start.x+building.end.x)/2
-          const posY=(building.start.y+building.end.y)/2
-          const position = [(plotSize*posX-gridSize*plotSize/2+plotSize/2),0,(plotSize*posY-gridSize*plotSize/2-plotSize/2)];
-          // return <House scale={1/6} key={building.uuid} position={position}/>
-          return <House scale={Scale} key={generateUUID()} position={position}/>
+          return <House scale={Scale} key={generateUUID()} position={position} rotation={[0,rotation,0]}/>
       }
       else if(Type==='factory')
       {
-          // const posX=(building.start[0]+building.end[0])/2
-          // const posY=(building.start[1]+building.end[1])/2
-          const posX=(building.start.x+building.end.x)/2
-          const posY=(building.start.y+building.end.y)/2
-          const position = [(plotSize*posX-gridSize*plotSize/2+plotSize/2),0,(plotSize*posY-gridSize*plotSize/2-plotSize/2)];
-          // return <Factory scale={1/6} key={building.uuid} position={position}/>
-          return <Factory scale={Scale} key={generateUUID()} position={position}/>
+          return <Factory scale={Scale} key={generateUUID()} position={position} rotation={[0,rotation,0]}/>
       }
       else if(Type==='building')
       {
-          // const posX=(building.start[0]+building.end[0])/2
-          // const posY=(building.start[1]+building.end[1])/2
-          const posX=(building.start.x+building.end.x)/2
-          const posY=(building.start.y+building.end.y)/2
-          const position = [(plotSize*posX-gridSize*plotSize/2+plotSize/2),0,(plotSize*posY-gridSize*plotSize/2-plotSize/2)];
-          // return <Building scale={1/6} key={building.uuid} position={position}/>
-          return <Building scale={Scale} key={generateUUID()} position={position}/>
+          return <Building scale={Scale} key={generateUUID()} position={position} rotation={[0,rotation,0]}/>
       }
   
       //add more later

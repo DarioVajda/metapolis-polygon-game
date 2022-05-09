@@ -380,8 +380,7 @@ app.post("/cities/:id/remove", async (req, res) => {
 	let city = utils.formatBuildingList(cityData).buildings;
 
 	if(city[index] === undefined) {
-		res.status(400).send("Ivalid index")
-		return; 
+		return res.status(400).send("Ivalid index")
 	}
 
 	let message = req.body.message;
@@ -389,13 +388,14 @@ app.post("/cities/:id/remove", async (req, res) => {
 	let signer = cityData.owner; // this address could be also sent in the body of the request
 	let signerAddr = await ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
-		res.status(400).send("The caller of this function must be the owner of the NFT");
-		return; 
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
 	}
 
 	let returnPercentage = 0.5;
-	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level-1].cost;
+	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level].cost;
 
+	console.log(utils.isSameBuilding(building, city[index]))
+	console.log(utils.isBuildingFormat(building))
 	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
 		let tx = await contract.removeBuilding(
 			req.params.id,

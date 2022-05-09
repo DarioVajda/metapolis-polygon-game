@@ -3,7 +3,6 @@ import React, {useState, useRef, Suspense} from 'react'
 import * as THREE from 'three';
 import {OrbitControls, Bounds} from "@react-three/drei"
 import Link from "next/link"
-
 import Buildings from '../components/game/Buildings';
 
 //----COMPONENTS----//
@@ -13,6 +12,8 @@ import Landscape from '../components/game/modelComponents/ValleyLandscape'
 import HTMLContent from '../components/game/HTMLContent'
 import Grid from '../components/game/Grid';
 import HoverObject from '../components/game/HoverObject.jsx';
+import { ethers } from 'ethers';
+import { generateUUID } from 'three/src/math/MathUtils';
 
 //----CONSTANTS----//
 
@@ -48,10 +49,9 @@ const initCity = async (id) => {
 
 
 
-
-
 //MAIN COMPONENT
 const gameplay = () => {
+  // getIncome(1)
   return (
     <>
       <div style={{position: "fixed",
@@ -83,6 +83,6 @@ const gameplay = () => {
     </>
   )
 }
-  ///CAMERA IS FUCKED UP BECAUSE OF MODELS, THEIR SCALE FUCKS SHIT UP
+  ///CAMERA IS BROKEN BECAUSE OF MODELS, THEIR SCALE BREAKS STUFF
 
 export default gameplay

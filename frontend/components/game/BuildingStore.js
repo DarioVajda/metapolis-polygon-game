@@ -11,13 +11,16 @@ const useBuildingStore = create((set) => ({
     buildMode:true,
     hoveredXYCurrent:{x:0,y:0},
     hoveredXYPrevious:{x:0,y:0},
+    hoverObjectMove: true,
     selectBuilding: (type) => set(() => ({selectedBuilding:type})),
     setBuildMode: (mode)=>  set(()=>  ({buildMode:mode})),
     setHoveredXY: (x,y)=> set((state)=>  ({hoveredXYPrevious:state.hoveredXYCurrent,hoveredXYCurrent:{x:x,y:y}})),
     addBuilding: ([x0,y0],[x1,y1], type) => set((state) => ({ uuid:generateUUID(),
-                                                              buildings: [...state.buildings, {start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,uuid:state.uuid}],
+                                                              buildings: [...state.buildings, {start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,uuid:state.uuid,orientation:0,level:0}],
+                                                              // ORIENTATION IS LEFT AS 0 FOR NOW, until rotation is implemented
                                                               grid: buildingToGrid([x0,y0],[x1,y1],state.uuid,state.grid)})),
-    removeBuilding: (uuid) => set((state) => ({buildings: state.buildings.filter(building => building.uuid!=uuid),
+    removeBuilding: (uuid) => set((state) => ({buildings: state.buildings.map((building,index,array) => {if(building.uuid===uuid){return array[array.length-1]}else{return building}}).splice(0,state.buildings.length-1),
+                                              // buildings: state.buildings.filter(building => building.uuid!=uuid),
                                                grid: removeBuildingFromGrid(state.grid,uuid)})),
     // initializeBuildings: (buildings) => {
     //   let initializedBuildings=buildings.map(building => ({...building,uuid:generateUUID()}),
@@ -38,6 +41,15 @@ function buildingToGrid([x0,y0],[x1,y1],uuid,grid){
     }
     return grid;
   }
+
+function eraseBuilding(uuid,buildings){
+  let found=buildings.find(building => building.uuid===uuid)
+  if(found != undefined)
+  {
+    found=buildings.pop();
+  }
+  return buildings;
+}
 
 function removeBuildingFromGrid(grid,uuid){
   for (let i = 0; i < gridSize; i++) {

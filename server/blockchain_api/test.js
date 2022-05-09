@@ -47,6 +47,13 @@ async function main() {
     // console.log(balance);
     
 
+    // Funkcija koja pokrece zaradu u igri:
+    //-------------------------------------------
+    tx = await game.startGameIncome({gasLimit: 1e6});
+    receipt = await tx.wait();
+    console.log(receipt);
+
+
     // Funkcija koja flippuje sale state
     // ------------------------------------------
     // tx = await city.flipSaleState();

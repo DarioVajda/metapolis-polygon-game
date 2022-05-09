@@ -230,7 +230,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
 
   // #endregion
 
-  // console.log(getRange(nfts, index+1).prize);
+  // console.log(data);
 
   return (
     <div className={style.item}>

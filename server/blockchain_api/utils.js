@@ -162,7 +162,8 @@ function formatBuildingList(data) {
             new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),
             new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
             data.buildingType[i],
-            data.level[i]
+            data.level[i],
+            1
         ));
     }
     for(let i = 0; i < data.numOfSpecialBuildings; i++) {

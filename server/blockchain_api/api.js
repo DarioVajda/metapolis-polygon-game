@@ -98,7 +98,7 @@ app.get("/cities/:id/data", async (req,res) => {
 	let city = utils.formatBuildingList(cityData);
 	// console.log(city);
 	res.json(city);
-}); // FIXED - not getting correct levels of buildings because the contract is old and bad (fix: just have to uncomment a line in utils file)
+}); // DONE - have to add the orientation to the smart contract
 
 app.post("/cities/:id/initialize", async (req, res) => {
 	if(req.body.address === undefined) {

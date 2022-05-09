@@ -1,6 +1,6 @@
 import {React, useState,useCallback, useRef, useEffect} from 'react'
 import { useBuildingStore, demolishOnGrid } from './BuildingStore.js';
-import {gridDimensions,gridSize,plotSize} from './GridData'
+import {gridDimensions,gridSize,plotSize,ID} from './GridData'
 import { buildingTypes } from './BuildingTypes.js';
 import { generateUUID } from 'three/src/math/MathUtils';
 import {ethers} from 'ethers'
@@ -73,6 +73,7 @@ function GridSquare(props){
     const gridDimensions = props.gridDimensions;
     const gridSize = props.gridSize;
     const plotSize = props.plotSize;
+    const ID = props.ID;
     const x=props.x;
     const y=props.y;
     const buildings = props.buildings
@@ -106,7 +107,7 @@ function GridSquare(props){
         if(buildable){
             ////HERE ADD API CALL THEN ADDBUILDING IF RESPONSE IS OK //// ID IS ONLY 9 FOR NOW
             useBuildingStore.setState({hoverObjectMove:false})
-            let response = await apiAddBuilding(1,[x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
+            let response = await apiAddBuilding(ID,[x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
             if(response.ok){
                 addBuilding([x,y],[x+selectedBuildingType.width-1,y+selectedBuildingType.height-1],selectedBuildingType.type)
                 useBuildingStore.setState({hoverObjectMove:true})
@@ -129,7 +130,7 @@ function GridSquare(props){
             let uuid=grid[x*gridSize+y];
             let index=buildings.findIndex((building)=>building.uuid===uuid);
             ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
-            let response = await apiRemoveBuilding(1,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
+            let response = await apiRemoveBuilding(ID,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
             if(response.ok)
             {
                 demolishBuilding(uuid)
@@ -173,6 +174,6 @@ export default function Grid() {
         x=Math.floor(index/gridSize)
         y=index%gridSize;
         position = [(plotSize*x-gridSize*plotSize/2+plotSize/2),0,(plotSize*y-gridSize*plotSize/2-plotSize/2)];
-        return <GridSquare buildings={buildings} gridSize={gridSize} gridDimensions={gridDimensions} plotSize={plotSize} key={index} position={position} scale={[plotSize*0.9,0.6,plotSize*0.9]} x={x} y={y} built={element?true:false}/>
+        return <GridSquare buildings={buildings} gridSize={gridSize} ID={ID} gridDimensions={gridDimensions} plotSize={plotSize} key={index} position={position} scale={[plotSize*0.9,0.6,plotSize*0.9]} x={x} y={y} built={element?true:false}/>
     })
 }

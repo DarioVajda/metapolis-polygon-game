@@ -8,6 +8,7 @@ import EducatedWorkers from './HTMLComponents/educatedWorkers'
 import UnEducatedWorkers from './HTMLComponents/unEducatedWorkers'
 import { generateUUID } from 'three/src/math/MathUtils'
 import { ethers } from 'ethers'
+import {ID} from './GridData'
 
 const getIncome = async (id) => {
     const message = `getting moola for #${id} City NFT, messageid: ` + generateUUID();
@@ -52,10 +53,6 @@ function HTMLContent() {
         let response = await fetch(`http://localhost:8000/cities/${id}/data`)
         if(response.ok){
             let json = await response.json()
-            console.log('       html:')
-            json.buildings.forEach(element => {
-                console.log(element.type)
-            });
             dataLoaded.current=true;
             setData(json);
         }
@@ -77,7 +74,7 @@ function HTMLContent() {
     const buildMode = useBuildingStore(state=>state.buildMode)
 
     useEffect(() => {
-        getCityData(1)
+        getCityData(ID)
         console.log('new data')
     }, [dataLoaded.current,buildings])
 
@@ -101,7 +98,7 @@ function HTMLContent() {
         <button className={selectedBuildingInList===5?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'42%'}} onClick={() =>{selectBuilding('office'),setSelectedBuildingInList(5)}}>Office</button>
     </div>
     <div id='utils' style={{pointerEvents:'none'}}>
-        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(1)}}>Get income</button>
+        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(ID)}}>Get income</button>
     </div>
     </>
         )

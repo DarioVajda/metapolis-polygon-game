@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import { useBuildingStore } from './BuildingStore.js'
-import {gridDimensions,gridSize,plotSize,Scale} from './GridData'
+import {gridDimensions,gridSize,plotSize,Scale,ID} from './GridData'
 import House from './modelComponents/House'
 import Factory from './modelComponents/Factory'
 import Building from './modelComponents/Building'
@@ -28,7 +28,7 @@ export default function Buildings() {
   }
 
   useEffect(() => {
-    getCityData(1)
+    getCityData(ID)
   }, [])
   
   //CURRENTLY UUID GENERATION IS NOT USED ANYWHERE

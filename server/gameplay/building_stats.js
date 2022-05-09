@@ -63,39 +63,39 @@ const buildingStats = new Map();
 function initBuildingStats() {
     // Sve ovo je u funkciji da bi program bio lepsi, a kasnije se poziva da se sve ovo izvrsi
     buildingStats.set(buildingTypes.Factory, [
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15},
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15},
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1}
     ]);
     buildingStats.set(buildingTypes.Office, [
-        { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25},
-        { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 40}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25},
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 40}
     ]);
     buildingStats.set(buildingTypes.Restaurant, [
-        { cost: 500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5}
     ]);
     buildingStats.set(buildingTypes.Parking, [
-        { cost: 50000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0},
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0},
     ]);
     buildingStats.set(buildingTypes.Building, [
-        { cost: 40000, normalPeople: 8, educatedPeople: 2, manualWorkers: 0, officeWorkers: 0},
-        { cost: 40000, normalPeople: 20, educatedPeople: 5, manualWorkers: 0, officeWorkers: 0}
+        { cost: 1, normalPeople: 8, educatedPeople: 2, manualWorkers: 0, officeWorkers: 0},
+        { cost: 1, normalPeople: 20, educatedPeople: 5, manualWorkers: 0, officeWorkers: 0}
     ]);
     buildingStats.set(buildingTypes.House, [
-        { cost: 20000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0, boost: 1.2},
-        { cost: 20000, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0, boost: 1.2}
+        { cost: 1, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0, boost: 1.2},
+        { cost: 1, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0, boost: 1.2}
     ]);
     buildingStats.set(buildingTypes.Store, [
-        { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 2, maxDecrease: 0.3}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 2, maxDecrease: 0.3}
     ]);
     buildingStats.set(buildingTypes.SuperMarket, [
-        { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10, range: 3, maxDecrease: 0.3}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10, range: 3, maxDecrease: 0.3}
     ]);
     buildingStats.set(buildingTypes.Park, [
-        { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0, range: 0}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0, range: 0}
     ]);
     buildingStats.set(buildingTypes.Gym, [
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3},
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4}
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3},
+        { cost: 1, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4}
     ]);
 } // funkcija koja inicijalizuje polja u mapi
 initBuildingStats();

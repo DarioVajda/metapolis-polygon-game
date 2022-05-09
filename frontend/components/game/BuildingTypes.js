@@ -4,6 +4,9 @@ const buildingTypes = {
     
     building: [{type: 'building',level:1,width:2,height:2,cost: 40000, normalPeople: 8, educatedPeople: 2, manualWorkers: 0, officeWorkers: 0},
                {type: 'building',level:2,width:2,height:2,cost: 40000, normalPeople: 20, educatedPeople: 5, manualWorkers: 0, officeWorkers: 0}],
+
+    longbuilding: [{type: 'longbuilding',level:1,width:1,height:3,cost: 40000, normalPeople: 8, educatedPeople: 2, manualWorkers: 0, officeWorkers: 0},
+                {type: 'longbuilding',level:2,width:1,height:3,cost: 40000, normalPeople: 20, educatedPeople: 5, manualWorkers: 0, officeWorkers: 0}],
     
     factory: [{type: 'factory',level:1,width:2,height:4, cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15},
             {type: 'factory',level:2,width:2,height:4,cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1}],

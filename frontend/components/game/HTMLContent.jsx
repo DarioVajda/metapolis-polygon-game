@@ -15,7 +15,11 @@ const getIncome = async (id) => {
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
+    try {
+        const signature = await signer.signMessage(message);
+    } catch (error) {
+        return {ok:false,status:error.message}
+    }
     const address = await signer.getAddress();
   
     let body = JSON.stringify({params:{id:id},address: address, message: message, signature: signature});
@@ -40,18 +44,23 @@ const getIncome = async (id) => {
 function HTMLContent() {
     const [data, setData] = useState(false);
     const dataLoaded = useRef(false);
+    const buildings = useBuildingStore(state=>state.buildings) //added for refreshing on build
 
 
     // #region Getting the data
     async function getCityData (id) {
         let response = await fetch(`http://localhost:8000/cities/${id}/data`)
         if(response.ok){
-        let json = await response.json()
-        dataLoaded.current=true;
-        setData(json);
+            let json = await response.json()
+            console.log('       html:')
+            json.buildings.forEach(element => {
+                console.log(element.type)
+            });
+            dataLoaded.current=true;
+            setData(json);
         }
         else{
-        alert("HTTP-Error: "+ response.status)
+            alert("HTTP-Error: "+ response.status)
         }
     }
 
@@ -70,7 +79,7 @@ function HTMLContent() {
     useEffect(() => {
         getCityData(1)
         console.log('new data')
-    }, [dataLoaded.current])
+    }, [dataLoaded.current,buildings])
 
         return (
     <>
@@ -88,6 +97,8 @@ function HTMLContent() {
         <button className={selectedBuildingInList===1?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'2%'}} onClick={() =>{selectBuilding('house'),setSelectedBuildingInList(1)}}>House</button>
         <button className={selectedBuildingInList===2?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'12%'}} onClick={() =>{selectBuilding('factory'),setSelectedBuildingInList(2)}}>Factory</button>
         <button className={selectedBuildingInList===3?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'22%'}} onClick={() =>{selectBuilding('building'),setSelectedBuildingInList(3)}}>Building</button>
+        <button className={selectedBuildingInList===4?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'32%'}} onClick={() =>{selectBuilding('store'),setSelectedBuildingInList(4)}}>Store</button>
+        <button className={selectedBuildingInList===5?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'42%'}} onClick={() =>{selectBuilding('office'),setSelectedBuildingInList(5)}}>Office</button>
     </div>
     <div id='utils' style={{pointerEvents:'none'}}>
         <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(1)}}>Get income</button>

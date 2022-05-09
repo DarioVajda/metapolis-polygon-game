@@ -13,7 +13,12 @@ const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
+    let signature;
+    try {
+        signature = await signer.signMessage(message);
+    } catch (error) {
+        return {ok:false,status:error.message}
+    }
     const address = await signer.getAddress();
   
     let body = JSON.stringify({building:{start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,level:0},signature: signature,message: message });
@@ -38,7 +43,12 @@ const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
+    let signature;
+    try {
+        signature = await signer.signMessage(message);
+    } catch (error) {
+        return {ok:false,status:error.message}
+    }
     const address = await signer.getAddress();
   
     let body = JSON.stringify({params:{id:id},index:index,building:{start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,level:level},signature: signature,message: message });

@@ -131,7 +131,7 @@ function doesOverlap(building, city) {
 //#region FORMATING CITY DATA 
 
 function calculatePeople(data) {
-    console.log(data);
+    // console.log(data);
 
     let buildings = data.buildings;
 

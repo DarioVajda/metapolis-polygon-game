@@ -95,7 +95,7 @@ function getBuildings() {
 
 function addBuilding(building) {
     buildingList.push(building);
-    console.log('adding building', building);
+    // console.log('adding building', building);
     return building.type.cost;
 } // dodaje gradjevinu na listu i vraca njenu cenu (to je mozda visak jer mislim da se nigde ne koristi, ali nema veze)
 

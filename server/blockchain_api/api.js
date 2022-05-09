@@ -193,7 +193,8 @@ app.post("/cities/:id/build", async (req, res) => {
 	let signer = cityData.owner; // this address could be also sent in the body of the request
 	let signerAddr = ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return;
 	}
 	
 	let cost = buildingStats.buildingStats.get(building.type)[0].cost;
@@ -202,16 +203,20 @@ app.post("/cities/:id/build", async (req, res) => {
 	}
 	
 	if(utils.isBuildingFormat(building) === false) {
-		return res.status(400).send("Bad format!");
+		res.status(400).send("Bad format!");
+		return;
 	}
 	if(building.level !== 0) {
-		return res.status(400).send("Building is not level 1!");
+		res.status(400).send("Building is not level 1!");
+		return;
 	}
 	if(utils.doesOverlap(building, city)) {
-		return res.status(400).send("Building overlaps!");
+		res.status(400).send("Building overlaps!");
+		return;
 	}
 	if(cost > city.money) {
-		return res.status(400).send("Not enough money to build!");
+		res.status(400).send("Not enough money to build!");
+		return;
 	}
 	
 	// calling the function that adds a building to the list
@@ -223,35 +228,39 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.x,
 		building.end.y,
 		building.type,
-		// 1000000,/////////////////dariov zajeb
 		{gasLimit:5e6}
 	);
 	let receipt;
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
-		res.status(200).send(receipt);
 	}
 	catch(e) {
 		console.log(e);
-		res.status(400).send(e, 'Blockchain error');
 	}
 
 	// calling the function that changes the income
-	let newIncome = 100000; // this should be calculated
-	tx = await contract.changeIncome(req.params.id, newIncome);
+	let income;
+	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+	let people = peopleModule.countPeople({normal: city.buildings} , map);
+	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	
+	console.log('INCOME:', income);
+	tx = await contract.changeIncome(req.params.id, income);
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
+		return;
 	}
 	catch(e) {
 		console.log(e);
 		res.status(400).send(e);
+		return;
 	}
 	
-	res.status(200).send('Success');
-}); // DONE
+	// res.status(200).send('Success');
+}); // DONE (not tested yet)
 
 app.post("/cities/:id/buildspecial", async (req, res) => {
 	let building = req.body;
@@ -298,7 +307,7 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 	}
 	
 	res.status(200).send(receipt);
-}); // DONE
+}); // DONE (not tested yet)
 
 app.post("/cities/:id/upgrade", async (req, res) => {
 	let index = req.body.index; // integer
@@ -340,8 +349,12 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 			res.status(400).send(e);
 		}
 
-		let newIncome = 100000; // this should be calculated
-		tx = await contract.changeIncome(req.params.id, newIncome);
+		let income;
+		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+		let people = peopleModule.countPeople({normal: city.buildings} , map);
+		
+		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		tx = await contract.changeIncome(req.params.id, income);
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
@@ -358,11 +371,91 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 	else {
 		res.status(400).send("Data sent is not correct");
 	}
-}); // DONE
+}); // DONE (not tested yet)
 
 app.post("/cities/:id/remove", async (req, res) => {
-	
-});
+	let index = req.body.index; // integer
+	let building = req.body.building; // 'Building' object
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData).buildings;
+
+	if(city[index] === undefined) {
+		res.status(400).send("Ivalid index")
+		return; 
+	}
+
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signerAddr = await ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return; 
+	}
+
+	let returnPercentage = 0.5;
+	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level-1].cost;
+
+	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
+		let tx = await contract.removeBuilding(
+			req.params.id,
+			value,
+			index
+		);
+		let receipt;
+		try {
+			receipt = await tx.wait();
+			console.log(receipt);
+			res.status(200).send(receipt);
+		}
+		catch(e) {
+			console.log(e);
+			res.status(400).send(e);
+		}
+
+		let income;
+		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+		let people = peopleModule.countPeople({normal: city.buildings} , map);
+		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		
+		tx = await contract.changeIncome(req.params.id, income);
+		try {
+			receipt = await tx.wait();
+			console.log(receipt);
+			res.status(200).send(receipt);
+		}
+		catch(e) {
+			console.log(e);
+			res.status(400).send(e);
+		}
+	}
+	else {
+		res.status(400).send("Data sent is not correct");
+	}
+}); // DONE (not tested yet)
+
+app.post("cities/:id/removespecial", async (req, res) => {
+	let id = req.params.id;
+	let index = req.body.index;
+
+	let building = req.body.building;
+ 
+	// treba da se napravi provera da li je postlati building isti kao sto je onaj u contractu
+
+	let returnPercentage = 0.25;
+	let value = returnPercentage * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina
+
+	let tx = await contract.removeSpecialBuilding(id, value, index);
+	try {
+		let receipt = await tx.wait();
+		res.status(200).send(receipt);
+		return;
+	}
+	catch(e) {
+		res.status(400).send('error in the smart contract function call');
+		return;
+	}
+}); // work in progress
 
 app.post("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
@@ -371,15 +464,15 @@ app.post("/cities/:id/getincome", async (req, res) => {
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
+		console.log('Income received!');
 		res.status(200).send(receipt);
+		return;
 	}
 	catch(e) {
 		console.log(e);
 		res.status(400).send(e);
+		return;
 	}
-
-	console.log('Income received!');
-	res.send(receipt);
 }); // DONE
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

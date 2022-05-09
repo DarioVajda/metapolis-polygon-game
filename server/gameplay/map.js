@@ -55,7 +55,7 @@ function initializeMap(buildings, mapDimensions) {
         }
     } // inicijalizuje mapu
 
-    console.log(buildings);
+    // console.log(buildings);
     buildings.normal.forEach((element) => {
         switch(element.type) {
             case buildingTypes.House: // povecava se produktivnost ljudi u kucama

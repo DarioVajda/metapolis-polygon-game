@@ -194,7 +194,6 @@ function formatBuildingList(data) {
 //#region IS SAME BUILDING 
 
 function isSameBuilding(building1, building2) {
-    console.log(building1.level+'  :  '+building2.level)
     if(
         building1.start.x === building2.start.x &&
         building1.start.y === building2.start.y &&

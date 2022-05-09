@@ -109,7 +109,7 @@ function GridSquare(props){
         else
             console.log('can\'t build')
         }
-    const remove = (x,y,grid)=>{
+    const remove = async (x,y,grid)=>{
         let notEmpty=true;
         if(grid[x*gridSize+y] === null || grid[x*gridSize+y] === undefined)
             notEmpty=false;
@@ -119,7 +119,7 @@ function GridSquare(props){
             let uuid=grid[x*gridSize+y];
             let index=buildings.findIndex((building)=>building.uuid===uuid);
             ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
-            let response = apiRemoveBuilding(1,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
+            let response = await apiRemoveBuilding(1,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
             if(response.ok)
             {
                 demolishBuilding(uuid)
@@ -144,7 +144,7 @@ function GridSquare(props){
         <mesh
         {...props}
         onPointerOver={(event)=>{if(hoverObjectMove){setHover(true),setHoveredXY(props.x,props.y)}}}
-        onPointerOut={(event)=>{if(hoverObjectMove){setHover(false)}}}
+        onPointerOut={(event)=>{setHover(false)}}
         onClick={onClick}
         >
         <boxBufferGeometry attach="geometry"/>

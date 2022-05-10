@@ -9,6 +9,7 @@ import UnEducatedWorkers from './HTMLComponents/unEducatedWorkers'
 import { generateUUID } from 'three/src/math/MathUtils'
 import { ethers } from 'ethers'
 import {ID} from './GridData'
+import { buildingTypes } from './BuildingTypes'
 
 const getIncome = async (id) => {
     const message = `getting moola for #${id} City NFT, messageid: ` + generateUUID();
@@ -91,11 +92,11 @@ function HTMLContent() {
         <button className={buildMode?styles.roundedFixedBtn:styles.roundedFixedBtnClicked} style={{bottom:'2%',right:'2%'}} onClick={()=>setBuildMode(false)}>Demolish</button>
     </div>
     <div id='buildingsList' hidden={!showBuildingsList} style={{pointerEvents:'none'}}>
-        <button className={selectedBuildingInList===1?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'2%'}} onClick={() =>{selectBuilding('house'),setSelectedBuildingInList(1)}}>House</button>
-        <button className={selectedBuildingInList===2?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'12%'}} onClick={() =>{selectBuilding('factory'),setSelectedBuildingInList(2)}}>Factory</button>
-        <button className={selectedBuildingInList===3?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'22%'}} onClick={() =>{selectBuilding('building'),setSelectedBuildingInList(3)}}>Building</button>
-        <button className={selectedBuildingInList===4?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'32%'}} onClick={() =>{selectBuilding('store'),setSelectedBuildingInList(4)}}>Store</button>
-        <button className={selectedBuildingInList===5?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'42%'}} onClick={() =>{selectBuilding('office'),setSelectedBuildingInList(5)}}>Office</button>
+        <button className={selectedBuildingInList===1?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'2%'}} onClick={() =>{selectBuilding('house'),setSelectedBuildingInList(1)}}>House<br/>Cost:{buildingTypes.house[0].cost}</button>
+        <button className={selectedBuildingInList===2?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'12%'}} onClick={() =>{selectBuilding('factory'),setSelectedBuildingInList(2)}}>Factory<br/>Cost:{buildingTypes.factory[0].cost}</button>
+        <button className={selectedBuildingInList===3?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'22%'}} onClick={() =>{selectBuilding('building'),setSelectedBuildingInList(3)}}>Building<br/>Cost:{buildingTypes.building[0].cost}</button>
+        <button className={selectedBuildingInList===4?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'32%'}} onClick={() =>{selectBuilding('store'),setSelectedBuildingInList(4)}}>Store<br/>Cost:{buildingTypes.store[0].cost}</button>
+        <button className={selectedBuildingInList===5?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'42%'}} onClick={() =>{selectBuilding('office'),setSelectedBuildingInList(5)}}>Office<br/>Cost:{buildingTypes.office[0].cost}</button>
     </div>
     <div id='utils' style={{pointerEvents:'none'}}>
         <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(ID)}}>Get income</button>

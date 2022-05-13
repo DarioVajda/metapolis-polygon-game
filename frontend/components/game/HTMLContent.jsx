@@ -90,7 +90,7 @@ function HTMLContent() {
         <button className={selectedBuildingInList===3?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'22%'}} onClick={() =>{selectBuilding('building'),setSelectedBuildingInList(3)}}>Building</button>
     </div>
     <div id='utils' style={{pointerEvents:'none'}}>
-        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(1)}}>Get income</button>
+        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(0)}}>Get income</button>
     </div>
     </>
         )

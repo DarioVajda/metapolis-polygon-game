@@ -67,19 +67,31 @@ app.get("/leaderboard", async (req, res) => {
 		res.send([]);
 		return;
 	}
-	console.log('tree:', tree);
+	// console.log('tree:', tree.map(element => element.id.toNumber()));
+	// console.log('tree:', tree.map(element => {return { 
+	// 	id____: element.id.toNumber(),
+	// 	value_: element.value.toNumber(), 
+	// 	left__: element.left.toNumber(), 
+	// 	right_: element.right.toNumber(), 
+	// 	height: element.height.toNumber()
+	// }} ));
 	const inorder = (root) => {
-		if(root == 10000) return;
-		if(tree[root].left && tree[root].left != 10000) inorder(tree[root].left);
+		console.log(root);
+		if(tree[root].left && tree[root].left != 10000) {
+			inorder(tree[root].left);
+		}
 		leaderboard.unshift(tree[root].id.toNumber()); // should insert in the front of the array to have it be sorted in a descending order!
-		if(tree[root].right && tree[root].right != 10000) inorder(tree[root].right);
+		if(tree[root].right && tree[root].right != 10000) {
+			inorder(tree[root].right);
+		}
 	}
 	let root = 0;
 	for(let i = 0; i < tree.length; i++) {
 		if(tree[i].height > tree[root].height) root = i;
 	}
+	console.log('starting root: ', root);
 	inorder(root);
-	// console.log('leaderboard:', leaderboard);
+	console.log('leaderboard:', leaderboard);
 	res.send(leaderboard);
 });
 
@@ -411,10 +423,14 @@ app.post("/cities/:id/remove", async (req, res) => {
 			res.status(400).send(e);
 		}
 
+		cityData = await contract.getCityData(req.params.id);
+		city = utils.formatBuildingList(cityData).buildings;
+		console.log(city);
+
 		let income;
-		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		let map = mapModule.initializeMap({normal: city} , mapModule.mapDimensions);
+		let people = peopleModule.countPeople({normal: city} , map);
+		income = incomeModule.calculateIncome(people, {normal: city} );
 		
 		tx = await contract.changeIncome(req.params.id, income);
 		try {

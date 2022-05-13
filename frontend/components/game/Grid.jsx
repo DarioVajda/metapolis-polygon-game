@@ -119,7 +119,7 @@ function GridSquare(props){
             let uuid=grid[x*gridSize+y];
             let index=buildings.findIndex((building)=>building.uuid===uuid);
             ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
-            let response = await apiRemoveBuilding(1,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
+            let response = await apiRemoveBuilding(0,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
             if(response.ok)
             {
                 demolishBuilding(uuid)

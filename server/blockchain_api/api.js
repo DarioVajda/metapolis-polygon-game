@@ -406,6 +406,8 @@ app.post("/cities/:id/remove", async (req, res) => {
 	let returnPercentage = 0.5;
 	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level].cost;
 
+	// console.log(utils.isSameBuilding(building, city[index]))
+	// console.log(utils.isBuildingFormat(building))
 	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
 		let tx = await contract.removeBuilding(
 			req.params.id,

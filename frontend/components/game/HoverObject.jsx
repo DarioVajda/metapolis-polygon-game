@@ -6,7 +6,10 @@ import {gridDimensions,gridSize,plotSize,Scale} from './GridData'
 import House from './modelComponents/House'
 import Factory from './modelComponents/Factory'
 import Building from './modelComponents/Building'
+import LongBuilding from './modelComponents/Building3x1'
 import { useFrame } from '@react-three/fiber';
+import Store from './modelComponents/Store.js';
+import Office from './modelComponents/Office.js';
 
 function distance(a,b){
     return Math.sqrt((a.x-b.x)**2 + (a.z-b.z)**2);
@@ -56,6 +59,14 @@ export default function HoverObject() {
         else if(selectedBuildingType.type=='building')
         {
             return <Building ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
+        }
+        else if(selectedBuildingType.type=='store')
+        {
+            return <Store ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
+        }
+        else if(selectedBuildingType.type=='office')
+        {
+            return <Office ref={hoverObjectRef} scale={Scale} key={'hoverObject'}/>
         }
         else
         {

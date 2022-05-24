@@ -1,29 +1,17 @@
 1. CONTRACT DEPLOYMENTS:
-   1_initial_migration.js
-   ======================
+   Replacing 'Weth'
+   > contract address:    0x14Dfd909b2E77d2f52228822B1032DF5c2c48631
+   > gas used:            1576361 (0x180da9)
 
-      Replacing 'Migrations'
-      ----------------------
-      > contract address:    0x952b9720031aA5ea199BDE6ec1BcBC7B60D0Be60
-      > gas used:            250142 (0x3d11e)
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0xD251a0b8000Af3262d917c3926Bc38823F1De32C
+   > gas used:            4295799 (0x418c77)
 
-
-   2_city_contract.js
-   ==================
-
-      Replacing 'Weth'
-      > contract address:    0x14Dfd909b2E77d2f52228822B1032DF5c2c48631
-      > gas used:            1576361 (0x180da9)
-
-      Replacing 'CityContract'
-      ------------------------
-      > contract address:    0xD251a0b8000Af3262d917c3926Bc38823F1De32C
-      > gas used:            4295799 (0x418c77)
-
-      Replacing 'Gameplay'
-      --------------------
-      > contract address:    0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466
-      > gas used:            4013624 (0x3d3e38)
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x0124aBC78a4B81e646AE05F672AEbbeF5a3dF466
+   > gas used:            4013624 (0x3d3e38)
 
    Summary
    =======
@@ -31,32 +19,19 @@
    > Final cost:          0.025339815097595778 ETH
 
 2. CONTRACT DEPLOYMENTS:
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0x651B808880c282f4658b593d643dd881d2a21b17
+   > gas used:            1576361 (0x180da9)
+   
+   Replacing 'CityContract'
+   > contract address:    0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4
+   > gas used:            4295799 (0x418c77)
 
-   1_initial_migration.js
-   ======================
-
-      Replacing 'Migrations'
-      ----------------------
-      > contract address:    0x7dC3Bf874833eCBAB1e7Cd94e1679b1aCD4CD93d
-      > gas used:            250142 (0x3d11e)
-
-
-   2_city_contract.js
-   ==================
-
-      Replacing 'Weth'
-      ----------------
-      > contract address:    0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d
-      > gas used:            1576361 (0x180da9)
-      
-      Replacing 'CityContract'
-      > contract address:    0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA
-      > gas used:            4295799 (0x418c77)
-
-      Replacing 'Gameplay'
-      --------------------
-      > contract address:    0xc20f0dcbe9219d7c1e5b3b6fce1ba6cafe8305d90b09ab202dc11ec3a1dabeaa
-      > gas used:            4915794 (0x4b0252)
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0xc20f0dcbe9219d7c1e5b3b6fce1ba6cafe8305d90b09ab202dc11ec3a1dabeaa
+   > gas used:            4915794 (0x4b0252)
 
    Summary
    =======
@@ -64,40 +39,46 @@
    > Final cost:          0.027595240088304768 ETH
 
 3. CONTRACT DEPLOYMENTS:
-      Starting migrations...
-   ======================
-   > Network name:    'mumbai'
-   > Network id:      80001
-   > Block gas limit: 20000000 (0x1312d00)
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0x651B808880c282f4658b593d643dd881d2a21b17
+   > gas used:            1576361 (0x180da9)
 
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4
+   > gas used:            4295799 (0x418c77)
 
-   1_initial_migration.js
-   ======================
-
-      Replacing 'Migrations'
-      ----------------------
-      > contract address:    0x14ba755F19f75262E3C01C48948c889A8Efa100a
-      > gas used:            250142 (0x3d11e)
-
-   2_city_contract.js
-   ==================
-
-      Replacing 'Weth'
-      ----------------
-      > contract address:    0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d
-      > gas used:            1576361 (0x180da9)
-
-      Replacing 'CityContract'
-      ------------------------
-      > contract address:    0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA
-      > gas used:            4295799 (0x418c77)
-
-      Replacing 'Gameplay'
-      --------------------
-      > contract address:    0xafc8f6025F98bb34dD4411Cb5038dfdD9caF54Ed
-      > gas used:            5865337 (0x597f79)
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x0ffd44739bDd7eB1b35d2D5d2a35086F328A3cB7
+   > gas used:            5865337 (0x597f79)
 
    Summary
    =======
    > Total deployments:   4
    > Final cost:          0.029969097605805283 ETH
+
+4. CONTRACT DEPLOYMENTS:
+
+1_initial_migration.js
+======================
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0x651B808880c282f4658b593d643dd881d2a21b17
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4
+   > gas used:            4295799 (0x418c77)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x0ffd44739bDd7eB1b35d2D5d2a35086F328A3cB7
+   > gas used:            4947072 (0x4b7c80)
+   
+   Summary
+   =======
+   > Total deployments:   4
+   > Final cost:          0.027673435170836693 ETH

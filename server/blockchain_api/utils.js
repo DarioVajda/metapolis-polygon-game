@@ -12,10 +12,10 @@ function contains(array, element) {
         }
     });
     return r;
-} // pomocna funkcija koja proverava da li niz nizova sa 2 elementa sadrzi niz 
-// sa 2 elementa sa nekim konkretnim vrednostima
+} // pomocna funkcija koja proverava da li niz nizova sa 2 elementa sadrzi niz sa 2 elementa sa nekim konkretnim vrednostima
 
 function isBuildingFormat(obj) {
+    // proverava se da li je format gradjevine ispravan, ako se budu menjala neka polja u klasi building onda ce i ovaj kod morati da se promeni malo
     if(
         obj.start === undefined ||
         obj.end === undefined ||
@@ -25,24 +25,28 @@ function isBuildingFormat(obj) {
         typeof obj.end.y !== 'number' ||
         typeof obj.type !== 'string' ||
         typeof obj.level !== 'number' ||
-        Object.values(obj).length !== 4 ||
+        typeof obj.orientation !== 'number' ||
+        Object.values(obj).length !== 5 ||
         Object.values(obj.start).length !== 2 ||
         Object.values(obj.end).length !== 2
 
     ) {
         return false;
-    } // proverava se da li je format gradjevine ispravan, ako se budu menjala neka polja u klasi
-    // building onda ce i ovaj kod morati da se promeni malo
+    }
+
+    // orientation mora biti ceo broj od 1 do 4, u suprotnom se vraca false
+    if(obj.orientation !== 4 && obj.orientation !== 2 && obj.orientation !== 2 && obj.orientation !== 1) {
+        return false;
+    }
 
     let typeValid = false;
     Object.values(buildingsModule.buildingTypes).forEach(type => {
         if(type === obj.type) {
             typeValid = true;
         }
-    }); // proverava se da li postoji tip gradjevine kao sto je onaj primljeni, ako ne postoji
-    // onda typeValid ostaje false
+    }); // proverava se da li postoji tip gradjevine kao sto je onaj primljeni, ako ne postoji onda typeValid ostaje false
 
-     // provera da li su sve koordinate unutar mape:
+    // provera da li su sve koordinate unutar mape:
     let coordinatesValid = true;
     if((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < 20) === false) {
         coordinatesValid = false;
@@ -51,8 +55,8 @@ function isBuildingFormat(obj) {
         coordinatesValid = false;
     }
     
+    // proverava se da li su dimenzije gradjevine dobre za taj konkretan tip
     coordinatesValid = coordinatesValid && contains(dimensions.get(obj.type), [obj.end.x - obj.start.x + 1, obj.end.y - obj.start.y + 1]);
-        // proverava se da li su dimenzije gradjevine dobre za taj konkretan tip
 
     return coordinatesValid && typeValid; // vratice se true samo ako su oba uslova ispunjena
 }
@@ -66,13 +70,19 @@ function isSpecialBuildingFormat(obj) {
         typeof obj.end.x !== 'number' ||
         typeof obj.end.y !== 'number' ||
         typeof obj.type !== 'string' ||
-        Object.values(obj).length !== 3 ||
+        typeof obj.orientation !== 'number' ||
+        Object.values(obj).length !== 4 ||
         Object.values(obj.start).length !== 2 ||
         Object.values(obj.end).length !== 2
 
     ) {
         return false;
     } // proverava se da li je format gradjevine ispravan
+
+    // orientation mora biti ceo broj od 1 do 4, u suprotnom se vraca false
+    if(obj.orientation !== 4 && obj.orientation !== 2 && obj.orientation !== 2 && obj.orientation !== 1) {
+        return false;
+    }
 
     let typeValid = false;
     Object.values(buildingsModule.buildingTypes).forEach(type => {
@@ -163,7 +173,7 @@ function formatBuildingList(data) {
             new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
             data.buildingType[i],
             data.level[i].toNumber(),
-            1
+            data.orientation[i].toNumber()
         ));
     }
     for(let i = 0; i < data.numOfSpecialBuildings; i++) {
@@ -176,7 +186,9 @@ function formatBuildingList(data) {
     city.money = data.money.toNumber();
     city.income = data.income.toNumber();
     city.owner = data.owner;
-    city.lastPay = data.lastPay.toNumber();
+    city.incomesReceived = data.incomesReceived.toNumber();
+    city.created = data.created;
+    city.initialized = data.initialized;
 
     let people = calculatePeople(city);
 
@@ -206,7 +218,8 @@ function isSameBuilding(building1, building2) {
         building1.end.x === building2.end.x &&
         building1.end.y === building2.end.y &&
         building1.type === building2.type &&
-        building1.level === building2.level
+        building1.level === building2.level &&
+        building1.orientation === building2.orientation
     ) {
         return true;
     }

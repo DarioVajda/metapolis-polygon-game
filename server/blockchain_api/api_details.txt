@@ -5,21 +5,37 @@ GET requests:
     /cities/:id - returns the json metadata about the NFT
     /cities/:id/image.jpg - returns the image of the NFT
     /cities/:id/data - returns the data about the city from the smart contract
+    /leaderboard - returns the list of cities sorted by score
+    /count - returns the number of NFTs
 
 POST requests:
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
-    (*) /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type", level: 0}
-    (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, type: "type"}
+    (*) /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type", level: 0}, 1≤x≤4
+    (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type"}
     (*) /cities/:id/upgrade - {
             index: i, // index in the building list array
             building: {
                 start: {x: ..., y: ...},
                 end: {x: ..., y: ...},
                 type: "type",
+                orientation: x,
                 level: 'l'
             } // data about the building
         }
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
+    (*) /cities/:id/rotate - { 
+            rotation: r, // new rotation of the building, 1≤r≤4
+            index: i // index of the building being rotated, 0≤i≤numOfBuildings-1
+        }
+    (*) /cities/:id/rotateSpecial - { 
+            rotation: r, // new rotation of the building, 1≤r≤4
+            index: i // index of the building being rotated, 0≤i≤numOfSpecialBuildings-1
+        }
+
+
+DEV OPTIONS:
+    (*) /cities/:id/dev/setmoney - { money: m } // m - unsigned int
+    (*) /cities/:id/dev/demolish - City gone, reduced to atoms...   
 
 NAPOMENA:
     - Kod url-ova sa (*) treba da bude sledeceg oblika: 

@@ -28,8 +28,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
-  const wethContractAddress = '0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d';
+  const cityContractAddress = '0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4';
+  const wethContractAddress = '0x651B808880c282f4658b593d643dd881d2a21b17';
   
   const connectWallet = async () => {
     let res;
@@ -42,6 +42,8 @@ export default function Home() {
   
   async function initContracts() {
     if(!window.ethereum) return { error: 'no wallet' };
+
+    if(cityContract && wethContract) return; // the contracts are already initialized
 
     const provider = new ethers.providers.Web3Provider(window.ethereum); // pravi se provider koji daje vezu sa blockchainom
     const signer = provider.getSigner(); // signer koji se daje kao argument pri povezivanju sa contractom
@@ -145,8 +147,10 @@ export default function Home() {
   //#endregion
 
   const numOfNFTs = async () => {
-    let list = await (await fetch('http://localhost:8000/leaderboard')).json();
-    return list.length;
+    await initContracts();
+    console.log(cityContract);
+    let num = await cityContract.totalSupply();
+    return num;
   }
 
   //#region Dev Options
@@ -171,11 +175,6 @@ export default function Home() {
 
   //#endregion
 
-  //#region Handling Popup Components 
-
-
-
-  //#endregion
 
   useEffect(() => {
     // initContracts();

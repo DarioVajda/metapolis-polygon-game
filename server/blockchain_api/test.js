@@ -8,7 +8,7 @@ const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02e
 var contractAddress;
 var abi
 
-contractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
+contractAddress = '0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var city = new ethers.Contract(
@@ -17,7 +17,7 @@ var city = new ethers.Contract(
 	account
 );
 
-contractAddress = '0xcA93946CF8E30C6226fdB8ddbB370F64806Ffc5d';
+contractAddress = '0x651B808880c282f4658b593d643dd881d2a21b17';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
 var weth = new ethers.Contract(
     contractAddress,
@@ -40,7 +40,7 @@ async function main() {
 
     // Funkcija koja mintuje weth tokene na moju adresu
     //------------------------------------------
-    // tx = await weth.mint(wallet.address, ethers.utils.parseEther('1'));
+    // tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'));
     // receipt = await tx.wait();
     // var balance = await weth.balanceOf(wallet.address);
     // balance = balance.toString();
@@ -49,9 +49,9 @@ async function main() {
 
     // Funkcija koja pokrece zaradu u igri:
     //-------------------------------------------
-    tx = await game.startGameIncome({gasLimit: 1e6});
-    receipt = await tx.wait();
-    console.log(receipt);
+    // tx = await game.startGameIncome({gasLimit: 1e6});
+    // receipt = await tx.wait();
+    // console.log(receipt);
 
 
     // Funkcija koja flippuje sale state

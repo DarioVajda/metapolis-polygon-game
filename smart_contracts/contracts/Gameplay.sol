@@ -3,9 +3,9 @@ pragma solidity ^0.8.11;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./CityContract.sol";
-import { BST } from "./BST.sol";
 
 contract Gameplay is Ownable {
+    // #region Constructor
 
     constructor(address _admin, address _nftContractAddress) {
         initStringToType();
@@ -15,6 +15,7 @@ contract Gameplay is Ownable {
         contr.initGameplayContract(address(this));
     }
 
+    // #endregion
     // #region Util functions, structs,...
 
     enum BuildingTypes {
@@ -61,6 +62,7 @@ contract Gameplay is Ownable {
         uint32 endx;
         uint32 endy;
         uint32 level;
+        uint32 orientation;
     } // occupies 1 block of 256 bytes
 
     struct SpecialBuilding {
@@ -69,6 +71,7 @@ contract Gameplay is Ownable {
         uint32 starty;
         uint32 endx;
         uint32 endy;
+        uint32 orientation;
     } // occupies 2 block of 256 bytes
 
     struct City {
@@ -77,28 +80,30 @@ contract Gameplay is Ownable {
         string username;
         bool created;
         bool initialized;
-        uint64 numOfBuildings;
-        uint64 numOfSpecialBuildings;
+        uint32 numOfBuildings;
+        uint32 numOfSpecialBuildings;
         uint64 money;
-        uint64 income;
+        uint32 income;
+        uint32 incomesReceived;
         address owner;
-        uint lastPay;
     } // occupies ( 4 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
 
     // #endregion
     // #region Variables
     address admin;
+    uint id = 0;
     address nftContractAddress;
     bool editable = true;
     uint gameStart = 2000000000;
     uint payPeriod = 60; // 1 day = 86400
 
     mapping(uint => City) cities; // map (array) containing all the data about the City NFTs
-    uint64 startingMoney = 100000; // the amount of in-game money everyone has right after minting
+    uint32 startingMoney = 100000; // the amount of in-game money everyone has right after minting
 
-    mapping(uint => BST.Node) leaderboard;
-    uint root = 10000;
-    uint id = 0;
+    // mapping(uint => BST.Node) leaderboard; // ovo mi ipak ne treba
+    // uint root = 10000;
+
+    mapping(uint => uint) scores;
     // #endregion
     // #region Minting and transfering NFTs
 
@@ -111,6 +116,7 @@ contract Gameplay is Ownable {
         require(msg.sender == nftContractAddress, 'Has to be sent from the City Contract');
         cities[tokenId].owner = addr;
         cities[tokenId].created = true;
+        id++;
     }
 
     /**
@@ -124,64 +130,23 @@ contract Gameplay is Ownable {
     }
 
     /**
-     * @dev Function used for minting new City NFTs
+     * @dev Function used for setting the 'initialized' field of a city to true
      * @param tokenId index of the token being initialized
-     * @param numOfBuildings number of buildings in the city
-     * @param numOfSpecialBuildings number of special buildings in the city
-     * @param startx arrays of coordinates for both types of buildings
-     * @param starty ...
-     * @param endx ...
-     * @param endy ...
-     * @param buildingType array of strings representing the buildingTypes
-     * @param specialType uint array representing the types of the special buildings
-     * @param income the calculated income for the city
      */
     function initializeCity(
         address owner,
-        uint tokenId,
-        uint numOfBuildings,
-        uint numOfSpecialBuildings,
-        // string calldata username,
-        uint[] memory startx,
-        uint[] memory starty,
-        uint[] memory endx,
-        uint[] memory endy,
-        string[] memory buildingType,
-        string[] memory specialType,
-        uint income
+        uint tokenId
     ) external onlyAdmin isEditable {
         require(cities[tokenId].created == true , "City is not created yet");
         require(cities[tokenId].initialized == false , "City is already initialized");
-        require(cities[tokenId].owner == owner, "City is owner by someone else");
+        require(cities[tokenId].owner == owner, "City is owned by someone else");
         
         City storage city = cities[tokenId];
-        for(uint i = 0; i < numOfBuildings; i++) {
-            city.buildingList[i].startx = uint32(startx[i]);
-            city.buildingList[i].starty = uint32(starty[i]);
-            city.buildingList[i].endx = uint32(endx[i]);
-            city.buildingList[i].endy = uint32(endy[i]);
-            city.buildingList[i].buildingType = stringToType[buildingType[i]];
-        }
-        for(uint i = numOfBuildings; i < numOfSpecialBuildings + numOfBuildings; i++) {
-            city.specialBuildingList[i-numOfBuildings].startx = uint32(startx[i]);
-            city.specialBuildingList[i-numOfBuildings].starty = uint32(starty[i]);
-            city.specialBuildingList[i-numOfBuildings].endx = uint32(endx[i]);
-            city.specialBuildingList[i-numOfBuildings].endy = uint32(endy[i]);
-            city.specialBuildingList[i-numOfBuildings].specialType = specialType[i-numOfBuildings];
-        }
-        city.numOfBuildings = uint64(numOfBuildings);
-        city.numOfSpecialBuildings = uint64(numOfSpecialBuildings);
-        city.username = "Player";
-        city.income = uint64(income);
+        
         city.money = startingMoney;
-        city.owner = owner;
         city.initialized = true;
-        if(gameStart != 2000000000) city.lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
-        else city.lastPay = 0;
-
-        root = BST.insert(leaderboard, root, income, id); // income should be the 'score' of the player
-
-        id++;
+        if(gameStart != 2000000000) city.incomesReceived = uint32((block.timestamp - gameStart) / payPeriod);
+        else city.incomesReceived = 0;
     }
 
     // #endregion
@@ -201,14 +166,10 @@ contract Gameplay is Ownable {
     /**
      * @dev Function that will change the income of a city - should be called when building, upgrading or deleting something
      * @param tokenId id of the city
-     * @param newIncome new income
+     * @param newScore new score
      */
-    function changeIncome(uint tokenId, uint newIncome) external onlyAdmin isEditable {
-        uint score = cities[tokenId].income;
-        root = BST.remove(leaderboard, root, score, tokenId);
-        cities[tokenId].income = uint64(newIncome);
-        score = cities[tokenId].income;
-        root = BST.insert(leaderboard, root, score, tokenId);
+    function changeScore(uint tokenId, uint newScore) external onlyAdmin isEditable {
+        scores[tokenId] = newScore;
     }
 
     /**
@@ -230,6 +191,7 @@ contract Gameplay is Ownable {
      * @param _starty y starting coordinate
      * @param _endx x ending coordinate
      * @param _endy y ending coordinate
+     * @param _orientation the orientation of a building
      * @param _buildingType a string that represents a building type
      */
     function addBuilding(
@@ -239,6 +201,7 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
+        uint _orientation,
         string calldata _buildingType
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
@@ -248,17 +211,11 @@ contract Gameplay is Ownable {
             starty: uint32(_starty),
             endx: uint32(_endx),
             endy: uint32(_endy),
-            level: 0
+            level: 0,
+            orientation: uint32(_orientation)
         });
         city.numOfBuildings += 1;
         city.money = city.money - uint64(price);
-
-        // Ovo je zakomentarisano jer ce se izvrsavati u posebnoj funkciji
-        // uint score = cities[tokenId].money + cities[tokenId].income * 7;
-        // root = BST.remove(leaderboard, root, score, tokenId);
-        // cities[tokenId].income = uint64(newIncome);
-        // score = cities[tokenId].income;
-        // root = BST.insert(leaderboard, root, score, tokenId);
     }
 
     /**
@@ -270,6 +227,7 @@ contract Gameplay is Ownable {
      * @param _endx x ending coordinate
      * @param _endy y ending coordinate
      * @param _specialType a string that represents a building type
+     * @param _orientation the orientation of a building
      */
     function addSpecialBuilding(
         uint tokenId,
@@ -278,6 +236,7 @@ contract Gameplay is Ownable {
         uint _starty,
         uint _endx,
         uint _endy,
+        uint _orientation,
         string calldata _specialType
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
@@ -286,7 +245,8 @@ contract Gameplay is Ownable {
             startx: uint32(_startx),
             starty: uint32(_starty),
             endx: uint32(_endx),
-            endy: uint32(_endy)
+            endy: uint32(_endy),
+            orientation: uint32(_orientation)
         });
         city.numOfSpecialBuildings += 1;
         city.money = city.money - uint64(price);
@@ -306,12 +266,13 @@ contract Gameplay is Ownable {
         cities[tokenId].buildingList[buildingIndex].endx = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endx;
         cities[tokenId].buildingList[buildingIndex].endy = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endy;
         cities[tokenId].buildingList[buildingIndex].level = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].level;
+        cities[tokenId].buildingList[buildingIndex].orientation = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].orientation;
         
         // cities[tokenId].buildingList[buildingIndex] = cities[tokenId].buildingList[cities[tokenId].numOfBuildings];
 
-        cities[tokenId].money = cities[tokenId].money + uint64(value);
-
         cities[tokenId].numOfBuildings = cities[tokenId].numOfBuildings - 1;
+
+        cities[tokenId].money = cities[tokenId].money + uint64(value);
     }
     
     /**
@@ -327,10 +288,31 @@ contract Gameplay is Ownable {
         cities[tokenId].specialBuildingList[buildingIndex].starty = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].starty;
         cities[tokenId].specialBuildingList[buildingIndex].endx = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endx;
         cities[tokenId].specialBuildingList[buildingIndex].endy = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endy;
+        cities[tokenId].specialBuildingList[buildingIndex].orientation = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].orientation;
         
-        cities[tokenId].money = cities[tokenId].money + uint64(value);
-
         cities[tokenId].numOfSpecialBuildings = cities[tokenId].numOfSpecialBuildings - 1;
+
+        cities[tokenId].money = cities[tokenId].money + uint64(value);
+    }
+
+    /**
+     * @dev Function for rotating a building
+     * @param tokenId the id of the city
+     * @param buildingIndex index of the building in the list
+     * @param _orientation the new orientation of the building
+     */
+    function rotate(uint tokenId, uint buildingIndex, uint _orientation) external onlyAdmin isEditable {
+        cities[tokenId].buildingList[buildingIndex].orientation = uint32(_orientation);
+    }
+
+    /**
+     * @dev Function for rotating a building
+     * @param tokenId the id of the city
+     * @param buildingIndex index of the building in the list
+     * @param _orientation the new orientation of the building
+     */
+    function rotateSpecial(uint tokenId, uint buildingIndex, uint _orientation) external onlyAdmin isEditable {
+        cities[tokenId].specialBuildingList[buildingIndex].orientation = uint32(_orientation);
     }
 
     /**
@@ -341,7 +323,7 @@ contract Gameplay is Ownable {
         gameStart = block.timestamp;
         uint i = 0;
         while(cities[i].owner != address(0)) {
-            cities[i].lastPay = gameStart;
+            cities[i].incomesReceived = 0;
             i++;
         }
     }
@@ -349,14 +331,16 @@ contract Gameplay is Ownable {
     /**
      * @dev Function getting the income for a city if conditions are met
      * @param tokenId id of the city
+     * @param income the income of the city
      */
-    function getIncome(uint tokenId) external onlyAdmin isEditable {
+     // should receive how much is the income
+    function getIncome(uint tokenId, uint income) external onlyAdmin isEditable {
         require(block.timestamp > gameStart, "Game did not start yet.");
-        require(block.timestamp - cities[tokenId].lastPay > payPeriod, "Can't get income yet.");
+        require(block.timestamp > cities[tokenId].incomesReceived * payPeriod + gameStart, "Can't get income yet.");
 
-        uint n = (block.timestamp - cities[tokenId].lastPay) / payPeriod;
-        cities[tokenId].money += uint64(n) * cities[tokenId].income;
-        cities[tokenId].lastPay = block.timestamp - ((block.timestamp - gameStart) % payPeriod);
+        uint n = (block.timestamp - gameStart) / payPeriod - cities[tokenId].incomesReceived;
+        cities[tokenId].money += uint32(n * income);
+        cities[tokenId].incomesReceived += uint32(n);
     }
 
     // #endregion
@@ -374,16 +358,19 @@ contract Gameplay is Ownable {
         uint numOfBuildings;
         uint numOfSpecialBuildings;
         string username;
+        bool created;
+        bool initialized;
         uint[] startx;
         uint[] starty;
         uint[] endx;
         uint[] endy;
+        uint[] orientation;
         string[] buildingType;
         uint[] level;
         string[] specialType;
         uint money;
         uint income;
-        uint lastPay;
+        uint incomesReceived;
     } // this is a struct used for returning values from the blockchain
     function getCityData(uint tokenId) external view returns(CityRepresentation memory) {
         City storage city = cities[tokenId];
@@ -394,22 +381,26 @@ contract Gameplay is Ownable {
             numOfBuildings: numOfBuildings,
             numOfSpecialBuildings: numOfSpecialBuildings,
             username: city.username,
+            created: city.created,
+            initialized: city.initialized,
             startx: new uint[](numOfBuildings + numOfSpecialBuildings),
             starty: new uint[](numOfBuildings + numOfSpecialBuildings),
             endx: new uint[](numOfBuildings + numOfSpecialBuildings),
             endy: new uint[](numOfBuildings + numOfSpecialBuildings),
+            orientation: new uint[](numOfBuildings + numOfSpecialBuildings),
             buildingType: new string[](numOfBuildings),
             level: new uint[](numOfBuildings),
             specialType: new string[](numOfSpecialBuildings),
             money: city.money,
             income: city.income,
-            lastPay: (gameStart == 2000000000) ? gameStart : city.lastPay - gameStart
+            incomesReceived: (gameStart == 2000000000) ? 0 : city.incomesReceived
         });
         for(uint i = 0; i < numOfBuildings; i++) {  
             r.startx[i] = city.buildingList[i].startx;
             r.starty[i] = city.buildingList[i].starty;
             r.endx[i] = city.buildingList[i].endx;
             r.endy[i] = city.buildingList[i].endy;
+            r.orientation[i] = city.buildingList[i].orientation;
             r.buildingType[i] = typeToString[city.buildingList[i].buildingType];
             r.level[i] = city.buildingList[i].level;
         }
@@ -418,17 +409,24 @@ contract Gameplay is Ownable {
             r.starty[i] = city.specialBuildingList[i-numOfBuildings].starty;
             r.endx[i] = city.specialBuildingList[i-numOfBuildings].endx;
             r.endy[i] = city.specialBuildingList[i-numOfBuildings].endy;
+            r.orientation[i] = city.specialBuildingList[i-numOfBuildings].orientation;
             r.specialType[i-numOfBuildings] = city.specialBuildingList[i-numOfBuildings].specialType;
         }
         return r;
     } // returns a struct with all the data about the city with the 'tokenId' ID
 
+    function getNumOfPlayers() external view returns(uint) {
+        return id;
+    }
+
+
+    struct Score {
+        uint score;
+        bool initialized;
+    }
     // returns an array of indices that correspod to the IDs of the sorted cities
-    function getTree() external view returns(BST.Node[] memory) {
-        BST.Node[] memory r = new BST.Node[](id);
-        for(uint i = 0; i < id; i++) {
-            r[i] = leaderboard[i];
-        }
+    function getScore(uint tokenId) external view returns(Score memory) {
+        Score memory r = Score({score: scores[tokenId], initialized: cities[tokenId].initialized});
         return r;
     } 
 
@@ -470,16 +468,12 @@ contract Gameplay is Ownable {
     // #endregion
     // #region Dev options
 
-    function devSetMoney(uint tokenId, uint _money) external {
-        require(msg.sender == cities[tokenId].owner);
-
+    function devSetMoney(uint tokenId, uint _money) external onlyAdmin {
         cities[tokenId].money = uint64(_money);
     }
 
     // City gone, reduced to atoms...
-    function devDemolishCity(uint tokenId) external {
-        require(msg.sender == cities[tokenId].owner);
-
+    function devDemolishCity(uint tokenId) external onlyAdmin {
         cities[tokenId].numOfBuildings = 0;
         cities[tokenId].numOfSpecialBuildings = 0;
     }

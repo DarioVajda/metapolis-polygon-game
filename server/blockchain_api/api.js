@@ -1,50 +1,96 @@
-const express = require("express");
-const ethers = require("ethers");
-const fs = require("fs");
+let express = require("express");
+let ethers = require("ethers");
+let fs = require("fs");
 
-const buildingStats = require('../gameplay/building_stats');
-const mapModule = require('../gameplay/map');
-const peopleModule = require('../gameplay/people');
-const incomeModule = require('../gameplay/income');
-const generateModule = require('../rand_map/generate');
-const utils = require('./utils');
+let buildingStats = require('../gameplay/building_stats');
+let mapModule = require('../gameplay/map');
+let peopleModule = require('../gameplay/people');
+let incomeModule = require('../gameplay/income');
+let generateModule = require('../rand_map/generate');
+let utils = require('./utils');
 
-const addressJSON = require('../../smart_contracts/contract-address.json');
+let addressJSON = require('../../smart_contracts/contract-address.json');
 
 // sifra za skolski metamast wallet: nftigrica
 // WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
 // patient pudding valid edit budget equal west pole canyon quality cannon toilet
 
-//#region connecting to the blockchain
-const provider = new ethers.providers.JsonRpcProvider(
+//#region connecting to the blockchain and other initializations
+let provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
 );
-const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
+let wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
 console.log(wallet);
-const contractAddress = addressJSON.gameplay;
+let contractAddress = addressJSON.gameplay;
 console.log(contractAddress)
-const abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
+let abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var contract = new ethers.Contract(
 	contractAddress,
 	abi,
 	account
 );
-//#endregion
 
-const app = express();
-const port = 8000;
+let app = express();
+let port = 8000;
 
-const cors=require("cors");
-const corsOptions ={
-   origin:'*', 
-   credentials:true,
-   optionSuccessStatus:200,
+let cors=require("cors");
+let corsOptions ={
+	origin:'*', 
+	credentials:true,
+	optionSuccessStatus:200,
 }
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors(corsOptions))
+
+//#endregion
+
+//_______________________________________________________________________________________________
+/* Planirane promene na backendu:
+
+- gradjenje, upgradeovanje i brisanje bi trebalo da radi kako treba
+
+- initialize:
+	- napraviti na serveru da se grad inicijalizuje tako sto se dodaju jedna po jedna gradjevina po ceni 0 i kasnije se pozove funkcija za inicijalizaciju grada na blockchain-u (to u stvari samo oznaci da je grad inicijalizovan i da je zapoceta igra sa tim gradom)
+
+✓ leaderboard:
+	- na blockchainu se cuva samo lista sa score-ovima igraca
+	- ucitava se broj igraca (treba dodati to na Gameplay contract ako jos ne postoji) i svacij score jedan po jedan
+	- imacemo niz objekata {id, score} i bice sortiran na serveru i poslat korisniku (to moze i u frontendu da se uradi, mada mislim da je ovako bolje)
+	- potrebni dodaci:
+		✓ smart contract - getScore(id), getNumOfPlayers()
+		✓ server - popraviti endpoint '/leaderboard'
+
+✓ income:
+	- zarada se sama po sebi vise ne cuva nigde (po potrebi se racuna na serveru), MOZDA BI IPAK MOGLO DA SE CUVA ISTO KAO RANIJE
+	- na blockchainu se cuva 'score' svakog igraca
+	- na blockchainu se cuva takodje KOLIKO PUTA JE PRIMLJENA ZARADA, a na osnovu gameStart-a se odredjuje koliko puta je trebalo da bude primljena i toliko se dodaje
+	- potrebni dodaci:
+		✓ smart contract - setScore(id, _score)
+		✓ server - popraviti endpoint '/getincome' 
+
+✓ building orientation:
+	- treba napraviti da se u contractu cuva orjentacija gradjevina
+	- dodati da se to ucitava sa contract-a umesto da se uvek vraca 1 na serveru
+	- obratiti paznju na to da se ne pokvari nesto u drugim funkcijama kad se ovo doda u contract... (brisanje, dodavanje, upgradeovanje,...)
+	- potrebni dodaci: 
+		✓ smart contract - 'orientation' polje u strukturama Building i SpecialBuilding, rotateBuilding(id, index, _rotation), rotateSpecialBuilding(id, index, _rotation)
+		✓ server - treba u utils funkcijama da se doda deo koji vraca podatke sa servera umesto 1, endpoint /rotate
+
+- optimizacije:
+	- treba namestiti tipove podataka u 'City', 'Building' i 'SpecialBuilding' strukturama tako da se uklope u manje 'bajtova' (ne bas bajtovi nego reci od 256 bitova)
+	- proveriti da li sve radi kad ima velik broj gradjevina u jednom gradu ili velik broj gradova u igrici, ako se pojavljuje problem onda ga popraviti nekako
+	- izbegavati vracanje/slanje velikih nizova na contract
+
+✓ dev options:
+	✓ skloniti 'require(msg.sender === cities[id].owner);' jer msg.sender nece biti igrac nego server
+	✓ napraviti endpointove za to privremeno
+*/
+//_______________________________________________________________________________________________
+
+// #region GET requests for data about NFTs
 
 app.get("/cities/:id", (req, res) => {
 	res.json({
@@ -60,39 +106,36 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
 }); // DONE (for now)
 
+// #endregion
+// #region GET requests
+
 app.get("/leaderboard", async (req, res) => {
-	let leaderboard = [];
-	let tree = await contract.getTree();
-	if(tree.length === 0) {
+	let numOfPlayers = await contract.getNumOfPlayers();
+	if(numOfPlayers === 0) {
 		res.send([]);
 		return;
 	}
-	// console.log('tree:', tree.map(element => element.id.toNumber()));
-	// console.log('tree:', tree.map(element => {return { 
-	// 	id____: element.id.toNumber(),
-	// 	value_: element.value.toNumber(), 
-	// 	left__: element.left.toNumber(), 
-	// 	right_: element.right.toNumber(), 
-	// 	height: element.height.toNumber()
-	// }} ));
-	const inorder = (root) => {
-		console.log(root);
-		if(tree[root].left && tree[root].left != 10000) {
-			inorder(tree[root].left);
-		}
-		leaderboard.unshift(tree[root].id.toNumber()); // should insert in the front of the array to have it be sorted in a descending order!
-		if(tree[root].right && tree[root].right != 10000) {
-			inorder(tree[root].right);
+
+	// getScore treba da vrati (score, initialized) !!!!!!!!!!!!!!!!!!!!!!!!
+	let temp; // objekat koji ce imati polja id i score kad se dobiju podaci sa contracta
+	let leaderboard = [];
+	for(let i = 0; i < numOfPlayers; i++) {
+		temp = await contract.getScore(i);
+		if(temp.initialized) {
+			leaderboard.push({ id: i, score: temp.score });
 		}
 	}
-	let root = 0;
-	for(let i = 0; i < tree.length; i++) {
-		if(tree[i].height > tree[root].height) root = i;
-	}
-	console.log('starting root: ', root);
-	inorder(root);
+
 	console.log('leaderboard:', leaderboard);
+	leaderboard.sort((a, b) => b.score - a.score);
+	console.log('leaderboard:', leaderboard);
+
 	res.send(leaderboard);
+});
+
+app.get("/count", async (req, res) => {
+	let count = await contract.getNumOfPlayers();
+	res.send(count);
 });
 
 app.get("/cities/:id/data", async (req,res) => {
@@ -112,6 +155,9 @@ app.get("/cities/:id/data", async (req,res) => {
 	res.json(city);
 }); // DONE - have to add the orientation to the smart contract
 
+// #endregion
+// #region POST requests
+
 app.post("/cities/:id/initialize", async (req, res) => {
 	if(req.body.address === undefined) {
 		res.status(400).send("Problem with the request");
@@ -127,7 +173,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 
 	let message = req.body.message;
 	let signature = req.body.signature;
-	let signer = cityData.owner; // this address could be also sent in the body of the request
+	let signer = cityData.owner;
 	let signerAddr = ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
 		console.log('The caller of this function must be the owner of the NFT');
@@ -147,6 +193,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let endy = [];
 	let buildingType = [];
 	let specialType = [];
+	let orientation = [];
 	let income;
 
 	for(let i = 0; i < numOfBuildings; i++) {
@@ -155,13 +202,14 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		endx.push(buildings.normal[i].end.x);
 		endy.push(buildings.normal[i].end.y);
 		buildingType.push(buildings.normal[i].type);
+		orientation.push(1); // the orientation should be determined when generating the random city
 	}
 	for(let i = 0; i < numOfSpecialBuildings; i++) {
 		startx.push(buildings.special[i].start.x);
 		starty.push(buildings.special[i].start.y);
 		endx.push(buildings.special[i].end.x);
 		endy.push(buildings.special[i].end.y);
-		specialType.push(buildings.special[i].type);
+		orientation.push(1); // the orientation should be determined when generating the random city
 	}
 
 	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
@@ -177,6 +225,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		starty,
 		endx,
 		endy,
+		orientation,
 		buildingType,
 		specialType,
 		income,
@@ -188,10 +237,12 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		let receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
+		return;
 	}
 	catch(e) {
 		console.log(e);
 		res.status(400).send(e);
+		return;
 	}
 }); // DONE
 
@@ -239,6 +290,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.start.y,
 		building.end.x,
 		building.end.y,
+		building.orientation,
 		building.type,
 		{gasLimit:5e6}
 	);
@@ -251,14 +303,18 @@ app.post("/cities/:id/build", async (req, res) => {
 		console.log(e);
 	}
 
-	// calling the function that changes the income
+	// calling the function that changes the score
+	cityData = await contract.getCityData(req.params.id);
+	city = utils.formatBuildingList(cityData);
 	let income;
 	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
 	let people = peopleModule.countPeople({normal: city.buildings} , map);
 	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 	
 	console.log('INCOME:', income);
-	tx = await contract.changeIncome(req.params.id, income);
+	let score = city.money + 7*income;
+	console.log('NEW SCORE:', score);
+	tx = await contract.changeScore(req.params.id, score);
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -284,19 +340,23 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 	let signer = cityData.owner; // this address could be also sent in the body of the request
 	let signerAddr = await ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return;
 	}
 
 	let cost = buildingStats.specialPrices[building.type];
 
 	if(utils.isSpecialBuildingFormat(building) == false) {
-		return res.status(400).send("Bad format!");
+		res.status(400).send("Bad format!");
+		return;
 	}
 	if(utils.doesOverlap(building, city)) {
-		return res.status(400).send("Building overlaps!");
+		res.status(400).send("Building overlaps!");
+		return;
 	}
 	if(cost >= city.money) {
-		return res.status(400).send("Not enough money to build!");
+		res.status(400).send("Not enough money to build!");
+		return;
 	}
 
 	let tx = await contract.addSpecialBuilding(
@@ -306,19 +366,20 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 		building.start.y,
 		building.end.x,
 		building.end.y,
+		building.orientation,
 		building.type
 	);
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
+		return;
 	}
 	catch(e) {
 		console.log(e);
 		res.status(400).send(e);
+		return;
 	}
-	
-	res.status(200).send(receipt);
 }); // DONE (not tested yet)
 
 app.post("/cities/:id/upgrade", async (req, res) => {
@@ -327,7 +388,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData).buildings;
 
-	if(city[index] === undefined) {
+	if(!city[index]) {
 		return res.status(400).send("Ivalid index")
 	}
 
@@ -344,7 +405,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		cost *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
 	}
 
-	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
+	if(utils.isBuildingFormat(building) && utils.isSameBuilding(building, city[index])) {
 		let tx = await contract.upgradeBuilding(
 			req.params.id,
 			cost,
@@ -354,31 +415,32 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
-			res.status(200).send(receipt);
 		}
 		catch(e) {
 			console.log(e);
 			res.status(400).send(e);
+			return;
 		}
 
+		cityData = await contract.getCityData(req.params.id);
+		city = utils.formatBuildingList(cityData);
 		let income;
 		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
 		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		
 		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
-		tx = await contract.changeIncome(req.params.id, income);
+
+		tx = await contract.changeScore(req.params.id, city.money + 7*income);
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
 			res.status(200).send(receipt);
+			return;
 		}
 		catch(e) {
 			console.log(e);
 			res.status(400).send(e);
+			return;
 		}
-		
-
-		res.status(200).send(receipt);
 	}
 	else {
 		res.status(400).send("Data sent is not correct");
@@ -423,26 +485,31 @@ app.post("/cities/:id/remove", async (req, res) => {
 		catch(e) {
 			console.log(e);
 			res.status(400).send(e);
+			return;
 		}
 
 		cityData = await contract.getCityData(req.params.id);
 		city = utils.formatBuildingList(cityData).buildings;
 		console.log(city);
 
+		cityData = await contract.getCityData(req.params.id);
+		city = utils.formatBuildingList(cityData);
 		let income;
-		let map = mapModule.initializeMap({normal: city} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city} , map);
-		income = incomeModule.calculateIncome(people, {normal: city} );
-		
-		tx = await contract.changeIncome(req.params.id, income);
+		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+		let people = peopleModule.countPeople({normal: city.buildings} , map);
+		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+
+		tx = await contract.changeScore(req.params.id, city.money + 7*income);
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
 			res.status(200).send(receipt);
+			return;
 		}
 		catch(e) {
 			console.log(e);
 			res.status(400).send(e);
+			return;
 		}
 	}
 	else {
@@ -473,9 +540,54 @@ app.post("cities/:id/removespecial", async (req, res) => {
 	}
 }); // work in progress
 
+app.post("/cities/:id/rotate", async (req, res) => {
+	let data = req.body;
+	
+	// neke provere...
+
+	let tx = await contract.rotate(req.params.id, data.index, data.rotation);
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+		return;
+	}
+	catch(e) {
+		res.status(400).send(e);
+		return;
+	}
+}); // ADD CHECKS FOR THE REQUEST
+
+app.post("/cities/:id/rotatespecial", async (req, res) => {
+	let data = req.body;
+	
+	// neke provere...
+
+	let tx = await contract.rotateSpecial(req.params.id, data.index, data.rotation);
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+		return;
+	}
+	catch(e) {
+		res.status(400).send(e);
+		return;
+	}
+}); // ADD CHECKS FOR THE REQUEST
+
 app.post("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
-	let tx = await contract.getIncome(req.params.id, {gasLimit: 1e6});
+
+	// let cityData = await contract.getCityData(req.params.id);
+	// let city = utils.formatBuildingList(cityData);
+
+	// let income;
+	// let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+	// let people = peopleModule.countPeople({normal: city.buildings} , map);
+	// income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+
+	let tx = await contract.getIncome(req.params.id, income, {gasLimit: 1e6});
 	
 	try {
 		let receipt = await tx.wait();
@@ -490,5 +602,40 @@ app.post("/cities/:id/getincome", async (req, res) => {
 		return;
 	}
 }); // DONE
+
+// #endregion
+// #region Dev options:
+app.post("cities/:id/dev/setmoney", async (req, res) => {
+	let tx = await contract.devSetMoney(req.params.id, req.body.money, {gasLimit: 1e6});
+	
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+		return;
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+		return;
+	}
+});
+
+app.post("cities/:id/dev/demolish", async (req, res) => {
+	let tx = await contract.devDemolishCity(req.params.id, {gasLimit: 1e6});
+	
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
+		return;
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+		return;
+	}
+});
+// #endregion
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

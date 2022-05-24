@@ -35,7 +35,7 @@ const GameStart = ({ setId }) => {
   const [nfts, setNfts] = useState(-1);
 
   var cityContract;
-  const cityContractAddress = '0xEcdd00A465c0CE6AF4c6C6c11127E4D4E5619cDA';
+  const cityContractAddress = '0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4';
   const connecting = useRef(false);
 
   async function initContract() {

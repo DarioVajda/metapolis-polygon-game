@@ -1,3 +1,10 @@
+
+// sifra za skolski metamast wallet: nftigrica
+// WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
+// patient pudding valid edit budget equal west pole canyon quality cannon toilet
+
+
+
 const ethers = require("ethers");
 const fs = require("fs");
 

@@ -11,11 +11,8 @@ let utils = require('./utils');
 
 let addressJSON = require('../../smart_contracts/contract-address.json');
 
-// sifra za skolski metamast wallet: nftigrica
-// WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
-// patient pudding valid edit budget equal west pole canyon quality cannon toilet
-
-//#region connecting to the blockchain and other initializations
+// #region Contract
+// connecting to the blockchain and other initializations
 let provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
 );
@@ -46,11 +43,17 @@ app.use(express.json());
 app.use(cors(corsOptions))
 
 //#endregion
+// #region Plan						(TREBA DA SE TESTIRA INITIALIZE)
 
 //_______________________________________________________________________________________________
 /* Planirane promene na backendu:
 
-- gradjenje, upgradeovanje i brisanje bi trebalo da radi kako treba
+- INSTRUCTION LIST ENDPOINT
+	- treba da se napravi endpoint koji prima listu instrukcija koje su se izvrsile nad nftom
+	- treba samo jednom da se proveri signer i kasnije da se pozivaju funkcije redom kojim su poslate
+	- pojedinacne funkcije koje bi se pozivale bi bile prakticno iste kao svi POST endpointobi trenutno (samo moze par provera da se izostavi da ne bi bilo ponavljanja)
+	- slala bi se lista ovakvih objekata: { function: "string koji oznacava funkciju", args: { objekat koji sadrzi podatke koji se sad salju u telu requesta} }
+	- ...
 
 - initialize:
 	- napraviti na serveru da se grad inicijalizuje tako sto se dodaju jedna po jedna gradjevina po ceni 0 i kasnije se pozove funkcija za inicijalizaciju grada na blockchain-u (to u stvari samo oznaci da je grad inicijalizovan i da je zapoceta igra sa tim gradom)
@@ -90,7 +93,8 @@ app.use(cors(corsOptions))
 */
 //_______________________________________________________________________________________________
 
-// #region GET requests for data about NFTs
+// #endregion
+// #region NFT GET requests
 
 app.get("/cities/:id", (req, res) => {
 	res.json({
@@ -178,63 +182,85 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	if(signerAddr !== signer) {
 		console.log('The caller of this function must be the owner of the NFT');
 		console.log('The real owner is ', signer);
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return;
 	}
 	console.log('Signature is correct');
 
 	let buildings = generateModule.generateBuildings();
 	let owner = req.body.address;
 	let tokenId = req.params.id;
-	let numOfBuildings = buildings.normal.length;
-	let numOfSpecialBuildings = buildings.special.length;
-	let startx = [];
-	let starty = [];
-	let endx = [];
-	let endy = [];
-	let buildingType = [];
-	let specialType = [];
-	let orientation = [];
-	let income;
 
-	for(let i = 0; i < numOfBuildings; i++) {
-		startx.push(buildings.normal[i].start.x);
-		starty.push(buildings.normal[i].start.y);
-		endx.push(buildings.normal[i].end.x);
-		endy.push(buildings.normal[i].end.y);
-		buildingType.push(buildings.normal[i].type);
-		orientation.push(1); // the orientation should be determined when generating the random city
+	let tx = await contract.initializeCity(owner, tokenId); // initializing the money and incomesReceived 
+	try {
+		await tx.wait();
 	}
-	for(let i = 0; i < numOfSpecialBuildings; i++) {
-		startx.push(buildings.special[i].start.x);
-		starty.push(buildings.special[i].start.y);
-		endx.push(buildings.special[i].end.x);
-		endy.push(buildings.special[i].end.y);
-		orientation.push(1); // the orientation should be determined when generating the random city
+	catch(e) {
+		res.status(500).send(e);
+		return;
 	}
 
+	/*
+	tx = await contract.changeusername(owner, 'username'); // initializing the username
+	try {
+		await tx.wait();
+	}
+	catch(e) {
+		res.status(500).send(e);
+		return;
+	}
+	*/
+
+	// adding all the buildings (the 'price' for everything is 0)
+	buildings.normal.forEach((element) => {
+		tx = await contract.addBuilding(
+			tokenId,
+			0,
+			element.start.x,
+			element.start.y,
+			element.end.x,
+			element.end.y,
+			element.orientation,
+			element.type
+		);
+		try {
+			await tx.wait();
+		}
+		catch(e) {
+			res.status(500).send(e); // ne znam sta znaci error code 500, ali treba mi onaj koji ukazuje na gresku u serveru
+			return;
+		}
+	});
+	buildings.normal.forEach((element) => {
+		tx = await contract.addSpecialBuilding(
+			tokenId,
+			0,
+			element.start.x,
+			element.start.y,
+			element.end.x,
+			element.end.y,
+			element.orientation,
+			element.specialtype
+		);
+		try {
+			await tx.wait();
+		}
+		catch(e) {
+			res.status(500).send(e); // ne znam sta znaci error code 500, ali treba mi onaj koji ukazuje na gresku u serveru
+			return;
+		}
+	});
+
+	// inicijalizacija scora:
+	cityData = await contract.getCityData(req.params.id);
+	city = utils.formatBuildingList(cityData);
 	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
 	let people = peopleModule.countPeople(buildings, map);
 	income = incomeModule.calculateIncome(people, buildings);
 
-	let tx = await contract.initializeCity(
-		owner,
-		tokenId,
-		numOfBuildings,
-		numOfSpecialBuildings,
-		startx,
-		starty,
-		endx,
-		endy,
-		orientation,
-		buildingType,
-		specialType,
-		income,
-		{
-			gasLimit: 1e7
-		}
-	);
+	tx = await contract.changeScore(req.params.id, city.money + 7*income);
 	try {
-		let receipt = await tx.wait();
+		receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
 		return;

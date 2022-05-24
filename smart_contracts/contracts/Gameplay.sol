@@ -154,6 +154,7 @@ contract Gameplay is Ownable {
     
     /**
      * @dev Function to change the username
+     * @dev OVA FUNKCIJA TREBA DA SE PROMENI, NE TREBA MSG.SENDER DA BUDE OWNER GRADA NEGO SAMO DA BUDE FUNKCIJA OZNACENA SA ONLYADMIN!!!
      * @param tokenId id of the nft
      * @param _username new username
      */

@@ -15,7 +15,15 @@ const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02e
 var contractAddress;
 var abi
 
-contractAddress = '0xFD1c681924CAF653494cAe2e134ABb36ea63b2F4';
+contractAddress = '0x6637B109F7c828324CD71504c5D927b65b525661';
+abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
+var weth = new ethers.Contract(
+    contractAddress,
+    abi,
+    account
+);
+
+contractAddress = '0xDd5B188Ec23c3C289d76B686c48aF0F9d5B0902F';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var city = new ethers.Contract(
@@ -24,15 +32,7 @@ var city = new ethers.Contract(
 	account
 );
 
-contractAddress = '0x651B808880c282f4658b593d643dd881d2a21b17';
-abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
-var weth = new ethers.Contract(
-    contractAddress,
-    abi,
-    account
-);
-
-contractAddress = '0x5755c8Bdf367Cc4AE6AB3463289B6601842b654e';
+contractAddress = '0x65c17d38CAb2c199E7B0B2037620F6BBb0337974';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var game = new ethers.Contract(
     contractAddress,
@@ -43,6 +43,25 @@ var game = new ethers.Contract(
 async function main() {
     var tx;
     var receipt;
+
+
+    // Funkcija koja poziva setMoney u serveru:
+    //------------------------------------------
+    let body = {money: 1000000};
+    let id = 10;
+    const response = await fetch(`http://localhost:8000/cities/${id}/dev/setmoney`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: body
+    });
+    console.log(response);
 
 
     // Funkcija koja mintuje weth tokene na moju adresu
@@ -61,11 +80,17 @@ async function main() {
     // console.log(receipt);
 
 
+    // Funkcija koja testira gameStart u contractu:
+    //------------------------------------------- 
+    // let res = await game.gameIncomeStarted();
+    // console.log(res);
+
+
     // Funkcija koja flippuje sale state
     // ------------------------------------------
     // tx = await city.flipSaleState();
     // receipt = await tx.wait();
-    // console.log(receipt)
+    // console.log(receipt);
 
     
     // Funkcija koja menja cenu mintovanja
@@ -122,13 +147,6 @@ async function main() {
     // Funkcija koja iniciajlizuje grad... ovo je vec odradjeno
     // ------------------------------------------
     // tx = await game.initializeCity(wallet.address, 0, 2, 0, [3, 4], [4, 5], [5, 6], [6, 7], ['house', 'office'], [], 125000);
-    // receipt = await tx.wait();
-    // console.log(receipt);
-
-
-    // Funkcija koja pokrece zaradjivanje u igrici
-    // ------------------------------------------
-    // tx = await game.startGameIncome();
     // receipt = await tx.wait();
     // console.log(receipt);
 

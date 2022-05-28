@@ -104,10 +104,11 @@ initBuildingStats();
 
 //#region SPECIAL BUILDINGS
 class SpecialBuilding {
-    constructor(start, end, type) {
+    constructor(start, end, type, orientation) {
         this.start = start; // coordinate
         this.end = end; // coordinate
         this.type = type; // string representing the special building
+        this.orientation = orientation;
     }
 }
 

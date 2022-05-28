@@ -99,11 +99,7 @@ function HTMLContent() {
         <button className={selectedBuildingInList===5?styles.roundedFixedBtnClicked:styles.roundedFixedBtn} style={{bottom:'15%',left:'42%'}} onClick={() =>{selectBuilding('office'),setSelectedBuildingInList(5)}}>Office<br/>Cost:{buildingTypes.office[0].cost}</button>
     </div>
     <div id='utils' style={{pointerEvents:'none'}}>
-<<<<<<< HEAD
-        <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(0)}}>Get income</button>
-=======
         <button className={styles.roundedFixedBtn} style={{top:'12%',left:'2%',height:'8%'}} onClick={() => {getIncome(ID)}}>Get income</button>
->>>>>>> 36d1812e0597083d1fb81db712a69979bc52547c
     </div>
     </>
         )

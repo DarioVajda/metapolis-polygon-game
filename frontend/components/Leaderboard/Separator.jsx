@@ -35,7 +35,7 @@ const Separator = ({ data, index, nfts, price }) => {
           <path fill="var(--eth-right2)" d="m127.961 312.187l-1.575 1.92v98.199l1.575 4.601l128.038-180.32z"/>
         </svg>
       <div className={styles.prize}>
-        {data.prize*price}
+        {+(data.prize*price).toFixed(5)}
       </div>
       </div>
     </div>

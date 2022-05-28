@@ -34,8 +34,8 @@ POST requests:
 
 
 DEV OPTIONS:
-    (*) /cities/:id/dev/setmoney - { money: m } // m - unsigned int
-    (*) /cities/:id/dev/demolish - City gone, reduced to atoms...   
+    /cities/:id/dev/setmoney - { money: m } // m - unsigned int
+    /cities/:id/dev/demolish - City gone, reduced to atoms...   
 
 NAPOMENA:
     - Kod url-ova sa (*) treba da bude sledeceg oblika: 

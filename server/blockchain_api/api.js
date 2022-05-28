@@ -43,7 +43,7 @@ app.use(express.json());
 app.use(cors(corsOptions))
 
 //#endregion
-// #region Plan						(TREBA DA SE TESTIRA INITIALIZE)
+// #region Plan
 
 //_______________________________________________________________________________________________
 /* Planirane promene na backendu:
@@ -126,13 +126,13 @@ app.get("/leaderboard", async (req, res) => {
 	for(let i = 0; i < numOfPlayers; i++) {
 		temp = await contract.getScore(i);
 		if(temp.initialized) {
-			leaderboard.push({ id: i, score: temp.score });
+			leaderboard.push({ id: i, score: temp.score.toNumber() });
 		}
 	}
 
-	console.log('leaderboard:', leaderboard);
+	console.log('leaderboard (not sorted):', leaderboard);
 	leaderboard.sort((a, b) => b.score - a.score);
-	console.log('leaderboard:', leaderboard);
+	console.log('leaderboard (sorted):', leaderboard);
 
 	res.send(leaderboard);
 });
@@ -155,6 +155,14 @@ app.get("/cities/:id/data", async (req,res) => {
 	*/
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
+	let score = await contract.getScore(req.params.id);
+	city.score = score.score.toNumber();
+	
+	let income;
+	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+	let people = peopleModule.countPeople({normal: city.buildings} , map);
+	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	city.income = income;
 	// console.log(city);
 	res.json(city);
 }); // DONE - have to add the orientation to the smart contract
@@ -199,6 +207,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		res.status(500).send(e);
 		return;
 	}
+	console.log('initialize done');
 
 	/*
 	tx = await contract.changeusername(owner, 'username'); // initializing the username
@@ -212,7 +221,10 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	*/
 
 	// adding all the buildings (the 'price' for everything is 0)
-	buildings.normal.forEach((element) => {
+	let element;
+	for(let i = 0; i < buildings.normal.length; i++) {
+		element = buildings.normal[i];
+		console.log(element);
 		tx = await contract.addBuilding(
 			tokenId,
 			0,
@@ -220,40 +232,48 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.start.y,
 			element.end.x,
 			element.end.y,
-			element.orientation,
-			element.type
+			1, // inace treba tu da bude element.orientation
+			element.type,
+			{gasLimit: 1e6}
 		);
 		try {
 			await tx.wait();
+			console.log('success');
 		}
-		catch(e) {
+			catch(e) {
 			res.status(500).send(e); // ne znam sta znaci error code 500, ali treba mi onaj koji ukazuje na gresku u serveru
 			return;
 		}
-	});
-	buildings.normal.forEach((element) => {
+	}
+	for(let i = 0; i < buildings.special.length; i++) {
+		element = buildings.special[i];
+		console.log(element);
+		console.log('nesto se desava');
 		tx = await contract.addSpecialBuilding(
 			tokenId,
-			0,
+			0, // cena
 			element.start.x,
 			element.start.y,
 			element.end.x,
 			element.end.y,
-			element.orientation,
-			element.specialtype
+			1, // inace treba tu da bude element.orientation
+			'fountain',
+			{gasLimit: 1e6}
 		);
 		try {
 			await tx.wait();
+			console.log('success');
 		}
 		catch(e) {
 			res.status(500).send(e); // ne znam sta znaci error code 500, ali treba mi onaj koji ukazuje na gresku u serveru
 			return;
 		}
-	});
+	}
 
 	// inicijalizacija scora:
 	cityData = await contract.getCityData(req.params.id);
 	city = utils.formatBuildingList(cityData);
+	console.log(city);
 	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
 	let people = peopleModule.countPeople(buildings, map);
 	income = incomeModule.calculateIncome(people, buildings);
@@ -602,16 +622,16 @@ app.post("/cities/:id/rotatespecial", async (req, res) => {
 	}
 }); // ADD CHECKS FOR THE REQUEST
 
-app.post("/cities/:id/getincome", async (req, res) => {
+app.get("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
 
-	// let cityData = await contract.getCityData(req.params.id);
-	// let city = utils.formatBuildingList(cityData);
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
 
-	// let income;
-	// let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	// let people = peopleModule.countPeople({normal: city.buildings} , map);
-	// income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income;
+	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
+	let people = peopleModule.countPeople({normal: city.buildings} , map);
+	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
 	let tx = await contract.getIncome(req.params.id, income, {gasLimit: 1e6});
 	
@@ -619,8 +639,18 @@ app.post("/cities/:id/getincome", async (req, res) => {
 		let receipt = await tx.wait();
 		console.log(receipt);
 		console.log('Income received!');
-		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
 		return;
+	}
+
+	tx = await contract.changeScore(req.params.id, city.money + 7*income);
+	try {
+		receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
 	}
 	catch(e) {
 		console.log(e);
@@ -631,14 +661,30 @@ app.post("/cities/:id/getincome", async (req, res) => {
 
 // #endregion
 // #region Dev options:
-app.post("cities/:id/dev/setmoney", async (req, res) => {
+	app.post("cities/:id/dev/setmoney", async (req, res) => {
 	let tx = await contract.devSetMoney(req.params.id, req.body.money, {gasLimit: 1e6});
 	
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
 		res.status(200).send(receipt);
+	}
+	catch(e) {
+		console.log(e);
+		res.status(400).send(e);
 		return;
+	}
+
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
+	let people = peopleModule.countPeople(buildings, map);
+	let income = incomeModule.calculateIncome(people, buildings);
+	tx = await contract.changeScore(req.params.id, city.money + 7*income);
+	try {
+		receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send(receipt);
 	}
 	catch(e) {
 		console.log(e);

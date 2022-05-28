@@ -329,6 +329,25 @@ contract Gameplay is Ownable {
         }
     }
 
+    function gameIncomeStarted() external view returns(bool) {
+        if(gameStart == 2000000000) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function getGameStart() external view returns(uint) {
+        return gameStart;
+    }
+
+    uint gameStart2 = 200;
+    function getGameStart2() external pure returns(uint) {
+        revert("Ovo je neki razlog");
+        return 10;
+    }
+
     /**
      * @dev Function getting the income for a city if conditions are met
      * @param tokenId id of the city

@@ -61,8 +61,6 @@
 
 4. CONTRACT DEPLOYMENTS:
 
-1_initial_migration.js
-======================
    Replacing 'Weth'
    ----------------
    > contract address:    0x651B808880c282f4658b593d643dd881d2a21b17
@@ -82,3 +80,25 @@
    =======
    > Total deployments:   4
    > Final cost:          0.027673435170836693 ETH
+
+5. CONTRACT DEPLOYMENTS:
+
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0x1d0eA805ce3503EB816AB4CB49957578De088Ea8
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0x1F1b0756844C8237b5dA67fafB015678CF4ef8b3
+   > gas used:            4295799 (0x418c77)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x4cAA51Ee262B6106Ab7690a5A612338AA8433bbb
+   > gas used:            4962881 (0x4bba41)
+
+   Summary
+   =======
+   > Total deployments:   4
+   > Final cost:          0.027712957637734935 ETH

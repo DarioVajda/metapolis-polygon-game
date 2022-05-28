@@ -2,6 +2,10 @@ const price = 0.1;
 
 const prizes = [
     {
+        min: 0,
+        list: []
+    },
+    {
         min: 100,
         list: [
             { start: 1, end: 1, prize: 10 },

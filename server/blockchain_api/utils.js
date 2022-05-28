@@ -180,11 +180,12 @@ function formatBuildingList(data) {
         city.specialBuildings.push(new SpecialBuilding(
             new Coordinate(data.startx[i + data.numOfBuildings.toNumber()].toNumber(), data.starty[i + data.numOfBuildings.toNumber()].toNumber()),
             new Coordinate(data.endx[i + data.numOfBuildings.toNumber()].toNumber(), data.endy[i + data.numOfBuildings.toNumber()].toNumber()),
-            data.specialType[i]
+            data.specialType[i],
+            data.orientation[i + data.numOfBuildings.toNumber()].toNumber()
         ));
     }
     city.money = data.money.toNumber();
-    city.income = data.income.toNumber();
+    // city.income = data.income.toNumber();
     city.owner = data.owner;
     city.incomesReceived = data.incomesReceived.toNumber();
     city.created = data.created;

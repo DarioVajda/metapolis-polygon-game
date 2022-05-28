@@ -23,7 +23,8 @@ const LeaderboardList = ({nfts}) => {
 
   const getList = async () => {
     let res = await (await fetch('http://localhost:8000/leaderboard')).json();
-    setList(res); // sets the city list to an array with IDs sorted by their score
+    console.log(res);
+    setList(res.map(element => element.id)); // sets the city list to an array with IDs sorted by their score
   }
 
   const loadCity = async (id, index) => {

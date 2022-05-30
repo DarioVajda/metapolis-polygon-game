@@ -139,10 +139,13 @@ app.get("/leaderboard", async (req, res) => {
 
 app.get("/count", async (req, res) => {
 	let count = await contract.getNumOfPlayers();
-	res.send(count);
+	console.log(count);
+	count = count.toNumber();
+	console.log(count);
+	res.status(200).send(`${count}`);
 });
 
-app.get("/cities/:id/data", async (req,res) => {
+app.get("/cities/:id/data", async (req, res) => {
 	/* The response is an object with the following values: 
 	{
         address owner,
@@ -232,7 +235,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.start.y,
 			element.end.x,
 			element.end.y,
-			1, // inace treba tu da bude element.orientation
+			element.orientation,
 			element.type,
 			{gasLimit: 1e6}
 		);
@@ -256,7 +259,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.start.y,
 			element.end.x,
 			element.end.y,
-			1, // inace treba tu da bude element.orientation
+			element.orientation,
 			'fountain',
 			{gasLimit: 1e6}
 		);

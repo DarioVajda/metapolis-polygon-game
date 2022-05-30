@@ -167,6 +167,7 @@ function calculatePeople(data) {
 
 function formatBuildingList(data) {
     let city = { buildings: [], specialBuildings: [] }
+    console.log(data);
     for(let i = 0; i < data.numOfBuildings; i++) {
         city.buildings.push(new Building(
             new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),

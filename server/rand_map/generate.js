@@ -136,6 +136,7 @@ function createBuilding(buildings, type, normal) {
 
         building.start = start;
         building.end = end;
+        building.orientation = direction + 1;
     } // generisu se random koordinate za levi gornji cosak gradjevine
 
     if(normal) buildings.normal.push(building);

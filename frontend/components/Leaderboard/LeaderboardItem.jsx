@@ -5,6 +5,7 @@ import { prizes, getRange } from '../utils/prizes';
 import style from './leaderboard.module.css';
 
 const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
+  const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
 
   const [data, setData] = useState(false);
   const idLoaded = useRef(false);
@@ -13,9 +14,10 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
   const [price, setPrice] = useState({});
   const [people, setPeople] = useState(false);
 
+  const [owner, setOwner] = useState(false); // false - not loaded, { data... } - contains data about the owner of the NFT
+  
   // #region Getting the prices
 
-  const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
 
   const highestOffer = async () => {
     const options = {method: 'GET'};
@@ -25,7 +27,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     .then(response => res = response)
     .catch(err => console.error(err));
       
-    // console.log(id, res);
+    // console.log('prices', id, res);
     
     let p = -1;
     let t;
@@ -93,12 +95,12 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     loadCity(id, index).then(res => {
       if(dataLoaded.current) return;
 
-      // console.log(res);
       idLoaded.current = true;
       calculatePeople(res);
       setData(res);
       dataLoaded.current = true;
       getPrices();
+      getOwnerData(res.owner);
     });
   }
 
@@ -230,13 +232,45 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
 
   // #endregion
 
-  // console.log(data);
+  // #region Profile image
+
+  const getOwnerData = async (addr) => {
+    const options = {method: 'GET'};
+
+    // kasnije nece trebati nista od sledeceg api call-a (nego se koristi prosledjena vrednost od 'addr')
+    let assetRes;
+    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/`, options)
+      .then(response => response.json())
+      .then(response => assetRes = response)
+      .catch(err => console.error(err));
+    addr = assetRes.owner.address;
+
+    let res;
+    await fetch(`https://api.opensea.io/user/${addr}`, options)
+      .then(response => response.json())
+      .then(response => res = response)
+      .catch(err => console.error(err));
+
+    console.log(id, 'response:', res);
+
+    // let _owner = res.owner;
+    setOwner(res.account);
+  }
+
+  // #endregion
 
   return (
     <div className={style.item}>
       <div className={`${style.top} ${owned?style.topOwned:''}`} onClick={() => expand(index)}>
+        <div className={style.owner}>
+          {
+            owner ?
+            <img src={owner.profile_img_url} alt="" />:
+            <>adsf</>
+          }
+        </div>
         <div className={style.id}>
-          {index+1}. City #{id!==-1 && id}
+          <span>{index+1}</span> City #{id!==-1 && id}
         </div>
         <div className={style.money}>
           Money: ${data.money}

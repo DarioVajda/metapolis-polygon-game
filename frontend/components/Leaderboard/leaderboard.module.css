@@ -16,6 +16,7 @@
     flex-direction: row;
     justify-content: flex-start;
     padding: 1.25em 0;
+    max-height: 3.75em;
     font-size: 1.2rem;
     user-select: none;
     cursor: pointer;
@@ -25,6 +26,10 @@
 
 .topOwned {
     background-color: var(--primary-dark);
+}
+
+.owner {
+
 }
 
 .id {
@@ -44,6 +49,20 @@
     text-align: start;
     margin: 0 0.5em;
     background-color: transparent;
+}
+
+.id {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: fit-content;
+}
+
+.id span {
+    font-size: 1.3em;
+    font-weight: 600;
+    padding-right: 1em;
 }
 
 .arrow {

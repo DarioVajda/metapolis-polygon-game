@@ -19,7 +19,6 @@ const game = () => {
 
     let num = await (await fetch('http://localhost:8000/count')).json();
     num = num.count;
-    num = parseInt(num.hex, 16);
 
     if( 
       Object.values(route).length === 1 && 

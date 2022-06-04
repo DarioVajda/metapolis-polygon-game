@@ -153,7 +153,6 @@ export default function Home() {
 
     let num = await (await fetch('http://localhost:8000/count')).json();
     num = num.count;
-    num = parseInt(num.hex, 16);
     console.log(num);
 
     return num;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import ethers from 'ethers';
+import { ethers } from 'ethers';
+import CityContract from '../../../smart_contracts/build/contracts/CityContract.json';
+import ContractAddress from '../../../smart_contracts/contract-address.json';
 
 import City from './City'
 
@@ -24,7 +26,7 @@ const Sort = (setSort) => {
 const Profile = () => {
 
   const [username, setUsername] = useState('username100');
-  const [addr, setAddr] = useState('0x46EFbAedc92067E6d60E84ED6395099723252496');
+  const [addr, setAddr] = useState('0x764cDA7eccc6a94C157742e369b3533D15d047c0');
   const [nftList, setNftList] = useState([1, 2, 3, 4, 5, 6, 7, 8]); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
 
   let sortTypes = {
@@ -45,7 +47,8 @@ const Profile = () => {
 
   const loadNfts = async () => {
     // ovo trebam da proverim da li je dobro...
-    let abi = JSON.parse(fs.readFileSync("../../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
+    const abi = CityContract.abi;
+    const contractAddress = ContractAddress.city;
     let provider = new ethers.providers.JsonRpcProvider(
       'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
     );
@@ -62,8 +65,10 @@ const Profile = () => {
     for(let i = 0; i < numOfNFTs; i++) {
         id = await city.tokenOfOwnerByIndex(addr, i);
         id = id.toNumber();
+        console.log(id);
         nfts[i] = id;
     }
+    setNftList(nfts);
   }
 
   useEffect(() => {

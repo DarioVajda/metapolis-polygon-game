@@ -3,7 +3,7 @@
     --light-background: #292c30;
     --lightest-background: #3b3f46;
     --text: #FFF;
-    --light-text: #b1b1b1;
+    --light-text: #cccccc;
     --primary: #017DEB;
     --primary-variant: #40a6ff;
     --primary-dark: #0059a667;
@@ -25,7 +25,7 @@
 
     /* Colors for the eth svg */
     --eth-left2: #ddd;
-    --eth-left1: #888;
+    --eth-left1: #aaa;
     --eth-left2: #ddd;
     --eth-right2: #888;
     --eth-right1: #555;

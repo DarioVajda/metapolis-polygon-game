@@ -139,7 +139,7 @@ app.get("/leaderboard", async (req, res) => {
 
 app.get("/count", async (req, res) => {
 	let count = await contract.getNumOfPlayers();
-	res.send(count);
+	res.send({count: count});
 });
 
 app.get("/cities/:id/data", async (req,res) => {

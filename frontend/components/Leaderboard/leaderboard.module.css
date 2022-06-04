@@ -124,7 +124,7 @@
 
 .price:hover {
     border: 2px solid var(--light-text);
-    margin: 0
+    margin: 0;
 }
 
 .price:active {

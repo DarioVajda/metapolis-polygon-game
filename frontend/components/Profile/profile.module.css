@@ -1,0 +1,135 @@
+.wrapper {
+    padding-bottom: 10em;
+}
+
+.top {
+    height: 18em;
+    background-color: var(--light-background);
+    display: flex;
+    align-items: flex-end;
+}
+
+.image {
+    /* margin-top: 3em; */
+    margin-left: min(5%, 2em);
+    width: min(90%, 10em);
+    height: 10em;
+    margin-bottom: -1em;
+}
+
+.username {
+    font-weight: 600;
+    margin-left: min(2.5%, 1em);
+    margin-top: 1.5em;
+    width: min(95%, 10em);
+    font-size: 1.8rem;
+}
+
+.addr {
+    margin-left: 2em;
+    margin-top: 0.2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    font-size: 0.9rem;
+}
+
+.addr a {
+    cursor: pointer;
+}
+
+.addr a:hover {
+    color: var(--light-text);
+}
+
+.eth {
+    padding-right: 0.2em;
+    display: none;
+}
+
+.matic {
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 0.2em;
+}
+
+.sort {
+    height: 3em;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0 2em;
+    margin: 0 0 1.5em 0;
+}
+
+.sort>div {
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--light-background);
+    cursor: pointer;
+}
+
+.sort>div>span {
+    padding: 0 4em 0 1.5em;
+}
+
+.sort>div>svg {
+    margin: 0 1.5em 0 0;
+    transform: scale(2);
+}
+
+.nftlist {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0 1em;
+}
+
+.nftlist>div {
+    flex-grow: 1;
+    min-width: 15em;
+    max-width: 20em;
+    aspect-ratio: 1/1;
+    padding: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nftitem {
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--text);
+    margin: 1px;
+    background-color: var(--light-background);
+    border-radius: 15px;
+    
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; */
+    overflow: hidden;
+}
+
+.nftitem:hover {
+    border: 2px solid var(--light-text);
+    margin: 0px;
+}
+
+.city {
+    height: 100%;
+    width: 100%;
+    background-color: var(--primary-dark);
+}
+
+.citydata {
+    position: relative;
+    bottom: 30%;
+    height: 30%;
+    background-color: var(--primary-dark);
+    width: 100%;
+}

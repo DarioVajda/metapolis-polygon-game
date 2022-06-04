@@ -147,9 +147,15 @@ export default function Home() {
   //#endregion
 
   const numOfNFTs = async () => {
-    await initContracts();
-    console.log(cityContract);
-    let num = await cityContract.totalSupply();
+    // await initContracts();
+    // console.log(cityContract);
+    // let num = await cityContract.totalSupply();
+
+    let num = await (await fetch('http://localhost:8000/count')).json();
+    num = num.count;
+    num = parseInt(num.hex, 16);
+    console.log(num);
+
     return num;
   }
 

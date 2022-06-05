@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding: 1.25em 0;
+    padding: var(--top-padding) 0;
     max-height: 3.75em;
     font-size: 1.2rem;
     user-select: none;
@@ -29,12 +29,25 @@
 }
 
 .owner {
+    margin-top: var(--top-padding-negative);
+    margin-bottom: var(--top-padding-negative);
+    margin-left: 0.5em;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
 
+.owner img {
+    width: 3em;
+    height: auto;
+    border-radius: 50%;
 }
 
 .id {
-    padding-left: min(3em, 3%);
-    width: min(12em, 20%);
+    padding-left: min(1em, 2%);
+    min-width: min(10em, 20%);
 }
 
 .money {

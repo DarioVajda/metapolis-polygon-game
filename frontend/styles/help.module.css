@@ -34,7 +34,7 @@
 
 .matic {
     padding-top: 4em;
-    background-image:  -webkit-linear-gradient(left, rgb(0, 0, 0, 0), var(--background)), -webkit-linear-gradient(top, var(--background), var(--matic-bg) 10em);
+    background-image: -webkit-linear-gradient(left, rgb(0, 0, 0, 0), var(--background)), -webkit-linear-gradient(top, var(--background), var(--matic-bg) 10em);
 
     height: fit-content;
 }

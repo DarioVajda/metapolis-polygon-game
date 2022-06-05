@@ -23,11 +23,11 @@ const Sort = (setSort) => {
   )
 }
 
-const Profile = () => {
+const Profile = ({ addr, isOwner }) => {
 
   const [username, setUsername] = useState('username100');
-  const [addr, setAddr] = useState('0x764cDA7eccc6a94C157742e369b3533D15d047c0');
-  const [nftList, setNftList] = useState([1, 2, 3, 4, 5, 6, 7, 8]); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
+  // const [addr, setAddr] = useState('0x764cDA7eccc6a94C157742e369b3533D15d047c0');
+  const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
 
   let sortTypes = {
     Desc: () => {},

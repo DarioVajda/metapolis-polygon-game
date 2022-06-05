@@ -30,7 +30,7 @@ const leaderboard = () => {
     let account = window.ethereum.selectedAddress; // bira se trenutna adresa ili null ako nije connectovan korisnik
     if(!account){
       [account] = await window.ethereum.request({ method: 'eth_requestAccounts' }); // poziva se funkcija za connectovanje korisnika
-    }   
+    }
     let addr = account;
     console.log(addr);
 

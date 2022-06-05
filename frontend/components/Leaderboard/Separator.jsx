@@ -4,7 +4,9 @@ import styles from './separator.module.css'
 
 const Separator = ({ data, index, nfts, price }) => {
 
-  if(index === data.end || index === nfts) return (
+  // console.log(data, index, nfts, price);
+
+  if(index === data.start /* || index === nfts */) return (
     <div className={styles.separator}>
       <div className={styles.arrow}>
         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">

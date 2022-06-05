@@ -25,6 +25,10 @@
     font-size: 1.8rem;
 }
 
+.username:hover {
+    color: var(--light-text);
+}
+
 .addr {
     margin-left: 2em;
     margin-top: 0.2em;
@@ -93,7 +97,7 @@
     flex-grow: 1;
     min-width: 15em;
     max-width: 20em;
-    aspect-ratio: 1/1;
+    aspect-ratio: 3/4;
     padding: 0.5em;
     display: flex;
     align-items: center;
@@ -104,8 +108,8 @@
     height: 100%;
     width: 100%;
     border: 1px solid var(--text);
-    margin: 1px;
-    background-color: var(--light-background);
+    padding: 1px;
+    background-color: transparent;
     border-radius: 15px;
     
     /* display: flex;
@@ -117,19 +121,20 @@
 
 .nftitem:hover {
     border: 2px solid var(--light-text);
-    margin: 0px;
+    padding: 0px;
 }
 
 .city {
-    height: 100%;
     width: 100%;
-    background-color: var(--primary-dark);
+    aspect-ratio: 1/1;
+    /* background-color: red; */
 }
 
 .citydata {
     position: relative;
-    bottom: 30%;
-    height: 30%;
-    background-color: var(--primary-dark);
+    height: 100%;
     width: 100%;
+    /* background-image: -webkit-linear-gradient(top, rgb(0, 0, 0, 0), var(--light-background)); */
+    background-color: var(--light-background);
+    font-size: 1.2em;
 }

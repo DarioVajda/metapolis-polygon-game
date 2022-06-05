@@ -30,4 +30,8 @@
     --eth-right2: #888;
     --eth-right1: #555;
     --eth-right2: #888;
+
+    /* Variables for the leaderboard page */
+    --top-padding: 1.25em;
+    --top-padding-negative: -1.25em;
 }

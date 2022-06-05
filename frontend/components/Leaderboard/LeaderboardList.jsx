@@ -45,10 +45,9 @@ const LeaderboardList = ({nfts}) => {
     getList();
   }, []);
 
-  // console.log('nfts:', nfts);
   const funkcija = (i) => { 
+    // funkcija koja vraca podatke o range-u
     let res = getRange(list.length, i);
-    // console.log('res', res);
     return res;
   };
 
@@ -57,6 +56,10 @@ const LeaderboardList = ({nfts}) => {
       {
         list.map((element, index) =>
           <div key={index}>
+            {
+              element !== -1 &&
+              <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />
+            }
             <LeaderboardItem 
               id={element} 
               index={index} 
@@ -65,17 +68,7 @@ const LeaderboardList = ({nfts}) => {
               expand={expand}
               owned={nfts.includes(element)}
               nfts={loaded?list.length:0}
-              />  
-              {
-                element !== -1 &&
-                <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />
-              }
-              {
-                // // temp = getRange(list.length, index) ?
-                // (funkcija(index+1).check || index === list.length-1) && element !== -1 ?
-                // <>_____________________________________________________________________________</> :
-                // <>nothing</>
-              }
+            />  
           </div>
         )
       }

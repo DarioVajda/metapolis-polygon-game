@@ -14,8 +14,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
   const [price, setPrice] = useState({});
   const [people, setPeople] = useState(false);
 
-  const [owner, setOwner] = useState(false); // false - not loaded, { data... } - contains data about the owner of the NFT
-  
+  const [owner, setOwner] = useState({ randomIndex: Math.floor(Math.random() * 33) + 1 }); // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
+
   // #region Getting the prices
 
 
@@ -251,9 +251,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
       .then(response => res = response)
       .catch(err => console.error(err));
 
-    console.log(id, 'response:', res);
+    // console.log(id, 'response:', res);
 
-    // let _owner = res.owner;
     setOwner(res.account);
   }
 
@@ -264,9 +263,9 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
       <div className={`${style.top} ${owned?style.topOwned:''}`} onClick={() => expand(index)}>
         <div className={style.owner}>
           {
-            owner ?
+            owner.randomIndex === undefined ?
             <img src={owner.profile_img_url} alt="" />:
-            <>adsf</>
+            <img src={`https://storage.googleapis.com/opensea-static/opensea-profile/${owner.randomIndex}.png`} />
           }
         </div>
         <div className={style.id}>

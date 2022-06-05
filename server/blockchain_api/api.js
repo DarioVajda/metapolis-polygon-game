@@ -115,26 +115,44 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 
 app.get("/leaderboard", async (req, res) => {
 	let numOfPlayers = await contract.getNumOfPlayers();
+	numOfPlayers = numOfPlayers.toNumber();
 	if(numOfPlayers === 0) {
 		res.send([]);
 		return;
 	}
 
-	// getScore treba da vrati (score, initialized) !!!!!!!!!!!!!!!!!!!!!!!!
 	let temp; // objekat koji ce imati polja id i score kad se dobiju podaci sa contracta
 	let leaderboard = [];
-	for(let i = 0; i < numOfPlayers; i++) {
-		temp = await contract.getScore(i);
-		if(temp.initialized) {
-			leaderboard.push({ id: i, score: temp.score.toNumber() });
-		}
+
+	const delay = async (time) => {
+		return new Promise(resolve => setTimeout(resolve, time));
 	}
 
-	console.log('leaderboard (not sorted):', leaderboard);
-	leaderboard.sort((a, b) => b.score - a.score);
-	console.log('leaderboard (sorted):', leaderboard);
+	const loadScore = async (i) => {
+		temp = await contract.getScore(i);
+		console.log(i);
+		leaderboard.push({ id: i, score: temp.score.toNumber(), initialized: temp.initialized });
+	}
 
-	res.send(leaderboard);
+	for(let i = 0; i < numOfPlayers; i++) {
+		loadScore(i);
+	}
+
+	while(leaderboard.length < numOfPlayers) {
+		console.log('waiting...', leaderboard.length, numOfPlayers);
+		await delay(100);
+	}
+
+	let filtered = leaderboard.filter((item) => {
+		return item.initialized === true;
+	});
+
+	console.log('leaderboard (not sorted):', filtered.map((element) => { return {score: element.score} }));
+	filtered.sort(function(a, b) { return b.score - a.score; });
+	console.log('leaderboard (sorted):', filtered.map((element) => { return {score: element.score} }));
+
+	console.log('leaderboard: ', filtered);
+	res.send(filtered);
 });
 
 app.get("/count", async (req, res) => {

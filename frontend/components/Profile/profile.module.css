@@ -92,11 +92,11 @@
 }
 
 .nftitem {
-    padding: 0.5px;
+    padding: 1px;
 }
 
 .nftitem:hover {
-    border: 1.5px solid var(--text);
+    border: 2px solid var(--light-text);
     padding: 0px;
 }
 
@@ -127,7 +127,7 @@
 
 .sort {
     align-self: flex-end;
-    width: fit-content;
+    min-width: 18em;
     height: 3em;
     display: flex;
     flex-direction: column;
@@ -138,18 +138,19 @@
 
 .sortBtn {
     min-height: 3em;
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-radius: 10px;
     border: 1px solid var(--text);
-    /* border-bottom: none; */
     background-color: var(--light-background);
     z-index: 10;
     cursor: pointer;
 }
 
 .sortBtn>span {
-    padding: 0 4em 0 1.5em;
+    padding: 0 0 0 1.5em;
 }
 
 .sortBtn>svg {
@@ -186,11 +187,11 @@
 }
 
 .sortBtn {
-    padding: 0.5px;
+    padding: 1px;
 }
 
 .sortBtn:hover {
-    border: 1.5px solid var(--text);
+    border: 2px solid var(--light-text);
     padding: 0;
 }
 
@@ -207,8 +208,12 @@
     border-radius: 10px 10px 0 0;
     border: 1px solid var(--text);
     border-bottom: none;
-    padding: 0.5px;
+    padding: 1px;
     background-color: var(--background);
+}
+
+.popupShown>svg {
+    transform: rotateX(180deg) scale(2);
 }
 
 /* #endregion */

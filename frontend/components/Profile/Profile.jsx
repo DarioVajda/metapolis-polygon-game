@@ -7,60 +7,30 @@ import City from './City'
 
 import styles from './profile.module.css'
 
-const Sort = (setSort) => {
+const Sort = ({ setSort, sortTypes, currSort }) => {
 
   const [showPopup, setShowPopup] = useState(false); // false - don't show the popup, true - show the popup
-
-
-  // <div className={`${styles.popup} ${showPopup?'':styles.hidePopup}`}>
-  // </div>
-
-  // <div className={styles.sort}>
-  //       <div className={styles.sortBtn}>
-  //         <span>
-  //           {'Score: High to Low'}
-  //         </span>
-  //         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-  //           <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
-  //         </svg>
-  //       </div>
-  //       <div className={styles.sortOptions}>
-  //         <div>
-  //           {'Score: High to Low'}
-  //         </div>
-  //         <div>
-  //           {'Score: High to Low'}
-  //         </div>
-  //         <div>
-  //           {'Score: High to Low'}
-  //         </div>
-  //       </div>
-  //     </div>
 
   return (
     <div className={styles.sortWrapper}>
       <div className={styles.sort}>
         <div className={`${styles.sortBtn} ${showPopup?styles.popupShown:''}`} onClick={() => setShowPopup(!showPopup)} >
           <span>
-            {'Score: High to Low'}
+            {currSort.key}
           </span>
           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
             <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
           </svg>
         </div>
         <div className={`${styles.sortOptions} ${showPopup?'':styles.hidePopup}`}>
-          <div>
-            {'Score: High to Low'}
-          </div>
-          <div>
-            {'Score: High to Low'}
-          </div>
-          <div>
-            {'Score: High to Low'}
-          </div>
-          <div>
-            {'treba napraviti...'} {/* ...da se strelica okrene nagore kad se otvori popup */}
-          </div>
+          {
+            Object.values(sortTypes).map((element, index) => {
+              if(currSort.key === element.key) return;
+              else return (
+                <div key={index} onClick={() => { setSort(element); setShowPopup(false) }} >{element.key}</div>
+              );
+            })
+          }
         </div>
       </div>
     </div>
@@ -72,22 +42,44 @@ const Profile = ({ addr, isOwner }) => {
   const [username, setUsername] = useState('username100');
   const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
 
+  // #region Sorting
+
   const sortTypes = {
-    Desc: () => {
-      // funkcija koja sortira gradove po score-u u opadajucem redosledu
+    Desc: {
+      func: (nfts) => {
+        // funkcija koja sortira gradove po score-u u opadajucem redosledu
+        return nfts; // ovo ce biti novi, sortirani niz
+      },
+      key: 'Desc'
     },
-    desc: 'Desc',
-    Asc: () => {
-      // funkcija koja sortira gradove po score-u u rastucem redosledu
+    Asc: {
+      func: (nfts) => {
+        // funkcija koja sortira gradove po score-u u rastucem redosledu
+        return nfts; // ovo ce biti novi, sortirani niz
+      },
+      key: 'Asc'
     },
-    asc: 'Asc',
-    LastEdited: () => {
-      // funkcija koja sortira gradove po tome koji je kad editovan (ne znam jos kako cu i da li cu uraditi ovo)
+    LastEdited: {
+      func: (nfts) => {
+        // funkcija koja sortira gradove po tome koji je kad editovan (ne znam jos kako cu i da li cu uraditi ovo)
+        return nfts; // ovo ce biti novi, sortirani niz
+      },
+      key: 'LastEdited'
     },
-    lastEdited: 'LastEdited',
+    ID: {
+      func: (nfts) => {
+        if(!nfts) return;
+        return [...nfts].sort((a, b) => a-b);
+      },
+      key: 'ID'
+    },
   }
-  const [sort, setSort] = useState(sortTypes.desc);
-  console.log(sortTypes);
+
+  const [sort, setSort] = useState(sortTypes.Desc);
+
+  // #endregion
+
+  // #region Format address
 
   const formatAddr = () => {
     let r = '';
@@ -97,6 +89,8 @@ const Profile = ({ addr, isOwner }) => {
 
     return r;
   }
+
+  // #endregion
 
   // #region Loading the NFTs
 
@@ -139,8 +133,8 @@ const Profile = ({ addr, isOwner }) => {
       await delay(100);
     }
 
-    console.log(sort);
-    sortTypes[sort].call(); // poziva se funkcija koja sortira grad po izabranom kriterijumu
+    // console.log(sort.func);
+    nfts = sort.func(nfts); // poziva se funkcija koja sortira grad po izabranom kriterijumu
     setNftList(nfts);
   }
 
@@ -201,7 +195,7 @@ const Profile = ({ addr, isOwner }) => {
           {formatAddr()}
         </a>
       </div>
-      <Sort setSort={setSort} />
+      <Sort setSort={(newSort) => {setSort(newSort); setNftList(newSort.func(nftList))}} sortTypes={sortTypes} currSort={sort} />
       <div className={styles.nftlist}>
         {
           nftList.map((id, index) => (

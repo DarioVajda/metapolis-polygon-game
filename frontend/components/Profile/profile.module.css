@@ -58,33 +58,6 @@
     margin-right: 0.2em;
 }
 
-.sort {
-    height: 3em;
-    display: flex;
-    align-items: stretch;
-    justify-content: flex-end;
-    padding: 0 2em;
-    margin: 0 0 1.5em 0;
-}
-
-.sort>div {
-    border: 1px solid white;
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    background-color: var(--light-background);
-    cursor: pointer;
-}
-
-.sort>div>span {
-    padding: 0 4em 0 1.5em;
-}
-
-.sort>div>svg {
-    margin: 0 1.5em 0 0;
-    transform: scale(2);
-}
-
 .nftlist {
     display: flex;
     flex-direction: row;
@@ -108,7 +81,6 @@
     height: 100%;
     width: 100%;
     border: 1px solid var(--text);
-    padding: 1px;
     background-color: transparent;
     border-radius: 15px;
     
@@ -119,8 +91,12 @@
     overflow: hidden;
 }
 
+.nftitem {
+    padding: 0.5px;
+}
+
 .nftitem:hover {
-    border: 2px solid var(--light-text);
+    border: 1.5px solid var(--text);
     padding: 0px;
 }
 
@@ -138,3 +114,101 @@
     background-color: var(--light-background);
     font-size: 1.2em;
 }
+
+/* #region Sort choice */
+
+.sortWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    user-select: none;
+}
+
+.sort {
+    align-self: flex-end;
+    width: fit-content;
+    height: 3em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin: 0 1.5em 1.5em 1.5em;
+}
+
+.sortBtn {
+    min-height: 3em;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid var(--text);
+    /* border-bottom: none; */
+    background-color: var(--light-background);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.sortBtn>span {
+    padding: 0 4em 0 1.5em;
+}
+
+.sortBtn>svg {
+    margin: 0 1.5em 0 0;
+    transform: scale(2);
+}
+
+.sortOptions {
+    background-color: var(--light-background);
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    border: 1px solid white;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    cursor: pointer;
+}
+
+.sortOptions>div {
+    width: inherit;
+    display: flex;
+    align-items: center;
+    min-height: 3em;
+    padding-left: 1.5em;
+    background-color: var(--light-background);
+    border-radius: 10px;
+}
+
+.sortOptions>div:hover {
+    background-color: var(--background);
+}
+
+.sortBtn {
+    padding: 0.5px;
+}
+
+.sortBtn:hover {
+    border: 1.5px solid var(--text);
+    padding: 0;
+}
+
+.hidePopup {
+    display: none;
+}
+
+.popupShown {
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+}
+
+.popupShown:hover {
+    border-radius: 10px 10px 0 0;
+    border: 1px solid var(--text);
+    border-bottom: none;
+    padding: 0.5px;
+    background-color: var(--background);
+}
+
+/* #endregion */

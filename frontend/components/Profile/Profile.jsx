@@ -9,15 +9,59 @@ import styles from './profile.module.css'
 
 const Sort = (setSort) => {
 
+  const [showPopup, setShowPopup] = useState(false); // false - don't show the popup, true - show the popup
+
+
+  // <div className={`${styles.popup} ${showPopup?'':styles.hidePopup}`}>
+  // </div>
+
+  // <div className={styles.sort}>
+  //       <div className={styles.sortBtn}>
+  //         <span>
+  //           {'Score: High to Low'}
+  //         </span>
+  //         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+  //           <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
+  //         </svg>
+  //       </div>
+  //       <div className={styles.sortOptions}>
+  //         <div>
+  //           {'Score: High to Low'}
+  //         </div>
+  //         <div>
+  //           {'Score: High to Low'}
+  //         </div>
+  //         <div>
+  //           {'Score: High to Low'}
+  //         </div>
+  //       </div>
+  //     </div>
+
   return (
-    <div className={styles.sort}>
-      <div>
-        <span>
-          {'Score: High to Low'}
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
-        </svg>
+    <div className={styles.sortWrapper}>
+      <div className={styles.sort}>
+        <div className={`${styles.sortBtn} ${showPopup?styles.popupShown:''}`} onClick={() => setShowPopup(!showPopup)} >
+          <span>
+            {'Score: High to Low'}
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
+          </svg>
+        </div>
+        <div className={`${styles.sortOptions} ${showPopup?'':styles.hidePopup}`}>
+          <div>
+            {'Score: High to Low'}
+          </div>
+          <div>
+            {'Score: High to Low'}
+          </div>
+          <div>
+            {'Score: High to Low'}
+          </div>
+          <div>
+            {'treba napraviti...'} {/* ...da se strelica okrene nagore kad se otvori popup */}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -26,15 +70,24 @@ const Sort = (setSort) => {
 const Profile = ({ addr, isOwner }) => {
 
   const [username, setUsername] = useState('username100');
-  // const [addr, setAddr] = useState('0x764cDA7eccc6a94C157742e369b3533D15d047c0');
   const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
 
-  let sortTypes = {
-    Desc: () => {},
-    Asc: () => {},
-    LastEdited: () => {}
+  const sortTypes = {
+    Desc: () => {
+      // funkcija koja sortira gradove po score-u u opadajucem redosledu
+    },
+    desc: 'Desc',
+    Asc: () => {
+      // funkcija koja sortira gradove po score-u u rastucem redosledu
+    },
+    asc: 'Asc',
+    LastEdited: () => {
+      // funkcija koja sortira gradove po tome koji je kad editovan (ne znam jos kako cu i da li cu uraditi ovo)
+    },
+    lastEdited: 'LastEdited',
   }
-  const [sort, setSort] = useState(sortTypes.Desc);
+  const [sort, setSort] = useState(sortTypes.desc);
+  console.log(sortTypes);
 
   const formatAddr = () => {
     let r = '';
@@ -44,6 +97,8 @@ const Profile = ({ addr, isOwner }) => {
 
     return r;
   }
+
+  // #region Loading the NFTs
 
   const loadNfts = async () => {
     // ovo trebam da proverim da li je dobro...
@@ -59,17 +114,37 @@ const Profile = ({ addr, isOwner }) => {
     )
     let numOfNFTs = await city.balanceOf(addr);
     numOfNFTs = numOfNFTs.toNumber();
-    console.log('numOfNFTs:', numOfNFTs);
-    let nfts = Array(numOfNFTs).fill(0);
-    let id;
-    for(let i = 0; i < numOfNFTs; i++) {
-        id = await city.tokenOfOwnerByIndex(addr, i);
-        id = id.toNumber();
-        console.log(id);
-        nfts[i] = id;
+    // console.log('numOfNFTs:', numOfNFTs);
+
+    let nfts = [];
+    
+    const delay = async (time) => {
+      return new Promise(resolve => setTimeout(resolve, time));
     }
+
+    const loadNFT = async (i) => {
+      let id;
+      id = await city.tokenOfOwnerByIndex(addr, i);
+      id = id.toNumber();
+      // console.log(id);
+      nfts.push(id);
+    }
+
+    for(let i = 0; i < numOfNFTs; i++) {
+      loadNFT(i);
+    }
+
+    while(nfts.length < numOfNFTs) {
+      // console.log('waiting...', nfts.length, numOfNFTs);
+      await delay(100);
+    }
+
+    console.log(sort);
+    sortTypes[sort].call(); // poziva se funkcija koja sortira grad po izabranom kriterijumu
     setNftList(nfts);
   }
+
+  // #endregion
 
   useEffect(() => {
     loadNfts();
@@ -126,7 +201,7 @@ const Profile = ({ addr, isOwner }) => {
           {formatAddr()}
         </a>
       </div>
-      <Sort />
+      <Sort setSort={setSort} />
       <div className={styles.nftlist}>
         {
           nftList.map((id, index) => (

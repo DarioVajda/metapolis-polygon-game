@@ -157,7 +157,7 @@ app.get("/leaderboard", async (req, res) => {
 
 app.get("/count", async (req, res) => {
 	let count = await contract.getNumOfPlayers();
-	count = parseInt(count.hex, 16);
+	count = parseInt(count._hex, 16);
 	res.send({count: count});
 });
 

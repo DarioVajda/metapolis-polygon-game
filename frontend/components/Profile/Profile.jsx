@@ -33,6 +33,7 @@ const Sort = ({ setSort, sortTypes, currSort }) => {
           }
         </div>
       </div>
+      <div className={showPopup?styles.screenFiller:styles.screenFillerClosed} onClick={() => setShowPopup(false) } />
     </div>
   )
 }
@@ -40,7 +41,7 @@ const Sort = ({ setSort, sortTypes, currSort }) => {
 const Profile = ({ addr, isOwner }) => {
 
   const [username, setUsername] = useState('username100');
-  const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [...] - indexes of the NFTs the person owns
+  const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
 
   // #region Sorting
 
@@ -68,8 +69,14 @@ const Profile = ({ addr, isOwner }) => {
     },
     ID: {
       func: (nfts) => {
-        if(!nfts) return;
-        return [...nfts].sort((a, b) => a-b);
+        if(!nfts) {
+          // console.log('nfts === false');
+          return false;
+        }
+        else {
+          // console.log('new list', [...nfts].sort((a, b) => a.id-b.id));
+          return [...nfts].sort((a, b) => a.id-b.id);
+        }
       },
       key: 'ID'
     },
@@ -121,7 +128,7 @@ const Profile = ({ addr, isOwner }) => {
       id = await city.tokenOfOwnerByIndex(addr, i);
       id = id.toNumber();
       // console.log(id);
-      nfts.push(id);
+      nfts.push({id: id});
     }
 
     for(let i = 0; i < numOfNFTs; i++) {
@@ -132,10 +139,10 @@ const Profile = ({ addr, isOwner }) => {
       // console.log('waiting...', nfts.length, numOfNFTs);
       await delay(100);
     }
-
-    // console.log(sort.func);
+    
     nfts = sort.func(nfts); // poziva se funkcija koja sortira grad po izabranom kriterijumu
-    setNftList(nfts);
+    // console.log('nfts', nfts);
+    setNftList([...nfts]);
   }
 
   // #endregion
@@ -198,9 +205,9 @@ const Profile = ({ addr, isOwner }) => {
       <Sort setSort={(newSort) => {setSort(newSort); setNftList(newSort.func(nftList))}} sortTypes={sortTypes} currSort={sort} />
       <div className={styles.nftlist}>
         {
-          nftList.map((id, index) => (
+          nftList.map((element, index) => (
             <div key={index}>
-              <City id={id} />
+              <City id={element.id} />
             </div>
           ))
         }

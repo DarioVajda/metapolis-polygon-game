@@ -4,6 +4,9 @@ import { prizes, getRange } from '../utils/prizes';
 
 import style from './leaderboard.module.css';
 
+import MoneyIcon from '../universal/MoneyIcon';
+import IncomeIcon from '../universal/IncomeIcon';
+
 const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
 
@@ -271,12 +274,20 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
         <div className={style.id}>
           <span>{index+1}</span> City #{id!==-1 && id}
         </div>
-        <div className={style.money}>
-          Money: ${data.money}
-        </div>
-        <div className={style.income}>
-          Income: ${data.income}
-        </div>
+        {
+          data.money !== undefined && 
+          <div className={style.money}>
+            <MoneyIcon />
+            {data.money.toLocaleString('en-US')}
+          </div> 
+        }
+        {
+          data.income !== undefined &&
+          <div className={style.income}>
+            <IncomeIcon />
+            {data.income.toLocaleString('en-US')}
+          </div>
+        }
         <div className={`${style.arrow} ${expanded&&style.arrowUp}`}>
           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
             <path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0z"/>
@@ -297,7 +308,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
               <div>{price.price} {price.token}</div>
             </a>
             <div className={style.score}>
-              Score: {data.money?data.money + 7*data.income:0}
+              Score: {data.money?(data.money + 7*data.income).toLocaleString('en-US'):0}
               <div>
                 Score = money + 7*income
               </div>

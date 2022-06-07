@@ -31,7 +31,7 @@
 .owner {
     margin-top: var(--top-padding-negative);
     margin-bottom: var(--top-padding-negative);
-    margin-left: 0.5em;
+    margin-left: 0.45em;
     background-color: transparent;
     display: flex;
     justify-content: center;
@@ -51,17 +51,21 @@
 }
 
 .money {
-    width: min(15em, 30%);
+    width: min(12em, 24%);
 }
 
 .income {
-    width: min(15em, 30%);
+    width: min(12em, 24%);
 }
 
 .id, .money, .income {
-    text-align: start;
+    /* text-align: start; */
     margin: 0 0.5em;
     background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .id {

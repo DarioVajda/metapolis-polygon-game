@@ -12,7 +12,7 @@ import ParkSquare from './modelComponents/ParkSquare.js'
 
 
 
-export default function Buildings() {
+export default function Buildings({ ID }) {
   const initializeBuildings = useBuildingStore(state=>state.initializeBuildings)
   const buildings = useBuildingStore(state=>state.buildings)
 

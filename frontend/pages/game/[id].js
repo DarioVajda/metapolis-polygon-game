@@ -1,5 +1,70 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/router';
+
+
+import {OrbitControls, Bounds} from "@react-three/drei"
+import Link from "next/link"
+
+//----COMPONENTS----//
+import Buildings from '../../components/game/Buildings';
+import Lights from '../../components/game/Lights'
+import WorldCanvas from '../../components/game/WorldCanvas';
+import Landscape from '../../components/game/modelComponents/ValleyLandscape'
+import HTMLContent from '../../components/game/HTMLContent'
+import Grid from '../../components/game/Grid';
+import HoverObject from '../../components/game/HoverObject.jsx';
+
+
+
+
+//MAIN COMPONENT
+const Gameplay = ({ ID }) => {
+  // getIncome(1)
+  return (
+    <>
+      <div style={{position: "fixed",
+        height: '90%',
+        width: '90%',
+        margin:'0px',
+        padding:'0px',
+        overflow:'hidden',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+      }}>
+          <HTMLContent ID={ID} />
+          <WorldCanvas>
+            <OrbitControls/>
+            <Lights/>
+            <Grid ID={ID} />
+            <Suspense fallback={null}>
+              <Bounds fit clip observe margin={1}>
+                <Landscape scale={120} position={[-20,-23,2]}/>
+                <Buildings ID={ID} />
+                <HoverObject/>
+              </Bounds>
+            </Suspense>
+          </WorldCanvas>
+      </div>
+      <Link href="/"><a>Home</a></Link> <br />
+      <Link href='/leaderboard'><a>Leaderboard</a></Link> <br />
+    </>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const game = () => {
   const router = useRouter();
@@ -48,7 +113,7 @@ const game = () => {
     <div>Loading...</div>
   )
   else if(idValidity === 1) return (
-    <div>{route.id}</div>
+    <Gameplay ID={route.id} />
   )
   else return (
     <div>Error</div>

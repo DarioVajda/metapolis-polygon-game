@@ -32,7 +32,7 @@ const leaderboard = () => {
       [account] = await window.ethereum.request({ method: 'eth_requestAccounts' }); // poziva se funkcija za connectovanje korisnika
     }
     let addr = account;
-    console.log(addr);
+    // console.log(addr);
 
     if(!cityContract) {
       await initContract();

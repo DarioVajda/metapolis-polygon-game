@@ -164,7 +164,7 @@ function GridSquare(props){
     )
 }
 
-export default function Grid() {
+export default function Grid({ ID }) {
     const grid = useBuildingStore(state=>state.grid)
     const buildings =useBuildingStore(state=>state.buildings) //ovo je bitno jer se zbog ovoga refreshuje
     let position;

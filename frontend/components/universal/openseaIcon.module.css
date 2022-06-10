@@ -1,0 +1,13 @@
+.opensea {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.opensea>svg {
+    color: var(--primary);
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid white;
+}

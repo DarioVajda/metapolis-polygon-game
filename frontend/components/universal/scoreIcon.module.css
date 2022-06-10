@@ -1,0 +1,18 @@
+.wrapper {
+    border-radius: 50%;
+    /* border: 1px solid red; */
+    display: flex;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+.wrapper>svg {
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    transform: scale(1.16);
+    background-color: var(--primary-dark);
+    background-color: transparent;
+    background-color: var(--primary);
+    overflow: auto;
+}

@@ -8,7 +8,8 @@ import { prizes, getRange, price } from '../utils/prizes';
 import style from './leaderboard.module.css';
 
 const LeaderboardList = ({nfts}) => {
-  const [list, setList] = useState(Array(10).fill(-1));
+  // const [list, setList] = useState(Array(10).fill(-1));
+  const [list, setList] = useState(false); // false - not loaded, [...] - list of nfts
   const loaded = useRef(0);
   
   const [expanded, setExpanded] = useState(-1);
@@ -23,7 +24,7 @@ const LeaderboardList = ({nfts}) => {
 
   const getList = async () => {
     let res = await (await fetch('http://localhost:8000/leaderboard')).json();
-    console.log(res);
+    // console.log(res);
     setList(res.map(element => element.id)); // sets the city list to an array with IDs sorted by their score
   }
 
@@ -54,6 +55,10 @@ const LeaderboardList = ({nfts}) => {
   return (
     <div className={style.leaderboard}>
       {
+        list === false ?
+        <>
+          Loading...
+        </> :
         list.map((element, index) =>
           <div key={index}>
             {

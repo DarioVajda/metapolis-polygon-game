@@ -12,6 +12,7 @@ import Landscape from '../components/game/modelComponents/ValleyLandscape'
 import HTMLContent from '../components/game/HTMLContent'
 import Grid from '../components/game/Grid';
 import HoverObject from '../components/game/HoverObject.jsx';
+import {ID} from '../components/game/GridData';
 import { ethers } from 'ethers';
 import { generateUUID } from 'three/src/math/MathUtils';
 
@@ -64,15 +65,15 @@ const gameplay = () => {
         top: '50%',
         transform: 'translate(-50%, -50%)'
       }}>
-          <HTMLContent/>
+          <HTMLContent ID={ID} />
           <WorldCanvas>
             <OrbitControls/>
             <Lights/>
-            <Grid/>
+            <Grid ID={ID} />
             <Suspense fallback={null}>
               <Bounds fit clip observe margin={1}>
                 <Landscape scale={120} position={[-20,-23,2]}/>
-                <Buildings/>
+                <Buildings ID={ID} />
                 <HoverObject/>
               </Bounds>
             </Suspense>

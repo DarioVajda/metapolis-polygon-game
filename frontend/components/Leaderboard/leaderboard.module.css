@@ -39,6 +39,38 @@
     flex-direction: row;
 }
 
+.owner>a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 50%;
+    transition: all 0.1s ease-in-out;
+}
+
+.owner>a:hover {
+    transform: scale(1.08);
+}
+
+.owner>a>span {
+    position: absolute;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: all 0.2s linear;
+    align-self: center;
+    background-color: var(--light-background);
+    border: 1px solid var(--light-text);
+    padding: 0.5em;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.owner>a:hover>span {
+    visibility: visible;
+}
+
 .owner img {
     width: 3em;
     height: auto;
@@ -167,7 +199,7 @@
     background-color: var(--primary-dark);
 }
 
-.price span {
+.price>span {
     color: var(--light-text);
     padding-bottom: 0.3em;
     display: flex;
@@ -176,15 +208,13 @@
     justify-content: space-between;
 }
 
-.price div {
-    font-size: 1.8rem;
-    background-color: transparent;
+.price>span>span {
+    margin-left: 0.4em;
 }
 
-.price svg {
-    margin-left: 0.6em;
-    color: var(--text);
-    transform: scale(1.4);
+.price>div {
+    font-size: 1.8rem;
+    background-color: transparent;
 }
 
 .score, .totalValue {
@@ -193,6 +223,7 @@
     border: 1px solid var(--light-text);
     font-size: 1.6rem;
     background-color: var(--lightest-background);
+    background-color: var(--primary-dark);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -206,11 +237,22 @@
     flex-direction: column;
 }
 
-.score>div {
+.score>span {
     font-size: 0.8rem;
     color: var(--light-text);
     padding-top: 0.5em;
     background-color: transparent;
+}
+
+.score>div {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.score>div>span {
+    padding: 0 0.3em;
 }
 
 .stats {

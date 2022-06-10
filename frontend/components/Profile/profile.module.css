@@ -66,12 +66,12 @@
     padding: 0 1em;
 }
 
-.nftlist>div {
+.nftlist>a, .nftlist>div {
     flex-grow: 1;
-    min-width: 15em;
-    max-width: 20em;
+    min-width: 18em;
+    max-width: 18em;
     aspect-ratio: 3/4;
-    padding: 0.5em;
+    margin: 0.5em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,24 +96,84 @@
 }
 
 .nftitem:hover {
-    border: 2px solid var(--light-text);
+    border: 2px solid var(--text);
     padding: 0px;
 }
 
-.city {
-    width: 100%;
-    aspect-ratio: 1/1;
-    /* background-color: red; */
+/* #region Popup style */
+
+.popupBG {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0000005e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 101;
 }
 
-.citydata {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    /* background-image: -webkit-linear-gradient(top, rgb(0, 0, 0, 0), var(--light-background)); */
+.popup {
+    min-width: 50vw;
+    height: fit-content;
     background-color: var(--light-background);
+    border-radius: 15px;
+    border: 1px solid var(--text);
+    overflow: hidden;
+}
+
+.popupTop {
+    padding-left: calc(3em/1.5);
+    padding-top: 1em;
+    font-size: 1.5rem;
+    background-color: transparent;
+}
+
+.linkOptions {
+    padding: 3em;
+    padding-top: 1.5em;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: transparent;
+}
+
+.openseaLink, .gameLink {
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--lightest-background);
+    border-radius: 10px;
+    border: 1px solid var(--text);
+    padding: calc(1px + 1em);
     font-size: 1.2em;
 }
+
+.openseaLink:hover, .gameLink:hover {
+    padding: 1em;
+    border: 2px solid var(--text);
+}
+
+.openseaLink {
+    margin: 0 0 0 0.5em;
+}
+
+.gameLink {
+    margin: 0 0.5em 0 0;
+}
+
+.openseaLink>span {
+    margin-top: 1em;
+    text-align: center;
+}
+
+/* #endregion */
 
 /* #region Sort choice */
 
@@ -191,7 +251,7 @@
 }
 
 .sortBtn:hover {
-    border: 2px solid var(--light-text);
+    border: 2px solid var(--text);
     padding: 0;
 }
 
@@ -228,6 +288,77 @@
 
 .screenFillerClosed {
     display: none;
+}
+
+/* #endregion */
+
+/* #region Item style */
+
+.city {
+    width: 100%;
+    aspect-ratio: 1/1;
+}
+
+.citydata {
+    position: relative;
+    height: 27%;
+    width: 100%;
+    /* background-image: -webkit-linear-gradient(top, rgb(0, 0, 0, 0), var(--light-background)); */
+    background-color: var(--light-background);
+    font-size: 1.3em;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.cityDataLeft {
+    height: 100%;
+    width: 100%;
+    padding-left: 0.5em;
+    background-color: transparent;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: column;
+    padding-bottom: 0.5em;
+}
+
+.money, .income, .score {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: transparent;
+    font-size: 0.9rem;
+}
+
+.score {
+    padding-left: 0.3em;
+}
+
+.score>span {
+    padding-left: 0.3em;
+}
+
+.cityDataRight {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cityDataRight>div {
+    background-color: transparent;
+    font-size: 0.8rem;
+}
+
+.cityDataRight>span {
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 /* #endregion */

@@ -43,7 +43,7 @@ const getIncome = async (id) => {
   };
 
 
-function HTMLContent() {
+function HTMLContent({ ID }) {
     const [data, setData] = useState(false);
     const dataLoaded = useRef(false);
     const buildings = useBuildingStore(state=>state.buildings) //added for refreshing on build

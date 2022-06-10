@@ -4,8 +4,12 @@ import CityContract from '../../../smart_contracts/build/contracts/CityContract.
 import ContractAddress from '../../../smart_contracts/contract-address.json';
 
 import City from './City'
+import OpenseaIcon from '../universal/OpenseaIcon';
 
 import styles from './profile.module.css'
+
+import useScrollbarSize from 'react-scrollbar-size';
+import { id } from 'ethers/lib/utils';
 
 const Sort = ({ setSort, sortTypes, currSort }) => {
 
@@ -46,43 +50,37 @@ const Profile = ({ addr, isOwner }) => {
   // #region Sorting
 
   const sortTypes = {
-    Desc: {
+    Money: {
       func: (nfts) => {
-        // funkcija koja sortira gradove po score-u u opadajucem redosledu
-        return nfts; // ovo ce biti novi, sortirani niz
+        if(!nfts) return false;
+        else return [...nfts].sort((a, b) => b.money-a.money);
       },
-      key: 'Desc'
+      key: 'Money'
     },
-    Asc: {
+    Income: {
       func: (nfts) => {
-        // funkcija koja sortira gradove po score-u u rastucem redosledu
-        return nfts; // ovo ce biti novi, sortirani niz
+        if(!nfts) return false;
+        else return [...nfts].sort((a, b) => b.income-a.income);
       },
-      key: 'Asc'
+      key: 'Income'
     },
-    LastEdited: {
+    Score: {
       func: (nfts) => {
-        // funkcija koja sortira gradove po tome koji je kad editovan (ne znam jos kako cu i da li cu uraditi ovo)
-        return nfts; // ovo ce biti novi, sortirani niz
+        if(!nfts) return false;
+        else return [...nfts].sort((a, b) => b.score-a.score);
       },
-      key: 'LastEdited'
+      key: 'Score'
     },
     ID: {
       func: (nfts) => {
-        if(!nfts) {
-          // console.log('nfts === false');
-          return false;
-        }
-        else {
-          // console.log('new list', [...nfts].sort((a, b) => a.id-b.id));
-          return [...nfts].sort((a, b) => a.id-b.id);
-        }
+        if(!nfts) return false;
+        else return [...nfts].sort((a, b) => a.id-b.id);
       },
       key: 'ID'
     },
   }
 
-  const [sort, setSort] = useState(sortTypes.Desc);
+  const [sort, setSort] = useState(sortTypes.Money);
 
   // #endregion
 
@@ -95,6 +93,92 @@ const Profile = ({ addr, isOwner }) => {
     for(let i = addr.length-4; i < addr.length; i++) r = r + addr[i];
 
     return r;
+  }
+
+  // #endregion
+
+  // #region Getting the data for NFTs
+
+  const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the NFT contract (for opensea api call)
+
+  const highestOffer = async (id) => {
+    const options = { method: 'GET' };
+    let res;
+    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/offers`, options)
+    .then(response => response.json())
+    .then(response => res = response)
+    .catch(err => console.error(err));
+      
+    // console.log('prices', id, res);
+    
+    let p = -1;
+    let t;
+    let max = -1;
+    
+    let usdPrice;
+    res.offers.forEach((offer, index) => {
+      usdPrice = offer.payment_token_contract.usd_price * offer.base_price / 1e18;
+      if(usdPrice > p) {
+        p = usdPrice;
+        t = offer.payment_token_contract.symbol;
+        max = index;
+      }
+    });
+    let temp = p / res.offers[max].payment_token_contract.usd_price;
+
+    return { 
+      price: Math.round(temp * 1000) / 1000,
+      token: t, 
+      usdPrice: p, 
+      message: 'Highest offer' 
+    };
+  }
+
+  const getListing = async (id) => {
+    const options = { method: 'GET' };
+    let res;
+    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/listings`, options)
+      .then(response => response.json())
+      .then(response => res = response)
+      .catch(err => console.error(err));
+      
+    if(res.listings.length === 0) return { price: 0, token: 0, usdPrice: '', message: '' };
+    
+    let temp = res.listings[0].base_price / 1e18;
+
+    return {
+      price: Math.round(temp * 1000) / 1000,
+      token: res.listings[0].payment_token_contract.symbol,
+      usdPrice: temp * res.listings[0].payment_token_contract.usd_price,
+      message: 'Price'
+    }
+  }
+
+  const getPrices = async (id) => {
+    let r;
+
+    await highestOffer(id).then(res => {
+      r = res;
+    });
+
+    await getListing(id).then(res => {
+      if(res.usdPrice > r.usdPrice) {
+        r = res;
+      }
+    });
+
+    if(r.price > 0) return r;
+    else return undefined;
+  }
+
+  const loadData = async (id) => {
+    let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+    // console.log(_data);
+
+    // trebaju da se ucitaju podaci o ceni nft-a na opensea, kao sto je uradjeno na leaderboard-u
+    _data.price = await getPrices(id);
+
+    return _data;
   }
 
   // #endregion
@@ -127,8 +211,8 @@ const Profile = ({ addr, isOwner }) => {
       let id;
       id = await city.tokenOfOwnerByIndex(addr, i);
       id = id.toNumber();
-      // console.log(id);
-      nfts.push({id: id});
+      let _data = await loadData(id);
+      nfts.push({id: id, ..._data});
     }
 
     for(let i = 0; i < numOfNFTs; i++) {
@@ -141,21 +225,59 @@ const Profile = ({ addr, isOwner }) => {
     }
     
     nfts = sort.func(nfts); // poziva se funkcija koja sortira grad po izabranom kriterijumu
-    // console.log('nfts', nfts);
     setNftList([...nfts]);
+  }
+
+  // #endregion
+
+  // #region Handling the Popup
+
+  const scrollBar = useScrollbarSize();
+
+  const [popupOpen, setPopupOpen] = useState({ open: false, id: -1}); // inace treba da bude false
+
+  const openPopup = (id) => { 
+    document.body.style.overflow = 'hidden';
+    document.body.style.marginRight = `${scrollBar.width}px`;
+    setPopupOpen({ open: true, id: id });
+  }
+
+  const closePopup = () => {
+    document.body.style.overflow = 'visible';
+    document.body.style.marginRight = '0';
+    setPopupOpen({ open: false, id: -1 });
   }
 
   // #endregion
 
   useEffect(() => {
     loadNfts();
-  }, []);
+  }, []); 
 
   if(nftList === false) return (
     <div>Loading...</div>
   )
   else return (
     <div className={styles.wrapper}>
+      {
+        popupOpen.open &&
+        <div className={styles.popupBG} onClick={closePopup}>
+          <div className={styles.popup}>
+            <div className={styles.popupTop}>
+              See City #{popupOpen.id}
+            </div>
+            <div className={styles.linkOptions}>
+              <a className={styles.gameLink} href={`http://localhost:3000/game/${popupOpen.id}`} target='_blank'>
+                Game
+              </a>
+              <a className={styles.openseaLink} href={`https://opensea.io/assets/${address}/${popupOpen.id}`} target='_blank'>
+                <OpenseaIcon size={8} />
+                <span className={styles.seeOpensea}>Opensea</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
       <div className={styles.top}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -205,11 +327,18 @@ const Profile = ({ addr, isOwner }) => {
       <Sort setSort={(newSort) => {setSort(newSort); setNftList(newSort.func(nftList))}} sortTypes={sortTypes} currSort={sort} />
       <div className={styles.nftlist}>
         {
-          nftList.map((element, index) => (
-            <div key={index}>
-              <City id={element.id} />
-            </div>
-          ))
+          nftList.map((element, index) => {
+            if(isOwner === false) return (
+              <a key={index} href={`https://opensea.io/assets/${address}/${element.id}`} target='_blank' >
+                <City id={element.id} data={element} />
+              </a>
+            )
+            else return (
+              <div key={index} onClick={() => { openPopup(element.id) }}>
+                <City id={element.id} data={element} />
+              </div>
+            )
+          })
         }
       </div>
     </div>

@@ -7,7 +7,7 @@
     margin: 1em;
     /* border: 1px solid white; */
     border-radius: 2.25em;
-    overflow: hidden;
+    /* overflow: hidden; */
     background-color: var(--light-background);
 }
 
@@ -22,6 +22,7 @@
     cursor: pointer;
     transition: background-color 0.4s linear;
     background-color: transparent;
+    border-radius: 2.25em;
 }
 
 .topOwned {
@@ -37,17 +38,18 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    font-size: 1rem;
 }
 
 .owner>a {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    align-items: flex-start;
+    justify-content: center;
     flex-direction: column;
     width: fit-content;
     height: fit-content;
     border-radius: 50%;
-    transition: all 0.1s ease-in-out;
+    transition: all 0.1s linear;
 }
 
 .owner>a:hover {
@@ -55,25 +57,42 @@
 }
 
 .owner>a>span {
-    position: absolute;
-    opacity: 0.5;
     visibility: hidden;
-    transition: all 0.2s linear;
+    position: absolute;
+    opacity: 0;
+    bottom: calc(100% + 3px);
+    min-width: calc(3.6em * 1.1);
+    left: -8%;
+    transition: all 0.1s linear;
     align-self: center;
     background-color: var(--light-background);
     border: 1px solid var(--light-text);
     padding: 0.5em;
     border-radius: 5px;
     text-align: center;
+    font-size: 1rem;
 }
 
 .owner>a:hover>span {
     visibility: visible;
+    opacity: 1;
+    transform: scale(0.90909);
+}
+
+.owner>a>span::after {
+    content: "";
+    position: absolute;
+    top: calc(100% + 1px);
+    left: calc(1.8em * 1.1);
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--light-text) transparent transparent transparent;
 }
 
 .owner img {
-    width: 3em;
-    height: auto;
+    width: 3.6em;
+    height: 3.6em;
     border-radius: 50%;
 }
 

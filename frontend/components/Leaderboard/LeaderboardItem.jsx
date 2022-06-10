@@ -264,7 +264,10 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
             owner.randomIndex === undefined ?
             <a href={`/profile/${owner.address}`} onClick={(event) => event.stopPropagation()} >
               <img src={owner.profile_img_url} alt="" />
-              <span>{owner.user.username}</span>
+              {
+                owner.user.username &&
+                <span>{owner.user.username}</span>
+              }
             </a> :
             <img src={`https://storage.googleapis.com/opensea-static/opensea-profile/${owner.randomIndex}.png`} />
           }

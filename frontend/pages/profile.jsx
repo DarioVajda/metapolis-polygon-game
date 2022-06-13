@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head';
 
 import Profile from '../components/Profile/Profile';
+import ConnectWallet from '../components/Profile/ConnectWallet';
 import Nav from '../components/Nav';
 
 const profile = () => {
@@ -16,7 +17,7 @@ const profile = () => {
   }
 
   const connectUser = async () => {
-    [account] = await window.ethereum.request({ method: 'eth_requestAccounts' }); // poziva se funkcija za connectovanje korisnika
+    let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' }); // poziva se funkcija za connectovanje korisnika
     setAddr(account);
   }
 
@@ -33,7 +34,7 @@ const profile = () => {
         <Nav />
         {
           addr === 0 ?
-          <>Connect wallet, buy nft...</> :
+          <ConnectWallet connectUser={connectUser} /> :
           <Profile addr={addr} isOwner={true} />
         }
       </main>

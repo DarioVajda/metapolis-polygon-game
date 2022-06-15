@@ -7,8 +7,8 @@ const EthIcon = ({ height, unit }) => {
         xmlns="http://www.w3.org/2000/svg" 
         aria-hidden="true" 
         role="img" 
-        width={`${height*0.62}${unit?unit:'em'}`} 
-        height={`${height}${unit?unit:'em'}`}
+        width={`${height?height*0.62:1}${unit?unit:'em'}`} 
+        height={`${height?height:1}${unit?unit:'em'}`}
         preserveAspectRatio="xMidYMid meet" 
         viewBox="0 0 256 417"
       >

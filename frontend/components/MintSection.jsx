@@ -5,6 +5,7 @@ import useScrollbarSize from 'react-scrollbar-size';
 
 import PrizesPopup from './PrizesPopup';
 import MintPopup from './MintPopup';
+import EthIcon from './universal/EthIcon';
 
 import style from './styles/mintSection.module.css';
 
@@ -106,7 +107,12 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
       }
       <div className={style.wrapper}>
         <h2 className={style.prizes}>
-          Compete for a part of the <span className={style.ethSpan} onClick={() => { if(citiesLeft) openPopup('prizes') } } >300 ETH</span> prize pool!
+          Compete for a part of the 
+          <span className={style.ethSpan} onClick={() => { if(citiesLeft) openPopup('prizes') } } >
+            <EthIcon />
+            300
+          </span>
+          prize pool!
         </h2>
         <div className={style.mintSection}>
           <div className={style.nftsLeft}>Cities left to mint: {citiesLeft}</div>

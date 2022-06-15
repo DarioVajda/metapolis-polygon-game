@@ -49,7 +49,7 @@
     width: fit-content;
     height: fit-content;
     border-radius: 50%;
-    transition: all 0.1s linear;
+    transition: all 0.15s linear;
 }
 
 .owner>a:hover {
@@ -63,11 +63,11 @@
     bottom: calc(100% + 3px);
     min-width: calc(3.6em * 1.1);
     left: -8%;
-    transition: all 0.1s linear;
+    transition: all 0.15s linear;
     align-self: center;
     background-color: var(--light-background);
     border: 1px solid var(--light-text);
-    padding: 0.5em;
+    padding: 0.2em 0.5em;
     border-radius: 5px;
     text-align: center;
     font-size: 1rem;

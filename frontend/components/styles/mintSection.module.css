@@ -7,17 +7,36 @@
 }
 
 .prizes {
-    background-color: inherit;
+    background-color: transparent;
+    font-weight: 600;
     text-align: center;
+    display: inline;
+
+    /* display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column; */
 }
 
 .ethSpan {
+    /* display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row; */
     font-size: 1.3em;
     cursor: pointer;
+    margin: 0 0.35em 0 0.15em;
+    transition: all 0.05s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.ethSpan div {
+    display: inline;
 }
 
 .ethSpan:hover {
-    text-decoration: underline;
+    
+    border-color: transparent transparent var(--text) transparent;
 }
 
 .mintSection {
@@ -124,7 +143,7 @@
 }
 
 .nftsLeft {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 500;
 }
 

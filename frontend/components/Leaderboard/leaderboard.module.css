@@ -26,7 +26,7 @@
 }
 
 .topOwned {
-    background-color: var(--primary-dark);
+    background-color: var(--primary-bg);
 }
 
 .owner {
@@ -215,7 +215,7 @@
 }
 
 .price:active {
-    background-color: var(--primary-dark);
+    background-color: var(--primary-bg);
 }
 
 .price>span {
@@ -242,7 +242,7 @@
     border: 1px solid var(--light-text);
     font-size: 1.6rem;
     background-color: var(--lightest-background);
-    background-color: var(--primary-dark);
+    background-color: var(--primary-bg);
     border-radius: 10px;
     display: flex;
     align-items: center;

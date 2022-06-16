@@ -261,6 +261,9 @@ contract Gameplay is Ownable {
      */
     function removeBuilding(uint tokenId, uint value, uint buildingIndex) external onlyAdmin isEditable {
         // curr building getting values from last building in the list
+
+        cities[tokenId].numOfBuildings = cities[tokenId].numOfBuildings - 1;
+
         cities[tokenId].buildingList[buildingIndex].buildingType = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].buildingType;
         cities[tokenId].buildingList[buildingIndex].startx = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].startx;
         cities[tokenId].buildingList[buildingIndex].starty = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].starty;
@@ -270,8 +273,6 @@ contract Gameplay is Ownable {
         cities[tokenId].buildingList[buildingIndex].orientation = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].orientation;
         
         // cities[tokenId].buildingList[buildingIndex] = cities[tokenId].buildingList[cities[tokenId].numOfBuildings];
-
-        cities[tokenId].numOfBuildings = cities[tokenId].numOfBuildings - 1;
 
         cities[tokenId].money = cities[tokenId].money + uint64(value);
     }
@@ -284,14 +285,15 @@ contract Gameplay is Ownable {
      */
     function removeSpecialBuilding(uint tokenId, uint value, uint buildingIndex) external onlyAdmin isEditable {
         // curr building getting values from last building in the list
+
+        cities[tokenId].numOfSpecialBuildings = cities[tokenId].numOfSpecialBuildings - 1;
+
         cities[tokenId].specialBuildingList[buildingIndex].specialType = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].specialType;
         cities[tokenId].specialBuildingList[buildingIndex].startx = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].startx;
         cities[tokenId].specialBuildingList[buildingIndex].starty = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].starty;
         cities[tokenId].specialBuildingList[buildingIndex].endx = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endx;
         cities[tokenId].specialBuildingList[buildingIndex].endy = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].endy;
         cities[tokenId].specialBuildingList[buildingIndex].orientation = cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings].orientation;
-        
-        cities[tokenId].numOfSpecialBuildings = cities[tokenId].numOfSpecialBuildings - 1;
 
         cities[tokenId].money = cities[tokenId].money + uint64(value);
     }
@@ -327,25 +329,6 @@ contract Gameplay is Ownable {
             cities[i].incomesReceived = 0;
             i++;
         }
-    }
-
-    function gameIncomeStarted() external view returns(bool) {
-        if(gameStart == 2000000000) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    function getGameStart() external view returns(uint) {
-        return gameStart;
-    }
-
-    uint gameStart2 = 200;
-    function getGameStart2() external pure returns(uint) {
-        revert("Ovo je neki razlog");
-        return 10;
     }
 
     /**

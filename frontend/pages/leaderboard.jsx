@@ -14,7 +14,7 @@ const leaderboard = () => {
   const [nfts, setNfts] = useState([]);
 
   var cityContract;
-  const cityContractAddress = '0xDd5B188Ec23c3C289d76B686c48aF0F9d5B0902F';
+  const cityContractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
   const connecting = useRef(false);
 
   async function initContract() {

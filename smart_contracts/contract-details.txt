@@ -102,3 +102,24 @@
    =======
    > Total deployments:   4
    > Final cost:          0.027712957637734935 ETH
+
+6. CONTRACT DEPLOYMENTS
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0xF1E1D340C4106315783F5125a0b87478f24A3e64
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0x88b68D2926eD258e7988e4D1809c42b199574088
+   > gas used:            4295787 (0x418c6b)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0xBb92dA58620905af251B098602C9124FAb97ECb3
+   > gas used:            4947060 (0x4b7c74)
+
+   Summary
+   =======
+   > Total deployments:   4
+   > Final cost:          0.0276733751106935 ETH

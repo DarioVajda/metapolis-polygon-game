@@ -518,24 +518,38 @@ app.post("/cities/:id/remove", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData).buildings;
 
-	if(city[index] === undefined) {
-		return res.status(400).send("Ivalid index")
-	}
+	console.log(1);
 
+	if(city[index] === undefined) {
+		console.log('invalid index');
+		res.status(400).send("Ivalid index");
+		return;
+	}
+	
+	console.log(2);
+	
 	let message = req.body.message;
 	let signature = req.body.signature;
 	let signer = cityData.owner; // this address could be also sent in the body of the request
 	let signerAddr = await ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
+		console.log('the caller of this function must be the owner of the nft');
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return; 
 	}
 
+	console.log(3);
+	
 	let returnPercentage = 0.5;
 	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level].cost;
-
-	// console.log(utils.isSameBuilding(building, city[index]))
-	// console.log(utils.isBuildingFormat(building))
+	
+	console.log(utils.isSameBuilding(building, city[index]))
+	console.log(utils.isBuildingFormat(building))
 	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
+
+		console.log(4);
+
+		console.log({id: req.params.id,value,index});
 		let tx = await contract.removeBuilding(
 			req.params.id,
 			value,
@@ -543,9 +557,10 @@ app.post("/cities/:id/remove", async (req, res) => {
 		);
 		let receipt;
 		try {
+			console.log(5);
+
 			receipt = await tx.wait();
 			console.log(receipt);
-			res.status(200).send(receipt);
 		}
 		catch(e) {
 			console.log(e);
@@ -566,6 +581,8 @@ app.post("/cities/:id/remove", async (req, res) => {
 
 		tx = await contract.changeScore(req.params.id, city.money + 7*income);
 		try {
+			console.log(6);
+
 			receipt = await tx.wait();
 			console.log(receipt);
 			res.status(200).send(receipt);
@@ -578,6 +595,7 @@ app.post("/cities/:id/remove", async (req, res) => {
 		}
 	}
 	else {
+		console.log('data sent is not correct');
 		res.status(400).send("Data sent is not correct");
 	}
 }); // DONE (not tested yet)

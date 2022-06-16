@@ -35,7 +35,7 @@ function isBuildingFormat(obj) {
     }
 
     // orientation mora biti ceo broj od 1 do 4, u suprotnom se vraca false
-    if(obj.orientation !== 4 && obj.orientation !== 2 && obj.orientation !== 2 && obj.orientation !== 1) {
+    if(obj.orientation !== 4 && obj.orientation !== 3 && obj.orientation !== 2 && obj.orientation !== 1) {
         return false;
     }
 

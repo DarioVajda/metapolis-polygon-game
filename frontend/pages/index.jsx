@@ -28,8 +28,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0xDd5B188Ec23c3C289d76B686c48aF0F9d5B0902F';
-  const wethContractAddress = '0x6637B109F7c828324CD71504c5D927b65b525661';
+  const cityContractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
+  const wethContractAddress = '0xF1E1D340C4106315783F5125a0b87478f24A3e64';
   
   const connectWallet = async () => {
     let res;

@@ -37,7 +37,7 @@ const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
     return response
   };
 
-  const apiRemoveBuilding = async (id,index,[x0,y0],[x1,y1], type,level) => {
+  const apiRemoveBuilding = async (id,index,[x0,y0],[x1,y1], type,level,orientation) => {
     const message = `Removing ${type}, index:${index} in city ${id}, messageUUID:${generateUUID()}`;
   
     await window.ethereum.send("eth_requestAccounts");
@@ -51,7 +51,19 @@ const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
     }
     const address = await signer.getAddress();
   
-    let body = JSON.stringify({params:{id:id},index:index,building:{start:{x:x0,y:y0},end:{x:x1,y:y1},type:type,level:level},signature: signature,message: message });
+    let body = JSON.stringify({
+        params: { id: id },
+        index: index,
+        building: {
+            start: { x: x0, y: y0 },
+            end: { x: x1, y: y1 },
+            type: type,
+            level: level,
+            orientation: orientation
+        },
+        signature: signature,
+        message: message 
+    });
     const response = await fetch(`http://localhost:8000/cities/${id}/remove`, {
       method: 'POST',
       mode: 'cors',
@@ -130,7 +142,20 @@ function GridSquare(props){
             let uuid=grid[x*gridSize+y];
             let index=buildings.findIndex((building)=>building.uuid===uuid);
             ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
-            let response = await apiRemoveBuilding(ID,index,[buildings[index].start.x,buildings[index].start.y],[buildings[index].end.x,buildings[index].end.y],buildings[index].type,buildings[index].level)
+
+            // #region Ovo je Dario dodao dok je testirao nesto
+            console.log(buildings[index]);
+            // #endregion
+
+            let response = await apiRemoveBuilding(
+                ID,
+                index,
+                [ buildings[index].start.x, buildings[index].start.y ],
+                [ buildings[index].end.x, buildings[index].end.y ],
+                buildings[index].type,
+                buildings[index].level,
+                buildings[index].orientation
+            );
             if(response.ok)
             {
                 demolishBuilding(uuid)

@@ -14,8 +14,9 @@ const provider = new ethers.providers.JsonRpcProvider(
 const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
 var contractAddress;
 var abi
+var account = wallet.connect(provider);
 
-contractAddress = '0x6637B109F7c828324CD71504c5D927b65b525661';
+contractAddress = '0xF1E1D340C4106315783F5125a0b87478f24A3e64';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
 var weth = new ethers.Contract(
     contractAddress,
@@ -23,16 +24,15 @@ var weth = new ethers.Contract(
     account
 );
 
-contractAddress = '0xDd5B188Ec23c3C289d76B686c48aF0F9d5B0902F';
+contractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
-var account = wallet.connect(provider);
 var city = new ethers.Contract(
 	contractAddress,
 	abi,
 	account
 );
 
-contractAddress = '0x65c17d38CAb2c199E7B0B2037620F6BBb0337974';
+contractAddress = '0xBb92dA58620905af251B098602C9124FAb97ECb3';
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var game = new ethers.Contract(
     contractAddress,
@@ -47,31 +47,31 @@ async function main() {
 
     // Funkcija koja poziva setMoney u serveru:
     //------------------------------------------
-    let body = {money: 1000000};
-    let id = 10;
-    const response = await fetch(`http://localhost:8000/cities/${id}/dev/setmoney`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: body
-    });
-    console.log(response);
+    // let body = {money: 1000000};
+    // let id = 10;
+    // const response = await fetch(`http://localhost:8000/cities/${id}/dev/setmoney`, {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   cache: 'no-cache',
+    //   credentials: 'same-origin',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   redirect: 'follow',
+    //   referrerPolicy: 'no-referrer',
+    //   body: body
+    // });
+    // console.log(response);
 
 
     // Funkcija koja mintuje weth tokene na moju adresu
     //------------------------------------------
-    // tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'));
-    // receipt = await tx.wait();
-    // var balance = await weth.balanceOf(wallet.address);
-    // balance = balance.toString();
-    // console.log(balance);
-    
+    tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'));
+    receipt = await tx.wait();
+    var balance = await weth.balanceOf(wallet.address);
+    balance = balance.toString();
+    console.log(balance);
+
 
     // Funkcija koja pokrece zaradu u igri:
     //-------------------------------------------

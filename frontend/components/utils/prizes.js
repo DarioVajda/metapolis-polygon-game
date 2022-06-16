@@ -2,10 +2,6 @@ const price = 0.1;
 
 const prizes = [
     {
-        min: 0,
-        list: []
-    },
-    {
         min: 100,
         list: [
             { start: 1, end: 1, prize: 10 },
@@ -58,9 +54,12 @@ const prizes = [
 
 function getRange(nfts, index) {
     nfts *= 100; // ovo treba kasnije da se ukloni!!!
+    
+    if(nfts < prizes[0].min) return { start: 0, end: 0, prize: 0 }
+
     let stage = 0;
     for(let i = 0; i < prizes.length; i++) {
-        if(prizes[stage].min < nfts) {
+        if(prizes[stage].min <= nfts) {
             stage += 1;
         }
         else {
@@ -80,7 +79,6 @@ function getRange(nfts, index) {
             break;
         }
     }
-    // console.log(list[res-1]);
     return list[res-1];
 }
 

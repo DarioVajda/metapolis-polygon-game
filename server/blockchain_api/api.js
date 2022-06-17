@@ -747,4 +747,59 @@ app.post("cities/:id/dev/demolish", async (req, res) => {
 });
 // #endregion
 
+// #region List of functions
+
+app.post('/cities/:id/instructions', async (req, res) => {
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+
+	try {
+		let message = req.body.message;
+		let signature = req.body.signature;
+		let signer = cityData.owner;
+		let signerAddr = ethers.utils.verifyMessage(message, signature);
+		if(signerAddr !== signer && false) {
+			res.status(400).send("The caller of this function must be the owner of the NFT");
+			return;
+		}
+	}
+	catch(e) {
+		res.status(400).send("Message or signature not sent.", e);
+		return;
+	}
+
+	if(req.body.instructions === undefined || req.body.instructions.length === undefined) {
+		res.status(400).send('List of instructions is not sent');
+		return;
+	}
+	
+	let functions = {
+		build: async (body) => {
+			console.log('build', { body });
+		},
+		buildspecial: async (body) => {
+			console.log('buildspecial', { body });
+		},
+		upgrade: async (body) => {
+			console.log('upgrade', { body });
+		},
+		rotate: async (body) => {
+			console.log('rotate', { body });
+		},
+		rotatespecial: async (body) => {
+			console.log('rotatespecial', { body });
+		}
+	}
+
+	let instructions = req.body.instructions;
+
+	instructions.forEach(async (element, index) => {
+		await functions[element.key](element.body);
+	});
+
+	res.send('Success');
+});
+
+// #endregion
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -12,14 +12,17 @@ const profile = () => {
   
   // #region checking if it is the connected address
 
-  const [connectedAddr, setConnectedAddr] = useState(0); // adresa od osobe koja je usla u sajt ako je ulogovan
+  const [connectedAddr, setConnectedAddr] = useState(undefined); // adresa od osobe koja je usla u sajt ako je ulogovan
   // false - not loaded, 0 - no one is connected, 0x... - address of the user
 
   const getConnectedUser = async () => {
     let account = window.ethereum.selectedAddress; // bira se trenutna adresa ili null ako nije connectovan korisnik
     if(!account){
+      console.log({account});
+      setConnectedAddr('0x00');
       return;
     }
+
     setConnectedAddr(account);
   }
 
@@ -34,6 +37,8 @@ const profile = () => {
 
   // #endregion
 
+  console.log(connectedAddr, route.addr);
+
   return (
     <div>
       <Head>
@@ -44,7 +49,7 @@ const profile = () => {
         {
           !route.addr || !connectedAddr ?
           <>Loading address...</> :
-          <Profile addr={route.addr} isOwner={connectedAddr.toLowerCase() === route.addr.toLowerCase()} />
+          <Profile addr={route.addr} isOwner={!connectedAddr || connectedAddr.toLowerCase() === route.addr.toLowerCase()} />
         }
       </main>
     </div>

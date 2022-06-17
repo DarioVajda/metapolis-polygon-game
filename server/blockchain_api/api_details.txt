@@ -7,6 +7,7 @@ GET requests:
     /cities/:id/data - returns the data about the city from the smart contract
     /leaderboard - returns the list of cities sorted by score
     /count - returns the number of NFTs
+    /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
 
 POST requests:
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
@@ -22,16 +23,28 @@ POST requests:
                 level: 'l'
             } // data about the building
         }
-    /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
     (*) /cities/:id/rotate - { 
             rotation: r, // new rotation of the building, 1≤r≤4
             index: i // index of the building being rotated, 0≤i≤numOfBuildings-1
         }
-    (*) /cities/:id/rotateSpecial - { 
+    (*) /cities/:id/rotatespecial - { 
             rotation: r, // new rotation of the building, 1≤r≤4
             index: i // index of the building being rotated, 0≤i≤numOfSpecialBuildings-1
         }
 
+INSTRUCTION LIST REQUEST:
+    (*) /cities/:id/instructions - {
+        instructions: [
+            {
+                instruction: 'key',
+                body: {
+                    data sent for the instruction
+                }
+            },
+            ...
+        ]
+    }
+    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial'
 
 DEV OPTIONS:
     /cities/:id/dev/setmoney - { money: m } // m - unsigned int

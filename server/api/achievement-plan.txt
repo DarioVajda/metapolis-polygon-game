@@ -1,0 +1,10 @@
+achievement data:
+    start, end date (unix time)
+    condition (bool function)
+    reward (value, type)
+
+achievement rewards:
+    in-game reward
+        aesthetic (special buildings, skins,...)
+        progress (income boost, money, productivity boost,...)
+    eth/matic

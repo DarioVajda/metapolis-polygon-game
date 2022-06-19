@@ -8,6 +8,7 @@ let peopleModule = require('../gameplay/people');
 let incomeModule = require('../gameplay/income');
 let generateModule = require('../rand_map/generate');
 let utils = require('./utils');
+let postFunctions = require('./postFunctions')
 
 let addressJSON = require('../../smart_contracts/contract-address.json');
 
@@ -518,16 +519,12 @@ app.post("/cities/:id/remove", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData).buildings;
 
-	console.log(1);
-
 	if(city[index] === undefined) {
 		console.log('invalid index');
 		res.status(400).send("Ivalid index");
 		return;
 	}
-	
-	console.log(2);
-	
+		
 	let message = req.body.message;
 	let signature = req.body.signature;
 	let signer = cityData.owner; // this address could be also sent in the body of the request
@@ -537,8 +534,6 @@ app.post("/cities/:id/remove", async (req, res) => {
 		res.status(400).send("The caller of this function must be the owner of the NFT");
 		return; 
 	}
-
-	console.log(3);
 	
 	let returnPercentage = 0.5;
 	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level].cost;
@@ -546,8 +541,6 @@ app.post("/cities/:id/remove", async (req, res) => {
 	console.log(utils.isSameBuilding(building, city[index]))
 	console.log(utils.isBuildingFormat(building))
 	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
-
-		console.log(4);
 
 		console.log({id: req.params.id,value,index});
 		let tx = await contract.removeBuilding(
@@ -557,8 +550,6 @@ app.post("/cities/:id/remove", async (req, res) => {
 		);
 		let receipt;
 		try {
-			console.log(5);
-
 			receipt = await tx.wait();
 			console.log(receipt);
 		}
@@ -581,8 +572,6 @@ app.post("/cities/:id/remove", async (req, res) => {
 
 		tx = await contract.changeScore(req.params.id, city.money + 7*income);
 		try {
-			console.log(6);
-
 			receipt = await tx.wait();
 			console.log(receipt);
 			res.status(200).send(receipt);
@@ -758,13 +747,13 @@ app.post('/cities/:id/instructions', async (req, res) => {
 		let signature = req.body.signature;
 		let signer = cityData.owner;
 		let signerAddr = ethers.utils.verifyMessage(message, signature);
-		if(signerAddr !== signer && false) {
+		if(signerAddr !== signer) {
 			res.status(400).send("The caller of this function must be the owner of the NFT");
 			return;
 		}
 	}
 	catch(e) {
-		res.status(400).send("Message or signature not sent.", e);
+		res.status(400).send("Message or signature not sent.");
 		return;
 	}
 
@@ -773,29 +762,22 @@ app.post('/cities/:id/instructions', async (req, res) => {
 		return;
 	}
 	
-	let functions = {
-		build: async (body) => {
-			console.log('build', { body });
-		},
-		buildspecial: async (body) => {
-			console.log('buildspecial', { body });
-		},
-		upgrade: async (body) => {
-			console.log('upgrade', { body });
-		},
-		rotate: async (body) => {
-			console.log('rotate', { body });
-		},
-		rotatespecial: async (body) => {
-			console.log('rotatespecial', { body });
-		}
-	}
+	let functions = postFunctions.functions;
 
 	let instructions = req.body.instructions;
 
-	instructions.forEach(async (element, index) => {
-		await functions[element.key](element.body);
-	});
+	let temp; // holding the value of the function that was executing
+	let element;
+	for(let i = 0; i < instructions.length; i++) {
+		element = instructions[i];
+
+		temp = await functions[element.key](element.body, req.params.id);
+		console.log({i, temp});
+		if(temp.status !== 200) {
+			res.status(temp.status).send(`${temp.message}`);
+			return;
+		}
+	}
 
 	res.send('Success');
 });

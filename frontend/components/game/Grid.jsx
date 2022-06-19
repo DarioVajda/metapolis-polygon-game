@@ -46,6 +46,7 @@ const apiAddBuilding = async (id,[x0,y0],[x1,y1], type) => {
     let signature;
     try {
         signature = await signer.signMessage(message);
+        // console.log({message, signature});
     } catch (error) {
         return {ok:false,status:error.message}
     }

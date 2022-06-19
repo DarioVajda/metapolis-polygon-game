@@ -11,7 +11,7 @@ GET requests:
 
 POST requests:
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
-    (*) /cities/:id/build - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type", level: 0}, 1≤x≤4
+    (*) /cities/:id/build - { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type", level: 0 }, 1≤x≤4
     (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type"}
     (*) /cities/:id/upgrade - {
             index: i, // index in the building list array
@@ -44,7 +44,7 @@ INSTRUCTION LIST REQUEST:
             ...
         ]
     }
-    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial'
+    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial', 'remove', 'removespecial'
 
 DEV OPTIONS:
     /cities/:id/dev/setmoney - { money: m } // m - unsigned int

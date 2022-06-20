@@ -17,8 +17,9 @@ const getIncome = async (id) => {
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
+    let signature;
     try {
-        const signature = await signer.signMessage(message);
+        signature = await signer.signMessage(message);
     } catch (error) {
         return {ok:false,status:error.message}
     }

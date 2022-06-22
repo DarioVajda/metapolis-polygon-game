@@ -654,10 +654,9 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
 
-	let income;
 	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
 	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
 	let tx = await contract.getIncome(req.params.id, income, {gasLimit: 1e6});
 	
@@ -671,6 +670,9 @@ app.get("/cities/:id/getincome", async (req, res) => {
 		res.status(400).send(e);
 		return;
 	}
+
+	cityData = await contract.getCityData(req.params.id);
+	city = utils.formatBuildingList(cityData);
 
 	tx = await contract.changeScore(req.params.id, city.money + 7*income);
 	try {
@@ -779,7 +781,7 @@ app.post('/cities/:id/instructions', async (req, res) => {
 		}
 	}
 
-	res.send('Success');
+	res.status(200).send('Success');
 });
 
 // #endregion

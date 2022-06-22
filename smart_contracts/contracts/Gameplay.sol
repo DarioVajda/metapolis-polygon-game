@@ -482,4 +482,19 @@ contract Gameplay is Ownable {
     }
 
     // #endregion
+
+    // #region Achievements
+
+    struct Achievement {
+        uint max; // max number of people who can get the reward for the achievement
+        uint start; // unix time
+        uint end; // unix time
+        string reward; // shows WHAT is the reward
+        uint amound; // show HOW MUCH is rewarded
+    }
+
+    uint numOfAchievements = 0;
+    mapping(uint => Achievement) achievements;
+
+    // #endregion
 }

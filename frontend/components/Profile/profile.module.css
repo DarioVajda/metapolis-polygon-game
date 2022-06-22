@@ -102,7 +102,21 @@
 
 /* #region ConnectWallet style  */
 
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .connectWallet {
+    animation-name: fadeIn;
+    animation-duration: 4s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -384,6 +398,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .cityDataRight>div {

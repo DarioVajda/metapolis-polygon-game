@@ -255,7 +255,7 @@ const Profile = ({ addr, isOwner }) => {
   }, []); 
 
   if(nftList === false) return (
-    <div>Loading...</div>
+    <div>screen that shows when loading the NFTs...</div>
   )
   else return (
     <div className={styles.wrapper}>

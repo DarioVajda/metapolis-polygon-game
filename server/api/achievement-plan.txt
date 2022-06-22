@@ -2,9 +2,22 @@ achievement data:
     start, end date (unix time)
     condition (bool function)
     reward (value, type)
+    num of rewarded players (1<=int<=10000)
 
 achievement rewards:
     in-game reward
         aesthetic (special buildings, skins,...)
         progress (income boost, money, productivity boost,...)
     eth/matic
+
+
+
+
+TODO:
+    server:
+        - ima podatke o svakom achievementu hardkodovano
+        - proverava se da li je osoba ispunila neki od achievementova i ako jeste onda se poziva funkcija smart contracta koja daje odgovarajucu nagradu osobi
+
+    smart contract:
+        - funkcije koje izvrsavaju bilo koju od funkcija za davanje nagrada
+        - lista vrednosti koje pokazuju koliko ljudi je postiglo neki achievement

@@ -11,7 +11,7 @@ const useBuildingStore = create((set) => ({
   hoveredXYCurrent: { x: 0, y: 0 },
   hoveredXYPrevious: { x: 0, y: 0 },
   hoverObjectMove: true,
-  buildRotation: 0,
+  buildRotation: 1,
   selectBuilding: (type) => set(() => ({ selectedBuilding: type })),
   setBuildMode: (mode) => set(() => ({ buildMode: mode })),
   setHoveredXY: (x, y) =>
@@ -30,7 +30,7 @@ const useBuildingStore = create((set) => ({
           end: { x: x1, y: y1 },
           type: type,
           uuid: state.uuid,
-          orientation: 0,
+          orientation: state.buildRotation,
           level: 0,
         },
       ],

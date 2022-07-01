@@ -117,16 +117,16 @@ function GridSquare(props) {
     } else {
       switch (buildRotation) {
         case 2:
-          endXY = [x + selectedBuildingType.width - 1, y];
-          startXY = [x, y - selectedBuildingType.height + 1];
+          endXY = [x + selectedBuildingType.height - 1, y];
+          startXY = [x, y - selectedBuildingType.width + 1];
           break;
         case 3:
           endXY = [x, y];
           startXY = [x - selectedBuildingType.width + 1, y - selectedBuildingType.height + 1];
           break;
         case 4:
-          endXY = [x, y + selectedBuildingType.height - 1];
-          startXY = [x - selectedBuildingType.width + 1, y];
+          endXY = [x, y + selectedBuildingType.width - 1];
+          startXY = [x - selectedBuildingType.height + 1, y];
           break;
         default: /// and 1
           endXY = [x + selectedBuildingType.width - 1, y + selectedBuildingType.height - 1];
@@ -158,8 +158,9 @@ function GridSquare(props) {
       }
     }
     if (buildable) {
-      ////HERE ADD API CALL THEN ADDBUILDING IF RESPONSE IS OK //// ID IS ONLY 9 FOR NOW
-
+      ///////OVDE UMESTO apiAddBuilding treba da se doda na listu instrukcija
+      ///takodje napraviti local updates za novac i tako to
+      /// i provere za isto
       useBuildingStore.setState({ hoverObjectMove: false });
       let response = await apiAddBuilding(ID, startXY, endXY, selectedBuildingType.type, buildRotation);
       if (response.ok) {
@@ -171,14 +172,15 @@ function GridSquare(props) {
       }
     } else console.log("can't build");
   }
-  const remove = async (x, y, grid) => {
+  const remove = async (x, y, grid, buildings) => {
     let notEmpty = true;
     if (grid[x * gridSize + y] === null || grid[x * gridSize + y] === undefined) notEmpty = false;
     if (notEmpty) {
       useBuildingStore.setState({ hoverObjectMove: false });
       let uuid = grid[x * gridSize + y];
       let index = buildings.findIndex((building) => building.uuid === uuid);
-      ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
+      ///////OVDE UMESTO apiRemoveBuilding treba da se doda na listu instrukcija
+      ///takodje napraviti local updates za novac i tako to
       let response = await apiRemoveBuilding(
         ID,
         index,
@@ -200,7 +202,7 @@ function GridSquare(props) {
 
   function onClick(e) {
     e.stopPropagation();
-    buildMode ? build(x, y, grid, selectedBuildingType, buildRotation) : remove(x, y, grid);
+    buildMode ? build(x, y, grid, selectedBuildingType, buildRotation) : remove(x, y, grid, buildings);
   }
 
   return (

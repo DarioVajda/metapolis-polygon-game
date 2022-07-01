@@ -11,6 +11,7 @@ import { useFrame } from "@react-three/fiber";
 import { MathUtils } from "three";
 import Store from "./modelComponents/Store.js";
 import Office from "./modelComponents/Office.js";
+import { Vector3 } from "three";
 
 function distance(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.z - b.z) ** 2);
@@ -47,7 +48,7 @@ export default function HoverObject() {
 
   const handler = ({ key }) => {
     if (String(key).toLowerCase() == "r" && !rotatingRef.current) {
-      setRotation((buildRotation + 1) % 4);
+      setRotation(buildRotation === 4 ? 1 : buildRotation + 1);
       if (hoverObjectRef.current.goalRotation) hoverObjectRef.current.goalRotation = hoverObjectRef.current.goalRotation + Math.PI / 2;
       else hoverObjectRef.current.goalRotation = Math.PI / 2;
       rotatingRef.current = true;
@@ -69,13 +70,15 @@ export default function HoverObject() {
       let moving = false;
       let rotating = false;
 
-      const posXCurrent = (hoveredXYCurrent.x + hoveredXYCurrent.x + selectedBuildingType.width) / 2; ///RACUNA POZICIJU NA GRIDU (ovo je float zbog gradjevina siroke 3 square itd)
-      const posYCurrent = (hoveredXYCurrent.y + hoveredXYCurrent.y + selectedBuildingType.height) / 2;
+      const posXCurrent = (hoveredXYCurrent.x + hoveredXYCurrent.x) / 2; ///RACUNA POZICIJU NA GRIDU (ovo je float zbog gradjevina siroke 3 square itd)
+      const posYCurrent = (hoveredXYCurrent.y + hoveredXYCurrent.y) / 2;
       const positionCurrent = [
-        plotSize * posXCurrent - (gridSize * plotSize) / 2,
+        plotSize * posXCurrent - (gridSize * plotSize) / 2 + plotSize / 2,
         0,
-        plotSize * posYCurrent - (gridSize * plotSize) / 2 - plotSize,
+        plotSize * posYCurrent - (gridSize * plotSize) / 2 + plotSize / 2,
       ]; ///RACUNA 3D poziciju na mapi
+
+      const axis = new Vector3(positionCurrent[0], 0, positionCurrent[2]);
 
       if (
         Math.abs(hoverObjectRef.current.position.x - positionCurrent[0]) > epsilon ||
@@ -104,16 +107,37 @@ export default function HoverObject() {
   });
 
   if (selectedBuildingType && buildMode) {
+    const position = [
+      (selectedBuildingType.width * plotSize) / 2 - plotSize / 2,
+      0,
+      (selectedBuildingType.height * plotSize) / 2 - plotSize / 2,
+    ];
     if (selectedBuildingType.type == "house") {
       return <House ref={hoverObjectRef} scale={Scale} key={"hoverObject"} />;
     } else if (selectedBuildingType.type == "factory") {
-      return <Factory ref={hoverObjectRef} scale={Scale} key={"hoverObject"} />;
+      return (
+        <group ref={hoverObjectRef}>
+          <Factory position={position} scale={Scale} key={"hoverObject"} />
+        </group>
+      );
     } else if (selectedBuildingType.type == "building") {
-      return <Building ref={hoverObjectRef} scale={Scale} key={"hoverObject"} />;
+      return (
+        <group ref={hoverObjectRef}>
+          <Building position={position} scale={Scale} key={"hoverObject"} />
+        </group>
+      );
     } else if (selectedBuildingType.type == "store") {
-      return <Store ref={hoverObjectRef} scale={Scale} key={"hoverObject"} />;
+      return (
+        <group ref={hoverObjectRef}>
+          <Store position={position} scale={Scale} key={"hoverObject"} />
+        </group>
+      );
     } else if (selectedBuildingType.type == "office") {
-      return <Office ref={hoverObjectRef} scale={Scale} key={"hoverObject"} />;
+      return (
+        <group ref={hoverObjectRef}>
+          <Office position={position} scale={Scale} key={"hoverObject"} />
+        </group>
+      );
     } else {
       return <></>;
     }

@@ -5,7 +5,7 @@ import { buildingTypes } from "./BuildingTypes.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ethers } from "ethers";
 
-const apiAddBuilding = async (id, [x0, y0], [x1, y1], type) => {
+const apiAddBuilding = async (id, [x0, y0], [x1, y1], type, orientation) => {
   const message = `Building ${type} in city ${id}, messageUUID:${generateUUID()}`;
 
   await window.ethereum.send("eth_requestAccounts");
@@ -23,6 +23,7 @@ const apiAddBuilding = async (id, [x0, y0], [x1, y1], type) => {
     building: {
       start: { x: x0, y: y0 },
       end: { x: x1, y: y1 },
+      orientation: orientation,
       type: type,
       level: 0,
     },
@@ -44,15 +45,7 @@ const apiAddBuilding = async (id, [x0, y0], [x1, y1], type) => {
   return response;
 };
 
-const apiRemoveBuilding = async (
-  id,
-  index,
-  [x0, y0],
-  [x1, y1],
-  type,
-  level,
-  orientation
-) => {
+const apiRemoveBuilding = async (id, index, [x0, y0], [x1, y1], type, level, orientation) => {
   const message = `Removing ${type}, index:${index} in city ${id}, messageUUID:${generateUUID()}`;
 
   await window.ethereum.send("eth_requestAccounts");
@@ -97,9 +90,7 @@ const apiRemoveBuilding = async (
 
 function GridSquare(props) {
   const selectedBuilding = useBuildingStore((state) => state.selectedBuilding);
-  let selectedBuildingType = selectedBuilding
-    ? buildingTypes[selectedBuilding][0]
-    : null; //checks if selectedBuilding is null
+  let selectedBuildingType = selectedBuilding ? buildingTypes[selectedBuilding][0] : null; //checks if selectedBuilding is null
   const gridDimensions = props.gridDimensions;
   const gridSize = props.gridSize;
   const plotSize = props.plotSize;
@@ -114,51 +105,65 @@ function GridSquare(props) {
   const buildMode = useBuildingStore((state) => state.buildMode);
   const setHoveredXY = useBuildingStore((state) => state.setHoveredXY);
   const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
+  const buildRotation = useBuildingStore((state) => state.buildRotation);
 
-  async function build(x, y, grid, selectedBuildingType) {
+  async function build(x, y, grid, selectedBuildingType, buildRotation) {
+    let endXY;
+    let startXY;
     let buildable = true;
     if (selectedBuildingType === null) {
       buildable = false;
       console.log("no building type selected");
-    } else if (
-      x + selectedBuildingType.width > gridSize ||
-      y + selectedBuildingType.height > gridSize
-    ) {
-      buildable = false;
-      console.log("error: trying to build out of bounds");
     } else {
-      for (let i = x; i < x + selectedBuildingType.width; i++) {
-        for (let j = y; j < y + selectedBuildingType.height; j++) {
-          if (
-            grid[i * gridSize + j] != null &&
-            grid[i * gridSize + j] != undefined
-          ) {
-            buildable = false;
+      switch (buildRotation) {
+        case 2:
+          endXY = [x + selectedBuildingType.width - 1, y];
+          startXY = [x, y - selectedBuildingType.height + 1];
+          break;
+        case 3:
+          endXY = [x, y];
+          startXY = [x - selectedBuildingType.width + 1, y - selectedBuildingType.height + 1];
+          break;
+        case 4:
+          endXY = [x, y + selectedBuildingType.height - 1];
+          startXY = [x - selectedBuildingType.width + 1, y];
+          break;
+        default: /// and 1
+          endXY = [x + selectedBuildingType.width - 1, y + selectedBuildingType.height - 1];
+          startXY = [x, y];
+          break;
+      }
+      console.log(startXY);
+      console.log(endXY);
+      if (
+        startXY[0] < 0 ||
+        startXY[1] < 0 ||
+        startXY[0] >= gridSize ||
+        startXY[1] >= gridSize ||
+        endXY[0] < 0 ||
+        endXY[1] < 0 ||
+        endXY[0] >= gridSize ||
+        endXY[1] >= gridSize
+      ) {
+        buildable = false;
+        console.log("error: trying to build out of bounds");
+      } else {
+        for (let i = startXY[0]; i < endXY[0]; i++) {
+          for (let j = startXY[1]; j < endXY[1]; j++) {
+            if (grid[i * gridSize + j] != null && grid[i * gridSize + j] != undefined) {
+              buildable = false;
+            }
           }
         }
       }
     }
     if (buildable) {
       ////HERE ADD API CALL THEN ADDBUILDING IF RESPONSE IS OK //// ID IS ONLY 9 FOR NOW
+
       useBuildingStore.setState({ hoverObjectMove: false });
-      let response = await apiAddBuilding(
-        ID,
-        [x, y],
-        [
-          x + selectedBuildingType.width - 1,
-          y + selectedBuildingType.height - 1,
-        ],
-        selectedBuildingType.type
-      );
+      let response = await apiAddBuilding(ID, startXY, endXY, selectedBuildingType.type, buildRotation);
       if (response.ok) {
-        addBuilding(
-          [x, y],
-          [
-            x + selectedBuildingType.width - 1,
-            y + selectedBuildingType.height - 1,
-          ],
-          selectedBuildingType.type
-        );
+        addBuilding(startXY, endXY, selectedBuildingType.type);
         useBuildingStore.setState({ hoverObjectMove: true });
       } else {
         alert("HTTP-Error: " + response.status);
@@ -168,18 +173,12 @@ function GridSquare(props) {
   }
   const remove = async (x, y, grid) => {
     let notEmpty = true;
-    if (grid[x * gridSize + y] === null || grid[x * gridSize + y] === undefined)
-      notEmpty = false;
+    if (grid[x * gridSize + y] === null || grid[x * gridSize + y] === undefined) notEmpty = false;
     if (notEmpty) {
       useBuildingStore.setState({ hoverObjectMove: false });
       let uuid = grid[x * gridSize + y];
       let index = buildings.findIndex((building) => building.uuid === uuid);
       ////HERE ADD API CALL THEN DEMOLISHBUILDING IF RESPONSE IS OK
-
-      // #region Ovo je Dario dodao dok je testirao nesto
-      console.log(buildings[index]);
-      // #endregion
-
       let response = await apiRemoveBuilding(
         ID,
         index,
@@ -201,7 +200,7 @@ function GridSquare(props) {
 
   function onClick(e) {
     e.stopPropagation();
-    buildMode ? build(x, y, grid, selectedBuildingType) : remove(x, y, grid);
+    buildMode ? build(x, y, grid, selectedBuildingType, buildRotation) : remove(x, y, grid);
   }
 
   return (
@@ -237,11 +236,7 @@ export default function Grid({ ID }) {
   return grid.map((element, index) => {
     x = Math.floor(index / gridSize);
     y = index % gridSize;
-    position = [
-      plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2,
-      0,
-      plotSize * y - (gridSize * plotSize) / 2 - plotSize / 2,
-    ];
+    position = [plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2, 0, plotSize * y - (gridSize * plotSize) / 2 + plotSize / 2];
     return (
       <GridSquare
         buildings={buildings}

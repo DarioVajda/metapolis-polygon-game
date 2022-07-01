@@ -140,7 +140,7 @@ app.get("/leaderboard", async (req, res) => {
 	}
 
 	while(leaderboard.length < numOfPlayers) {
-		console.log('waiting...', leaderboard.length, numOfPlayers);
+		// console.log('waiting...', leaderboard.length, numOfPlayers);
 		await delay(100);
 	}
 
@@ -659,7 +659,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
 	let tx = await contract.getIncome(req.params.id, income, {gasLimit: 1e6});
-	
+		
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);

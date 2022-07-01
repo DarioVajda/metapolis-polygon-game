@@ -2,7 +2,7 @@ achievement data:
     start, end date (unix time)
     condition (bool function)
     reward (value, type)
-    num of rewarded players (1<=int<=10000)
+    percentage of rewarded players (0<float<=1)
 
 achievement rewards:
     in-game reward
@@ -20,4 +20,27 @@ TODO:
 
     smart contract:
         - funkcije koje izvrsavaju bilo koju od funkcija za davanje nagrada
+        - funkcija koja dodaje novi achievement na listu achievementova
         - lista vrednosti koje pokazuju koliko ljudi je postiglo neki achievement
+
+
+achievement examples:
+    ✓ parkovima pokriveno x polja
+    □ cist grad
+    ✓ puno solitera
+    ✓ puno edukovanih ljudi
+    □ puno kuca (saburb-ija)
+    □ aktivno igranje
+    □ popuniti svako polje na mapi
+    □ nesto sto ima veze sa ukrasnim gradjevinama
+            npr sakupiti 5 'legendary' specijalnih gradjevina
+            imati x statua/fontana
+            napraviti reku/jezero
+
+
+
+
+TODO:
+    napraviti mogucnost ogranicavanja broja specijalnih gradjevina koje mogu da se naprave
+    napraviti theme-ove
+    pravljenje offerova za specijalne gradjevine koje su rasprodate

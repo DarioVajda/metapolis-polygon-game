@@ -12,6 +12,7 @@ const useBuildingStore = create((set) => ({
   hoveredXYPrevious: { x: 0, y: 0 },
   hoverObjectMove: true,
   buildRotation: 1,
+  instructions: [],
   selectBuilding: (type) => set(() => ({ selectedBuilding: type })),
   setBuildMode: (mode) => set(() => ({ buildMode: mode })),
   setHoveredXY: (x, y) =>
@@ -19,7 +20,7 @@ const useBuildingStore = create((set) => ({
       hoveredXYPrevious: state.hoveredXYCurrent,
       hoveredXYCurrent: { x: x, y: y },
     })),
-  setRotation: (rotation) => set(() => ({buildRotation:rotation})),
+  setRotation: (rotation) => set(() => ({ buildRotation: rotation })),
   addBuilding: ([x0, y0], [x1, y1], type) =>
     set((state) => ({
       uuid: generateUUID(),
@@ -50,6 +51,14 @@ const useBuildingStore = create((set) => ({
         .splice(0, state.buildings.length - 1),
       // buildings: state.buildings.filter(building => building.uuid!=uuid),
       grid: removeBuildingFromGrid(state.grid, uuid),
+    })),
+  addInstruction: (key, body) =>
+    set((state) => ({
+      instructions: [...state.instructions, { instruction: key, body: body }],
+    })),
+  clearInstructions: () =>
+    set(() => ({
+      instructions: [],
     })),
   // initializeBuildings: (buildings) => {
   //   let initializedBuildings=buildings.map(building => ({...building,uuid:generateUUID()}),
@@ -94,29 +103,9 @@ function removeBuildingFromGrid(grid, uuid) {
 
 function initializeGrid(buildings, grid) {
   buildings.forEach((element) => {
-    grid = buildingToGrid(
-      [element.start.x, element.start.y],
-      [element.end.x, element.end.y],
-      element.uuid,
-      grid
-    );
+    grid = buildingToGrid([element.start.x, element.start.y], [element.end.x, element.end.y], element.uuid, grid);
   });
   return grid;
 }
-
-const post = async (body, link) => {
-  const response = await fetch(link, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
-    body: body,
-  });
-};
 
 export { useBuildingStore };

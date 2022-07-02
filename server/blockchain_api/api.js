@@ -219,7 +219,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let owner = req.body.address;
 	let tokenId = req.params.id;
 
-	let tx = await contract.initializeCity(owner, tokenId); // initializing the money and incomesReceived 
+	let tx = await contract.initializeCity(owner, tokenId, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }); // initializing the money and incomesReceived 
 	try {
 		await tx.wait();
 	}
@@ -254,7 +254,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.end.y,
 			element.orientation,
 			element.type,
-			{gasLimit: 1e6}
+			{ gasLimit: 1e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 		);
 		try {
 			await tx.wait();
@@ -278,7 +278,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.end.y,
 			element.orientation,
 			'fountain',
-			{gasLimit: 1e6}
+			{ gasLimit: 1e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 		);
 		try {
 			await tx.wait();
@@ -298,7 +298,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let people = peopleModule.countPeople(buildings, map);
 	income = incomeModule.calculateIncome(people, buildings);
 
-	tx = await contract.changeScore(req.params.id, city.money + 7*income);
+	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -358,7 +358,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.y,
 		building.orientation,
 		building.type,
-		{gasLimit:5e6}
+		{ gasLimit:5e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 	);
 	let receipt;
 	try {
@@ -380,7 +380,7 @@ app.post("/cities/:id/build", async (req, res) => {
 	console.log('INCOME:', income);
 	let score = city.money + 7*income;
 	console.log('NEW SCORE:', score);
-	tx = await contract.changeScore(req.params.id, score);
+	tx = await contract.changeScore(req.params.id, score, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -433,7 +433,8 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 		building.end.x,
 		building.end.y,
 		building.orientation,
-		building.type
+		building.type,
+		{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 	);
 	try {
 		let receipt = await tx.wait();
@@ -475,7 +476,8 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		let tx = await contract.upgradeBuilding(
 			req.params.id,
 			cost,
-			index
+			index,
+			{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 		);
 		let receipt;
 		try {
@@ -495,7 +497,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		let people = peopleModule.countPeople({normal: city.buildings} , map);
 		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
-		tx = await contract.changeScore(req.params.id, city.money + 7*income);
+		tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
@@ -546,7 +548,8 @@ app.post("/cities/:id/remove", async (req, res) => {
 		let tx = await contract.removeBuilding(
 			req.params.id,
 			value,
-			index
+			index,
+			{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
 		);
 		let receipt;
 		try {
@@ -570,7 +573,7 @@ app.post("/cities/:id/remove", async (req, res) => {
 		let people = peopleModule.countPeople({normal: city.buildings} , map);
 		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
-		tx = await contract.changeScore(req.params.id, city.money + 7*income);
+		tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
@@ -600,7 +603,7 @@ app.post("cities/:id/removespecial", async (req, res) => {
 	let returnPercentage = 0.25;
 	let value = returnPercentage * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina
 
-	let tx = await contract.removeSpecialBuilding(id, value, index);
+	let tx = await contract.removeSpecialBuilding(id, value, index, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		let receipt = await tx.wait();
 		res.status(200).send(receipt);
@@ -617,7 +620,7 @@ app.post("/cities/:id/rotate", async (req, res) => {
 	
 	// neke provere...
 
-	let tx = await contract.rotate(req.params.id, data.index, data.rotation);
+	let tx = await contract.rotate(req.params.id, data.index, data.rotation, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -635,7 +638,7 @@ app.post("/cities/:id/rotatespecial", async (req, res) => {
 	
 	// neke provere...
 
-	let tx = await contract.rotateSpecial(req.params.id, data.index, data.rotation);
+	let tx = await contract.rotateSpecial(req.params.id, data.index, data.rotation, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -658,8 +661,9 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let people = peopleModule.countPeople({normal: city.buildings} , map);
 	let income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
-	let tx = await contract.getIncome(req.params.id, income, {gasLimit: 1e6});
-		
+	let tx = await contract.getIncome(req.params.id, income, { gasLimit: 1e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+	console.log(tx);	
+
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -674,7 +678,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	cityData = await contract.getCityData(req.params.id);
 	city = utils.formatBuildingList(cityData);
 
-	tx = await contract.changeScore(req.params.id, city.money + 7*income);
+	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -690,7 +694,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 // #endregion
 // #region Dev options:
 	app.post("cities/:id/dev/setmoney", async (req, res) => {
-	let tx = await contract.devSetMoney(req.params.id, req.body.money, {gasLimit: 1e6});
+	let tx = await contract.devSetMoney(req.params.id, req.body.money, { gasLimit: 1e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	
 	try {
 		let receipt = await tx.wait();
@@ -708,7 +712,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
 	let people = peopleModule.countPeople(buildings, map);
 	let income = incomeModule.calculateIncome(people, buildings);
-	tx = await contract.changeScore(req.params.id, city.money + 7*income);
+	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -722,7 +726,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 });
 
 app.post("cities/:id/dev/demolish", async (req, res) => {
-	let tx = await contract.devDemolishCity(req.params.id, {gasLimit: 1e6});
+	let tx = await contract.devDemolishCity(req.params.id, { gasLimit: 1e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
 	
 	try {
 		let receipt = await tx.wait();

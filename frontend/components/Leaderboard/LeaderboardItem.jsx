@@ -10,12 +10,19 @@ import OpenseaIcon from '../universal/OpenseaIcon';
 const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
 
-  const [data, setData] = useState(false);
+  const [info, setInfo] = useState({
+    data: false,
+    price: {},
+    people: false,
+    owner: { randomIndex: Math.floor(Math.random() * 33) + 1 }  // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
+  });
 
-  const [price, setPrice] = useState({});
-  const [people, setPeople] = useState(false);
+  // const [data, setData] = useState(false);
 
-  const [owner, setOwner] = useState({ randomIndex: Math.floor(Math.random() * 33) + 1 }); // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
+  // const [price, setPrice] = useState({});
+  // const [people, setPeople] = useState(false);
+
+  // const [owner, setOwner] = useState({ randomIndex: Math.floor(Math.random() * 33) + 1 }); // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
 
   // #region Getting the prices
 
@@ -88,17 +95,21 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     });
 
     // setTokenSymbol(token);
-    if(r.price > 0) setPrice(r);
+    return r;
   }
   // #endregion
 
   // #region Getting the data
   const getData = async () => {
-    loadCity(id, index).then(res => {
-      calculatePeople(res);
-      setData(res);
-      getPrices();
-      getOwnerData(res.owner);
+    let res = await loadCity(id, index);
+    let _people = calculatePeople(res);
+    let _price = await getPrices();
+    let _owner = await getOwnerData(res.owner);
+    setInfo({
+      data: res,
+      people: _people,
+      price: _price,
+      owner: _owner
     });
   }
 
@@ -127,7 +138,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     if(educatedHelping > educatedRemainder) educatedHelping = educatedRemainder; // in this case there are not enough educated people to help fill all the workplaces
     _people.educatedHelping = educatedHelping
 
-    setPeople(_people);
+    return _people;
   }
 
   // #endregion
@@ -249,12 +260,18 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
       .then(response => res = response)
       .catch(err => console.error(err));
 
-    console.log(id, 'response:', res);
+    // console.log(id, 'response:', res);
 
-    setOwner(res.account);
+    // setOwner(res.account);
+    return res.account;
   }
 
   // #endregion
+
+  let data = info.data;
+  let price = info.price;
+  let people = info.people;
+  let owner = info.owner;
 
   return (
     <div className={style.item}>

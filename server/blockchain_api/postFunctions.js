@@ -81,7 +81,7 @@ const build = async (body, id) => {
 		building.end.y,
 		building.orientation,
 		building.type,
-		{ gasLimit:5e6, maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
+		{ gasLimit:5e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);
 	let receipt;
 	try {
@@ -107,7 +107,7 @@ const build = async (body, id) => {
 	// console.log('INCOME:', income);
 	let score = city.money + 7*income;
 	// console.log('NEW SCORE:', score);
-	tx = await contract.changeScore(id, score, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+	tx = await contract.changeScore(id, score, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -161,7 +161,7 @@ const buildspecial = async (body, id) => {
 		building.end.y,
 		building.orientation,
 		building.type,
-		{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
+		{ maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);
 	try {
 		let receipt = await tx.wait();
@@ -213,7 +213,7 @@ const upgrade =  async (body, id) => {
 			id,
 			cost,
 			index,
-			{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
+			{ maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		let receipt;
 		try {
@@ -236,7 +236,7 @@ const upgrade =  async (body, id) => {
 		let people = peopleModule.countPeople({normal: city.buildings} , map);
 		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
-		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
@@ -301,7 +301,7 @@ const remove = async (body, id) => {
 			id,
 			value,
 			index,
-			{ maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 }
+			{ maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		let receipt;
 		try {
@@ -328,7 +328,7 @@ const remove = async (body, id) => {
 		let people = peopleModule.countPeople({normal: city.buildings} , map);
 		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
 
-		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 		try {
 			receipt = await tx.wait();
 			console.log(receipt);
@@ -364,7 +364,7 @@ const removespecial = async (body, id) => {
 	let returnPercentage = 0.25;
 	let value = returnPercentage * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina
 
-	let tx = await contract.removeSpecialBuilding(id, value, index, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+	let tx = await contract.removeSpecialBuilding(id, value, index, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		let receipt = await tx.wait();
 		// res.status(200).send(receipt);
@@ -384,7 +384,7 @@ const rotate = async (body, id) => {
 	
 	// neke provere...
 
-	let tx = await contract.rotate(id, data.index, data.rotation, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+	let tx = await contract.rotate(id, data.index, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -405,7 +405,7 @@ const rotatespecial = async (body, id) => {
 	
 	// neke provere...
 
-	let tx = await contract.rotateSpecial(id, data.index, data.rotation, { maxPriorityFeePerGas: 3e9, maxFeePerGas: 3.5e9 });
+	let tx = await contract.rotateSpecial(id, data.index, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);

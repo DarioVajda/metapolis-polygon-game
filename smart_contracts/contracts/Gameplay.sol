@@ -135,16 +135,16 @@ contract Gameplay {
         specialData[key].numOfOffers = 0;
     }
 
-    /**
-     * @dev Funkcija koja vraca podatke o nekom tipu specijalnih gradjevina
-     * @param key je kljuc tipa
-     */
     struct SpecialBuildingTypeRepresentation {
         uint32 count;
         uint32 numOfOffers;
         bool soldOut;
         SpecialOffer[] offers;
     }
+    /**
+     * @dev Funkcija koja vraca podatke o nekom tipu specijalnih gradjevina
+     * @param key je kljuc tipa
+     */
     function getSpecialBuildingType(string memory key) external view returns(SpecialBuildingTypeRepresentation memory) {
         SpecialBuildingTypeRepresentation memory r = SpecialBuildingTypeRepresentation({
             count: specialData[key].count,

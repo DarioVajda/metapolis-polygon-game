@@ -31,6 +31,47 @@ const getIncome = async (id) => {
   if (response.ok) dataLoaded.current = false; /// need to refresh data if everything went through
 };
 
+const apiSendInstructions = async (id, instructions) => {
+  const message = `Saving changes in city ${id}, messageUUID:${generateUUID()}`;
+
+  await window.ethereum.send("eth_requestAccounts");
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  let signature;
+  try {
+    signature = await signer.signMessage(message);
+  } catch (error) {
+    return { ok: false, status: error.message };
+  }
+  const address = await signer.getAddress();
+
+  console.log(instructions);
+  instructions = instructions.map((element) => {
+    element.body.signature = signature;
+    element.body.message = message;
+    return element;
+  });
+  console.log(instructions);
+  let body = JSON.stringify({
+    instructions,
+    signature: signature,
+    message: message,
+  });
+  const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+    body: body,
+  });
+  return response;
+};
+
 function HTMLContent({ ID }) {
   const [data, setData] = useState(false);
   const dataLoaded = useRef(false);
@@ -59,6 +100,7 @@ function HTMLContent({ ID }) {
   const selectBuilding = useBuildingStore((state) => state.selectBuilding);
   const setBuildMode = useBuildingStore((state) => state.setBuildMode);
   const buildMode = useBuildingStore((state) => state.buildMode);
+  const instructions = useBuildingStore((state) => state.instructions);
 
   useEffect(() => {
     getCityData(ID);
@@ -89,6 +131,16 @@ function HTMLContent({ ID }) {
           onClick={() => setBuildMode(false)}
         >
           Demolish
+        </button>
+        <button
+          className={styles.roundedFixedBtn}
+          style={{ bottom: "16%", right: "2%", width: "18%", backgroundColor: "#cdff8a9a" }}
+          onClick={() => {
+            let response = apiSendInstructions(ID, instructions);
+            console.log(response);
+          }}
+        >
+          Save changes
         </button>
       </div>
       <div id="buildingsList" hidden={!showBuildingsList} style={{ pointerEvents: "none" }}>

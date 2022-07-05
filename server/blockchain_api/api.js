@@ -777,13 +777,12 @@ app.post('/cities/:id/instructions', async (req, res) => {
 	let functions = postFunctions.functions;
 
 	let instructions = req.body.instructions;
-
+	let length = instructions.length;
 	let temp; // holding the value of the function that was executing
 	let element;
-	for(let i = 0; i < instructions.length; i++) {
+	for(let i = 0; i < length; i++) {
 		element = instructions[i];
-
-		temp = await functions[element.key](element.body, req.params.id);
+		temp = await functions[element.instruction](element.body, req.params.id);
 		console.log({i, temp});
 		if(temp.status !== 200) {
 			res.status(temp.status).send(`${temp.message}`);

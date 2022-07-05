@@ -106,8 +106,10 @@ function GridSquare(props) {
   const setHoveredXY = useBuildingStore((state) => state.setHoveredXY);
   const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
   const buildRotation = useBuildingStore((state) => state.buildRotation);
+  const addInstruction = useBuildingStore((state) => state.addInstruction);
+  const instructions = useBuildingStore((state) => state.instructions);
 
-  async function build(x, y, grid, selectedBuildingType, buildRotation) {
+  function build(x, y, grid, selectedBuildingType, buildRotation) {
     let endXY;
     let startXY;
     let buildable = true;
@@ -133,8 +135,6 @@ function GridSquare(props) {
           startXY = [x, y];
           break;
       }
-      console.log(startXY);
-      console.log(endXY);
       if (
         startXY[0] < 0 ||
         startXY[1] < 0 ||
@@ -161,42 +161,73 @@ function GridSquare(props) {
       ///////OVDE UMESTO apiAddBuilding treba da se doda na listu instrukcija
       ///takodje napraviti local updates za novac i tako to
       /// i provere za isto
-      useBuildingStore.setState({ hoverObjectMove: false });
-      let response = await apiAddBuilding(ID, startXY, endXY, selectedBuildingType.type, buildRotation);
-      if (response.ok) {
-        addBuilding(startXY, endXY, selectedBuildingType.type);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      } else {
-        alert("HTTP-Error: " + response.status);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      }
+
+      // #region oldBuildingSystem
+      // useBuildingStore.setState({ hoverObjectMove: false });
+      // let response = await apiAddBuilding(ID, startXY, endXY, selectedBuildingType.type, buildRotation);
+      // if (response.ok) {
+      //   addBuilding(startXY, endXY, selectedBuildingType.type);
+      //   useBuildingStore.setState({ hoverObjectMove: true });
+      // } else {
+      //   alert("HTTP-Error: " + response.status);
+      //   useBuildingStore.setState({ hoverObjectMove: true });
+      // }
+      // #endregion
+      let body = {
+        building: {
+          start: { x: startXY[0], y: startXY[1] },
+          end: { x: endXY[0], y: endXY[1] },
+          orientation: buildRotation,
+          type: selectedBuildingType.type,
+          level: 0,
+        },
+      };
+      addInstruction("build", body);
+      console.log(instructions);
+      addBuilding(startXY, endXY, selectedBuildingType.type);
     } else console.log("can't build");
   }
-  const remove = async (x, y, grid, buildings) => {
+  const remove = (x, y, grid, buildings) => {
     let notEmpty = true;
     if (grid[x * gridSize + y] === null || grid[x * gridSize + y] === undefined) notEmpty = false;
     if (notEmpty) {
-      useBuildingStore.setState({ hoverObjectMove: false });
       let uuid = grid[x * gridSize + y];
       let index = buildings.findIndex((building) => building.uuid === uuid);
       ///////OVDE UMESTO apiRemoveBuilding treba da se doda na listu instrukcija
       ///takodje napraviti local updates za novac i tako to
-      let response = await apiRemoveBuilding(
-        ID,
-        index,
-        [buildings[index].start.x, buildings[index].start.y],
-        [buildings[index].end.x, buildings[index].end.y],
-        buildings[index].type,
-        buildings[index].level,
-        buildings[index].orientation
-      );
-      if (response.ok) {
-        demolishBuilding(uuid);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      } else {
-        alert("HTTP-Error: " + response.status);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      }
+
+      // #region oldRemoveSystem
+      // useBuildingStore.setState({ hoverObjectMove: false });
+      // let response = await apiRemoveBuilding(
+      //   ID,
+      //   index,
+      //   [buildings[index].start.x, buildings[index].start.y],
+      //   [buildings[index].end.x, buildings[index].end.y],
+      //   buildings[index].type,
+      //   buildings[index].level,
+      //   buildings[index].orientation
+      // );
+      // if (response.ok) {
+      //   demolishBuilding(uuid);
+      //   useBuildingStore.setState({ hoverObjectMove: true });
+      // } else {
+      //   alert("HTTP-Error: " + response.status);
+      //   useBuildingStore.setState({ hoverObjectMove: true });
+      // }
+      // #endregion
+      let body = {
+        index: index,
+        building: {
+          start: { x: buildings[index].start.x, y: buildings[index].start.y },
+          end: { x: buildings[index].end.x, y: buildings[index].end.y },
+          orientation: buildings[index].orientation,
+          type: buildings[index].type,
+          level: buildings[index].level,
+        },
+      };
+      addInstruction("remove", body);
+      console.log(instructions);
+      demolishBuilding(uuid);
     } else console.log("this grid square is empty already");
   };
 

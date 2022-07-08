@@ -45,7 +45,6 @@ const apiSendInstructions = async (id, instructions) => {
   }
   const address = await signer.getAddress();
 
-  console.log(instructions);
   instructions = instructions.map((element) => {
     element.body.signature = signature;
     element.body.message = message;
@@ -76,6 +75,19 @@ function HTMLContent({ ID }) {
   const [data, setData] = useState(false);
   const dataLoaded = useRef(false);
   const buildings = useBuildingStore((state) => state.buildings); //added for refreshing on build
+  const money = useBuildingStore((state) => state.money);
+  const educatedWorkers = useBuildingStore((state) => state.educatedWorkers);
+  const unEducatedWorkers = useBuildingStore((state) => state.unEducatedWorkers);
+  const educatedWorkersNeeded = useBuildingStore((state) => state.educatedWorkersNeeded);
+  const unEducatedWorkersNeeded = useBuildingStore((state) => state.unEducatedWorkersNeeded);
+
+  const [showBuildingsList, setShowBuildingsList] = useState(false);
+  const [selectedBuildingInList, setSelectedBuildingInList] = useState(0);
+  const toggleBuildings = () => setShowBuildingsList(!showBuildingsList);
+  const selectBuilding = useBuildingStore((state) => state.selectBuilding);
+  const setBuildMode = useBuildingStore((state) => state.setBuildMode);
+  const buildMode = useBuildingStore((state) => state.buildMode);
+  const instructions = useBuildingStore((state) => state.instructions);
 
   // #region Getting the data
   async function getCityData(id) {
@@ -89,30 +101,32 @@ function HTMLContent({ ID }) {
     }
   }
 
-  // #endregion
+  // Updating data in store, essentially updating state
+  useEffect(() => {
+    if (data) {
+      useBuildingStore.setState({
+        money: data.money,
+        educatedWorkers: data.educated,
+        unEducatedWorkers: data.normal,
+        educatedWorkersNeeded: data.educatedWorkers,
+        unEducatedWorkersNeeded: data.normalWorkers,
+      });
+    }
+  }, [data]);
 
-  // TODO:    SHOULD RELOAD DATA IN INTERVALS, OR WHEN SOMETHING CHANGES
-  //          THIS WILL BE FIXED
-
-  const [showBuildingsList, setShowBuildingsList] = useState(false);
-  const [selectedBuildingInList, setSelectedBuildingInList] = useState(0);
-  const toggleBuildings = () => setShowBuildingsList(!showBuildingsList);
-  const selectBuilding = useBuildingStore((state) => state.selectBuilding);
-  const setBuildMode = useBuildingStore((state) => state.setBuildMode);
-  const buildMode = useBuildingStore((state) => state.buildMode);
-  const instructions = useBuildingStore((state) => state.instructions);
-
+  // Get city data on first render
   useEffect(() => {
     getCityData(ID);
-    console.log("new data");
-  }, [dataLoaded.current, buildings]);
+  }, []);
 
   return (
     <>
       <div id="data" style={{ pointerEvents: "none" }}>
-        <GoldDiv value={data && dataLoaded.current ? data.money : "..."} />
-        <EducatedWorkers value={data && dataLoaded.current ? data.educated + " / " + data.educatedWorkers : "..."} />
-        <UnEducatedWorkers value={data && dataLoaded.current ? data.normal + " / " + data.normalWorkers : "..."} />
+        <GoldDiv value={data && dataLoaded.current ? money : "..."} />
+        <EducatedWorkers value={data && dataLoaded.current ? educatedWorkers + " / " + educatedWorkersNeeded : "..."} />
+        <UnEducatedWorkers
+          value={data && dataLoaded.current ? unEducatedWorkers + " / " + unEducatedWorkersNeeded : "..."}
+        />
       </div>
       <div id="menuButtons" style={{ pointerEvents: "none" }}>
         <button className={styles.roundedFixedBtn} style={{ bottom: "2%", left: "2%" }} onClick={toggleBuildings}>
@@ -137,7 +151,8 @@ function HTMLContent({ ID }) {
           style={{ bottom: "16%", right: "2%", width: "18%", backgroundColor: "#cdff8a9a" }}
           onClick={() => {
             let response = apiSendInstructions(ID, instructions);
-            console.log(response);
+            if (response.ok) getCityData(ID);
+            // console.log(response);
           }}
         >
           Save changes

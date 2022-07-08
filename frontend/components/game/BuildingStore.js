@@ -13,6 +13,12 @@ const useBuildingStore = create((set) => ({
   hoverObjectMove: true,
   buildRotation: 1,
   instructions: [],
+  money: undefined,
+  educatedWorkers: undefined,
+  unEducatedWorkers: undefined,
+  educatedWorkersNeeded: undefined,
+  unEducatedWorkersNeeded: undefined,
+  officeWorkers: undefined,
   selectBuilding: (type) => set(() => ({ selectedBuilding: type })),
   setBuildMode: (mode) => set(() => ({ buildMode: mode })),
   setHoveredXY: (x, y) =>

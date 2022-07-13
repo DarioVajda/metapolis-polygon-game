@@ -31,10 +31,63 @@ const getIncome = async (id) => {
   if (response.ok) dataLoaded.current = false; /// need to refresh data if everything went through
 };
 
+const apiSendInstructions = async (id, instructions) => {
+  const message = `Saving changes in city ${id}, messageUUID:${generateUUID()}`;
+
+  await window.ethereum.send("eth_requestAccounts");
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  let signature;
+  try {
+    signature = await signer.signMessage(message);
+  } catch (error) {
+    return { ok: false, status: error.message };
+  }
+  const address = await signer.getAddress();
+
+  instructions = instructions.map((element) => {
+    element.body.signature = signature;
+    element.body.message = message;
+    return element;
+  });
+  console.log(instructions);
+  let body = JSON.stringify({
+    instructions,
+    signature: signature,
+    message: message,
+  });
+  const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+    body: body,
+  });
+  return response;
+};
+
 function HTMLContent({ ID }) {
   const [data, setData] = useState(false);
   const dataLoaded = useRef(false);
   const buildings = useBuildingStore((state) => state.buildings); //added for refreshing on build
+  const money = useBuildingStore((state) => state.money);
+  const educatedWorkers = useBuildingStore((state) => state.educatedWorkers);
+  const unEducatedWorkers = useBuildingStore((state) => state.unEducatedWorkers);
+  const educatedWorkersNeeded = useBuildingStore((state) => state.educatedWorkersNeeded);
+  const unEducatedWorkersNeeded = useBuildingStore((state) => state.unEducatedWorkersNeeded);
+
+  const [showBuildingsList, setShowBuildingsList] = useState(false);
+  const [selectedBuildingInList, setSelectedBuildingInList] = useState(0);
+  const toggleBuildings = () => setShowBuildingsList(!showBuildingsList);
+  const selectBuilding = useBuildingStore((state) => state.selectBuilding);
+  const setBuildMode = useBuildingStore((state) => state.setBuildMode);
+  const buildMode = useBuildingStore((state) => state.buildMode);
+  const instructions = useBuildingStore((state) => state.instructions);
 
   // #region Getting the data
   async function getCityData(id) {
@@ -48,29 +101,32 @@ function HTMLContent({ ID }) {
     }
   }
 
-  // #endregion
+  // Updating data in store, essentially updating state
+  useEffect(() => {
+    if (data) {
+      useBuildingStore.setState({
+        money: data.money,
+        educatedWorkers: data.educated,
+        unEducatedWorkers: data.normal,
+        educatedWorkersNeeded: data.educatedWorkers,
+        unEducatedWorkersNeeded: data.normalWorkers,
+      });
+    }
+  }, [data]);
 
-  // TODO:    SHOULD RELOAD DATA IN INTERVALS, OR WHEN SOMETHING CHANGES
-  //          THIS WILL BE FIXED
-
-  const [showBuildingsList, setShowBuildingsList] = useState(false);
-  const [selectedBuildingInList, setSelectedBuildingInList] = useState(0);
-  const toggleBuildings = () => setShowBuildingsList(!showBuildingsList);
-  const selectBuilding = useBuildingStore((state) => state.selectBuilding);
-  const setBuildMode = useBuildingStore((state) => state.setBuildMode);
-  const buildMode = useBuildingStore((state) => state.buildMode);
-
+  // Get city data on first render
   useEffect(() => {
     getCityData(ID);
-    console.log("new data");
-  }, [dataLoaded.current, buildings]);
+  }, []);
 
   return (
     <>
       <div id="data" style={{ pointerEvents: "none" }}>
-        <GoldDiv value={data && dataLoaded.current ? data.money : "..."} />
-        <EducatedWorkers value={data && dataLoaded.current ? data.educated + " / " + data.educatedWorkers : "..."} />
-        <UnEducatedWorkers value={data && dataLoaded.current ? data.normal + " / " + data.normalWorkers : "..."} />
+        <GoldDiv value={data && dataLoaded.current ? money : "..."} />
+        <EducatedWorkers value={data && dataLoaded.current ? educatedWorkers + " / " + educatedWorkersNeeded : "..."} />
+        <UnEducatedWorkers
+          value={data && dataLoaded.current ? unEducatedWorkers + " / " + unEducatedWorkersNeeded : "..."}
+        />
       </div>
       <div id="menuButtons" style={{ pointerEvents: "none" }}>
         <button className={styles.roundedFixedBtn} style={{ bottom: "2%", left: "2%" }} onClick={toggleBuildings}>
@@ -89,6 +145,17 @@ function HTMLContent({ ID }) {
           onClick={() => setBuildMode(false)}
         >
           Demolish
+        </button>
+        <button
+          className={styles.roundedFixedBtn}
+          style={{ bottom: "16%", right: "2%", width: "18%", backgroundColor: "#cdff8a9a" }}
+          onClick={() => {
+            let response = apiSendInstructions(ID, instructions);
+            if (response.ok) getCityData(ID);
+            // console.log(response);
+          }}
+        >
+          Save changes
         </button>
       </div>
       <div id="buildingsList" hidden={!showBuildingsList} style={{ pointerEvents: "none" }}>

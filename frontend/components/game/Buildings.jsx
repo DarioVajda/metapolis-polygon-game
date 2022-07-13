@@ -42,8 +42,6 @@ export default function Buildings({ ID }) {
         plotSize * posY - (gridSize * plotSize) / 2 + plotSize / 2,
       ];
       const rotation = (Math.PI / 2) * (building.orientation - 1);
-      console.log(building);
-      console.log({ rotation });
       if (Type === "house") {
         return <House scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
       } else if (Type === "factory") {

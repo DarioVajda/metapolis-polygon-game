@@ -2,7 +2,7 @@ import { useHelper } from "@react-three/drei";
 import { useRef } from "react";
 import { DirectionalLightHelper, SpotLightHelper } from "three";
 
-const shadowMapSize = [8192/4,8192/4]
+const shadowMapSize = [1024,1024]
 
 function Lights(){
     const mesh = useRef()

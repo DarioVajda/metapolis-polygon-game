@@ -106,14 +106,27 @@ function GridSquare(props) {
   const setHoveredXY = useBuildingStore((state) => state.setHoveredXY);
   const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
   const buildRotation = useBuildingStore((state) => state.buildRotation);
+  const addInstruction = useBuildingStore((state) => state.addInstruction);
+  const instructions = useBuildingStore((state) => state.instructions);
+  const money = useBuildingStore((state) => state.money);
+  const educatedWorkers = useBuildingStore((state) => state.educatedWorkers);
+  const unEducatedWorkers = useBuildingStore((state) => state.unEducatedWorkers);
+  const educatedWorkersNeeded = useBuildingStore((state) => state.educatedWorkersNeeded);
+  const unEducatedWorkersNeeded = useBuildingStore((state) => state.unEducatedWorkersNeeded);
 
-  async function build(x, y, grid, selectedBuildingType, buildRotation) {
+  function build(x, y, grid, selectedBuildingType, buildRotation) {
     let endXY;
     let startXY;
     let buildable = true;
     if (selectedBuildingType === null) {
       buildable = false;
       console.log("no building type selected");
+    } else if (money === undefined) {
+      buildable = false;
+      console.log("wait for data to load");
+    } else if (money < selectedBuildingType.cost) {
+      buildable = false;
+      console.log("not enough money to build");
     } else {
       switch (buildRotation) {
         case 2:
@@ -133,8 +146,6 @@ function GridSquare(props) {
           startXY = [x, y];
           break;
       }
-      console.log(startXY);
-      console.log(endXY);
       if (
         startXY[0] < 0 ||
         startXY[1] < 0 ||
@@ -148,8 +159,8 @@ function GridSquare(props) {
         buildable = false;
         console.log("error: trying to build out of bounds");
       } else {
-        for (let i = startXY[0]; i < endXY[0]; i++) {
-          for (let j = startXY[1]; j < endXY[1]; j++) {
+        for (let i = startXY[0]; i <= endXY[0]; i++) {
+          for (let j = startXY[1]; j <= endXY[1]; j++) {
             if (grid[i * gridSize + j] != null && grid[i * gridSize + j] != undefined) {
               buildable = false;
             }
@@ -158,45 +169,54 @@ function GridSquare(props) {
       }
     }
     if (buildable) {
-      ///////OVDE UMESTO apiAddBuilding treba da se doda na listu instrukcija
-      ///takodje napraviti local updates za novac i tako to
-      /// i provere za isto
-      useBuildingStore.setState({ hoverObjectMove: false });
-      let response = await apiAddBuilding(ID, startXY, endXY, selectedBuildingType.type, buildRotation);
-      if (response.ok) {
-        addBuilding(startXY, endXY, selectedBuildingType.type);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      } else {
-        alert("HTTP-Error: " + response.status);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      }
+      let body = {
+        building: {
+          start: { x: startXY[0], y: startXY[1] },
+          end: { x: endXY[0], y: endXY[1] },
+          orientation: buildRotation,
+          type: selectedBuildingType.type,
+          level: 0,
+        },
+      };
+      addInstruction("build", body);
+      addBuilding(startXY, endXY, selectedBuildingType.type);
+      useBuildingStore.setState({
+        money: money - selectedBuildingType.cost,
+        educatedWorkers: educatedWorkers + selectedBuildingType.educatedPeople,
+        unEducatedWorkers: unEducatedWorkers + selectedBuildingType.normalPeople,
+        educatedWorkersNeeded: educatedWorkersNeeded + selectedBuildingType.officeWorkers,
+        unEducatedWorkersNeeded: unEducatedWorkersNeeded + selectedBuildingType.manualWorkers,
+      });
     } else console.log("can't build");
   }
-  const remove = async (x, y, grid, buildings) => {
+  const remove = (x, y, grid, buildings) => {
     let notEmpty = true;
     if (grid[x * gridSize + y] === null || grid[x * gridSize + y] === undefined) notEmpty = false;
     if (notEmpty) {
-      useBuildingStore.setState({ hoverObjectMove: false });
       let uuid = grid[x * gridSize + y];
       let index = buildings.findIndex((building) => building.uuid === uuid);
-      ///////OVDE UMESTO apiRemoveBuilding treba da se doda na listu instrukcija
-      ///takodje napraviti local updates za novac i tako to
-      let response = await apiRemoveBuilding(
-        ID,
-        index,
-        [buildings[index].start.x, buildings[index].start.y],
-        [buildings[index].end.x, buildings[index].end.y],
-        buildings[index].type,
-        buildings[index].level,
-        buildings[index].orientation
-      );
-      if (response.ok) {
-        demolishBuilding(uuid);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      } else {
-        alert("HTTP-Error: " + response.status);
-        useBuildingStore.setState({ hoverObjectMove: true });
-      }
+      let removedBuilding = buildings[index];
+      let removedBuildingType = removedBuilding ? buildingTypes[removedBuilding.type][0] : null; //checks if removedBuilding.type is null
+      let body = {
+        index: index,
+        building: {
+          start: { x: removedBuilding.start.x, y: removedBuilding.start.y },
+          end: { x: removedBuilding.end.x, y: removedBuilding.end.y },
+          orientation: removedBuilding.orientation,
+          type: removedBuilding.type,
+          level: removedBuilding.level,
+        },
+      };
+      let returnPercentage = 0.5; //percentage of price for refunding at building removal
+      useBuildingStore.setState({
+        money: money + removedBuildingType.cost * returnPercentage,
+        educatedWorkers: educatedWorkers - removedBuildingType.educatedPeople,
+        unEducatedWorkers: unEducatedWorkers - removedBuildingType.normalPeople,
+        educatedWorkersNeeded: educatedWorkersNeeded - removedBuildingType.officeWorkers,
+        unEducatedWorkersNeeded: unEducatedWorkersNeeded - removedBuildingType.manualWorkers,
+      });
+      addInstruction("remove", body);
+      demolishBuilding(uuid);
     } else console.log("this grid square is empty already");
   };
 
@@ -238,7 +258,11 @@ export default function Grid({ ID }) {
   return grid.map((element, index) => {
     x = Math.floor(index / gridSize);
     y = index % gridSize;
-    position = [plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2, 0, plotSize * y - (gridSize * plotSize) / 2 + plotSize / 2];
+    position = [
+      plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2,
+      0,
+      plotSize * y - (gridSize * plotSize) / 2 + plotSize / 2,
+    ];
     return (
       <GridSquare
         buildings={buildings}

@@ -192,16 +192,16 @@ const upgrade =  async (body, id) => {
         }
 	}
 
-	let message = body.message;
-	let signature = body.signature;
-	let signer = cityData.owner; // this address could be also sent in the body of the request
-	let signerAddr = await ethers.utils.verifyMessage(message, signature);
-	if(signerAddr !== signer) {
-		return {
-            status: 400,
-            message: "The caller of this function must be the owner of the NFT"
-        };
-	}
+	// let message = body.message;
+	// let signature = body.signature;
+	// let signer = cityData.owner; // this address could be also sent in the body of the request
+	// let signerAddr = await ethers.utils.verifyMessage(message, signature);
+	// if(signerAddr !== signer) {
+	// 	return {
+    //         status: 400,
+    //         message: "The caller of this function must be the owner of the NFT"
+    //     };
+	// }
 
 	let cost = buildingStats.buildingStats.get(building.type)[building.level].cost; // getting the cost of upgrading to the next level
 	if(building.type === buildingStats.buildingTypes.Building || building.type === buildingStats.buildingTypes.Park) {
@@ -276,18 +276,18 @@ const remove = async (body, id) => {
         };
 	}
 
-	let message = body.message;
-	let signature = body.signature;
-	let signer = cityData.owner; // this address could be also sent in the body of the request
-	let signerAddr = await ethers.utils.verifyMessage(message, signature);
-	if(signerAddr !== signer) {
-		console.log('the caller of this function must be the owner of the nft');
-		// res.status(400).send("The caller of this function must be the owner of the NFT");
-		return {
-            status: 400,
-            message: "The caller of this function must be the owner of the NFT"
-        }; 
-	}
+	// let message = body.message;
+	// let signature = body.signature;
+	// let signer = cityData.owner; // this address could be also sent in the body of the request
+	// let signerAddr = await ethers.utils.verifyMessage(message, signature);
+	// if(signerAddr !== signer) {
+	// 	console.log('the caller of this function must be the owner of the nft');
+	// 	// res.status(400).send("The caller of this function must be the owner of the NFT");
+	// 	return {
+    //         status: 400,
+    //         message: "The caller of this function must be the owner of the NFT"
+    //     }; 
+	// }
 	
 	let returnPercentage = 0.5;
 	let value = returnPercentage * buildingStats.buildingStats.get(building.type)[building.level].cost;

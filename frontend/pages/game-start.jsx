@@ -10,6 +10,8 @@ import styles from '../components/game/dario/gamestart.module.css'; // ovde ce t
 
 import Nav from '../components/Nav';
 
+import {city as cityContractAddressImport} from '../../smart_contracts/contract-address.json';
+
 // ovo nece trebati, napravljeno je kao primer toga kako treba da se koristi komponenta 'GameStart'
 const rootComponent = () => {
   const [id, setId] = useState(-1);
@@ -35,7 +37,7 @@ const GameStart = ({ setId }) => {
   const [nfts, setNfts] = useState(-1);
 
   var cityContract;
-  const cityContractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
+  const cityContractAddress = cityContractAddressImport;
   const connecting = useRef(false);
 
   async function initContract() {

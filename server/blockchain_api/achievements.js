@@ -22,9 +22,9 @@ let provider = new ethers.providers.JsonRpcProvider(
 	'https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44'
 );
 let wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
-console.log(wallet);
+// console.log(wallet);
 let contractAddress = addressJSON.gameplay;
-console.log(contractAddress)
+// console.log(contractAddress)
 let abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
 var account = wallet.connect(provider);
 var contract = new ethers.Contract(
@@ -136,8 +136,8 @@ const funkcijaZaTestiranje = async () => {
 // funkcijaZaTestiranje();
 
 const achievements = {
-    check1: {
-        greenCity: greenCity,
+    greenCity: {
+        check: greenCity,
         title: 'Green City',
         explanation: 'Cover at least 50 sqares with parks.',
         startDate: '09/24/2022 09:25:32',

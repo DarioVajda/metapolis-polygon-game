@@ -34,7 +34,7 @@ contract CityContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Pr
     }
     
     function _baseURI() internal pure override returns (string memory) {
-        return "http://localhost:3000/cities"; // this is just temporary
+        return "http://localhost:8000/cities"; // this is just temporary
     }
   
     uint mintingPrice = 0.1 ether; // cost of minting a single City NFT (in ether wei)

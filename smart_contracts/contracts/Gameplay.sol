@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+// import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./CityContract.sol";
 
 contract Gameplay {
     // #region Constructor
 
     constructor(address _admin, address _nftContractAddress) {
-        initStringToType();
+        // initStringToType();
         owner = msg.sender;
         admin = _admin;
         nftContractAddress = _nftContractAddress;
@@ -19,45 +19,45 @@ contract Gameplay {
     // #endregion
     // #region Util functions, structs,...
 
-    enum BuildingTypes {
-        Factory,
-        Office,
-        Restaurant,
-        Building,
-        House,
-        Store,
-        SuperMarket,
-        Park,
-        Gym
-    }
+    // enum BuildingTypes {
+    //     Factory,
+    //     Office,
+    //     Restaurant,
+    //     Building,
+    //     House,
+    //     Store,
+    //     SuperMarket,
+    //     Park,
+    //     Gym
+    // }
 
-    mapping(string => BuildingTypes) stringToType;
-    mapping(BuildingTypes => string) typeToString;
-    uint numOfBuildingTypes = 10;
-    function initStringToType() private {
-        stringToType["factory"] = BuildingTypes.Factory;
-        stringToType["office"] = BuildingTypes.Office;
-        stringToType["restaurant"] = BuildingTypes.Restaurant;
-        stringToType["building"] = BuildingTypes.Building;
-        stringToType["house"] = BuildingTypes.House;
-        stringToType["store"] = BuildingTypes.Store;
-        stringToType["supermarket"] = BuildingTypes.SuperMarket;
-        stringToType["park"] = BuildingTypes.Park;
-        stringToType["gym"] = BuildingTypes.Gym;
+    // mapping(string => BuildingTypes) stringToType;
+    // mapping(BuildingTypes => string) typeToString;
+    // uint numOfBuildingTypes = 10;
+    // function initStringToType() private {
+    //     stringToType["factory"] = BuildingTypes.Factory;
+    //     stringToType["office"] = BuildingTypes.Office;
+    //     stringToType["restaurant"] = BuildingTypes.Restaurant;
+    //     stringToType["building"] = BuildingTypes.Building;
+    //     stringToType["house"] = BuildingTypes.House;
+    //     stringToType["store"] = BuildingTypes.Store;
+    //     stringToType["supermarket"] = BuildingTypes.SuperMarket;
+    //     stringToType["park"] = BuildingTypes.Park;
+    //     stringToType["gym"] = BuildingTypes.Gym;
 
-        typeToString[BuildingTypes.Factory] = "factory";
-        typeToString[BuildingTypes.Office] = "office";
-        typeToString[BuildingTypes.Restaurant] = "restaurant";
-        typeToString[BuildingTypes.Building] = "building";
-        typeToString[BuildingTypes.House] = "house";
-        typeToString[BuildingTypes.Store] = "store";
-        typeToString[BuildingTypes.SuperMarket] = "supermarket";
-        typeToString[BuildingTypes.Park] = "park";
-        typeToString[BuildingTypes.Gym] = "gym";
-    }
+    //     typeToString[BuildingTypes.Factory] = "factory";
+    //     typeToString[BuildingTypes.Office] = "office";
+    //     typeToString[BuildingTypes.Restaurant] = "restaurant";
+    //     typeToString[BuildingTypes.Building] = "building";
+    //     typeToString[BuildingTypes.House] = "house";
+    //     typeToString[BuildingTypes.Store] = "store";
+    //     typeToString[BuildingTypes.SuperMarket] = "supermarket";
+    //     typeToString[BuildingTypes.Park] = "park";
+    //     typeToString[BuildingTypes.Gym] = "gym";
+    // }
     
     struct Building {
-        BuildingTypes buildingType;
+        string buildingType;
         uint32 startx;
         uint32 starty;
         uint32 endx;
@@ -82,6 +82,7 @@ contract Gameplay {
         // string username;
         bool created;
         bool initialized;
+        uint32 theme;
         uint32 numOfBuildings;
         uint32 numOfSpecialBuildings;
         uint32 numOfspecialBuildingCash; // number of special buildings aquired through offers
@@ -89,7 +90,7 @@ contract Gameplay {
         uint32 income;
         uint32 incomesReceived;
         address owner;
-    } // occupies ( 4 + numOfBuildings + numOfSpecialBuildings ) blocks of 256 bytes in total
+    } // occupies ( 4 + numOfBuildings + numOfSpecialBuildings + numOfspecialBuildingCash ) blocks of 256 bytes in total
 
     // #endregion
     // #region Variables
@@ -110,13 +111,15 @@ contract Gameplay {
     // #region Special building utils
 
     struct SpecialOffer {
-        uint128 value; // value of the offer (ingame money)
-        uint128 user; // id of the user who made the offer
+        uint64 value; // value of the offer (ingame money)
+        uint64 user; // id of the user who made the offer
+        bool filled;
     }
 
     struct SpecialBuildingType {
         uint32 count; // how many can be built
         uint32 numOfOffers;
+        uint32 rarity;
         bool soldOut; // bool indicating if special building is sold out or not
         mapping(uint => SpecialOffer) offers; // list of offers (not sorted)
     }
@@ -127,10 +130,11 @@ contract Gameplay {
      * @param key je 'kljuc' (string) novog tipa specijalnih gradjevina
      * @param count je broj koliko moze tih gradjevina da se napravi ukupno
      */
-    function addSpecialBuildingType(string memory key, uint32 count) external onlyAdmin {
+    function addSpecialBuildingType(string memory key, uint32 count, uint32 rarity) external onlyAdmin {
         require(specialData[key].count == 0 && specialData[key].soldOut == false, "Key exists");
 
         specialData[key].count = count;
+        specialData[key].rarity = rarity;
         // specialData[key].offers = new SpecialOffer[](0);
         specialData[key].numOfOffers = 0;
     }
@@ -138,6 +142,7 @@ contract Gameplay {
     struct SpecialBuildingTypeRepresentation {
         uint32 count;
         uint32 numOfOffers;
+        uint32 rarity;
         bool soldOut;
         SpecialOffer[] offers;
     }
@@ -149,12 +154,15 @@ contract Gameplay {
         SpecialBuildingTypeRepresentation memory r = SpecialBuildingTypeRepresentation({
             count: specialData[key].count,
             numOfOffers: specialData[key].numOfOffers,
+            rarity: specialData[key].rarity,
             soldOut: specialData[key].soldOut,
             offers: new SpecialOffer[](specialData[key].numOfOffers)
         });
         for(uint i = 0; i < specialData[key].numOfOffers; i++) {
-            r.offers[i].value = specialData[key].offers[i].value;
-            r.offers[i].user = specialData[key].offers[i].user;
+            r.offers[i] = specialData[key].offers[i];
+            // r.offers[i].value = specialData[key].offers[i].value;
+            // r.offers[i].user = specialData[key].offers[i].user;
+            // r.offers[i].filled = specialData[key].offers[i].filled;
         }
         return r;
     }
@@ -165,11 +173,11 @@ contract Gameplay {
      * @param makerId je id grada sa kojeg se pravi offer
      * @param value je cena u ingame novcu koja je predlozena
      */
-    function makeSpecialOffer(string memory key, uint128 makerId, uint128 value) external onlyAdmin isEditable {
+    function makeSpecialOffer(string memory key, uint64 makerId, uint64 value) external onlyAdmin isEditable {
         require(specialData[key].soldOut == true, "CantOffer");
         require(specialData[key].numOfOffers < 1000, 'MaxOffers');
 
-        specialData[key].offers[specialData[key].numOfOffers] = SpecialOffer({ value: value, user: makerId });
+        specialData[key].offers[specialData[key].numOfOffers] = SpecialOffer({ value: value, user: makerId, filled: false });
         specialData[key].numOfOffers++;
     }
 
@@ -194,7 +202,7 @@ contract Gameplay {
      * @param addr is the address of the owner (person who just minted the city)
      */
     function created(uint tokenId, address addr) external {
-        require(msg.sender == nftContractAddress, 'NotCityContract');
+        require(msg.sender == nftContractAddress, 'Fail');
         cities[tokenId].owner = addr;
         cities[tokenId].created = true;
         id++;
@@ -206,7 +214,7 @@ contract Gameplay {
      * @param _newOwner is the new owner of the nft with that id
      */
     function newOwner(uint tokenId, address _newOwner) public {
-        require(msg.sender == nftContractAddress, 'NotCityContract');
+        require(msg.sender == nftContractAddress, 'Fail');
         cities[tokenId].owner = _newOwner;
     }
 
@@ -216,18 +224,25 @@ contract Gameplay {
      */
     function initializeCity(
         address _owner,
-        uint tokenId
+        uint tokenId,
+        uint32 theme
     ) external onlyAdmin isEditable {
         require(cities[tokenId].created == true , "NotCreated");
-        require(cities[tokenId].initialized == false , "AlreadyInitialized");
+        require(cities[tokenId].initialized == false , "Initialized");
         require(cities[tokenId].owner == _owner, "WrongOwner");
         
         City storage city = cities[tokenId];
         
         city.money = startingMoney;
+        city.theme = theme;
         city.initialized = true;
-        if(gameStart != 2000000000) city.incomesReceived = uint32((block.timestamp - gameStart) / payPeriod);
-        else city.incomesReceived = 0;
+
+        if(gameStart != 2000000000) {
+            city.incomesReceived = uint32((block.timestamp - gameStart) / payPeriod);
+        }
+        else {
+            city.incomesReceived = 0;
+        }
     }
 
     // #endregion
@@ -288,7 +303,7 @@ contract Gameplay {
     ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
         city.buildingList[city.numOfBuildings] = Building({
-            buildingType: stringToType[_buildingType],
+            buildingType: _buildingType,
             startx: uint32(_startx),
             starty: uint32(_starty),
             endx: uint32(_endx),
@@ -313,6 +328,7 @@ contract Gameplay {
      * @param throughOffer is true if buying through an offer and false if buying normaly
      * @param cashIndex is the index of the special building in the cash that is built
      */
+    //  * @param offerIndex is the index of the offer in the offer list for that special building type
     function addSpecialBuilding(
         uint tokenId,
         uint price,
@@ -324,20 +340,26 @@ contract Gameplay {
         string calldata _specialType,
         bool throughOffer,
         uint cashIndex
+        // uint offerIndex
     ) external onlyAdmin isEditable {
         require(throughOffer == true || specialData[_specialType].count > 0, 'SoldOut');
 
-        City storage city = cities[tokenId];
+        // City storage city = cities[tokenId];
 
         if(throughOffer == false) {
             specialData[_specialType].count--; // decreasing the number of special buildings left to build
+            if(specialData[_specialType].count == 0) {
+                specialData[_specialType].soldOut = true;
+            }
         }
         else {
-            city.numOfspecialBuildingCash--; // decreasing the num of special buildings cashed for that player
-            city.specialBuildingCash[cashIndex] = city.specialBuildingCash[city.numOfspecialBuildingCash]; // moving the last element to the index of the deleted element
+            cities[tokenId].numOfspecialBuildingCash--; // decreasing the num of special buildings cashed for that player
+            cities[tokenId].specialBuildingCash[cashIndex] = cities[tokenId].specialBuildingCash[cities[tokenId].numOfspecialBuildingCash]; // moving the last element to the index of the deleted element
+
+            // cancelSpecialOffer(_specialType, offerIndex); // removing the offer from the list because it got filled
         }
         
-        city.specialBuildingList[city.numOfSpecialBuildings] = SpecialBuilding({
+        cities[tokenId].specialBuildingList[cities[tokenId].numOfSpecialBuildings] = SpecialBuilding({
             specialType: _specialType,
             startx: uint32(_startx),
             starty: uint32(_starty),
@@ -345,8 +367,8 @@ contract Gameplay {
             endy: uint32(_endy),
             orientation: uint32(_orientation)
         });
-        city.numOfSpecialBuildings++;
-        city.money = city.money - uint64(price);
+        cities[tokenId].numOfSpecialBuildings++;
+        cities[tokenId].money = cities[tokenId].money - uint64(price);
     }
 
     /**
@@ -360,15 +382,15 @@ contract Gameplay {
         
         cities[tokenId].numOfBuildings = cities[tokenId].numOfBuildings - 1;
 
-        cities[tokenId].buildingList[buildingIndex].buildingType = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].buildingType;
-        cities[tokenId].buildingList[buildingIndex].startx       = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].startx;
-        cities[tokenId].buildingList[buildingIndex].starty       = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].starty;
-        cities[tokenId].buildingList[buildingIndex].endx         = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endx;
-        cities[tokenId].buildingList[buildingIndex].endy         = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endy;
-        cities[tokenId].buildingList[buildingIndex].level        = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].level;
-        cities[tokenId].buildingList[buildingIndex].orientation  = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].orientation;
+        // cities[tokenId].buildingList[buildingIndex].buildingType = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].buildingType;
+        // cities[tokenId].buildingList[buildingIndex].startx       = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].startx;
+        // cities[tokenId].buildingList[buildingIndex].starty       = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].starty;
+        // cities[tokenId].buildingList[buildingIndex].endx         = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endx;
+        // cities[tokenId].buildingList[buildingIndex].endy         = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].endy;
+        // cities[tokenId].buildingList[buildingIndex].level        = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].level;
+        // cities[tokenId].buildingList[buildingIndex].orientation  = cities[tokenId].buildingList[cities[tokenId].numOfBuildings].orientation;
         
-        // cities[tokenId].buildingList[buildingIndex] = cities[tokenId].buildingList[cities[tokenId].numOfBuildings];
+        cities[tokenId].buildingList[buildingIndex] = cities[tokenId].buildingList[cities[tokenId].numOfBuildings];
 
         cities[tokenId].money = cities[tokenId].money + uint64(value);
     }
@@ -376,32 +398,46 @@ contract Gameplay {
     /**
      * @dev Function used for removing a building from a city
      * @param tokenId id of the city
-     * @param value that will be refunded for selling/removing a building from the city
+     * @param value that will be refunded for selling/removing a building from the city (isnt taken into consideration if building is being sold through an offer)
      * @param buildingIndex is the index of the building in the list
      * @param throughOffer is true if selling through an offer and false if selling normaly
      * @param buyerId is the ID of the city that made the offer
      */
-    function removeSpecialBuilding(uint tokenId, uint value, uint buildingIndex, bool throughOffer, uint buyerId) external onlyAdmin isEditable {
-
+    function removeSpecialBuilding(
+        uint tokenId,
+        uint value,
+        uint buildingIndex,
+        bool throughOffer,
+        uint buyerId,
+        uint offerIndex
+    ) external onlyAdmin isEditable {
         City storage city = cities[tokenId];
+
+        require(buildingIndex < city.numOfSpecialBuildings && (!throughOffer || tokenId != buyerId), 'I/O'); // wrong index or the owner is the same as the person who made the offer
+        require(throughOffer == false || specialData[city.specialBuildingList[buildingIndex].specialType].offers[offerIndex].filled == false, 'invalidOffer');
 
         if(throughOffer == false) {
             specialData[city.specialBuildingList[buildingIndex].specialType].count++;
+            specialData[city.specialBuildingList[buildingIndex].specialType].soldOut = false;
         }
         else {
+            value = specialData[city.specialBuildingList[buildingIndex].specialType].offers[offerIndex].value;
             cities[buyerId].specialBuildingCash[cities[buyerId].numOfspecialBuildingCash] = city.specialBuildingList[buildingIndex].specialType; // adding a special building to the cash list of the city to who it was sold
             cities[buyerId].numOfspecialBuildingCash++; // increasing the num of special buildings cashed for that player
+            specialData[city.specialBuildingList[buildingIndex].specialType].offers[offerIndex].filled = true; // marking the offer as filled
         }
 
         city.numOfSpecialBuildings = city.numOfSpecialBuildings - 1;
 
         // curr building getting values from last building in the list
-        city.specialBuildingList[buildingIndex].specialType = city.specialBuildingList[city.numOfSpecialBuildings].specialType;
-        city.specialBuildingList[buildingIndex].startx      = city.specialBuildingList[city.numOfSpecialBuildings].startx;
-        city.specialBuildingList[buildingIndex].starty      = city.specialBuildingList[city.numOfSpecialBuildings].starty;
-        city.specialBuildingList[buildingIndex].endx        = city.specialBuildingList[city.numOfSpecialBuildings].endx;
-        city.specialBuildingList[buildingIndex].endy        = city.specialBuildingList[city.numOfSpecialBuildings].endy;
-        city.specialBuildingList[buildingIndex].orientation = city.specialBuildingList[city.numOfSpecialBuildings].orientation;
+        // city.specialBuildingList[buildingIndex].specialType = city.specialBuildingList[city.numOfSpecialBuildings].specialType;
+        // city.specialBuildingList[buildingIndex].startx      = city.specialBuildingList[city.numOfSpecialBuildings].startx;
+        // city.specialBuildingList[buildingIndex].starty      = city.specialBuildingList[city.numOfSpecialBuildings].starty;
+        // city.specialBuildingList[buildingIndex].endx        = city.specialBuildingList[city.numOfSpecialBuildings].endx;
+        // city.specialBuildingList[buildingIndex].endy        = city.specialBuildingList[city.numOfSpecialBuildings].endy;
+        // city.specialBuildingList[buildingIndex].orientation = city.specialBuildingList[city.numOfSpecialBuildings].orientation;
+
+        city.specialBuildingList[buildingIndex] = city.specialBuildingList[city.numOfSpecialBuildings];
 
         city.money = city.money + uint64(value);
     }
@@ -472,6 +508,7 @@ contract Gameplay {
         // string username;
         bool created;
         bool initialized;
+        uint32 theme;
         uint[] startx;
         uint[] starty;
         uint[] endx;
@@ -498,6 +535,7 @@ contract Gameplay {
             // username: city.username,
             created: city.created,
             initialized: city.initialized,
+            theme: city.theme,
             startx: new uint[](numOfBuildings + numOfSpecialBuildings),
             starty: new uint[](numOfBuildings + numOfSpecialBuildings),
             endx: new uint[](numOfBuildings + numOfSpecialBuildings),
@@ -517,7 +555,7 @@ contract Gameplay {
             r.endx[i] = city.buildingList[i].endx;
             r.endy[i] = city.buildingList[i].endy;
             r.orientation[i] = city.buildingList[i].orientation;
-            r.buildingType[i] = typeToString[city.buildingList[i].buildingType];
+            r.buildingType[i] = city.buildingList[i].buildingType;
             r.level[i] = city.buildingList[i].level;
         }
         for(uint i = numOfBuildings; i < numOfSpecialBuildings + numOfBuildings; i++) {
@@ -539,14 +577,15 @@ contract Gameplay {
     }
 
 
-    struct Score {
-        uint score;
-        bool initialized;
-    }
+    // struct Score {
+    //     uint score;
+    //     bool initialized;
+    // }
     // returns an array of indices that correspod to the IDs of the sorted cities
-    function getScore(uint tokenId) external view returns(Score memory) {
-        Score memory r = Score({score: scores[tokenId], initialized: cities[tokenId].initialized});
-        return r;
+    function getScore(uint tokenId) external view returns(uint, bool) {
+        // Score memory r = Score({score: scores[tokenId], initialized: cities[tokenId].initialized});
+        // return r;
+        return (scores[tokenId], cities[tokenId].initialized);
     } 
 
     // #endregion
@@ -598,21 +637,6 @@ contract Gameplay {
         cities[tokenId].numOfBuildings = 0;
         cities[tokenId].numOfSpecialBuildings = 0;
     }
-
-    // #endregion
-
-    // #region Achievements
-
-    // struct Achievement {
-    //     uint max; // max number of people who can get the reward for the achievement
-    //     uint start; // unix time
-    //     uint end; // unix time
-    //     string reward; // shows WHAT is the reward
-    //     uint amound; // show HOW MUCH is rewarded
-    // }
-
-    // uint numOfAchievements = 0;
-    // mapping(uint => Achievement) achievements;
 
     // #endregion
 }

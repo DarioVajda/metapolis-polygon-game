@@ -103,7 +103,7 @@
    > Total deployments:   4
    > Final cost:          0.027712957637734935 ETH
 
-6. CONTRACT DEPLOYMENTS (LAST STABLE)
+6. CONTRACT DEPLOYMENTS
    Replacing 'Weth'
    ----------------
    > contract address:    0xF1E1D340C4106315783F5125a0b87478f24A3e64
@@ -124,24 +124,56 @@
    > Total deployments:   4
    > Final cost:          0.0276733751106935 ETH
 
-7. CONTRACT DEPLOYMENTS (TESTING)
+7. CONTRACT DEPLOYMENTS
 
    Replacing 'Weth'
    ----------------
-   > contract address:    0xa4892262eB706fe77A5e351d6994C81cd04C828C
+   > contract address:    0xD8934715536D7bbAE471Aa793a2D69A5213891e6
    > gas used:            1576361 (0x180da9)
 
    Replacing 'CityContract'
    ------------------------
-   > contract address:    0xb9943198f6f7d4b4F424b49C9e65A6A6E8789435
+   > contract address:    0xE881D2Ce1A71e0C198F00F2c1eACa9702B5FB6BA
    > gas used:            4295799 (0x418c77)
 
    Replacing 'Gameplay'
    --------------------
-   > contract address:    0xe931bA5d76Ea01418B226C9D8204Cccdd4f20275
-   > gas used:            5957703 (0x5ae847)
+   > contract address:    0xB3c8f0e1b2936F922257F0080726Db844FB38326
+   > gas used:            5500089 (0x53ecb9)
+
+   Deploying 'Achievements'
+   ------------------------
+   > contract address:    0x91e75563aA998f964Fe8Eac233a355E389C21645
+   > gas used:            1303781 (0x13e4e5)
 
    Summary
    =======
-   > Total deployments:   4
-   > Final cost:          0.030200012606893542 ETH
+   > Total deployments:   5
+   > Final cost:          0.032315430116335548 ETH
+
+8. CONTRACT DEPLOYMENTS
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0xA92146956378d29899831116330182B6116Eb8c8
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0x1679A57503375fE2f2776754F8306EB2CA180B45
+   > gas used:            4295799 (0x418c77)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x8318cEd02c85e02eeA73FA074aD78019702c7892
+   > gas used:            5500089 (0x53ecb9)
+
+   Replacing 'Achievements'
+   ------------------------
+   > contract address:    0x1eaEDEA5f67D9Cb8178eA55536760ccb8A835891
+   > gas used:            1303781 (0x13e4e5)
+
+   Summary
+   =======
+   > gas price:           50.000000008 gwei
+   > Total deployments:   5
+   > Final cost:          0.646308600105736163 ETH

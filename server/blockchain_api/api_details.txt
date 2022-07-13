@@ -8,11 +8,17 @@ GET requests:
     /leaderboard - returns the list of cities sorted by score
     /count - returns the number of NFTs
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
+    /cities/:id/achievements - returns a list of data about all the achievements { 'count' - number of people who completed the achievement, 'completed' - true if the id-th city completed it and false if not }
 
 POST requests:
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
-    (*) /cities/:id/build - { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: r, type: "type", level: 0 }, 1≤r≤4
-    (*) /cities/:id/buildspecial - {start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type"}
+    (*) /cities/:id/build - { 
+            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: r, type: "type", level: 0 } 
+        }, 1≤r≤4
+    (*) /cities/:id/buildspecial - { 
+            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type" },
+            throughOffer: true/false,
+        }
     (*) /cities/:id/upgrade - {
             index: i, // index in the building list array
             building: {
@@ -21,7 +27,7 @@ POST requests:
                 type: "type",
                 orientation: x,
                 level: 'l'
-            } // data about the building
+            }
         }
     (*) /cities/:id/rotate - { 
             rotation: r, // new rotation of the building, 1≤r≤4
@@ -30,6 +36,23 @@ POST requests:
     (*) /cities/:id/rotatespecial - { 
             rotation: r, // new rotation of the building, 1≤r≤4
             index: i // index of the building being rotated, 0≤i≤numOfSpecialBuildings-1
+        }
+    (*) /cities/:id/remove - {
+            index: i, // index in the building list array,
+            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type", level: 'l' }
+        }
+    (*) /cities/:id/removespecial - {
+            index: i, // index in the building list array
+            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type" },
+            throughOffer: true/false,
+            expectedValue: x, // int, the expected price for selling the special building (if not met, the action will fail)
+        }
+    (*) /cities/:id/specialoffer - {
+            value: Number, // offer value
+            type: String // the special building type the offer is made for
+        }
+    (*) /cities/:id/completed - { // does not change the score, should call getincome to set it to the new value
+            achievement: 'key'
         }
 
 INSTRUCTION LIST REQUEST:

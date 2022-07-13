@@ -8,13 +8,15 @@ import LeaderboardList from '../components/Leaderboard/LeaderboardList'
 
 import styles from '../styles/leaderboard.module.css'
 
+import contractAddresses from '../../smart_contracts/contract-address.json';
+
 
 const leaderboard = () => {
 
   const [nfts, setNfts] = useState([]);
 
   var cityContract;
-  const cityContractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
+  const cityContractAddress = contractAddresses.city;
   const connecting = useRef(false);
 
   async function initContract() {

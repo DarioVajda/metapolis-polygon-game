@@ -1,6 +1,6 @@
 const statsModule = require('../gameplay/building_stats');
 const types = statsModule.buildingTypes;
-const specialTypes = statsModule.specialTypes;
+const specialTypes = Object.values(statsModule.specialTypes).map(element => element.type);
 const Building = statsModule.Building;
 const SpecialBuilding = statsModule.SpecialBuilding;
 const Coordinate = statsModule.Coordinate;
@@ -19,8 +19,8 @@ function random(min, max) {
     return r;
 }
 
-function randomPick(choises) {
-    let temp = [...choises];
+function randomPick(choices) {
+    let temp = [...choices];
     let sum = 0;
     for(let i = 0; i < temp.length; i++) {
         sum += temp[i][1];
@@ -170,7 +170,8 @@ function generate() {
 
     const specialProbabilities = [
         [[1, 1]], // statue
-        [[1, 9], [2, 1]] // fountain
+        [[1, 9], [2, 1]], // fountain
+        [[0, 9], [1, 1]], // stadium
     ];
     let specialNum = numOfBuildings(specialProbabilities, false);
     for(let i = 0; i < specialNum.length; i++) {
@@ -183,5 +184,30 @@ function generate() {
 }
 
 // console.dir(generate(), {depth: null});
+
+// function test() {
+//     let iterations = 10000000;
+//     let stadiums = 0;
+//     for(let i = 0; i < iterations; i++) {
+//         let buildings = generate();
+//         let stadium = false;
+//         buildings.special.forEach((element) => {
+//             if(element.type === 'stadium') {
+//                 stadium = true;
+//             }
+//         })
+//         if(stadium) stadiums++;
+//     }
+//     console.log({iterations, stadiums});
+//     return stadiums/iterations;
+// }
+
+// let temp = test();
+// let count = 1;
+// while(temp !== 0.1) {
+//     count++;
+//     temp = test();
+// }
+// console.log('it took', count, ' runs to get the perfect ratio');
 
 exports.generateBuildings = generate;

@@ -1,6 +1,7 @@
 const CityContract = artifacts.require("CityContract");
 const Weth = artifacts.require("Weth");
 const Gameplay = artifacts.require("Gameplay");
+const Achievements = artifacts.require("Achievements");
 
 module.exports = async function (deployer) {
     await deployer.deploy(Weth);
@@ -10,7 +11,10 @@ module.exports = async function (deployer) {
     let city = await CityContract.deployed();
     
     await deployer.deploy(Gameplay, '0x764cDA7eccc6a94C157742e369b3533D15d047c0', city.address); // adresa admina i adresa NFT contracta
-    gameplay = await Gameplay.deployed();
+    let gameplay = await Gameplay.deployed();
+
+    await deployer.deploy(Achievements, '0x764cDA7eccc6a94C157742e369b3533D15d047c0');
+    let achievements = await Achievements.deployed();
 
     // ovde mozda moze da se izvrsi nesto sa mintovanjem i inicializovanjem par NFTova da bi se ubrzalo testiranje...
 };

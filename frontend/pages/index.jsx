@@ -17,6 +17,8 @@ import AboutUs from '../components/AboutUs';
 
 import styles from "../styles/Home.module.css";
 
+import contractAddresses from '../../smart_contracts/contract-address.json';
+
 const networkID = 80001; // ovo je sad ID od mumbai testneta, ali kasnije ce biti ID od polygon mainneta!
 
 // trebalo bi da postoji promenljiva koja pokazuje koliko je do sad NFT-ova mintovano (samo treba cityContract.currId() da se pozove)
@@ -28,8 +30,8 @@ export default function Home() {
   var cityContract;
   var wethContract;
   
-  const cityContractAddress = '0x88b68D2926eD258e7988e4D1809c42b199574088';
-  const wethContractAddress = '0xF1E1D340C4106315783F5125a0b87478f24A3e64';
+  const cityContractAddress = contractAddresses.city;
+  const wethContractAddress = contractAddresses.weth;
   
   const connectWallet = async () => {
     let res;
@@ -93,7 +95,15 @@ export default function Home() {
     
     try {
       // calling the mint function in the smart contract
-      let tx = await cityContract.maticMint(num, { value: ethers.utils.parseEther(`${maticPrice + epsilon}`) });
+      let tx = await cityContract.maticMint(
+        num, 
+        { 
+          value: ethers.utils.parseEther(`${maticPrice + epsilon}`), 
+          gasLimit: 3e6, 
+          maxPriorityFeePerGas: 100e9, 
+          maxFeePerGas: (100e9)+16
+        }
+      );
       let receipt = await tx.wait();
     }
     catch(e) {
@@ -123,7 +133,12 @@ export default function Home() {
     if(allowance < wethPrice) {
       try {
         // increasing the allowance
-        tx = await wethContract.increaseAllowance(cityContract.address, ethers.utils.parseEther(`${wethPrice-allowance}`)); // there should be a check if the current allowance is enough
+        tx = await wethContract.increaseAllowance(
+          cityContract.address, 
+          ethers.utils.parseEther(`${wethPrice-allowance}`),
+          { gasLimit: 1e6, maxPriorityFeePerGas: 100e9, maxFeePerGas: (100e9)+16 }
+        );
+        console.log({ tx });
         reciept = await tx.wait();
       }
       catch(e) { 
@@ -133,7 +148,7 @@ export default function Home() {
 
     try { 
       // calling the mint function
-      tx = await cityContract.wethMint(num, {gasLimit: 1e7});
+      tx = await cityContract.wethMint(num, { gasLimit: 3e6, maxPriorityFeePerGas: 100e9, maxFeePerGas: (100e9)+16 });
       reciept = await tx.wait(); 
     }
     catch(e) {
@@ -153,7 +168,7 @@ export default function Home() {
 
     let num = await (await fetch('http://localhost:8000/count')).json();
     num = num.count;
-    console.log(num);
+    // console.log(num);
 
     return num;
   }
@@ -162,7 +177,11 @@ export default function Home() {
 
   const mintERC20 = async () => {
     const addr = await connectWallet();
-    const tx = await wethContract.mint(addr, ethers.utils.parseEther('20'));
+    const tx = await wethContract.mint(
+      addr, 
+      ethers.utils.parseEther('20'),
+      { gasLimit: 1e6, maxPriorityFeePerGas: 100e9, maxFeePerGas: (100e9)+16 }
+    );
     const receipt = await tx.wait();
     // console.log(receipt);
     var balance = await wethContract.balanceOf(addr);
@@ -173,7 +192,7 @@ export default function Home() {
 
   const withdrawTokens = async () => {
     console.log(cityContract);
-    let tx = await cityContract.withdraw();
+    let tx = await cityContract.withdraw({ gasLimit: 1e6, maxPriorityFeePerGas: 100e9, maxFeePerGas: (100e9)+16 });
     let receipt = await tx.wait();
     console.log(receipt);
   }

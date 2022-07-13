@@ -4,27 +4,71 @@
 const ethers = require("ethers");
 const fs = require("fs");
 
+const achievementsModule = require("./achievements");
+const buildingStatsModule = require("../gameplay/building_stats");
+
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-mumbai.g.alchemy.com/v2/XTpCP18xP9ox0cc8xhOQ2NXxgCxcJV44");
 const wallet = new ethers.Wallet("0x5ae5d0b3a78146ace82c8ca9a4d3cd5ca7d0dcb2c02ee21739e9b5433596702c");
-var contractAddress;
 var abi;
 var account = wallet.connect(provider);
 
-contractAddress = "0xF1E1D340C4106315783F5125a0b87478f24A3e64";
+var contractAddress = require('../../smart_contracts/contract-address.json');
+
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Weth.json").toString().trim()).abi;
-var weth = new ethers.Contract(contractAddress, abi, account);
+var weth = new ethers.Contract(contractAddress.weth, abi, account);
 
-contractAddress = "0x88b68D2926eD258e7988e4D1809c42b199574088";
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/CityContract.json").toString().trim()).abi;
-var city = new ethers.Contract(contractAddress, abi, account);
+var city = new ethers.Contract(contractAddress.city, abi, account);
 
-contractAddress = "0xBb92dA58620905af251B098602C9124FAb97ECb3";
 abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Gameplay.json").toString().trim()).abi;
-var game = new ethers.Contract(contractAddress, abi, account);
+var game = new ethers.Contract(contractAddress.gameplay, abi, account);
+
+abi = JSON.parse(fs.readFileSync("../../smart_contracts/build/contracts/Achievements.json").toString().trim()).abi;
+var achievements = new ethers.Contract(contractAddress.achievements, abi, account);
 
 async function main() {
   var tx;
   var receipt;
+
+  // Funkcija koja inicijalizuje achievementove u smart contractu:
+  //-----------------------------------------
+  console.log('Achievement initialization');
+  let achievementList = Object.keys(achievementsModule.achievements);
+  console.log({achievementList});
+  for(let i = 0; i < achievementList.length; i++) {
+    let element = achievementList[i];
+    let tx = await achievements.newAchievement(element, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+    let receipt;
+    try {
+      receipt = await tx.wait()
+    }
+    catch(e) {
+      receipt = e;
+    }
+    console.log({element, receipt});
+  }
+
+  // Funkcija koja inicijalizuje tipove specijalnih gradjevina u smart contract:
+  console.log('Special building type initialization');
+  let typesList = Object.values(buildingStatsModule.specialTypes);
+  for(let i = 0; i < typesList.length; i++) {
+    let element = typesList[i];
+    let tx = await game.addSpecialBuildingType(
+      element.type, 
+      element.count, 
+      element.rarity, 
+      { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+    );
+    let receipt;
+    try {
+      receipt = await tx.wait();
+    }
+    catch(e) {
+      receipt = e;
+    }
+    console.log({type: element.type, receipt});
+  }
+
   // Funkcija koja poziva setMoney u serveru:
   //------------------------------------------
   // let body = { money: 10000000 };
@@ -44,15 +88,16 @@ async function main() {
   // console.log(response);
 
   // Funkcija koja mintuje weth tokene na moju adresu
-  //------------------------------------------
-  // tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'));
-  // receipt = await tx.wait();
-  // var balance = await weth.balanceOf(wallet.address);
-  // balance = balance.toString();
-  // console.log(balance);
+  // ------------------------------------------
+  console.log('Weth mint');
+  tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'), { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  receipt = await tx.wait();
+  var balance = await weth.balanceOf(wallet.address);
+  balance = balance.toString();
+  console.log(balance);
 
   // Funkcija koja pokrece zaradu u igri:
-  //-------------------------------------------
+  // -------------------------------------------
   // tx = await game.startGameIncome({gasLimit: 1e6});
   // receipt = await tx.wait();
   // console.log(receipt);
@@ -64,9 +109,10 @@ async function main() {
 
   // Funkcija koja flippuje sale state
   // ------------------------------------------
-  // tx = await city.flipSaleState();
-  // receipt = await tx.wait();
-  // console.log(receipt);
+  console.log('Flip sale state');
+  tx = await city.flipSaleState({ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  receipt = await tx.wait();
+  console.log(receipt);
 
   // Funkcija koja menja cenu mintovanja
   // ------------------------------------------
@@ -99,13 +145,15 @@ async function main() {
 
   // Funkcija koja salje Marku weth tokene
   // ------------------------------------------
-  // let markovaAdresa = "0xC40e41385698b12Ead7ea73bD5c6AE4ea836c9fb";
-  // tx = await weth.transfer(markovaAdresa, ethers.utils.parseEther("10"), { gasLimit: 1e7 });
-  // receipt = await tx.wait();
-  // console.log("receipt:", receipt);
+  console.log('Sharing weth tokens');
+  let markovaAdresa = "0xC40e41385698b12Ead7ea73bD5c6AE4ea836c9fb";
+  tx = await weth.transfer(markovaAdresa, ethers.utils.parseEther("10"), { gasLimit: 1e7, gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  receipt = await tx.wait();
+  console.log("receipt:", receipt);
+  balance = await weth.balanceOf(markovaAdresa);
   // let balance = await weth.balanceOf(markovaAdresa);
-  // balance = balance.toString();
-  // console.log("balance =", balance);
+  balance = balance.toString();
+  console.log("balance =", balance);
 
   // Funkcija koja withdrawuje sve sa contracta na moju adresu
   // ------------------------------------------
@@ -113,7 +161,7 @@ async function main() {
   // receipt = await tx.wait();
   // console.log(receipt);
 
-  // Funkcija koja iniciajlizuje grad... ovo je vec odradjeno
+  // Funkcija koja iniciajlizuje grad... ovo je vec odradjeno (outdated)
   // ------------------------------------------
   // tx = await game.initializeCity(wallet.address, 0, 2, 0, [3, 4], [4, 5], [5, 6], [6, 7], ['house', 'office'], [], 125000);
   // receipt = await tx.wait();

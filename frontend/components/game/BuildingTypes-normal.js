@@ -14,7 +14,8 @@ const buildingTypes = {
     office: [{type: 'office',level:1,width:2,height:2,cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25},
             {type: 'office',level:2,width:2,height:2,cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 40}],
 
-    restaurant: [{type: 'restaurant',level:1,width:2,height:1,cost: 500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5}],
+    // Ovde je Dario zamenio width i height da bi uvek width bio ona manja dimenzija ako su razlicite!!!
+    restaurant: [{type: 'restaurant',level:1,width:1,height:2,cost: 500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 20, officeWorkers: 5}],
 
     store: [{type: 'store',level:1,width:1,height:1,cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 2, maxDecrease: 0.3}],
 

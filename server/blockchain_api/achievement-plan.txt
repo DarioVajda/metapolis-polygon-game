@@ -41,6 +41,6 @@ achievement examples:
 
 
 TODO:
-    napraviti mogucnost ogranicavanja broja specijalnih gradjevina koje mogu da se naprave
-    napraviti theme-ove
-    pravljenje offerova za specijalne gradjevine koje su rasprodate
+    ✓ napraviti mogucnost ogranicavanja broja specijalnih gradjevina koje mogu da se naprave
+    ✓ napraviti theme-ove
+    ✓ pravljenje offerova za specijalne gradjevine koje su rasprodate

@@ -37,7 +37,7 @@ const buildingDimensions = new Map();
 function dimensionsRange(min, max) {
     let r = [];
     for(let i = min; i <= max; i++) {
-        for(let j = min; j <= max; j++) {
+        for(let j = i; j <= max; j++) {
             r.push([i, j]);
         }
     }
@@ -45,9 +45,9 @@ function dimensionsRange(min, max) {
 } // funkcija koja napravi niz svih mogucih parova mxn gde su m i n izmedju min i max (ukljucujuci i njih)
 function initBuildingDimensions() {
     // ova funkcija je tu samo da bude lepse, a kasnije se poziva da bi se sve ovo izvrsilo
-    buildingDimensions.set(buildingTypes.Factory, [[2, 4], [4, 2]]);
+    buildingDimensions.set(buildingTypes.Factory, [[2, 4]]);
     buildingDimensions.set(buildingTypes.Office, [[2, 2]]);
-    buildingDimensions.set(buildingTypes.Restaurant, [[2, 1], [1, 2]]);
+    buildingDimensions.set(buildingTypes.Restaurant, [[1, 2]]);
     buildingDimensions.set(buildingTypes.Parking, dimensionsRange(2, 4));
     buildingDimensions.set(buildingTypes.Building, [[1, 3], [3, 1], [2, 2]]);
     buildingDimensions.set(buildingTypes.House, [[1, 1]]);
@@ -113,21 +113,36 @@ class SpecialBuilding {
 }
 
 const specialTypes = {
-    Statue: 'statue',
-    Fountain: 'fountain'
+    Statue: {
+        type: 'statue',
+        count: 10,
+        rarity: 5
+    },
+    Fountain: {
+        type: 'fountain',
+        count: 20,
+        rarity: 3
+    },
+    Stadium: {
+        type: 'stadium',
+        count: 1,
+        rarity: 10
+    }
 }
 
 const specialBuildingDimensions = new Map();
 function initSpecialBuildingDimensions() {
-    specialBuildingDimensions.set(specialTypes.Statue, [[1, 1]]);
-    specialBuildingDimensions.set(specialTypes.Fountain, [[1, 2], [2, 1]]);
+    specialBuildingDimensions.set(specialTypes.Statue.type, [[1, 1]]);
+    specialBuildingDimensions.set(specialTypes.Fountain.type, [[1, 2]]);
+    specialBuildingDimensions.set(specialTypes.Stadium.type, [[2, 2]]);
 }
 initSpecialBuildingDimensions();
 
 const specialPrices = new Map();
 function initSpecialPrices() {
-    specialPrices.set(specialTypes.Statue, 100000);
-    specialPrices.set(specialTypes.Fountain, 80000);
+    specialPrices.set(specialTypes.Statue.type, 100000);
+    specialPrices.set(specialTypes.Fountain.type, 80000);
+    specialPrices.set(specialTypes.Stadium.type, 80000);
 }
 initSpecialPrices();
 

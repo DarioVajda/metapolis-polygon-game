@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 
 import styles from './profile.module.css';
 
-import MoneyIcon from '../universal/MoneyIcon';
-import IncomeIcon from '../universal/IncomeIcon';
-import ScoreIcon from '../universal/ScoreIcon';
+import MoneyIcon from '../universal/icons/MoneyIcon';
+import IncomeIcon from '../universal/icons/IncomeIcon';
+import ScoreIcon from '../universal/icons/ScoreIcon';
 
 const City = ({ id, data }) => {
   return (

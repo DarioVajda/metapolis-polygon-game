@@ -1,7 +1,7 @@
 // #region require
 
 let ethers = require("ethers");
-let fs = require("fs");
+// let fs = require("fs");
 
 let buildingStats = require('../gameplay/building_stats');
 let mapModule = require('../gameplay/map');
@@ -9,13 +9,13 @@ let peopleModule = require('../gameplay/people');
 let incomeModule = require('../gameplay/income');
 let generateModule = require('../rand_map/generate');
 let utils = require('./utils');
-let postFunctions = require('./postFunctions');
+// let postFunctions = require('./postFunctions');
 
 let addressJSON = require('../../smart_contracts/contract-address.json');
 
 // #endregion
 
-// #region Contract
+/* #region Contract
 
 // connecting to the blockchain and other initializations
 let provider = new ethers.providers.JsonRpcProvider(
@@ -34,6 +34,7 @@ var contract = new ethers.Contract(
 );
 
 //#endregion
+*/
 
 // #region Utils:
 
@@ -170,7 +171,7 @@ const achievements = {
         check: check4,
         title: 'check4',
         explanation: 'This is the check4.',
-        startDate: '09/24/2022 09:25:32',
+        startDate: '06/24/2022 09:25:32',
         endDate: '10/24/2022 09:25:32',
         rewardValue: 100,
         rewardType: rewardTypes.matic,

@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import style from './leaderboard.module.css';
 
-import MoneyIcon from '../universal/MoneyIcon';
-import IncomeIcon from '../universal/IncomeIcon';
-import ScoreIcon from '../universal/ScoreIcon';
-import OpenseaIcon from '../universal/OpenseaIcon';
+import MoneyIcon from '../universal/icons/MoneyIcon';
+import IncomeIcon from '../universal/icons/IncomeIcon';
+import ScoreIcon from '../universal/icons/ScoreIcon';
+import OpenseaIcon from '../universal/icons/OpenseaIcon';
 
 const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)

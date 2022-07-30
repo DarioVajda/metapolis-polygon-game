@@ -2,8 +2,8 @@ import React from 'react'
 
 import styles from './separator.module.css'
 
-import EthIcon from '../universal/EthIcon';
-import ArrowIcon from '../universal/ArrowIcon';
+import EthIcon from '../universal/icons/EthIcon';
+import ArrowIcon from '../universal/icons/ArrowIcon';
 
 const Separator = ({ data, index, nfts, price }) => {
 

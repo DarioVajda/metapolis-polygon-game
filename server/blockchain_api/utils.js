@@ -246,57 +246,14 @@ function isSameBuilding(building1, building2) {
 
 // #region CHECKING OFFERS
 
-/**
- * Function that checks if a player can spend some ingame money without affecting the offers the person made
- * If it affects any of the offers with this action, some offers will be canceled
- * @param {'smart contract'} contract is connecting us to the Gameplay smart contract
- * @param {Number} id is the id of the player
- * @param {Number} moneyValue is the value someone is trying to spend
- * @param {Object?} cityData is the data about the city (optional, will be loaded if not provided)
- * @returns {{ success: Boolean, canceled: Array<{ type: String, index: Number }> }} list of offers that were canceled and a boolean indicating if the action was successful
- */
-async function checkingOffers ({ contract, id, moneyValue, cityData }) {
+function formatOffers(offers) {
 
-    let cityDataLoaded = true;
+    let typeData = Object.entries(offers).map(element => ({
+        type: element[0],
+        offers: element[1]
+    }));
 
-    // async function used to load the data about a city
-    const loadCityData = async () => {
-        cityData = await contract.getCityData(id);
-        cityData = formatBuildingList(cityData);
-        cityDataLoaded = true;
-    }
-
-    // loading the data about the city if it was not provided
-    if(cityData === undefined) {
-        cityDataLoaded = false;
-        loadCityData();
-    }
-
-    let typeData = []; // array of objects containing data about the special building types
-    let typeList = Object.values(specialTypes); // array of strings
-    let numOfTypes = typeList.length; // number of special building types
-
-    // function called to load data about a special building type
-    const loadTypeData = async (_type) => {
-        let data = await contract.getSpecialBuildingType(_type);
-        data.type = _type;
-        typeData.push(data);
-    }
-    const delay = async (time) => {
-        return new Promise(resolve => setTimeout(resolve, time));
-    }
-
-    for(let i = 0; i < numOfTypes; i++) {
-        // starting the async functions for all special building types
-        loadTypeData(typeList[i]);
-    }
-
-    // waiting for all the data to load (city data and special building types)
-    while(cityDataLoaded === false || typeData.length < numOfTypes) {
-        await delay(50);
-    }
-
-    let offers = typeData
+    let offerList = typeData
         .map((element) => ({ type: element.type, offers: element.offers }) ) // making an array with this format: [ {type: 'type', offers: [{value: x, user: id}] }, ... ]
         .reduce(
             (array, subarray) => array.concat(
@@ -306,67 +263,55 @@ async function checkingOffers ({ contract, id, moneyValue, cityData }) {
             ),
             []
         ) // reducing the array with elements typeData to this format: [ {type, index, value, user}, ... ]
-        .map((element) => ({ type: element.type, index: element.index, value: element.value }) ) // removing the 'user' field since it is unnecessary
+        .map((element) => ({ type: element.type, index: element.index, value: element.value, canceled: false }) ) // removing the 'user' field since it is unnecessary
     
+    return offerList;
+}
 
-    let totalOfferValue = offers.reduce((sum, element) => sum + element.value, 0); // calculating the sum of all the offers the person made
-
-    if(cityData.money - moneyValue < totalOfferValue) {
-        // cancel the offers that should be canceled...
-        let delta = cityData.money - moneyValue; // delta is the available money
-        let receipts = [];
-        let error = false;
-        let numOfCanceledOffers = 0;
-
-        const cancel = async ({ type, index }) => {
-            let tx = await contract.cancelSpecialOffer(type, index);
-            try {
-                let receipt = await tx.wait();
-                receipts.push(receipt);
-            }
-            catch(e) {
-                error = true;
-                receipts.push(e);
-            }
+function reverseFormatOffers(offers, offersArg) {
+    for(let i = 0; i < offers.length; i++) {
+        if(offers[i].canceled === true) {
+            offersArg[offers[i].type][offers[i].index].canceled = true;
         }
-
-        // calling the cancel function until it is not needed anymore
-        while(delta < totalOfferValue) {
-            totalOfferValue -= offers[numOfCanceledOffers].value; // decreasing the total value of offers
-            numOfCanceledOffers++;
-            cancel(offers[numOfCanceledOffers]); // canceling the offer
-        }
-
-        // waiting until all the offers that should be canceled are canceled
-        while(error === false && receipts.length < numOfCanceledOffers) {
-            await delay(50);
-        }
-
-        if(error === true) {
-            return {
-                success: false,
-                canceled: []
-            }; // indicating that something went wrong in the transactions
-        }
-
-        return {
-            success: true,
-            canceled: offers
-                .slice(0, numOfCanceledOffers) // taking only the first 'numOfCanceledOffers' elements because those are the ones that were canceled
-                .map(element => ({ type: element.type, index: element.index })) // removing the 'value' property
-        };
     }
-    else {
-        return {
-            success: true,
-            canceled: []
-        };
+
+    return offersArg;
+}
+
+function checkingOffers(offersArg, cityData, moneyValue) {
+
+    let offers = formatOffers(offersArg);
+
+    let totalOfferValue = offers.reduce((sum, element) => {
+        if(element.canceled === false) return sum + element.value;
+        else return sum;
+    }, 0); // calculating the sum of all the offers the person made
+
+    // cancel the offers that should be canceled...
+    let delta = cityData.money - moneyValue; // delta is the available money
+    let numOfCanceledOffers = 0;
+
+    // pushing the offers that should be canceled to a list until it is not needed anymore
+    while(delta < totalOfferValue) {
+        totalOfferValue -= offers[numOfCanceledOffers].canceled === false ? offers[numOfCanceledOffers].value : 0; // decreasing the total value of offers (if curr offer is not canceled already)
+        offers[numOfCanceledOffers].canceled = true;
+        numOfCanceledOffers++;
     }
+
+    offersArg = reverseFormatOffers(offers, offersArg);
+    
+    return offersArg;
+}
+
+async function cancelOffers(offersArg) {
+    // canceling the offers where 'canceled' is true...
 }
 
 // #endregion
 
 exports.checkingOffers = checkingOffers;
+exports.cancelOffers = cancelOffers;
+
 exports.isBuildingFormat = isBuildingFormat;
 exports.isSpecialBuildingFormat = isSpecialBuildingFormat;
 exports.doesOverlap = doesOverlap;

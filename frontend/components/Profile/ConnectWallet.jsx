@@ -2,8 +2,8 @@ import React from 'react'
 
 import styles from './profile.module.css';
 
-import MetamaskIcon from '../universal/MetamaskIcon';
-import MetamaskIcon2 from '../universal/MetamaskIcon2';
+import MetamaskIcon from '../universal/icons/MetamaskIcon';
+import MetamaskIcon2 from '../universal/icons/MetamaskIcon2';
 
 const ConnectWallet = ({ connectUser }) => {
 

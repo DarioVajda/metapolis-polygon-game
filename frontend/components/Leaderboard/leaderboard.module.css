@@ -343,7 +343,7 @@
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent var(--light-text) transparent;
-  }
+}
 
 .peopleBarFill:hover {
     border: 1px solid var(--text);

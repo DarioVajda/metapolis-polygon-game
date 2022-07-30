@@ -534,7 +534,7 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 		let tempIndex = -1; // index of the highest offer the person made (because the biggest offer is always accepted)
 		console.log(specialTypeData.offers);
 		specialTypeData.offers.forEach((element, index) => {
-			if(parseInt(element.user) === parseInt(req.params.id) && (tempIndex === -1 || element.value > specialTypeData.offers[tempIndex].value) ) {
+			if(parseInt(element.user) === parseInt(req.params.id) && element.filled === true && (tempIndex === -1 || element.value > specialTypeData.offers[tempIndex].value) ) {
 				console.log({element});
 				tempIndex = index;
 			}
@@ -692,7 +692,13 @@ app.post("/cities/:id/remove", async (req, res) => {
 	}
 	
 	let RETURN_PERCENTAGE = 0.5;
-	let value = RETURN_PERCENTAGE * buildingStats.buildingStats.get(building.type)[building.level].cost;
+	let value = RETURN_PERCENTAGE * buildingStats.buildingStats
+		.get(building.type) // dobija se lista levela i podataka o levelima
+		.slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
+		.reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
+	if(building.type === buildingStats.buildingTypes.Building || building.type === buildingStats.buildingTypes.Park) {
+		value *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
+	}
 	
 	console.log(utils.isSameBuilding(building, city[index]))
 	console.log(utils.isBuildingFormat(building))

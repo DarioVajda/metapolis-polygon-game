@@ -4,7 +4,7 @@ import CityContract from '../../../smart_contracts/build/contracts/CityContract.
 import ContractAddress from '../../../smart_contracts/contract-address.json';
 
 import City from './City'
-import OpenseaIcon from '../universal/OpenseaIcon';
+import OpenseaIcon from '../universal/icons/OpenseaIcon';
 
 import styles from './profile.module.css'
 

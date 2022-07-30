@@ -2,7 +2,7 @@ import React from 'react'
 
 const EthIcon = ({ height, unit }) => {
   return (
-    <div style={{backgroundColor: 'transparent'}}>
+    <div style={{backgroundColor: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         aria-hidden="true" 

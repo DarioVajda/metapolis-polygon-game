@@ -1,0 +1,52 @@
+.hoverWrapper {
+    background-color: transparent;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+    /* border: 1px solid white; */
+    /* border-radius: 50%; */
+    transition: all 0.15s linear;
+    /* width: 100%; */
+}
+
+.hoverWrapper .hoverItem {
+    visibility: hidden;
+    position: relative;
+    opacity: 0;
+    background-color: var(--light-background);
+    border: 1px solid var(--light-text);
+    border-radius: 5px;
+    transition: all 0.15s linear;
+    align-self: center;
+    text-align: center;
+    padding: 0.5em;
+    /* margin-top: -1em; */
+    transform: translateY(-100%);
+    z-index: 100000;
+}
+
+.hoverWrapper:hover .hoverItem {
+    visibility: visible;
+    /* border: 1px solid white; */
+    opacity: 1;
+    /* transform: translateY(-100%); */
+}
+
+.hoverWrapper .hoverItem::after {
+    content: "";
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--light-text) transparent transparent transparent;
+}
+
+.hoverWrapper>div:hover .hoverItem {
+    visibility: hidden;
+    opacity: 0;
+}

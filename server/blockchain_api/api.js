@@ -188,11 +188,35 @@ app.get("/cities/:id/data", async (req, res) => {
 	let city = utils.formatBuildingList(cityData);
 	let score = await contract.getScore(req.params.id);
 	city.score = score[0].toNumber();
+
+	// #region get achievements
+	let keyList = Object.keys(achievements.achievements);
+	let achievements = [];
+
+	const loadAchievementData = async (key) => {
+		let count = await achievementContract.getAchievementCount(key);
+		let completed = await achievementContract.checkIfCompleted(req.params.id, key);
+		achievements.push({
+			key: key,
+			count: count,
+			completed: completed
+		})
+	}
+
+	const delay = async (time) => {
+		return new Promise(resolve => setTimeout(resolve, time));
+	}
+
+	for(let i = 0; i < keyList.length; i++) {
+		loadAchievementData(keyList[i]);
+	}
+
+	while(achievements.length < keyList.length) {
+		await delay(50);
+	}
+	// #endregion
 	
-	let income;
-	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(city, achievements);
 	city.income = income;
 	// console.log(city);
 	res.json(city);
@@ -231,9 +255,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
 
-	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	let income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(city);
 
 	let tx = await contract.getIncome(req.params.id, income, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	console.log(tx);	
@@ -370,9 +392,8 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	cityData = await contract.getCityData(req.params.id);
 	city = utils.formatBuildingList(cityData);
 	console.log(city);
-	let map = mapModule.initializeMap(buildings, mapModule.mapDimensions);
-	let people = peopleModule.countPeople(buildings, map);
-	let income = incomeModule.calculateIncome(people, buildings);
+	
+	let income = incomeModule.calculateIncome(city);
 
 	console.log('new score: ', city.money + 7*income);
 	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
@@ -452,10 +473,7 @@ app.post("/cities/:id/build", async (req, res) => {
 	// calling the function that changes the score
 	cityData = await contract.getCityData(req.params.id);
 	city = utils.formatBuildingList(cityData);
-	let income;
-	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(city);
 	
 	console.log('INCOME:', income);
 	let score = city.money + 7*income;
@@ -643,10 +661,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 
 		cityData = await contract.getCityData(req.params.id);
 		city = utils.formatBuildingList(cityData);
-		let income;
-		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		let income = incomeModule.calculateIncome(city);
 		console.log('income', income);
 		console.log('score', city.money + 7*income);
 
@@ -729,10 +744,7 @@ app.post("/cities/:id/remove", async (req, res) => {
 
 		cityData = await contract.getCityData(req.params.id);
 		city = utils.formatBuildingList(cityData);
-		let income;
-		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		let income = incomeModule.calculateIncome(city);
 
 		tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 		try {
@@ -968,10 +980,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 
 	let cityData = await contract.getCityData(req.params.id);
 	city = utils.formatBuildingList(cityData);
-	let income;
-	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(city);
 
 	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {

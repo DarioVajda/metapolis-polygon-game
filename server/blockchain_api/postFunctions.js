@@ -99,10 +99,7 @@ const build = async (body, id) => {
 	// calling the function that changes the score
 	cityData = await contract.getCityData(id);
 	city = utils.formatBuildingList(cityData);
-	let income;
-	let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-	let people = peopleModule.countPeople({normal: city.buildings} , map);
-	income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+	let income = incomeModule.calculateIncome(city);
 	
 	// console.log('INCOME:', income);
 	let score = city.money + 7*income;
@@ -231,10 +228,7 @@ const upgrade =  async (body, id) => {
 
 		cityData = await contract.getCityData(id);
 		city = utils.formatBuildingList(cityData);
-		let income;
-		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		let income = incomeModule.calculateIncome(city);
 
 		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 		try {
@@ -323,10 +317,7 @@ const remove = async (body, id) => {
 
 		cityData = await contract.getCityData(id);
 		city = utils.formatBuildingList(cityData);
-		let income;
-		let map = mapModule.initializeMap({normal: city.buildings} , mapModule.mapDimensions);
-		let people = peopleModule.countPeople({normal: city.buildings} , map);
-		income = incomeModule.calculateIncome(people, {normal: city.buildings} );
+		let income = incomeModule.calculateIncome(city);
 
 		tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 		try {

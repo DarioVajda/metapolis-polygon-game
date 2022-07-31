@@ -8,7 +8,7 @@ import AchievementItem from './AchievementItem';
 import XIcon from '../universal/icons/XIcon';
 
 import styles from './achievements.module.css';
-import { achievements } from './achievements';
+import { achievements, rewardTypes } from './achievements';
 
 const AchievementList = ({ id, city, closePopup, data, saveData }) => {
 
@@ -93,11 +93,10 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
     // console.log({list});
 
     let reward = { value: achievement.rewardValue, type: achievement.rewardType };
-    // giving the reward to the player
+    cityData = rewardTypes[reward.type].preview(cityData, reward.value);
+    // poziva se funkcija koja dodaje ovo na listu instrukcija ili odmah cuva na serveru...
 
     // console.log(list[index]);
-
-    
     
     list[index].count++;
     list[index].completed = true;
@@ -108,21 +107,11 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
       value: 1
     }
     list = list.map(element => ({ ...element, check: element.checkFunction(cityData) }) );
-
-    console.log(index, list);
-    // console.log(list[index]);
-
-    // list = [
-    //   ...list.filter((element) => element.count < Math.ceil(data.count * element.percentage) && element.check.completed === true ),
-    //   ...list.filter((element) => element.count < Math.ceil(data.count * element.percentage) && element.check.completed === false).sort((a, b) => b.check.value - a.check.value),
-    //   ...list.filter((element) => element.count === Math.ceil(data.count * element.percentage) && element.completed === true),
-    //   ...list.filter((element) => element.count === Math.ceil(data.count * element.percentage) && element.completed === false)
-    // ]
     
     saveData({ list: list, count: data.count, city: cityData });
   }
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>

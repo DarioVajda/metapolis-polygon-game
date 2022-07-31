@@ -27,40 +27,64 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
   // #region Getting the prices
 
 
-  const highestOffer = async () => {
-    const options = {method: 'GET'};
+  const highestOffer = async (id) => {
+
+    const options = { method: 'GET' };
     let res;
-    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/offers`, options)
-    .then(response => response.json())
-    .then(response => res = response)
-    .catch(err => console.error(err));
-      
-    // console.log('prices', id, res);
+    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/?include_orders=true`, options)
+      .then(response => response.json())
+      .then(response => res = response)
+      .catch(err => console.error(err))
     
-    let p = -1;
-    let t;
-    let max = -1;
+    if(res === undefined) return {
+      price: 0,
+      token: '',
+      usdPrice: 0,
+      message: 'Error'
+    }
+    
+    let p = -1; // najveca cena u dolarima
+    let t; // simbol tokena
+    let max = -1; // cena izrazena u tom tokenu
     
     let usdPrice;
-    res.offers.forEach((offer, index) => {
-      usdPrice = offer.payment_token_contract.usd_price * offer.base_price / 1e18;
+    let tokens = {}; // lista podataka o tokenima koji se koriste
+    res.collection.payment_tokens.forEach((element) => {
+      tokens[element.address] = { symbol: element.symbol, price: element.usd_price, decimals: element.decimals }
+    })
+
+    if(id === 0) console.log(tokens);
+
+    res.seaport_sell_orders.forEach((offer, index) => {
+
+      let token = tokens[offer.protocol_data.parameters.offer[0].token.toLowerCase()];
+      // if(id === 0) console.log(token);
+      
+      if(token === undefined) {
+        // console.log({id, token, index, addr: offer });
+      }
+      else { usdPrice = offer.current_price / Math.pow(10, token.decimals) * token.price; } // racuna se cena u dolarima
+      
       if(usdPrice > p) {
         p = usdPrice;
-        t = offer.payment_token_contract.symbol;
-        max = index;
+        t = token.symbol;
+        max = offer.current_price / Math.pow(10, token.decimals);
       }
+      
     });
-    let temp = p / res.offers[max].payment_token_contract.usd_price;
+    // if(id === 0) console.log({tokens});
 
-    return { 
-      price: Math.round(temp * 1000) / 1000,
+    let r = { 
+      price: Math.round(max * 1000) / 1000,
       token: t, 
       usdPrice: p, 
       message: 'Highest offer' 
     };
+    // console.log(r);
+    return r;
   }
   
-  const getListing = async () => {
+  const getListing = async (id) => {
     const options = {method: 'GET'};
     let res;
     await fetch(`https://api.opensea.io/api/v1/asset/${address}/${id}/listings`, options)
@@ -84,11 +108,11 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
   const getPrices = async () => {
     let r;
     
-    await highestOffer().then(res => {
+    await highestOffer(id).then(res => {
       r = res;
     });
 
-    await getListing().then(res => {
+    await getListing(id).then(res => {
       if(res.usdPrice > r.usdPrice) {
         r = res;
       }

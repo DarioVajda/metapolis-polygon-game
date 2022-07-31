@@ -2,12 +2,19 @@ const buildingsModule = require('./building_stats');
 const buildingTypes = buildingsModule.buildingTypes;
 const buildingStats = buildingsModule.buildingStats;
 
+const achievementModule = require('../blockchain_api/achievements');
+
+const mapModule = require('./map');
+const peopleModule = require('./people');
+
 const incomeRate = {
     educated: 10000,
     normal: 5000,
     gymIncomePerPerson: 150,
     restaurantIncomePerPerson: 200
 }; // plate ljudi u gradu i zarada teretane i restorana (moglo bi da predstavlja na mesecnom nivou)
+
+// #region utils
 
 function sortMap(map) {
     return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
@@ -43,7 +50,7 @@ function restaurantIncome(people, n) {
     return numOfPeople * incomeRate.restaurantIncomePerPerson;
 } // racuna se zarada restorana koja je proporcionalna broju gradjana u celom gradu
 
-function calculateIncome(peopleArg, buildings) {
+function calculate(peopleArg, buildings) {
     var educatedIncome = 0;
     var normalIncome = 0;
     var people = {
@@ -118,6 +125,35 @@ function calculateIncome(peopleArg, buildings) {
     return Math.floor(normalIncome + educatedIncome + buildingsIncome);
         // vraca se zbir zarada obicnih i edukovanih ljudi i objekata koji donose novac
         // 'floor' da bi brojevi bili lepsi
+}
+
+// #endregion
+
+function calculateIncome(city, achievementsArg) {
+    let achievements;
+    if(achievementsArg) {
+        achievements = {};
+        achievementsArg.forEach((element) => {
+            achievements[element.key] = { 
+                completed: element.completed,
+                rewardType: achievementModule.achievements[element.key].rewardType,
+                rewardValue: achievementModule.achievements[element.key].rewardValue
+            };
+        });
+    }
+
+    let map = mapModule.initializeMap({ normal: city.buildings } , mapModule.mapDimensions);
+    let people = peopleModule.countPeople({ normal: city.buildings } , map);
+    let income = calculate(people, { normal: city.buildings });
+
+    // taking into consideration the achievements that give an income boost
+    Object.values(achievements).forEach(element => {
+        if(element.completed === true && element.rewardType === achievementModule.rewardTypes.boost) {
+            income *= element.rewardValue;
+        }
+    })
+
+    return income;
 }
 
 exports.calculateIncome = calculateIncome;

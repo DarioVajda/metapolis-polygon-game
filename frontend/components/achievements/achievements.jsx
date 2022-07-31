@@ -149,7 +149,7 @@ const skyCity = (city) => {
         message: message
     };
 
-    console.log(r);
+    // console.log(r);
 
     return r;
 };
@@ -171,7 +171,7 @@ const achievements = {
         endDate: '10/24/2023 09:25:32',
         rewardValue: 1.05,
         rewardValueJsx: <>+5%</>,
-        rewardType: rewardTypes.boost,
+        rewardType: rewardTypes.boost.key,
         percentage: 0.05
     },
     educatedCity: {
@@ -182,7 +182,7 @@ const achievements = {
         endDate: '10/24/2023 09:25:32',
         rewardValue: null,
         rewardValueJsx: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>,
-        rewardType: rewardTypes.extraEducated,
+        rewardType: rewardTypes.extraEducated.key,
         percentage: 0.05
     },
     skyCity: {
@@ -193,7 +193,7 @@ const achievements = {
         endDate: '10/24/2023 09:25:32',
         rewardValue: 500000,
         rewardValueJsx: <>500000</>,
-        rewardType: rewardTypes.money,
+        rewardType: rewardTypes.money.key,
         percentage: 0.025
     },
     check4: {
@@ -204,7 +204,7 @@ const achievements = {
         endDate: '10/24/2023 09:25:32',
         rewardValue: 100,
         rewardValueJsx: <>100</>,
-        rewardType: rewardTypes.matic,
+        rewardType: rewardTypes.matic.key,
         percentage: 0.005
     },
 }

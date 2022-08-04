@@ -20,32 +20,43 @@ POST requests:
             throughOffer: true/false,
         }
     (*) /cities/:id/upgrade - {
-            index: i, // index in the building list array
             building: {
                 start: {x: ..., y: ...},
                 end: {x: ..., y: ...},
                 type: "type",
                 orientation: x,
-                level: 'l'
+                level: 'l',
+                id: 'buildingId',
             }
         }
     (*) /cities/:id/rotate - { 
             rotation: r, // new rotation of the building, 1≤r≤4
-            index: i // index of the building being rotated, 0≤i≤numOfBuildings-1
+            building: { ... } // building object like for all other endpoints
         }
     (*) /cities/:id/rotatespecial - { 
             rotation: r, // new rotation of the building, 1≤r≤4
-            index: i // index of the building being rotated, 0≤i≤numOfSpecialBuildings-1
+            building: { ... } // building object like for all other endpoints
         }
     (*) /cities/:id/remove - {
-            index: i, // index in the building list array,
-            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type", level: 'l' }
+            building: { 
+                start: {x: ..., y: ...}, 
+                end: {x: ..., y: ...}, 
+                orientation: x, 
+                type: "type", 
+                level: 'l', 
+                id: 'buildingId' 
+            }
         }
     (*) /cities/:id/removespecial - {
-            index: i, // index in the building list array
-            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type" },
+            building: { 
+                start: {x: ..., y: ...}, 
+                end: {x: ..., y: ...}, 
+                orientation: x, 
+                type: "type", 
+                id: 'buildingId' 
+            },
             throughOffer: true/false,
-            expectedValue: x, // int, the expected price for selling the special building (if not met, the action will fail)
+            expectedValue: number, // int, the expected price for selling the special building (if not met, the action will fail)
         }
     (*) /cities/:id/specialoffer - {
             value: Number, // offer value
@@ -73,8 +84,11 @@ DEV OPTIONS:
     /cities/:id/dev/setmoney - { money: m } // m - unsigned int
     /cities/:id/dev/demolish - City gone, reduced to atoms...   
 
-NAPOMENA:
-    - Kod url-ova sa (*) treba da bude sledeceg oblika: 
+NAPOMENE:
+    1. Medju post requestova treba koristiti samo sledece:
+        '/cities/:id/instructions', '/cities/:id/specialoffer' i '/cities/:id/initialize'
+        
+    2. Kod url-ova sa (*) treba da bude sledeceg oblika: 
         {
             navedeni podaci...,
             signature: '0x... ovo je potpis koji se dobije od korisnika u frontendu',

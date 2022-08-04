@@ -1,17 +1,16 @@
-let express = require("express");
-let ethers = require("ethers");
-let fs = require("fs");
+const express = require("express");
+const ethers = require("ethers");
+const fs = require("fs");
 
-let buildingStats = require('../gameplay/building_stats');
-let mapModule = require('../gameplay/map');
-let peopleModule = require('../gameplay/people');
-let incomeModule = require('../gameplay/income');
-let generateModule = require('../rand_map/generate');
-let utils = require('./utils');
-let postFunctions = require('./postFunctions');
-let achievements = require('./achievements');
+const buildingStats = require('../gameplay/building_stats');
+const incomeModule = require('../gameplay/income');
+const generateModule = require('../rand_map/generate');
+const utils = require('./utils');
+// const postFunctions = require('./postFunctions');
+const achievements = require('./achievements');
+const apiFunctions = require('./apiFunctions');
 
-let addressJSON = require('../../smart_contracts/contract-address.json');
+const addressJSON = require('../../smart_contracts/contract-address.json');
 
 // #region Contract
 // connecting to the blockchain and other initializations
@@ -55,57 +54,6 @@ app.use(express.json());
 app.use(cors(corsOptions))
 
 //#endregion
-// #region Plan
-
-//_______________________________________________________________________________________________
-/* Planirane promene na backendu:
-
-- INSTRUCTION LIST ENDPOINT
-	- treba da se napravi endpoint koji prima listu instrukcija koje su se izvrsile nad nftom
-	- treba samo jednom da se proveri signer i kasnije da se pozivaju funkcije redom kojim su poslate
-	- pojedinacne funkcije koje bi se pozivale bi bile prakticno iste kao svi POST endpointobi trenutno (samo moze par provera da se izostavi da ne bi bilo ponavljanja)
-	- slala bi se lista ovakvih objekata: { function: "string koji oznacava funkciju", args: { objekat koji sadrzi podatke koji se sad salju u telu requesta} }
-	- ...
-
-- initialize:
-	- napraviti na serveru da se grad inicijalizuje tako sto se dodaju jedna po jedna gradjevina po ceni 0 i kasnije se pozove funkcija za inicijalizaciju grada na blockchain-u (to u stvari samo oznaci da je grad inicijalizovan i da je zapoceta igra sa tim gradom)
-
-✓ leaderboard:
-	- na blockchainu se cuva samo lista sa score-ovima igraca
-	- ucitava se broj igraca (treba dodati to na Gameplay contract ako jos ne postoji) i svacij score jedan po jedan
-	- imacemo niz objekata {id, score} i bice sortiran na serveru i poslat korisniku (to moze i u frontendu da se uradi, mada mislim da je ovako bolje)
-	- potrebni dodaci:
-		✓ smart contract - getScore(id), getNumOfPlayers()
-		✓ server - popraviti endpoint '/leaderboard'
-
-✓ income:
-	- zarada se sama po sebi vise ne cuva nigde (po potrebi se racuna na serveru), MOZDA BI IPAK MOGLO DA SE CUVA ISTO KAO RANIJE
-	- na blockchainu se cuva 'score' svakog igraca
-	- na blockchainu se cuva takodje KOLIKO PUTA JE PRIMLJENA ZARADA, a na osnovu gameStart-a se odredjuje koliko puta je trebalo da bude primljena i toliko se dodaje
-	- potrebni dodaci:
-		✓ smart contract - setScore(id, _score)
-		✓ server - popraviti endpoint '/getincome' 
-
-✓ building orientation:
-	- treba napraviti da se u contractu cuva orjentacija gradjevina
-	- dodati da se to ucitava sa contract-a umesto da se uvek vraca 1 na serveru
-	- obratiti paznju na to da se ne pokvari nesto u drugim funkcijama kad se ovo doda u contract... (brisanje, dodavanje, upgradeovanje,...)
-	- potrebni dodaci: 
-		✓ smart contract - 'orientation' polje u strukturama Building i SpecialBuilding, rotateBuilding(id, index, _rotation), rotateSpecialBuilding(id, index, _rotation)
-		✓ server - treba u utils funkcijama da se doda deo koji vraca podatke sa servera umesto 1, endpoint /rotate
-
-- optimizacije:
-	- treba namestiti tipove podataka u 'City', 'Building' i 'SpecialBuilding' strukturama tako da se uklope u manje 'bajtova' (ne bas bajtovi nego reci od 256 bitova)
-	- proveriti da li sve radi kad ima velik broj gradjevina u jednom gradu ili velik broj gradova u igrici, ako se pojavljuje problem onda ga popraviti nekako
-	- izbegavati vracanje/slanje velikih nizova na contract
-
-✓ dev options:
-	✓ skloniti 'require(msg.sender === cities[id].owner);' jer msg.sender nece biti igrac nego server
-	✓ napraviti endpointove za to privremeno
-*/
-//_______________________________________________________________________________________________
-
-// #endregion
 // #region NFT GET requests
 
 app.get("/cities/:id", (req, res) => {
@@ -319,53 +267,51 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let owner = req.body.address;
 	let tokenId = req.params.id;
 
-	let tx = await contract.initializeCity(
-		owner, 
-		tokenId, 
-		0, // random theme...
-		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-		); // initializing the theme, money and incomesReceived 
-	try {
-		await tx.wait();
-	}
-	catch(e) {
-		res.status(500).send(e);
-		return;
-	}
+	// let tx = await contract.initializeCity(
+	// 	owner, 
+	// 	tokenId, 
+	// 	0, // random theme...
+	// 	{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	// ); // initializing the theme, money and incomesReceived 
+	// try {
+	// 	await tx.wait();
+	// }
+	// catch(e) {
+	// 	res.status(500).send(e);
+	// 	return;
+	// }
 	console.log('initialize done');
 
-	// adding all the buildings (the 'price' for everything is 0)
-	let element;
-	for(let i = 0; i < buildings.normal.length; i++) {
-		element = buildings.normal[i];
-		console.log(element);
-		tx = await contract.addBuilding(
+	// #region adding the buildings
+
+	let error = undefined;
+	let transactionCount = buildings.normal.length + buildings.special.length;
+
+	const addBuilding = async (element) => {
+		let tx = await contract.addBuilding(
 			tokenId,
-			0,
 			element.start.x,
 			element.start.y,
 			element.end.x,
 			element.end.y,
 			element.orientation,
+			0, // level
 			element.type,
 			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		try {
-			// console.log({ tx, i });
 			await tx.wait();
-			// console.log('success');
+			console.log(element);
 		}
-			catch(e) {
-			res.status(500).send(e); // ne znam sta znaci error code 500, ali treba mi onaj koji ukazuje na gresku u serveru
-			return;
+		catch(e) {
+			error = e;
 		}
+		transactionCount--;
 	}
-	for(let i = 0; i < buildings.special.length; i++) {
-		element = buildings.special[i];
-		console.log(element);
+
+	const addSpecialBuilding = async (element) => {
 		tx = await contract.addSpecialBuilding(
 			tokenId,
-			0, // cena
 			element.start.x,
 			element.start.y,
 			element.end.x,
@@ -373,20 +319,43 @@ app.post("/cities/:id/initialize", async (req, res) => {
 			element.orientation,
 			element.type,
 			false, // not through offer
-			0, // cash index (not important)
 			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		try {
-			// console.log({ tx, i });
 			await tx.wait();
-			// console.log('success');
+			console.log(element);
 		}
 		catch(e) {
-			console.log('Special building sold out!');
-			res.status(500).send(e);
+			error = e;
+		}
+		transactionCount--;
+	}
+
+	const delay = async (time) => {
+		return new Promise(resolve => setTimeout(resolve, time));
+	}
+
+	let element;
+	for(let i = 0; i < buildings.normal.length; i++) {
+		element = buildings.normal[i];
+		addBuilding(element);
+		await delay(5000);
+	}
+	for(let i = 0; i < buildings.special.length; i++) {
+		element = buildings.special[i];
+		addSpecialBuilding(element);
+		await delay(5000);
+	}
+
+	while(transactionCount > 0) {
+		await delay(50);
+		if(error !== undefined) {
+			res.status(500).send(error);
 			return;
 		}
 	}
+
+	// #endregion
 
 	// inicijalizacija scora:
 	cityData = await contract.getCityData(req.params.id);
@@ -457,6 +426,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		building.end.x,
 		building.end.y,
 		building.orientation,
+		building.level,
 		building.type,
 		{ gasLimit:5e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);
@@ -611,15 +581,9 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 }); // DONE
 
 app.post("/cities/:id/upgrade", async (req, res) => {
-	let index = req.body.index; // integer
 	let building = req.body.building; // 'Building' object
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
-
-	if(!city.buildings[index]) {
-		res.status(400).send("Ivalid index")
-		return;
-	}
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -641,11 +605,11 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		return;
 	}
 
-	if(utils.isBuildingFormat(building) && utils.isSameBuilding(building, city.buildings[index])) {
+	if(utils.isBuildingFormat(building) /* && utils.isSameBuilding(building, city.buildings[index]) */ ) {
 		let tx = await contract.upgradeBuilding(
 			req.params.id,
 			cost,
-			index,
+			building.id,
 			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		let receipt;
@@ -682,19 +646,12 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		res.status(400).send("Data sent is not correct");
 		return;
 	}
-}); // DONE (not tested yet)
+}); // DONE
 
 app.post("/cities/:id/remove", async (req, res) => {
-	let index = req.body.index; // integer
 	let building = req.body.building; // 'Building' object
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData).buildings;
-
-	if(city[index] === undefined) {
-		console.log('invalid index');
-		res.status(400).send("Ivalid index");
-		return;
-	}
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -715,15 +672,13 @@ app.post("/cities/:id/remove", async (req, res) => {
 		value *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
 	}
 	
-	console.log(utils.isSameBuilding(building, city[index]))
-	console.log(utils.isBuildingFormat(building))
-	if(utils.isSameBuilding(building, city[index]) && utils.isBuildingFormat(building)) {
+	if(utils.isBuildingFormat(building)) {
 
-		console.log({id: req.params.id,value,index});
+		console.log({id: req.params.id, value});
 		let tx = await contract.removeBuilding(
 			req.params.id,
 			value,
-			index,
+			building.id,
 			{ maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 		);
 		console.log({ tx });
@@ -767,18 +722,18 @@ app.post("/cities/:id/remove", async (req, res) => {
 
 app.post("/cities/:id/removespecial", async (req, res) => {
 	let id = parseInt(req.params.id);
-	let index = req.body.index;
 
 	let building = req.body.building;
- 
+
 	// treba da se napravi provera da li je postlati building isti kao sto je onaj u contractu
 	const RETURN_PERCENTAGE = 0.25;
-	let value = RETURN_PERCENTAGE * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina
+	let value = RETURN_PERCENTAGE * buildingStats.specialPrices.get(building.type); // treba da se uzme vrednost odgovarajuceg tipa gradjevina
 	let buyerId = 0;
 	let offerIndex = 0;
 	
 	if(req.body.throughOffer === false) {
-		value = RETURN_PERCENTAGE * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina		
+		value = RETURN_PERCENTAGE * buildingStats.specialPrices.get(building.type); // treba da se uzme vrednost odgovarajuceg tipa gradjevina		
+		console.log({value});
 	}
 	else {
 		// getting the data about the special building type the person is trying to sell
@@ -826,7 +781,7 @@ app.post("/cities/:id/removespecial", async (req, res) => {
 	let tx = await contract.removeSpecialBuilding(
 		id,
 		value,
-		index,
+		building.id,
 		req.body.throughOffer,
 		buyerId,
 		offerIndex,
@@ -849,14 +804,30 @@ app.post("/cities/:id/removespecial", async (req, res) => {
 		res.status(400).send('error in the smart contract function call');
 		return;
 	}
-}); // work in progress
+}); // DONE
 
 app.post("/cities/:id/rotate", async (req, res) => {
 	let data = req.body;
-	
-	// neke provere...
 
-	let tx = await contract.rotate(req.params.id, data.index, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+
+	let building = city.buildings.reduce((prev, curr) => curr.id === id ? curr : prev, -1);
+
+	if(building === -1) {
+		res.status(400).send("Building with the id that was sent does not exist");
+		return;
+	}
+	
+	// ako je gradjevina nesimetricna onda moze da se rotira samo za 180 stepeni
+	if(building.end.x - building.start.x !== building.end.x - building.start.x) {
+		if((building.rotation - rotation + 100) % 2 === 1) {
+			res.status(400).send("Can't rotate building this way");
+			return;
+		}
+	}
+
+	let tx = await contract.rotate(req.params.id, data.id, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -872,9 +843,25 @@ app.post("/cities/:id/rotate", async (req, res) => {
 app.post("/cities/:id/rotatespecial", async (req, res) => {
 	let data = req.body;
 	
-	// neke provere...
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
 
-	let tx = await contract.rotateSpecial(req.params.id, data.index, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	let building = city.specialBuildings.reduce((prev, curr) => curr.id === id ? curr : prev, -1);
+
+	if(building === -1) {
+		res.status(400).send("Building with the id that was sent does not exist");
+		return;
+	}
+	
+	// ako je gradjevina nesimetricna onda moze da se rotira samo za 180 stepeni
+	if(building.end.x - building.start.x !== building.end.x - building.start.x) {
+		if((building.rotation - rotation + 100) % 2 === 1) {
+			res.status(400).send("Can't rotate building this way");
+			return;
+		}
+	}
+
+	let tx = await contract.rotateSpecial(req.params.id, data.id, data.rotation, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -1101,9 +1088,9 @@ app.post('/cities/:id/completed', async (req, res) => {
 
 // #endregion
 
-// #region List of functions
+// #region Instruction list
 
-app.post('/cities/:id/instructions', async (req, res) => {
+app.post("/cities/:id/instructions", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
 	let city = utils.formatBuildingList(cityData);
 
@@ -1122,30 +1109,24 @@ app.post('/cities/:id/instructions', async (req, res) => {
 		return;
 	}
 
-	if(req.body.instructions === undefined || req.body.instructions.length === undefined) {
+	let instructions = req.body.instructions;
+	if(instructions === undefined || instructions.length === undefined) {
 		res.status(400).send('List of instructions is not sent');
 		return;
 	}
 	
-	let functions = postFunctions.functions;
-
-	let instructions = req.body.instructions;
-	let length = instructions.length;
-	let temp; // holding the value of the function that was executing
-	let element;
-	for(let i = 0; i < length; i++) {
-		element = instructions[i];
-		temp = await functions[element.instruction](element.body, req.params.id);
-		console.log({i, temp});
-		if(temp.status !== 200) {
-			res.status(temp.status).send(`${temp.message}`);
+	for(let i = 0; i < instructions.length; i++) {
+		if(!instructions[i].instruction || !instructions[i].body) {
+			res.status(400).send({ error: 'Wrong data format (instructions dont have body or instruction key' });
 			return;
 		}
 	}
 
-	res.status(200).send('Success');
-});
+	let response = await apiFunctions.instructionsApi(contract, achievementContract, parseInt(req.params.id), instructions);
+	console.log(response);
 
+	res.status(response.status).send({ message: response.message, errors: response.errors });
+});
 // #endregion
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

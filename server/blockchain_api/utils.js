@@ -26,7 +26,8 @@ function isBuildingFormat(obj) {
         typeof obj.type !== "string" ||
         typeof obj.level !== "number" ||
         typeof obj.orientation !== "number" ||
-        Object.values(obj).length !== 5 ||
+        typeof obj.id !== 'number' ||
+        Object.values(obj).length !== 6 ||
         Object.values(obj.start).length !== 2 ||
         Object.values(obj.end).length !== 2
     ) {
@@ -70,7 +71,8 @@ function isSpecialBuildingFormat(obj) {
         typeof obj.end.y !== "number" ||
         typeof obj.type !== "string" ||
         typeof obj.orientation !== "number" ||
-        Object.values(obj).length !== 4 ||
+        typeof obj.id !== 'number' ||
+        Object.values(obj).length !== 6 ||
         Object.values(obj.start).length !== 2 ||
         Object.values(obj.end).length !== 2
     ) {
@@ -167,42 +169,37 @@ function calculatePeople(data) {
 function formatBuildingList(data) {
     let city = { buildings: [], specialBuildings: [], specialBuildingCash: [] };
     // console.log(data);
-    for (let i = 0; i < data.numOfBuildings; i++) {
-        city.buildings.push(
-            new Building(
-                new Coordinate(data.startx[i].toNumber(), data.starty[i].toNumber()),
-                new Coordinate(data.endx[i].toNumber(), data.endy[i].toNumber()),
-                data.buildingType[i],
-                data.level[i].toNumber(),
-                data.orientation[i].toNumber()
-            )
-        );
+    for (let i = 0; i < data.buildingList.length; i++) {
+        city.buildings.push({
+            start: { x: data.buildingList[i].startx, y: data.buildingList[i].starty },
+            end: { x: data.buildingList[i].endx, y: data.buildingList[i].endy },
+            type: data.buildingList[i].buildingType,
+            level: data.buildingList[i].level,
+            orientation: data.buildingList[i].orientation,
+            id: data.buildingList[i].id
+        });
     }
-    for (let i = 0; i < data.numOfSpecialBuildings; i++) {
-        city.specialBuildings.push(
-            new SpecialBuilding(
-                new Coordinate(
-                    data.startx[i + data.numOfBuildings.toNumber()].toNumber(),
-                    data.starty[i + data.numOfBuildings.toNumber()].toNumber()
-                ),
-                new Coordinate(
-                    data.endx[i + data.numOfBuildings.toNumber()].toNumber(),
-                    data.endy[i + data.numOfBuildings.toNumber()].toNumber()
-                ),
-                data.specialType[i],
-                data.orientation[i + data.numOfBuildings.toNumber()].toNumber()
-            )
-        );
+    for (let i = 0; i < data.specialBuildingList.length; i++) {
+        city.specialBuildings.push({
+            start: { x: data.specialBuildingList[i].startx, y: data.specialBuildingList[i].starty },
+            end: { x: data.specialBuildingList[i].endx, y: data.specialBuildingList[i].endy },
+            type: data.specialBuildingList[i].specialType,
+            orientation: data.specialBuildingList[i].orientation,
+            id: data.specialBuildingList[i].id
+        });
     }
 
     city.specialBuildingCash = data.specialBuildingCash;
 
     city.money = data.money.toNumber();
     // city.income = data.income.toNumber();
-    city.owner = data.owner;
+    city.owner = data.cityOwner;
     city.incomesReceived = data.incomesReceived.toNumber();
-    city.created = data.created;
+    city.created = data.cityCreated;
     city.initialized = data.initialized;
+    city.theme = data.theme;
+    city.buildingId = data.buildingId,
+    city.specialBuildingId = data.specialBuildingId;
 
     let people = calculatePeople(city);
 
@@ -211,6 +208,9 @@ function formatBuildingList(data) {
     city.educated = people.educatedPeople;
     city.normalWorkers = people.manualWorkers;
     city.educatedWorkers = people.officeWorkers;
+    
+    // city.buildings = [];
+    // city.specialBuildings = [];
 
     return city;
 }

@@ -168,6 +168,7 @@ const Profile = ({ addr, isOwner }) => {
       .then(response => res = response)
       .catch(err => console.error(err));
       
+    console.log(id, res)
     if(res.listings.length === 0) return { price: 0, token: 0, usdPrice: '', message: '' };
     
     let temp = res.listings[0].base_price / 1e18;
@@ -187,11 +188,11 @@ const Profile = ({ addr, isOwner }) => {
       r = res;
     });
 
-    await getListing(id).then(res => {
-      if(res.usdPrice > r.usdPrice) {
-        r = res;
-      }
-    });
+    // await getListing(id).then(res => {
+    //   if(res.usdPrice > r.usdPrice) {
+    //     r = res;
+    //   }
+    // });
 
     if(r.price > 0) return r;
     else return undefined;

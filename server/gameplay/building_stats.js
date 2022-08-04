@@ -8,12 +8,13 @@ class Coordinate {
 //#region BUILDINGS
 
 class Building {
-    constructor(start, end, type, level, orientation) {
+    constructor(start, end, type, level, orientation, id) {
         this.start = start; // coordinate
         this.end = end; // coordinate
         this.type = type; // jedan od stringova iz buildingTypes objekta
         this.level = level; // int koji oznacava level gradjevine
         this.orientation = orientation;
+        this.id = id;
     }
 } // klasa koja opisuje jednu gradjevinu
 
@@ -104,11 +105,12 @@ initBuildingStats();
 
 //#region SPECIAL BUILDINGS
 class SpecialBuilding {
-    constructor(start, end, type, orientation) {
+    constructor(start, end, type, orientation, id) {
         this.start = start; // coordinate
         this.end = end; // coordinate
         this.type = type; // string representing the special building
         this.orientation = orientation;
+        this.id = id;
     }
 }
 

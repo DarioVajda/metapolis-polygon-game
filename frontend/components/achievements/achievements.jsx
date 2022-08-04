@@ -98,12 +98,12 @@ const greenCity = (city) => {
 
 const educatedCity = (city) => {
     const MIN_PEOPLE = 500;
-    const MIN_EDUCATED_PERCENTAGE = 60;
+    const MIN_EDUCATED_PERCENTAGE = 0.6;
     
     let people = city.educated + city.normal;
     let educated = city.educated;
 
-    let completed = (people >= MIN_PEOPLE) && (educated / people >= MIN_EDUCATED_PERCENTAGE / 100)
+    let completed = (people >= MIN_PEOPLE) && (educated / people >= MIN_EDUCATED_PERCENTAGE)
     let message;
     if(completed) {
         message = 'Achievement completed.'
@@ -116,7 +116,7 @@ const educatedCity = (city) => {
     }
     // return (people >= MIN_PEOPLE) && (educated / people >= MIN_EDUCATED_PERCENTAGE / 100);
 
-    let value = Math.min((educated / people) / (MIN_EDUCATED_PERCENTAGE / 100), 1) * Math.min(people / MIN_PEOPLE, 1);
+    let value = people === 0 ? 0 : Math.min((educated / people) / (MIN_EDUCATED_PERCENTAGE), 1) * Math.min(people / MIN_PEOPLE, 1);
 
     return {
         completed: completed,

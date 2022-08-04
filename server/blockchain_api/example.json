@@ -1,0 +1,95 @@
+{
+    "signature": "0x00458fcc3a153dba0189f5d82047d76ace91b4c674258c9635737df5bce3666d0062ec5c20f3280ab2cf8796cf9cb7ee4442af71fcfed9827c6f7fe2f9d032421b",
+    "message": "Removing house, index:0 in city 0, messageUUID:f0cc30a7-7560-44b1-9883-f5babf25f2eb",
+    "instructions": [
+        {
+            "instruction": "build",
+            "body": {
+                "building": {
+                    "start": { "x": 0, "y": 0 },
+                    "end": { "x": 0, "y": 0 },
+                    "orientation": 2,
+                    "type": "house",
+                    "level": 1
+                }
+            }
+        },
+        {
+            "instruction": "upgrade",
+            "body": {
+                "building": {
+                    "start": { "x": 0, "y": 0 },
+                    "end": { "x": 0, "y": 0 },
+                    "orientation": 2,
+                    "type": "house",
+                    "level": 1,
+                    "id": 1
+                }
+            }
+        },
+        {
+            "instruction": "remove",
+            "body": {
+                "building": {
+                    "start": { "x": 0, "y": 0 },
+                    "end": { "x": 0, "y": 0 },
+                    "orientation": 2,
+                    "type": "house",
+                    "level": 1,
+                    "id": 2
+                }
+            }
+        },
+        {
+            "instruction": "rotate",
+            "body": {
+                "building": {
+                    "start": { "x": 0, "y": 0 },
+                    "end": { "x": 0, "y": 0 },
+                    "orientation": 2,
+                    "type": "house",
+                    "level": 1,
+                    "id": 0
+                },
+                "rotation": 1
+            }
+        },
+        {
+            "instruction": "buildspecial",
+            "body": {
+                "building": {
+                    "start": { "x": 1, "y": 0 },
+                    "end": { "x": 1, "y": 0 },
+                    "orientation": 3,
+                    "type": "statue"
+                },
+                "throughOffer": false
+            }
+        },
+        {
+            "instruction": "removespecial",
+            "body": {
+                "building": {
+                    "start": { "x": 1, "y": 0 },
+                    "end": { "x": 1, "y": 0 },
+                    "orientation": 3,
+                    "type": "statue",
+                    "id": 0
+                }
+            }
+        },
+        {
+            "instruction": "rotatespecial",
+            "body": {
+                "building": {
+                    "start": { "x": 1, "y": 0 },
+                    "end": { "x": 1, "y": 0 },
+                    "orientation": 2,
+                    "type": "statue",
+                    "id": 1
+                },
+                "rotation": 3
+            }
+        }
+    ]
+}

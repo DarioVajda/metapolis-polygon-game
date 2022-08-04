@@ -177,3 +177,57 @@
    > gas price:           50.000000008 gwei
    > Total deployments:   5
    > Final cost:          0.646308600105736163 ETH
+
+9. CONTRACT DEPLOYMENTS
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0xeC12e78F69eDBFFa74c505f60111368bb2f38984
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0xab02cfdb3A7d9294dA16d6970091852BAd9400F5
+   > gas used:            4295799 (0x418c77)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0xF3ac88E4034E894f9AfeC465625a5c5c6170c92a
+   > gas used:            5392566 (0x5248b6)
+
+   Replacing 'Achievements'
+   ------------------------
+   > contract address:    0xA20922F053296fBa01CC9815759c58cdb5387E02
+   > gas used:            1303781 (0x13e4e5)
+
+   Summary
+   =======
+   > Total deployments:   5
+   > Final cost:          0.640932450089730543 ETH
+
+10. CONTRACT DEPLOYMENTS
+   Replacing 'Weth'
+   ----------------
+   > contract address:    0x180f0457e99D91B59aFDc00DfCbb8081C0203719
+   > gas used:            1576361 (0x180da9)
+
+   Replacing 'CityContract'
+   ------------------------
+   > contract address:    0xf5466315D661fB5F7a1c723268b717BCbB6c6957
+   > gas used:            4295799 (0x418c77)
+
+   Replacing 'Gameplay'
+   --------------------
+   > contract address:    0x2651f63DDEDd2478cB223d5cce2331d839569ed1
+   > gas used:            5251535 (0x5021cf)
+
+   Replacing 'Achievements'
+   ------------------------
+   > contract address:    0x947eEAD9F9DbcFc2Dfd55C8d43477036D6cfF8D2
+   > gas used:            1303781 (0x13e4e5)
+
+   Summary
+   =======
+   > Total deployments:   5
+   > Final cost:          0.633880900104028506 ETH
+
+

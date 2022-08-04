@@ -210,4 +210,21 @@ function generate() {
 // }
 // console.log('it took', count, ' runs to get the perfect ratio');
 
+// testira se racunanje zarade:
+// const incomeModule = require('../gameplay/income');
+
+// let income = 0;
+// let max = 0, min = 1e10;
+// let iterations = 100000;
+// for(let i = 0; i < iterations; i++) {
+//     if(i % 10000 === 0) console.log(i);
+//     let buildings = generate();
+//     // console.log(buildings);
+//     let temp = incomeModule.calculateIncome({ buildings: buildings.normal, specialBuildings: buildings.special }, []);
+//     income += temp;
+//     if(temp > max) max = temp;
+//     if(temp < min) min = temp;
+// }
+// console.log({ average: Math.round(income/iterations), max, min });
+
 exports.generateBuildings = generate;

@@ -112,7 +112,7 @@ function calculate(peopleArg, buildings) {
     buildings.normal.forEach((element) => {
         switch(element.type) {
             case buildingTypes.Gym:
-                buildingsIncome += gymIncome(element, buildings);
+                buildingsIncome += gymIncome(element, buildings.normal);
                 break;
             case buildingTypes.Parking: break;
             case buildingTypes.Restaurant:
@@ -130,9 +130,13 @@ function calculate(peopleArg, buildings) {
 // #endregion
 
 function calculateIncome(city, achievementsArg) {
-    let achievements;
+
+    let map = mapModule.initializeMap({ normal: city.buildings } , mapModule.mapDimensions);
+    let people = peopleModule.countPeople({ normal: city.buildings } , map);
+    let income = calculate(people, { normal: city.buildings });
+
     if(achievementsArg) {
-        achievements = {};
+        let achievements = {};
         achievementsArg.forEach((element) => {
             achievements[element.key] = { 
                 completed: element.completed,
@@ -140,18 +144,14 @@ function calculateIncome(city, achievementsArg) {
                 rewardValue: achievementModule.achievements[element.key].rewardValue
             };
         });
+
+        // taking into consideration the achievements that give an income boost
+        Object.values(achievements).forEach(element => {
+            if(element.completed === true && element.rewardType === achievementModule.rewardTypes.boost) {
+                income *= element.rewardValue;
+            }
+        })
     }
-
-    let map = mapModule.initializeMap({ normal: city.buildings } , mapModule.mapDimensions);
-    let people = peopleModule.countPeople({ normal: city.buildings } , map);
-    let income = calculate(people, { normal: city.buildings });
-
-    // taking into consideration the achievements that give an income boost
-    Object.values(achievements).forEach(element => {
-        if(element.completed === true && element.rewardType === achievementModule.rewardTypes.boost) {
-            income *= element.rewardValue;
-        }
-    })
 
     return income;
 }

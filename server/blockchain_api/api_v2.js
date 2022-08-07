@@ -5,6 +5,7 @@ const fs = require("fs");
 const buildingStats = require('../gameplay/building_stats');
 const incomeModule = require('../gameplay/income');
 const generateModule = require('../rand_map/generate');
+const utils = require('./utils');
 // const postFunctions = require('./postFunctions');
 const achievements = require('./achievements');
 const apiFunctions = require('./apiFunctions');
@@ -266,19 +267,20 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let owner = req.body.address;
 	let tokenId = req.params.id;
 
-	// let tx = await contract.initializeCity(
-	// 	owner, 
-	// 	tokenId, 
-	// 	0, // random theme...
-	// 	{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-	// ); // initializing the theme, money and incomesReceived 
-	// try {
-	// 	await tx.wait();
-	// }
-	// catch(e) {
-	// 	res.status(500).send(e);
-	// 	return;
-	// }
+	let tx = await contract.initializeCity(
+		owner, 
+		tokenId, 
+		0, // random theme...
+		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	); // initializing the theme, money and incomesReceived 
+	try {
+		console.log(tx);
+		await tx.wait();
+	}
+	catch(e) {
+		res.status(500).send(e);
+		return;
+	}
 	console.log('initialize done');
 
 	// #region adding the buildings
@@ -286,43 +288,9 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let error = undefined;
 	let transactionCount = buildings.normal.length + buildings.special.length;
 
-	const addBuilding = async (element) => {
-		let tx = await contract.addBuilding(
-			tokenId,
-			element.start.x,
-			element.start.y,
-			element.end.x,
-			element.end.y,
-			element.orientation,
-			0, // level
-			element.type,
-			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-		);
+	const waitForTx = async (tx) => {
 		try {
 			await tx.wait();
-			console.log(element);
-		}
-		catch(e) {
-			error = e;
-		}
-		transactionCount--;
-	}
-
-	const addSpecialBuilding = async (element) => {
-		tx = await contract.addSpecialBuilding(
-			tokenId,
-			element.start.x,
-			element.start.y,
-			element.end.x,
-			element.end.y,
-			element.orientation,
-			element.type,
-			false, // not through offer
-			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-		);
-		try {
-			await tx.wait();
-			console.log(element);
 		}
 		catch(e) {
 			error = e;
@@ -337,13 +305,35 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let element;
 	for(let i = 0; i < buildings.normal.length; i++) {
 		element = buildings.normal[i];
-		addBuilding(element);
-		await delay(5000);
+		let tx = await contract.addBuilding(
+			tokenId,
+			element.start.x,
+			element.start.y,
+			element.end.x,
+			element.end.y,
+			element.orientation,
+			0, // level
+			element.type,
+			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+		);
+		console.log(element);
+		waitForTx(tx);
 	}
 	for(let i = 0; i < buildings.special.length; i++) {
 		element = buildings.special[i];
-		addSpecialBuilding(element);
-		await delay(5000);
+		let tx = await contract.addSpecialBuilding(
+			tokenId,
+			element.start.x,
+			element.start.y,
+			element.end.x,
+			element.end.y,
+			element.orientation,
+			element.type,
+			false, // not through offer
+			{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+		);
+		console.log(element);
+		waitForTx(tx);
 	}
 
 	while(transactionCount > 0) {

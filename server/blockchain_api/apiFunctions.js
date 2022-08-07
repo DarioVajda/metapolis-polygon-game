@@ -141,14 +141,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     buildspecial: {
@@ -225,14 +218,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     upgrade: {
@@ -277,14 +263,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     remove: {
@@ -294,6 +273,9 @@ const functions = {
             console.log('remove', building);
 
             let index = city.buildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
+
+            console.log(city);
+            console.log(city.buildings[index]);
 
             if(index === -1) {
                 console.log('building id not found');
@@ -332,14 +314,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     removespecial: {
@@ -433,14 +408,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     rotate: {
@@ -475,14 +443,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     rotatespecial: {
@@ -517,14 +478,7 @@ const functions = {
                 { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
             );
             console.log({tx});
-            try {
-                let res = await tx.wait();
-                return res;
-            }
-            catch(e) {
-                console.log(e);
-                return false;
-            }
+            return tx;
         }
     },
     completed: {
@@ -535,7 +489,7 @@ const functions = {
             return { city, specialTypeData, achievementList };
         },
         save: async (id, contract, specialTypeData, body) => {
-            return 'success...';
+            return { wait: () => {} };
         }
     }
 }
@@ -618,7 +572,7 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
         if(temp === false) {
             return {
                 status: 400,
-                message: 'bad request',
+                message: `bad request - ${instructions[i].instruction}`,
                 errors: []
             };
         }
@@ -638,25 +592,13 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
     let instructionCount = instructions.length;
     let errors = [];
 
-    const saveFunctionCall = async (instruction, body) => {
-        let res = false;
-        let numOfAttempts = 0;
-
-        while(res === false && numOfAttempts < 10) {
-            console.log(`${numOfAttempts+1}th try`);
-            res = await functions[instruction].save(id, contract, specialTypeData, body);
-            numOfAttempts++;
-
-            // waiting 10 seconds to execute the function again if it failed
-            if(res === false && numOfAttempts < 10) {
-                console.log('trying again...', instruction);
-                await delay(5e3);
-            }
+    const saveFunctionCall = async (tx, instruction, body) => {
+        let receipt;
+        try {
+            receipt = await tx.wait();
         }
-
-        console.log('successfull try');
-
-        if(numOfAttempts === 10) {
+        catch(e) {
+            console.log(e);
             errors.push({ instruction, body });
         }
 
@@ -665,7 +607,8 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
 
     // calling the save functions
     for(let i = 0; i < instructions.length; i++) {
-        saveFunctionCall(instructions[i].instruction, instructions[i].body);
+        let tx = await functions[instructions[i].instruction].save(id, contract, specialTypeData, instructions[i].body);
+        saveFunctionCall(tx, instructions[i].instruction, instructions[i].body);
         await delay(1e3);
     }
 

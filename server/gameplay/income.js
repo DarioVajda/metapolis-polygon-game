@@ -5,7 +5,6 @@ const buildingStats = buildingsModule.buildingStats;
 const achievementModule = require('../blockchain_api/achievements');
 
 const mapModule = require('./map');
-const utils = require('./utils');
 const peopleModule = require('./people');
 
 const incomeRate = {

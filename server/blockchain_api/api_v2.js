@@ -5,7 +5,6 @@ const fs = require("fs");
 const buildingStats = require('../gameplay/building_stats');
 const incomeModule = require('../gameplay/income');
 const generateModule = require('../rand_map/generate');
-const utils = require('./utils');
 // const postFunctions = require('./postFunctions');
 const achievements = require('./achievements');
 const apiFunctions = require('./apiFunctions');

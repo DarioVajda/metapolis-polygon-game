@@ -1,8 +1,9 @@
 import { generateUUID } from "three/src/math/MathUtils";
 import create from "zustand";
+import { devtools } from "zustand/middleware";
 import { gridDimensions, gridSize, plotSize } from "./GridData";
 
-const useBuildingStore = create((set) => ({
+const buildingStore = (set) => ({
   buildings: [],
   grid: Array(gridSize * gridSize).fill(null, 0, gridSize * gridSize),
   uuid: generateUUID(),
@@ -76,7 +77,9 @@ const useBuildingStore = create((set) => ({
       buildings: buildings,
       grid: initializeGrid(buildings, state.grid),
     })),
-}));
+});
+
+const useBuildingStore = create(devtools(buildingStore));
 
 //Function to add building to grid
 function buildingToGrid([x0, y0], [x1, y1], uuid, grid) {

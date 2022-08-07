@@ -96,9 +96,9 @@ function calculateCoordinates(start, end, shape, direction) {
         end.y = start.y + (shape[1] - 1); // kraj gradjevine ce se nalaziti dole za shape[1]
     }
     else if(direction === 1) {
-        end.x = start.x; // kraj gradjevine ce se nalaziti tamo gde nam je trenutno start.x
-        end.y = start.y + (shape[1] - 1); // kraj gradjevine ce se nalaziti dole za shape[1]
-        start.x = start.x - (shape[0] - 1); // pocetak gradjevine se nalazi za shape[0] levo
+        end.y = start.y; // kraj gradjevine ce se nalaziti tamo gde nam je trenutno start.x
+        end.x = start.x + (shape[1] - 1); // kraj gradjevine ce se nalaziti dole za shape[1]
+        start.y = start.y - (shape[0] - 1); // pocetak gradjevine se nalazi za shape[0] levo
     }
     else if(direction === 2) {
         end.x = start.x; // generisane koordinate postaju koordinate kraja gradjevine
@@ -107,9 +107,9 @@ function calculateCoordinates(start, end, shape, direction) {
         start.y = start.y - (shape[1] - 1); // pocetne koordinate se pomeraju za shape[1]
     }
     else {
-        end.x = start.x + (shape[0] - 1);
-        end.y = start.y;
-        start.y = start.y - (shape[1] - 1);
+        end.y = start.y + (shape[0] - 1);
+        end.x = start.x;
+        start.x = start.x - (shape[1] - 1);
     }
 }
 
@@ -121,7 +121,7 @@ function createBuilding(buildings, type, normal) {
     let start = new Coordinate(0, 0);
     let end = new Coordinate(0, 0);
 
-    let tempDimensions = (normal) ? buildingDimensions : specialBuildingDimensions;
+    let tempDimensions = normal ? buildingDimensions : specialBuildingDimensions;
 
     while(buildingValid(buildings, building) === false) {
         start.x = random(0, mapDimensions - 1);
@@ -155,7 +155,7 @@ function generate() {
         [[1, 1]], // office
         [[0, 1]], // restaurant
         [[0, 1]], // parking
-        [[1, 9], [2, 1]], // store
+        [[2, 9], [3, 1]], // store
         [[0, 49], [1, 1]], // supermarket
         [[1, 7], [2, 3]], // park
         [[0, 49], [1, 1]] // gym
@@ -182,6 +182,8 @@ function generate() {
     }
     return buildings;
 }
+
+// #region tests 
 
 // console.dir(generate(), {depth: null});
 
@@ -215,16 +217,16 @@ function generate() {
 
 // let income = 0;
 // let max = 0, min = 1e10;
-// let iterations = 100000;
+// let iterations = 10000;
 // for(let i = 0; i < iterations; i++) {
-//     if(i % 10000 === 0) console.log(i);
 //     let buildings = generate();
-//     // console.log(buildings);
 //     let temp = incomeModule.calculateIncome({ buildings: buildings.normal, specialBuildings: buildings.special }, []);
 //     income += temp;
 //     if(temp > max) max = temp;
 //     if(temp < min) min = temp;
 // }
 // console.log({ average: Math.round(income/iterations), max, min });
+
+// #endregion
 
 exports.generateBuildings = generate;

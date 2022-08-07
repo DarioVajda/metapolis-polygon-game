@@ -1,7 +1,7 @@
 import ViewGL from "./viewgl.js";
 import React from 'react';
 
-import styles from '../styles/walkthrough.module.css';
+import styles from '../../styles/walkthrough.module.css';
 
 export default class Scene extends React.Component {
   constructor(props) {

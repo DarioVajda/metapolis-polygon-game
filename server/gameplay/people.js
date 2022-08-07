@@ -4,8 +4,8 @@ function getproductivity(building, map) {
     var productivity = 0;
     for(let i = building.start.x; i <= building.end.x; i++) {
         for(let j = building.start.y; j <= building.end.y; j++) {
-            if(map[j][i].productivity > productivity) {
-                productivity = map[j][i].productivity;
+            if(map[j][i] > productivity) {
+                productivity = map[j][i];
             }
         }
     }

@@ -7,7 +7,7 @@ import PrizesPopup from './PrizesPopup';
 import MintPopup from './MintPopup';
 import EthIcon from './universal/icons/EthIcon';
 
-import style from './styles/mintSection.module.css';
+import style from '../styles/mintSection.module.css';
 
 
 const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {

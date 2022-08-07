@@ -50,7 +50,7 @@ function initBuildingDimensions() {
     buildingDimensions.set(buildingTypes.Office, [[2, 2]]);
     buildingDimensions.set(buildingTypes.Restaurant, [[1, 2]]);
     buildingDimensions.set(buildingTypes.Parking, dimensionsRange(2, 4));
-    buildingDimensions.set(buildingTypes.Building, [[1, 3], [3, 1], [2, 2]]);
+    buildingDimensions.set(buildingTypes.Building, [[1, 3], [2, 2]]);
     buildingDimensions.set(buildingTypes.House, [[1, 1]]);
     buildingDimensions.set(buildingTypes.Store, [[1, 1]]);
     buildingDimensions.set(buildingTypes.SuperMarket, [[2, 2]]);
@@ -64,8 +64,8 @@ const buildingStats = new Map();
 function initBuildingStats() {
     // Sve ovo je u funkciji da bi program bio lepsi, a kasnije se poziva da se sve ovo izvrsi
     buildingStats.set(buildingTypes.Factory, [
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 10, maxDecrease: 0.15},
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 10, maxDecrease: 0.1}
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 8, maxDecrease: 0.2},
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 8, maxDecrease: 0.1}
     ]);
     buildingStats.set(buildingTypes.Office, [
         { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25},
@@ -82,8 +82,8 @@ function initBuildingStats() {
         { cost: 40000, normalPeople: 20, educatedPeople: 5, manualWorkers: 0, officeWorkers: 0}
     ]);
     buildingStats.set(buildingTypes.House, [
-        { cost: 20000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0, boost: 1.2},
-        { cost: 20000, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0, boost: 1.2}
+        { cost: 20000, normalPeople: 2, educatedPeople: 3, manualWorkers: 0, officeWorkers: 0, boost: 1.3},
+        { cost: 20000, normalPeople: 4, educatedPeople: 7, manualWorkers: 0, officeWorkers: 0, boost: 1.3}
     ]);
     buildingStats.set(buildingTypes.Store, [
         { cost: 100000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 2, maxDecrease: 0.3}
@@ -92,11 +92,11 @@ function initBuildingStats() {
         { cost: 300000, normalPeople: 0, educatedPeople: 0, manualWorkers: 30, officeWorkers: 10, range: 3, maxDecrease: 0.3}
     ]);
     buildingStats.set(buildingTypes.Park, [
-        { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0, range: 0}
+        { cost: 30000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 0, range: 0, boost: 1.2}
     ]);
     buildingStats.set(buildingTypes.Gym, [
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3},
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4}
+        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3, boost: 1.3},
+        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4, boost: 1.3}
     ]);
 } // funkcija koja inicijalizuje polja u mapi
 initBuildingStats();

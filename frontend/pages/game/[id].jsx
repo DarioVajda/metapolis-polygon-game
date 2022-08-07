@@ -75,8 +75,8 @@ const game = () => {
 
   const isValidID = async () => {
     id = parseInt(id);
-    console.log(id);
-    console.log(typeof id);
+    // console.log(id);
+    // console.log(typeof id);
     if(typeof id !== 'number') {
       setIdValidity(2);
       return;

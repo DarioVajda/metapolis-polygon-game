@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 
-import style from './styles/mintPopup.module.css';
+import style from '../styles/mintPopup.module.css';
 
 import { SpinnerCircular } from 'spinners-react';
 

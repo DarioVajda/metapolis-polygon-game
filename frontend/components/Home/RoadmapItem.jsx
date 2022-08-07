@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styles from './styles/roadmap.module.css';
+import styles from '../styles/roadmap.module.css';
 
 const RoadmapItem = ({data}) => {
   const inPast = () => {

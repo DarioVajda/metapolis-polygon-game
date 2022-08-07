@@ -5,15 +5,15 @@ import { ethers } from 'ethers';
 import CityContract from '../../smart_contracts/build/contracts/CityContract.json'
 import Weth from '../../smart_contracts/build/contracts/Weth.json'
 
-import Nav from '../components/Nav';
-import DevOptions from '../components/DevOptions';
-import MintSection from '../components/MintSection';
-import HomeCity from '../components/HomeCity';
-import Roadmap from '../components/Roadmap';
-// import Prizes from '../components/Prizes';
-import Walkthrough from '../components/Walkthrough/Walkthrough';
-import FAQs from '../components/FAQs';
-import AboutUs from '../components/AboutUs';
+import Nav from '../components/Home/Nav';
+import DevOptions from '../components/Home/DevOptions';
+import MintSection from '../components/Home/MintSection';
+import HomeCity from '../components/Home/HomeCity';
+import Roadmap from '../components/Home/Roadmap';
+// import Prizes from '../components/Home/Prizes';
+import Walkthrough from '../components/Home/Walkthrough/Walkthrough';
+import FAQs from '../components/Home/FAQs';
+import AboutUs from '../components/Home/AboutUs';
 
 import styles from "../styles/Home.module.css";
 

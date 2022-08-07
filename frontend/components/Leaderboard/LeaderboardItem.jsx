@@ -112,11 +112,11 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
       r = res;
     });
 
-    await getListing(id).then(res => {
-      if(res.usdPrice > r.usdPrice) {
-        r = res;
-      }
-    });
+    // await getListing(id).then(res => {
+    //   if(res.usdPrice > r.usdPrice) {
+    //     r = res;
+    //   }
+    // });
 
     // setTokenSymbol(token);
     return r;

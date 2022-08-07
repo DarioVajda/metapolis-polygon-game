@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styles from './styles/faqs.module.css';
+import styles from '../styles/faqs.module.css';
 
 import FAQuestion from './FAQuestion';
 

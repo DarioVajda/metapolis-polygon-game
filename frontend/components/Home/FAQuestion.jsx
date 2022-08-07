@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import styles from './styles/faqs.module.css';
+import styles from '../styles/faqs.module.css';
 
 const FAQuestion = ({q, a, i}) => {
 

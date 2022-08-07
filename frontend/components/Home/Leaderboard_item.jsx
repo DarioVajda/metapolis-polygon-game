@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import styles from './styles/item.module.css';
+import styles from '../styles/item.module.css';
 import { ExpandedContext } from './Leaderboard_list';
 
 const Leaderboard_item = ({ id, rank, expanded, setExpanded }) => {

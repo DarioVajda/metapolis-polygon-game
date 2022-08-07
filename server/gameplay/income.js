@@ -5,6 +5,7 @@ const buildingStats = buildingsModule.buildingStats;
 const achievementModule = require('../blockchain_api/achievements');
 
 const mapModule = require('./map');
+const utils = require('./utils');
 const peopleModule = require('./people');
 
 const incomeRate = {
@@ -131,7 +132,7 @@ function calculate(peopleArg, buildings) {
 
 function calculateIncome(city, achievementsArg) {
 
-    let map = mapModule.initializeMap({ normal: city.buildings } , mapModule.mapDimensions);
+    let map = mapModule.initializeMap({ normal: city.buildings });
     let people = peopleModule.countPeople({ normal: city.buildings } , map);
     let income = calculate(people, { normal: city.buildings });
 

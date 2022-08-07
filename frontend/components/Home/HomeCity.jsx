@@ -1,7 +1,7 @@
 import ViewGL from "../three/viewgl.js";
 import React from 'react';
 
-import styles from './styles/homeCity.module.css';
+import styles from '../styles/homeCity.module.css';
 
 export default class Scene extends React.Component {
   constructor(props) {

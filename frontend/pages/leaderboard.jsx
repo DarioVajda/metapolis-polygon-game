@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 import React, { useState, useRef, useEffect } from 'react'
 
-import Nav from '../components/Nav'
+import Nav from '../components/Home/Nav';
 import LeaderboardList from '../components/Leaderboard/LeaderboardList'
 
 import styles from '../styles/leaderboard.module.css'

@@ -42,14 +42,17 @@ export default function Buildings({ ID }) {
         plotSize * posY - (gridSize * plotSize) / 2 + plotSize / 2,
       ];
       const rotation = (Math.PI / 2) * (building.orientation - 1);
+
+      let key = generateUUID();
+
       if (Type === "house") {
-        return <House scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+        return <House scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
       } else if (Type === "factory") {
-        return <Factory scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+        return <Factory scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
       } else if (Type === "store") {
-        return <Store scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+        return <Store scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
       } else if (Type === "office") {
-        return <Office scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+        return <Office scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
         /////////////////////////////////////////PARK IS TEMPORARY
       } else if (Type === "park") {
         let parkSquares = [];
@@ -69,13 +72,20 @@ export default function Buildings({ ID }) {
             );
           }
         }
-        return parkSquares;
+        return (
+          <group key={key} uuid={building.uuid}>
+            {parkSquares}
+          </group>
+        );
         /////////////////////////////////////////PARK IS TEMPORARY
       } else if (Type === "building") {
-        if (Math.abs(building.start.x - building.end.x) + 1 === 2 || Math.abs(building.start.y - building.end.y) + 1 === 2)
-          return <Building scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+        if (
+          Math.abs(building.start.x - building.end.x) + 1 === 2 ||
+          Math.abs(building.start.y - building.end.y) + 1 === 2
+        )
+          return <Building scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
         else {
-          return <LongBuilding scale={Scale} key={generateUUID()} position={position} rotation={[0, rotation, 0]} />;
+          return <LongBuilding scale={Scale} key={key} uuid={building.uuid} position={position} rotation={[0, rotation, 0]} />;
         }
       }
 

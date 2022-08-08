@@ -106,7 +106,7 @@ export default function HoverObject() {
     }
   });
 
-  if (selectedBuildingType && buildMode) {
+  if (selectedBuildingType && buildMode===1) {
     const position = [
       (selectedBuildingType.width * plotSize) / 2 - plotSize / 2,
       0,

@@ -8,7 +8,7 @@ const buildingStore = (set) => ({
   grid: Array(gridSize * gridSize).fill(null, 0, gridSize * gridSize),
   uuid: generateUUID(),
   selectedBuilding: null,
-  buildMode: true,
+  buildMode: 0,
   hoveredXYCurrent: { x: 0, y: 0 },
   hoveredXYPrevious: { x: 0, y: 0 },
   hoverObjectMove: true,

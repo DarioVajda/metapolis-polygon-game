@@ -4,6 +4,7 @@ import { gridDimensions, gridSize, plotSize, ID } from "./GridData";
 import { buildingTypes } from "./BuildingTypes.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ethers } from "ethers";
+import { Scene } from "three";
 
 const apiAddBuilding = async (id, [x0, y0], [x1, y1], type, orientation) => {
   const message = `Building ${type} in city ${id}, messageUUID:${generateUUID()}`;
@@ -97,6 +98,7 @@ function GridSquare(props) {
   const ID = props.ID;
   const x = props.x;
   const y = props.y;
+  const built = props.built;
   const buildings = props.buildings;
   const [hovered, setHover] = useState(false);
   const grid = useBuildingStore((state) => state.grid);
@@ -107,12 +109,24 @@ function GridSquare(props) {
   const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
   const buildRotation = useBuildingStore((state) => state.buildRotation);
   const addInstruction = useBuildingStore((state) => state.addInstruction);
-  const instructions = useBuildingStore((state) => state.instructions);
   const money = useBuildingStore((state) => state.money);
   const educatedWorkers = useBuildingStore((state) => state.educatedWorkers);
   const unEducatedWorkers = useBuildingStore((state) => state.unEducatedWorkers);
   const educatedWorkersNeeded = useBuildingStore((state) => state.educatedWorkersNeeded);
   const unEducatedWorkersNeeded = useBuildingStore((state) => state.unEducatedWorkersNeeded);
+
+  let gridSquareRef = useRef();
+
+  function select(x, y, grid, buildings)
+  {
+    if (!built) {
+      //nista se ne desi jer nista ne selectujes
+      console.log("selecting an empty square");
+    }
+    else {
+      console.log(gridSquareRef.current.parent.getObjectByProperty('uuid',built))
+    }
+  }
 
   function build(x, y, grid, selectedBuildingType, buildRotation) {
     let endXY;
@@ -222,12 +236,25 @@ function GridSquare(props) {
 
   function onClick(e) {
     e.stopPropagation();
-    buildMode ? build(x, y, grid, selectedBuildingType, buildRotation) : remove(x, y, grid, buildings);
+    switch (buildMode) {
+      case 0:
+        select(x, y, grid, buildings);
+        break;
+      case 1:
+        build(x, y, grid, selectedBuildingType, buildRotation);
+        break;
+      case 2:
+        remove(x, y, grid, buildings);
+        break;
+      default:
+        break;
+    }
   }
 
   return (
     <mesh
       {...props}
+      ref={gridSquareRef}
       onPointerOver={(event) => {
         if (hoverObjectMove) {
           setHover(true), setHoveredXY(props.x, props.y);
@@ -241,7 +268,7 @@ function GridSquare(props) {
       <boxBufferGeometry attach="geometry" />
       <meshLambertMaterial
         attach="material"
-        color={hovered ? (buildMode ? 0x88ff88 : 0xff8888) : "lightgray"}
+        color={hovered ? (buildMode != 2 ? 0x88ff88 : 0xff8888) : "lightgray"}
         transparent
         opacity={props.built ? 0 : hovered ? 0.8 : 0.6}
       />
@@ -275,7 +302,7 @@ export default function Grid({ ID }) {
         scale={[plotSize * 0.9, 0.6, plotSize * 0.9]}
         x={x}
         y={y}
-        built={element ? true : false}
+        built={element ? element : false}
       />
     );
   });

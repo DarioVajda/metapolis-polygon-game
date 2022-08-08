@@ -133,16 +133,23 @@ function HTMLContent({ ID }) {
           Buildings
         </button>
         <button
-          className={buildMode ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
+          className={buildMode === 0 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
+          style={{ bottom: "2%", right: "22%" }}
+          onClick={() => setBuildMode(0)}
+        >
+          Select
+        </button>
+        <button
+          className={buildMode === 1 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "2%", right: "12%" }}
-          onClick={() => setBuildMode(true)}
+          onClick={() => setBuildMode(1)}
         >
           Build
         </button>
         <button
-          className={buildMode ? styles.roundedFixedBtn : styles.roundedFixedBtnClicked}
+          className={buildMode === 2 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "2%", right: "2%" }}
-          onClick={() => setBuildMode(false)}
+          onClick={() => setBuildMode(2)}
         >
           Demolish
         </button>

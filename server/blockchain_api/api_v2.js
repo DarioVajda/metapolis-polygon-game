@@ -236,7 +236,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 }); // DONE
 
 // #endregion
-// #region POST requests
+// #region POST functions
 
 app.post("/cities/:id/initialize", async (req, res) => {
 	if(req.body.address === undefined) {
@@ -366,7 +366,136 @@ app.post("/cities/:id/initialize", async (req, res) => {
 		res.status(400).send(e);
 		return;
 	}
-}); // DONE
+});
+
+app.post("/cities/:id/instructions", async (req, res) => {
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+
+	try {
+		let message = req.body.message;
+		let signature = req.body.signature;
+		let signer = cityData.cityOwner;
+		let signerAddr = ethers.utils.verifyMessage(message, signature);
+		if(signerAddr !== signer) {
+			res.status(400).send("The caller of this function must be the owner of the NFT");
+			return;
+		}
+	}
+	catch(e) {
+		res.status(400).send("Message or signature not sent.");
+		return;
+	}
+
+	let instructions = req.body.instructions;
+	if(instructions === undefined || instructions.length === undefined) {
+		res.status(400).send('List of instructions is not sent');
+		return;
+	}
+	
+	for(let i = 0; i < instructions.length; i++) {
+		if(!instructions[i].instruction || !instructions[i].body) {
+			res.status(400).send({ error: 'Wrong data format (instructions dont have body or instruction key' });
+			return;
+		}
+	}
+
+	let response = await apiFunctions.instructionsApi(contract, achievementContract, parseInt(req.params.id), instructions);
+	console.log(response);
+
+	res.status(response.status).send({ message: response.message, errors: response.errors });
+});
+
+app.post("/cities/:id/specialoffer", async (req, res) => {
+
+	let cityData = await contract.getCityData(req.params.id);
+	let city = utils.formatBuildingList(cityData);
+
+	// checking if the request was sent from the owner of the NFT
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.cityOwner;
+	let signerAddr = ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
+
+	let value = req.body.value; // the value of the offer
+	let type = req.body.type; // the type of special buildings the offer was made for
+
+	//////////// should check if the special building is sold out \\\\\\\\\\\\
+
+	// checking if the player has enough money to make the offer
+	if(value > city.money) {
+		res.status(400).send("Not enough money to make the offer");
+		return;
+	}
+
+	let tx = await contract.makeSpecialOffer(
+		type, 
+		req.params.id, 
+		value, 
+		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	);
+	try {
+		let receipt = await tx.wait();
+		console.log(receipt);
+		res.status(200).send("Offer made successfully");
+		return;
+	}
+	catch(e) {
+		console.log(e);
+		res.status(500).send(e);
+		return;
+	}
+});
+
+app.post("/cities/:id/canceloffer", async (req, res) => {
+	let cityData = await contract.getCityData(req.params.id);
+	// let city = utils.formatBuildingList(cityData);
+
+	// checking if the request was sent from the owner of the NFT
+	let message = req.body.message;
+	let signature = req.body.signature;
+	let signer = cityData.cityOwner;
+	let signerAddr = ethers.utils.verifyMessage(message, signature);
+	if(signerAddr !== signer) {
+		return res.status(400).send("The caller of this function must be the owner of the NFT");
+	}
+
+	let offerValue = req.body.offerValue;
+	let type = req.body.type;
+	// let data = await contract.getSpecialBuildingType(type);
+	// let id = parseInt(req.params.id);
+	// if(data.offers[offerIndex].user.toNumber() !== id) {
+	// 	console.log("Can't cancel an offer someone else made!");
+	// 	res.status(400).send("Can't cancel an offer someone else made!");
+	// 	return;
+	// }
+
+	let tx = await contract.cancelSpecialOffer(
+		type, 
+		req.params.id, 
+		offerValue, 
+		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	);
+	try {
+		let receipt = await tx.wait();
+		console.log('offer canceled');
+		res.status(200).send(receipt);
+	}
+	catch(e) {
+		res.status(500).send({ error: e, message: 'smart contract transaction failed' });
+		console.log('offer canceling transaction failed');
+		return;
+	}
+});
+
+// #endregion
+
+
+
+// #region DONT USE THIS
 
 app.post("/cities/:id/build", async (req, res) => {
 	let building = req.body.building;
@@ -863,92 +992,10 @@ app.post("/cities/:id/rotatespecial", async (req, res) => {
 	}
 }); // ADD CHECKS FOR THE REQUEST
 
-app.post("/cities/:id/specialoffer", async (req, res) => {
-
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
-
-	// checking if the request was sent from the owner of the NFT
-	let message = req.body.message;
-	let signature = req.body.signature;
-	let signer = cityData.cityOwner;
-	let signerAddr = ethers.utils.verifyMessage(message, signature);
-	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
-	}
-
-	let value = req.body.value; // the value of the offer
-	let type = req.body.type; // the type of special buildings the offer was made for
-
-	//////////// should check if the special building is sold out \\\\\\\\\\\\
-
-	// checking if the player has enough money to make the offer
-	if(value > city.money) {
-		res.status(400).send("Not enough money to make the offer");
-		return;
-	}
-
-	let tx = await contract.makeSpecialOffer(
-		type, 
-		req.params.id, 
-		value, 
-		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-	);
-	try {
-		let receipt = await tx.wait();
-		console.log(receipt);
-		res.status(200).send("Offer made successfully");
-		return;
-	}
-	catch(e) {
-		console.log(e);
-		res.status(500).send(e);
-		return;
-	}
-});
-
-app.post("/cities/:id/canceloffer", async (req, res) => {
-	let cityData = await contract.getCityData(req.params.id);
-	// let city = utils.formatBuildingList(cityData);
-
-	// checking if the request was sent from the owner of the NFT
-	let message = req.body.message;
-	let signature = req.body.signature;
-	let signer = cityData.cityOwner;
-	let signerAddr = ethers.utils.verifyMessage(message, signature);
-	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
-	}
-
-	let offerValue = req.body.offerValue;
-	let type = req.body.type;
-	let data = await contract.getSpecialBuildingType(type);
-	let id = parseInt(req.params.id);
-	if(data.offers[offerIndex].user.toNumber() !== id) {
-		console.log("Can't cancel an offer someone else made!");
-		res.status(400).send("Can't cancel an offer someone else made!");
-		return;
-	}
-
-	let tx = await contract.cancelSpecialOffer(
-		type, 
-		req.params.id, 
-		offerValue, 
-		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-	);
-	try {
-		let receipt = await tx.wait();
-		console.log('offer canceled');
-		res.status(200).send(receipt);
-	}
-	catch(e) {
-		res.status(500).send({ error: e, message: 'smart contract transaction failed' });
-		console.log('offer canceling transaction failed');
-		return;
-	}
-});
-
 // #endregion
+
+
+
 // #region Dev options:
 	app.post("/cities/:id/dev/setmoney", async (req, res) => {
 	let tx = await contract.devSetMoney(req.params.id, req.body.money, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
@@ -1089,43 +1136,6 @@ app.post('/cities/:id/completed', async (req, res) => {
 
 // #region Instruction list
 
-app.post("/cities/:id/instructions", async (req, res) => {
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
-
-	try {
-		let message = req.body.message;
-		let signature = req.body.signature;
-		let signer = cityData.cityOwner;
-		let signerAddr = ethers.utils.verifyMessage(message, signature);
-		if(signerAddr !== signer) {
-			res.status(400).send("The caller of this function must be the owner of the NFT");
-			return;
-		}
-	}
-	catch(e) {
-		res.status(400).send("Message or signature not sent.");
-		return;
-	}
-
-	let instructions = req.body.instructions;
-	if(instructions === undefined || instructions.length === undefined) {
-		res.status(400).send('List of instructions is not sent');
-		return;
-	}
-	
-	for(let i = 0; i < instructions.length; i++) {
-		if(!instructions[i].instruction || !instructions[i].body) {
-			res.status(400).send({ error: 'Wrong data format (instructions dont have body or instruction key' });
-			return;
-		}
-	}
-
-	let response = await apiFunctions.instructionsApi(contract, achievementContract, parseInt(req.params.id), instructions);
-	console.log(response);
-
-	res.status(response.status).send({ message: response.message, errors: response.errors });
-});
 // #endregion
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -34,8 +34,8 @@ const useEventListener = (eventName, handler, element = window) => {
 };
 
 export default function HoverObject() {
-  const selectedBuilding = useBuildingStore((state) => state.selectedBuilding);
-  let selectedBuildingType = selectedBuilding ? buildingTypes[selectedBuilding][0] : null; //checks if selectedBuilding is null - no building selected
+  const selectedBuildingInGui = useBuildingStore((state) => state.selectedBuildingInGui);
+  let selectedBuildingType = selectedBuildingInGui ? buildingTypes[selectedBuildingInGui][0] : null; //checks if selectedBuildingInGui is null - no building selected
   const hoveredXYCurrent = useBuildingStore((state) => state.hoveredXYCurrent); ///KADA SE I JEDAN OD OVA DVA PROMENI ONDA SE RERENDERUJE COMPONENT
   const hoveredXYPrevious = useBuildingStore((state) => state.hoveredXYPrevious); ///KADA SE I JEDAN OD OVA DVA PROMENI ONDA SE RERENDERUJE COMPONENT
   const buildMode = useBuildingStore((state) => state.buildMode);
@@ -49,7 +49,8 @@ export default function HoverObject() {
   const handler = ({ key }) => {
     if (String(key).toLowerCase() == "r" && !rotatingRef.current) {
       setRotation(buildRotation === 4 ? 1 : buildRotation + 1);
-      if (hoverObjectRef.current.goalRotation) hoverObjectRef.current.goalRotation = hoverObjectRef.current.goalRotation + Math.PI / 2;
+      if (hoverObjectRef.current.goalRotation)
+        hoverObjectRef.current.goalRotation = hoverObjectRef.current.goalRotation + Math.PI / 2;
       else hoverObjectRef.current.goalRotation = Math.PI / 2;
       rotatingRef.current = true;
     }
@@ -106,7 +107,7 @@ export default function HoverObject() {
     }
   });
 
-  if (selectedBuildingType && buildMode) {
+  if (selectedBuildingType && buildMode === 1) {
     const position = [
       (selectedBuildingType.width * plotSize) / 2 - plotSize / 2,
       0,

@@ -1,12 +1,12 @@
 import ViewGL from "../../three/viewgl.js";
-import React from 'react';
+import React from "react";
 
-import styles from '../styles/homeCity.module.css';
+import styles from "../styles/homeCity.module.css";
 
 export default class Scene extends React.Component {
   constructor(props) {
-      super(props);
-      this.canvasRef = React.createRef();
+    super(props);
+    this.canvasRef = React.createRef();
   }
 
   // ******************* COMPONENT LIFECYCLE ******************* //
@@ -16,26 +16,26 @@ export default class Scene extends React.Component {
     this.viewGL = new ViewGL(canvas);
 
     // Init any event listeners
-    window.addEventListener('mousemove', this.mouseMove);
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("mousemove", this.mouseMove);
+    window.addEventListener("resize", this.handleResize);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Pass updated props to 
+    // Pass updated props to
     const newValue = this.props.whateverProperty;
     this.viewGL.updateValue(newValue);
   }
 
   componentWillUnmount() {
     // Remove any event listeners
-    window.removeEventListener('mousemove', this.mouseMove);
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener("mousemove", this.mouseMove);
+    window.removeEventListener("resize", this.handleResize);
   }
 
   // ******************* EVENT LISTENERS ******************* //
   mouseMove = (event) => {
     this.viewGL.onMouseMove();
-  }
+  };
 
   handleResize = () => {
     this.viewGL.onWindowResize(window.innerWidth, window.innerHeight);

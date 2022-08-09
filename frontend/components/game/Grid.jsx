@@ -1,5 +1,5 @@
-import { React, useState, useCallback, useRef, useEffect } from "react";
-import { useBuildingStore, demolishOnGrid } from "./BuildingStore.js";
+import { React, useState, useRef } from "react";
+import { useBuildingStore } from "./BuildingStore.js";
 import { gridDimensions, gridSize, plotSize, ID } from "./GridData";
 import { buildingTypes } from "./BuildingTypes.js";
 import { generateUUID } from "three/src/math/MathUtils";
@@ -89,16 +89,18 @@ const apiRemoveBuilding = async (id, index, [x0, y0], [x1, y1], type, level, ori
 };
 
 function GridSquare(props) {
-  const selectedBuilding = useBuildingStore((state) => state.selectedBuilding);
-  let selectedBuildingType = selectedBuilding ? buildingTypes[selectedBuilding][0] : null; //checks if selectedBuilding is null
+  const selectedBuildingInGui = useBuildingStore((state) => state.selectedBuildingInGui);
+  let selectedBuildingType = selectedBuildingInGui ? buildingTypes[selectedBuildingInGui][0] : null; //checks if selectedBuildingInGui is null
   const gridDimensions = props.gridDimensions;
   const gridSize = props.gridSize;
   const plotSize = props.plotSize;
   const ID = props.ID;
   const x = props.x;
   const y = props.y;
+  const built = props.built;
   const buildings = props.buildings;
   const [hovered, setHover] = useState(false);
+  const selectedBuildingObject = useBuildingStore((state) => state.selectedBuildingObject);
   const grid = useBuildingStore((state) => state.grid);
   const addBuilding = useBuildingStore((state) => state.addBuilding);
   const demolishBuilding = useBuildingStore((state) => state.removeBuilding);
@@ -107,12 +109,25 @@ function GridSquare(props) {
   const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
   const buildRotation = useBuildingStore((state) => state.buildRotation);
   const addInstruction = useBuildingStore((state) => state.addInstruction);
-  const instructions = useBuildingStore((state) => state.instructions);
   const money = useBuildingStore((state) => state.money);
   const educatedWorkers = useBuildingStore((state) => state.educatedWorkers);
   const unEducatedWorkers = useBuildingStore((state) => state.unEducatedWorkers);
   const educatedWorkersNeeded = useBuildingStore((state) => state.educatedWorkersNeeded);
   const unEducatedWorkersNeeded = useBuildingStore((state) => state.unEducatedWorkersNeeded);
+
+  let gridSquareRef = useRef();
+
+  function select(x, y, grid, buildings) {
+    if (!built) {
+      //nista se ne desi jer nista ne selectujes
+      console.log("selecting an empty square");
+    } else {
+      console.log(gridSquareRef.current.parent.getObjectByProperty("uuid", built));
+      useBuildingStore.setState({
+        selectedBuildingObject: gridSquareRef.current.parent.getObjectByProperty("uuid", built),
+      });
+    }
+  }
 
   function build(x, y, grid, selectedBuildingType, buildRotation) {
     let endXY;
@@ -222,12 +237,25 @@ function GridSquare(props) {
 
   function onClick(e) {
     e.stopPropagation();
-    buildMode ? build(x, y, grid, selectedBuildingType, buildRotation) : remove(x, y, grid, buildings);
+    switch (buildMode) {
+      case 0:
+        select(x, y, grid, buildings);
+        break;
+      case 1:
+        build(x, y, grid, selectedBuildingType, buildRotation);
+        break;
+      case 2:
+        remove(x, y, grid, buildings);
+        break;
+      default:
+        break;
+    }
   }
 
   return (
     <mesh
       {...props}
+      ref={gridSquareRef}
       onPointerOver={(event) => {
         if (hoverObjectMove) {
           setHover(true), setHoveredXY(props.x, props.y);
@@ -241,7 +269,7 @@ function GridSquare(props) {
       <boxBufferGeometry attach="geometry" />
       <meshLambertMaterial
         attach="material"
-        color={hovered ? (buildMode ? 0x88ff88 : 0xff8888) : "lightgray"}
+        color={hovered ? (buildMode != 2 ? 0x88ff88 : 0xff8888) : "lightgray"}
         transparent
         opacity={props.built ? 0 : hovered ? 0.8 : 0.6}
       />
@@ -275,7 +303,7 @@ export default function Grid({ ID }) {
         scale={[plotSize * 0.9, 0.6, plotSize * 0.9]}
         x={x}
         y={y}
-        built={element ? true : false}
+        built={element ? element : false}
       />
     );
   });

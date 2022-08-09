@@ -14,6 +14,7 @@ import HoverObject from "../components/game/HoverObject.jsx";
 import { ID } from "../components/game/GridData";
 import { ethers } from "ethers";
 import { generateUUID } from "three/src/math/MathUtils";
+import FloatingMenu from "../components/game/FloatingMenu";
 
 //----CONSTANTS----//
 
@@ -66,15 +67,15 @@ const gameplay = () => {
         }}
       >
         <HTMLContent ID={ID} />
-        <WorldCanvas>
+        <WorldCanvas className={"world-canvas"} style={{ backgroundColor: "transparent" }}>
           <OrbitControls />
           <Lights />
           <Grid ID={ID} />
           <Suspense fallback={null}>
             <Bounds fit clip observe margin={1}>
               <Landscape scale={120} position={[-20, -23, 2]} />
-              <Buildings ID={ID} />
-
+              <FloatingMenu style={{ backgroundColor: "transparent" }} />
+              <Buildings ID={ID}></Buildings>
               <HoverObject />
             </Bounds>
           </Suspense>

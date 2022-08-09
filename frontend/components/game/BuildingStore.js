@@ -4,23 +4,32 @@ import { devtools } from "zustand/middleware";
 import { gridDimensions, gridSize, plotSize } from "./GridData";
 
 const buildingStore = (set) => ({
+  //#region DATA
   buildings: [],
   grid: Array(gridSize * gridSize).fill(null, 0, gridSize * gridSize),
   uuid: generateUUID(),
-  selectedBuilding: null,
-  buildMode: true,
+  //#endregion
+  //#region GUI BUTTONS:
+  selectedBuildingInGui: null,
+  buildMode: 0,
+  //#endregion
+  //#region USED FOR EDITING THE MAP
   hoveredXYCurrent: { x: 0, y: 0 },
   hoveredXYPrevious: { x: 0, y: 0 },
   hoverObjectMove: true,
   buildRotation: 1,
   instructions: [],
+  selectedBuildingObject: undefined,
+  //#endregion
+  //#region DATA REPRESENTED IN GUI
   money: undefined,
   educatedWorkers: undefined,
   unEducatedWorkers: undefined,
   educatedWorkersNeeded: undefined,
   unEducatedWorkersNeeded: undefined,
   officeWorkers: undefined,
-  selectBuilding: (type) => set(() => ({ selectedBuilding: type })),
+  //#endregion
+  selectBuildingInGui: (type) => set(() => ({ selectedBuildingInGui: type })),
   setBuildMode: (mode) => set(() => ({ buildMode: mode })),
   setHoveredXY: (x, y) =>
     set((state) => ({
@@ -89,14 +98,6 @@ function buildingToGrid([x0, y0], [x1, y1], uuid, grid) {
     }
   }
   return grid;
-}
-
-function eraseBuilding(uuid, buildings) {
-  let found = buildings.find((building) => building.uuid === uuid);
-  if (found != undefined) {
-    found = buildings.pop();
-  }
-  return buildings;
 }
 
 function removeBuildingFromGrid(grid, uuid) {

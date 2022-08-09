@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Html } from "@react-three/drei";
-import styles from "../styles/game.module.css";
+import styles from "../styles/Game.module.css";
 import { Group } from "three";
 import { useBuildingStore } from "./BuildingStore";
 import GoldDiv from "./HTMLComponents/goldIcon.jsx";
@@ -84,7 +84,7 @@ function HTMLContent({ ID }) {
   const [showBuildingsList, setShowBuildingsList] = useState(false);
   const [selectedBuildingInList, setSelectedBuildingInList] = useState(0);
   const toggleBuildings = () => setShowBuildingsList(!showBuildingsList);
-  const selectBuilding = useBuildingStore((state) => state.selectBuilding);
+  const selectBuildingInGui = useBuildingStore((state) => state.selectBuildingInGui);
   const setBuildMode = useBuildingStore((state) => state.setBuildMode);
   const buildMode = useBuildingStore((state) => state.buildMode);
   const instructions = useBuildingStore((state) => state.instructions);
@@ -133,16 +133,23 @@ function HTMLContent({ ID }) {
           Buildings
         </button>
         <button
-          className={buildMode ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
+          className={buildMode === 0 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
+          style={{ bottom: "2%", right: "22%" }}
+          onClick={() => setBuildMode(0)}
+        >
+          Select
+        </button>
+        <button
+          className={buildMode === 1 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "2%", right: "12%" }}
-          onClick={() => setBuildMode(true)}
+          onClick={() => setBuildMode(1)}
         >
           Build
         </button>
         <button
-          className={buildMode ? styles.roundedFixedBtn : styles.roundedFixedBtnClicked}
+          className={buildMode === 2 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "2%", right: "2%" }}
-          onClick={() => setBuildMode(false)}
+          onClick={() => setBuildMode(2)}
         >
           Demolish
         </button>
@@ -163,7 +170,7 @@ function HTMLContent({ ID }) {
           className={selectedBuildingInList === 1 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "15%", left: "2%" }}
           onClick={() => {
-            selectBuilding("house"), setSelectedBuildingInList(1);
+            selectBuildingInGui("house"), setSelectedBuildingInList(1);
           }}
         >
           House
@@ -174,7 +181,7 @@ function HTMLContent({ ID }) {
           className={selectedBuildingInList === 2 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "15%", left: "12%" }}
           onClick={() => {
-            selectBuilding("factory"), setSelectedBuildingInList(2);
+            selectBuildingInGui("factory"), setSelectedBuildingInList(2);
           }}
         >
           Factory
@@ -185,7 +192,7 @@ function HTMLContent({ ID }) {
           className={selectedBuildingInList === 3 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "15%", left: "22%" }}
           onClick={() => {
-            selectBuilding("building"), setSelectedBuildingInList(3);
+            selectBuildingInGui("building"), setSelectedBuildingInList(3);
           }}
         >
           Building
@@ -196,7 +203,7 @@ function HTMLContent({ ID }) {
           className={selectedBuildingInList === 4 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "15%", left: "32%" }}
           onClick={() => {
-            selectBuilding("store"), setSelectedBuildingInList(4);
+            selectBuildingInGui("store"), setSelectedBuildingInList(4);
           }}
         >
           Store
@@ -207,7 +214,7 @@ function HTMLContent({ ID }) {
           className={selectedBuildingInList === 5 ? styles.roundedFixedBtnClicked : styles.roundedFixedBtn}
           style={{ bottom: "15%", left: "42%" }}
           onClick={() => {
-            selectBuilding("office"), setSelectedBuildingInList(5);
+            selectBuildingInGui("office"), setSelectedBuildingInList(5);
           }}
         >
           Office

@@ -9,7 +9,7 @@ const House = forwardRef(function House(props,ref) {
   const { nodes, materials } = useGLTF('/house1.glb')
   console.log(props)
   return (
-    <group ref={ref} {...props} dispose={null}>
+    <group name="objectGroup" ref={ref} {...props} dispose={null}>
       <mesh receiveShadow geometry={nodes.Plane.geometry} material={materials['grass.001']} scale={[30, 1, 30]} />
       <mesh castShadow receiveShadow geometry={nodes.Cube006.geometry} material={materials.floortile} position={[8.2, 0.01, -5.41]} scale={[0.63, -0.11, 1]} />
       <mesh castShadow receiveShadow geometry={nodes.Cube008.geometry} material={materials.floortile} position={[10.27, 0.01, -3.39]} scale={[0.63, -0.11, 1]} />

@@ -1,10 +1,9 @@
-import { React, useState, useCallback, useRef, useEffect } from "react";
-import { useBuildingStore, demolishOnGrid } from "./BuildingStore.js";
+import { React, useState, useRef } from "react";
+import { useBuildingStore } from "./BuildingStore.js";
 import { gridDimensions, gridSize, plotSize, ID } from "./GridData";
 import { buildingTypes } from "./BuildingTypes.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ethers } from "ethers";
-import { Scene } from "three";
 
 const apiAddBuilding = async (id, [x0, y0], [x1, y1], type, orientation) => {
   const message = `Building ${type} in city ${id}, messageUUID:${generateUUID()}`;
@@ -90,8 +89,8 @@ const apiRemoveBuilding = async (id, index, [x0, y0], [x1, y1], type, level, ori
 };
 
 function GridSquare(props) {
-  const selectedBuilding = useBuildingStore((state) => state.selectedBuilding);
-  let selectedBuildingType = selectedBuilding ? buildingTypes[selectedBuilding][0] : null; //checks if selectedBuilding is null
+  const selectedBuildingInGui = useBuildingStore((state) => state.selectedBuildingInGui);
+  let selectedBuildingType = selectedBuildingInGui ? buildingTypes[selectedBuildingInGui][0] : null; //checks if selectedBuildingInGui is null
   const gridDimensions = props.gridDimensions;
   const gridSize = props.gridSize;
   const plotSize = props.plotSize;
@@ -101,6 +100,7 @@ function GridSquare(props) {
   const built = props.built;
   const buildings = props.buildings;
   const [hovered, setHover] = useState(false);
+  const selectedBuildingObject = useBuildingStore((state) => state.selectedBuildingObject);
   const grid = useBuildingStore((state) => state.grid);
   const addBuilding = useBuildingStore((state) => state.addBuilding);
   const demolishBuilding = useBuildingStore((state) => state.removeBuilding);
@@ -117,14 +117,15 @@ function GridSquare(props) {
 
   let gridSquareRef = useRef();
 
-  function select(x, y, grid, buildings)
-  {
+  function select(x, y, grid, buildings) {
     if (!built) {
       //nista se ne desi jer nista ne selectujes
       console.log("selecting an empty square");
-    }
-    else {
-      console.log(gridSquareRef.current.parent.getObjectByProperty('uuid',built))
+    } else {
+      console.log(gridSquareRef.current.parent.getObjectByProperty("uuid", built));
+      useBuildingStore.setState({
+        selectedBuildingObject: gridSquareRef.current.parent.getObjectByProperty("uuid", built),
+      });
     }
   }
 

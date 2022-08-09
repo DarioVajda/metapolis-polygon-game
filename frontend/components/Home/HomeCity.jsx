@@ -1,4 +1,4 @@
-import ViewGL from "../three/viewgl.js";
+import ViewGL from "../../three/viewgl.js";
 import React from 'react';
 
 import styles from '../styles/homeCity.module.css';

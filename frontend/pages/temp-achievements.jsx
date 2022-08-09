@@ -13,7 +13,7 @@ const achievements = () => {
       <button onClick={() => setOpen(true)} >Open Popup</button>
 
       <PopupModule open={open} width={75} height={85} unit={'%'} >
-        <AchievementList id={0} closePopup={() => setOpen(false)} />
+        <AchievementList id={6} closePopup={() => setOpen(false)} />
       </PopupModule>
     </div>
   )

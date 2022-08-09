@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { prizes, price } from './utils/prizes';
+import { prizes, price } from '../utils/prizes';
 
 import styles from '../styles/prizes.module.css';
 

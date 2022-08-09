@@ -888,7 +888,12 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 		return;
 	}
 
-	let tx = await contract.makeSpecialOffer(type, req.params.id, value, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	let tx = await contract.makeSpecialOffer(
+		type, 
+		req.params.id, 
+		value, 
+		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	);
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
@@ -900,7 +905,7 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 		res.status(500).send(e);
 		return;
 	}
-}); // NOT DONE (work in progress)
+});
 
 app.post("/cities/:id/canceloffer", async (req, res) => {
 	let cityData = await contract.getCityData(req.params.id);
@@ -915,7 +920,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 		return res.status(400).send("The caller of this function must be the owner of the NFT");
 	}
 
-	let offerIndex = req.body.offerIndex;
+	let offerValue = req.body.offerValue;
 	let type = req.body.type;
 	let data = await contract.getSpecialBuildingType(type);
 	let id = parseInt(req.params.id);
@@ -925,7 +930,12 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 		return;
 	}
 
-	let tx = await contract.cancelSpecialOffer(type, offerIndex, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	let tx = await contract.cancelSpecialOffer(
+		type, 
+		req.params.id, 
+		offerValue, 
+		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+	);
 	try {
 		let receipt = await tx.wait();
 		console.log('offer canceled');

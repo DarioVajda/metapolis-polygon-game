@@ -65,6 +65,10 @@ POST requests:
     (*) /cities/:id/completed - { // does not change the score, should call getincome to set it to the new value
             achievement: 'key'
         }
+    (*) /cities/:id/canceloffer - {
+            type: String,
+            value: Number
+        }
 
 INSTRUCTION LIST REQUEST:
     (*) /cities/:id/instructions - {

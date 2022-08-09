@@ -5,7 +5,7 @@ import useScrollbarSize from 'react-scrollbar-size';
 
 import PrizesPopup from './PrizesPopup';
 import MintPopup from './MintPopup';
-import EthIcon from './universal/icons/EthIcon';
+import EthIcon from '../universal/icons/EthIcon';
 
 import style from '../styles/mintSection.module.css';
 

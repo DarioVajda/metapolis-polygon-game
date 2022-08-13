@@ -10,16 +10,18 @@ GET requests:
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
     /cities/:id/achievements - returns a list of data about all the achievements { 'count' - number of people who completed the achievement, 'completed' - true if the id-th city completed it and false if not }
 
+
 POST requests:
+    ** endpoints marked with X should not be used anymore **
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
-    (*) /cities/:id/build - { 
+    X (*) /cities/:id/build - { 
             building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: r, type: "type", level: 0 } 
         }, 1≤r≤4
-    (*) /cities/:id/buildspecial - { 
+    X (*) /cities/:id/buildspecial - { 
             building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type" },
             throughOffer: true/false,
         }
-    (*) /cities/:id/upgrade - {
+    X (*) /cities/:id/upgrade - {
             building: {
                 start: {x: ..., y: ...},
                 end: {x: ..., y: ...},
@@ -29,15 +31,15 @@ POST requests:
                 id: 'buildingId',
             }
         }
-    (*) /cities/:id/rotate - { 
+    X (*) /cities/:id/rotate - { 
             rotation: r, // new rotation of the building, 1≤r≤4
             building: { ... } // building object like for all other endpoints
         }
-    (*) /cities/:id/rotatespecial - { 
+    X (*) /cities/:id/rotatespecial - { 
             rotation: r, // new rotation of the building, 1≤r≤4
             building: { ... } // building object like for all other endpoints
         }
-    (*) /cities/:id/remove - {
+    X (*) /cities/:id/remove - {
             building: { 
                 start: {x: ..., y: ...}, 
                 end: {x: ..., y: ...}, 
@@ -47,7 +49,7 @@ POST requests:
                 id: 'buildingId' 
             }
         }
-    (*) /cities/:id/removespecial - {
+    X (*) /cities/:id/removespecial - {
             building: { 
                 start: {x: ..., y: ...}, 
                 end: {x: ..., y: ...}, 
@@ -82,7 +84,7 @@ INSTRUCTION LIST REQUEST:
             ...
         ]
     }
-    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial', 'remove', 'removespecial'
+    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial', 'remove', 'removespecial', 'completed'
 
 DEV OPTIONS:
     /cities/:id/dev/setmoney - { money: m } // m - unsigned int

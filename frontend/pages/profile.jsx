@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import Profile from '../components/Profile/Profile';
 import ConnectWallet from '../components/Profile/ConnectWallet';
-import Nav from '../components/Nav';
+import Nav from '../components/Home/Nav';
 
 const profile = () => {
   const [addr, setAddr] = useState(0); // adresa od osobe koja je usla u sajt ako je ulogovan

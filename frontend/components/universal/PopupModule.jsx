@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import ReactDom from 'react-dom'
+import useScrollbarSize from 'react-scrollbar-size';
+
 
 const PopupModule = ({ children, open, height, width, unit }) => {
   
   const [cash, setCash] = useState(false);
-  
-  if(!open || typeof document === 'undefined') return <div/>;
+
+  const scrollBar = useScrollbarSize();
 
   const wrapperStyle = {
     position: 'absolute',
@@ -20,6 +22,7 @@ const PopupModule = ({ children, open, height, width, unit }) => {
   }
 
   const parentStyle = {
+    backgroundColor: 'var(--background)',
     border: '1px solid var(--light-text)',
     borderRadius: '20px',
     overflow: 'hidden',
@@ -31,6 +34,19 @@ const PopupModule = ({ children, open, height, width, unit }) => {
     justifyContent: 'flex-start',
     flexDirection: 'column'
   }
+
+  if(typeof document === 'undefined') {
+    return <></>;
+  }
+
+  if(!open) {
+    document.body.style.overflow = 'visible';
+    document.body.style.marginRight = '0';
+    return <></>;
+  }
+  
+  document.body.style.overflow = 'hidden';
+  document.body.style.marginRight = `${scrollBar.width}px`;
 
   return ReactDom.createPortal(
     <div style={wrapperStyle} >

@@ -60,7 +60,7 @@ const LeaderboardList = ({nfts}) => {
           Loading...
         </> :
         list.map((element, index) =>
-          <div key={index}>
+          <div key={index} style={{backgroundColor: 'var(--background)'}}>
             {
               element !== -1 &&
               <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />

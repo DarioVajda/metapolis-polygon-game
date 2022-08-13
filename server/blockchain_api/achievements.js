@@ -29,8 +29,8 @@ const rewardTypes = {
     // ingame rewards:
     money: {
         key: 'money',
-        receive: async (id, value) => {
-            
+        receive: async (id, contract, value) => {
+            // nothing to do here
         },
         preview: (city, value) => {
             city.money = city.money + value;
@@ -39,8 +39,8 @@ const rewardTypes = {
     },
     boost: {
         key: 'boost',
-        receive: async (id, value) => {
-            
+        receive: async (id, contract, value) => {
+            // nothing to do here
         },
         preview: (city, value) => {
             city.income = city.income * value;
@@ -49,8 +49,8 @@ const rewardTypes = {
     },
     extraEducated: {
         key: 'extraEducated',
-        receive: async (id, value) => {
-            
+        receive: async (id, contract, value) => {
+            // nothing to do here
         },
         preview: (city, value) => {
             return city;
@@ -60,8 +60,8 @@ const rewardTypes = {
     // other rewards:
     eth: {
         key: 'eth',
-        receive: async (id, value) => {
-            
+        receive: async (id, contract, value) => {
+            // sending ETH to the owner of the NFT
         },
         preview: (city, value) => {
             return city;
@@ -69,8 +69,8 @@ const rewardTypes = {
     },
     matic: {
         key: 'matic',
-        receive: async (id, value) => {
-            
+        receive: async (id, contract, value) => {
+            // sending MATIC to the owner of the NFT
         },
         preview: (city, value) => {
             return city;

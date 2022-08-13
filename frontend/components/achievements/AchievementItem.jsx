@@ -55,14 +55,6 @@ const AchievementItem = ({ data, count, claimReward }) => {
 
   let completedPercentage = achievement.count / Math.ceil(count * achievement.percentage);
 
-  useEffect(() => {
-    // let progress = getProgressColor(check.value);
-    // if(progressColor !== progress) setProgressColor(progress);
-
-    // let completed = achievement.count / Math.ceil(count * achievement.percentage) === 1 ? 'red' : 'blue';
-    // if(completedColor !== completed) setCompletedColor(completed);
-  });
-
   // console.log(progressColor);
   // console.log({achievement, city, check});
   // console.log(Math.ceil(count * achievement.percentage));

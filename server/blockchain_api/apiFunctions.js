@@ -483,13 +483,42 @@ const functions = {
     },
     completed: {
         check: (id, city, specialTypeData, achievementList, body) => {
-            // ...
+            let { achievement } = body;
+
+            // checking if achievement key exists
+            if( !achievements.achievements[achievement] ) return false;
+
+            // checking if the achievement is active
+            if( !achievements.checkIfActive(achievements.achievements[achievement]) ) return false;
+
+            // checking if the person completed the achievement
+            let completed = achievements.achievements[achievement].checkFunction(city);
+            if(completed.completed === false) return false;
+
+            // getting the new version of the city
+            city = achievements
+                .rewardTypes[achievements.achievements[achievement].rewardType]
+                .preview(city, achievements.achievements[achievement].rewardValue)
+
+            // setting the completed field to true
+            achievementList.forEach((element, index) => {
+                if(element.key === achievement) {
+                    achievementList[i].completed = true;
+                }
+            });
 
             console.log('success');
             return { city, specialTypeData, achievementList };
         },
         save: async (id, contract, specialTypeData, body) => {
-            return { wait: () => {} };
+            let { achievement, achievementContract } = body;
+
+            let rewardType = achievements.rewardTypes[achievements.achievements[achievement].rewardType]
+            await rewardType.receive(id, contract, achievements.achievements[achievement].rewardValue);
+
+            let tx = await achievementContract.completedAchievement(id, achievement);
+
+            return tx;
         }
     }
 }
@@ -607,8 +636,15 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
 
     // calling the save functions
     for(let i = 0; i < instructions.length; i++) {
-        let tx = await functions[instructions[i].instruction].save(id, contract, specialTypeData, instructions[i].body);
-        saveFunctionCall(tx, instructions[i].instruction, instructions[i].body);
+        let element = instructions[i];
+
+        let tempBody = element.body;
+        if(element.instruction === 'completed') {
+            tempBody = { ...tempBody, achievementContract };
+        }
+        
+        let tx = await functions[element.instruction].save(id, contract, specialTypeData, element.body);
+        saveFunctionCall(tx, element.instruction, element.body);
         await delay(1e3);
     }
 
@@ -630,6 +666,8 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
     catch(e) {
         errors.push({ instruction: 'setmoney', error: e, message: 'fail' })
     }
+
+    // TODO - treba napraviti da se setuje score nakon izvrsavanja liste instrukcija !!!
 
     // response
     if(errors.length === 0) return {

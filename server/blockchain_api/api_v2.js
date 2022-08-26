@@ -9,6 +9,7 @@ const utils = require('./utils');
 // const postFunctions = require('./postFunctions');
 const achievements = require('./achievements');
 const apiFunctions = require('./apiFunctions');
+const getFunctions = require('./getFunctions');
 
 const addressJSON = require('../../smart_contracts/contract-address.json');
 
@@ -122,52 +123,8 @@ app.get("/count", async (req, res) => {
 }); // DONE
 
 app.get("/cities/:id/data", async (req, res) => {
-	/* The response is an object with the following values: 
-	{
-        address owner,
-        Building[] buildings,
-		SpecialBuilding[] specialBuildings,
-        uint money,
-        uint income,
-        uint lastPay,
-    }
-	*/
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
-	let score = await contract.getScore(req.params.id);
-	city.score = score[0].toNumber();
-
-	// #region get achievements
-	let keyList = Object.keys(achievements.achievements);
-	let achievementData = [];
-
-	const loadAchievementData = async (key) => {
-		let count = await achievementContract.getAchievementCount(key);
-		let completed = await achievementContract.checkIfCompleted(req.params.id, key);
-		achievementData.push({
-			key: key,
-			count: count,
-			completed: completed
-		})
-	}
-
-	const delay = async (time) => {
-		return new Promise(resolve => setTimeout(resolve, time));
-	}
-
-	for(let i = 0; i < keyList.length; i++) {
-		loadAchievementData(keyList[i]);
-	}
-
-	while(achievementData.length < keyList.length) {
-		await delay(50);
-	}
-	// #endregion
-	
-	let income = incomeModule.calculateIncome(city, achievementData);
-	city.income = income;
-	// console.log(city);
-	res.json(city);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
+	res.send(city);
 }); // DONE - have to add the orientation to the smart contract
 
 app.get("/specialtype/:type", async (req, res) => {
@@ -200,10 +157,9 @@ app.get("/specialtype/:type", async (req, res) => {
 app.get("/cities/:id/getincome", async (req, res) => {
 	// here could be some kind of a check if the player can receive income...
 
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
-	let income = incomeModule.calculateIncome(city);
+	let income = city.income
 
 	let tx = await contract.getIncome(req.params.id, income, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	console.log(tx);	
@@ -369,8 +325,6 @@ app.post("/cities/:id/initialize", async (req, res) => {
 });
 
 app.post("/cities/:id/instructions", async (req, res) => {
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
 
 	try {
 		let message = req.body.message;
@@ -408,8 +362,7 @@ app.post("/cities/:id/instructions", async (req, res) => {
 
 app.post("/cities/:id/specialoffer", async (req, res) => {
 
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	// checking if the request was sent from the owner of the NFT
 	let message = req.body.message;
@@ -499,8 +452,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 
 app.post("/cities/:id/build", async (req, res) => {
 	let building = req.body.building;
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -584,8 +536,7 @@ app.post("/cities/:id/build", async (req, res) => {
 
 app.post("/cities/:id/buildspecial", async (req, res) => {
 	let building = req.body.building;
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -700,8 +651,7 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 
 app.post("/cities/:id/upgrade", async (req, res) => {
 	let building = req.body.building; // 'Building' object
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -927,8 +877,7 @@ app.post("/cities/:id/removespecial", async (req, res) => {
 app.post("/cities/:id/rotate", async (req, res) => {
 	let data = req.body;
 
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let building = city.buildings.reduce((prev, curr) => curr.id === id ? curr : prev, -1);
 
@@ -961,8 +910,7 @@ app.post("/cities/:id/rotate", async (req, res) => {
 app.post("/cities/:id/rotatespecial", async (req, res) => {
 	let data = req.body;
 	
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let building = city.specialBuildings.reduce((prev, curr) => curr.id === id ? curr : prev, -1);
 
@@ -1077,8 +1025,7 @@ app.get("/cities/:id/achievements", async (req, res) => {
 });
 
 app.post('/cities/:id/completed', async (req, res) => {
-	let cityData = await contract.getCityData(req.params.id);
-	let city = utils.formatBuildingList(cityData);
+	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -1131,10 +1078,6 @@ app.post('/cities/:id/completed', async (req, res) => {
 	// changing the score... (optional)
 
 });
-
-// #endregion
-
-// #region Instruction list
 
 // #endregion
 

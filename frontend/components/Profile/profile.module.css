@@ -59,17 +59,12 @@
 }
 
 .nftlist {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
     padding: 0 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
 }
 
 .nftlist>a, .nftlist>div {
-    flex-grow: 1;
-    min-width: 18em;
-    max-width: 18em;
     aspect-ratio: 3/4;
     margin: 0.5em;
     display: flex;

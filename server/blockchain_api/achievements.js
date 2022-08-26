@@ -16,22 +16,12 @@ const dateToUnix = (dateStr) => {
     return unixTimestamp;
 }
 
-// Function getting the values from the contract
-const getCityData = async (id, contract) => {
-    let cityData = await contract.getCityData(id);
-	let city = utils.formatBuildingList(cityData);
-    return city;
-}
-
 // #endregion
 
 const rewardTypes = {
     // ingame rewards:
     money: {
         key: 'money',
-        receive: async (id, contract, value) => {
-            // nothing to do here
-        },
         preview: (city, value) => {
             city.money = city.money + value;
             return city;
@@ -39,40 +29,32 @@ const rewardTypes = {
     },
     boost: {
         key: 'boost',
-        receive: async (id, contract, value) => {
-            // nothing to do here
-        },
         preview: (city, value) => {
             city.income = city.income * value;
             return city;
         }
     },
     extraEducated: {
+        // every building has an extra educated person instead of an uneducated
         key: 'extraEducated',
-        receive: async (id, contract, value) => {
-            // nothing to do here
-        },
         preview: (city, value) => {
+            // calculate the new income with the extra educated people
             return city;
         }
-    }, // every building has extra educated people instead of an uneducated
+    },
 
     // other rewards:
-    eth: {
-        key: 'eth',
-        receive: async (id, contract, value) => {
-            // sending ETH to the owner of the NFT
-        },
+    weth: {
+        key: 'weth',
         preview: (city, value) => {
+            // nothing to do here
             return city;
         }
     },
     matic: {
         key: 'matic',
-        receive: async (id, contract, value) => {
-            // sending MATIC to the owner of the NFT
-        },
         preview: (city, value) => {
+            // nothing to do here
             return city;
         }
     }

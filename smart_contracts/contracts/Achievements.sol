@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
+import "./CityContract.sol";
+
 contract Achievements {
 
-    constructor(address _admin) {
+    CityContract cityContract;
+
+    constructor(address _admin, address _city) {
         owner = msg.sender;
         admin = _admin;
+
+        cityContract = CityContract(_city);
+        cityContract.initAchievementContract();
     }
 
     mapping(string => Achievement) achievements; // list of achievements
@@ -29,12 +36,19 @@ contract Achievements {
     }
 
     // called when a person completed an achievement
-    function completedAchievement(uint tokenId, string memory key) external onlyAdmin {
+    function completedAchievement(uint tokenId, string memory key, uint wethReward, uint maticReward) external onlyAdmin {
         require(achievements[key].created == true, 'NotCreated');
         require(achievements[key].completed[tokenId] == false, "CompletedAlready");
 
         achievements[key].count++;
         achievements[key].completed[tokenId] = true;
+
+        if(wethReward > 0) {
+            cityContract.sendWeth(tokenId, wethReward);
+        }
+        if(maticReward > 0) {
+            cityContract.sendMatic(tokenId,maticReward);
+        }
     }
 
     // returns the number of people who completed the achievement
@@ -54,7 +68,7 @@ contract Achievements {
 
     // #endregion
 
-    // #region Achievement rewards
+    // #region Achievement rewards - OVO JE NEPOTREBNO
 
     struct Rewards {
         uint numOfRewards;

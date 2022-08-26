@@ -320,7 +320,7 @@ const functions = {
     removespecial: {
         check: (id, city, specialTypeData, achievementList, body) => {
             let { building, throughOffer, expectedValue } = body;
-            const RETURN_PERCENTAGE = 0.5;
+            const MIN_RETURN_PERCENTAGE = 0.5;
 
             let index = city.specialBuildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
         
@@ -336,7 +336,10 @@ const functions = {
 
             let value;
             if(throughOffer === false) {
-                value = RETURN_PERCENTAGE * buildingStats.specialPrices.get(building.type);
+                let maxCount = buildingStats.specialTypes[building.type].count;
+                let currCount = specialTypeData[building.type].count;
+                let returnPercentage = MIN_RETURN_PERCENTAGE + (1 - MIN_RETURN_PERCENTAGE) * (maxCount - currCount) / maxCount;
+                value = returnPercentage * buildingStats.specialPrices.get(building.type);
             }
             else {
                 let tempOffers = specialTypeData[building.type].offers.map((element, index) => ({ ...element, index }));
@@ -514,9 +517,18 @@ const functions = {
             let { achievement, achievementContract } = body;
 
             let rewardType = achievements.rewardTypes[achievements.achievements[achievement].rewardType]
-            await rewardType.receive(id, contract, achievements.achievements[achievement].rewardValue);
+            // await rewardType.receive(id, contract, achievements.achievements[achievement].rewardValue);
 
-            let tx = await achievementContract.completedAchievement(id, achievement);
+            let wethValue = rewardType.key === 'weth' ? achievements.achievements[achievement].rewardValue : 0;
+            let maticValue = rewardType.key === 'matic' ? achievements.achievements[achievement].rewardValue : 0;
+
+            let tx = await achievementContract.completedAchievement(
+                id, 
+                achievement, 
+                wethValue, 
+                maticValue,
+                { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+            ); // here should be the values of weth and matic tokes that should be received for completing the achievement
 
             return tx;
         }
@@ -528,12 +540,16 @@ const delay = async (time) => {
 }
 
 async function loadData(contract, achievementContract, id) {
-    let city = undefined;
-    let specialTypeData;
-    city = await contract.getCityData(id); // treba promeniti ovo jer city nece biti undefined nego Promise i onda ce se proci while pre nego sto treba, treba napraviti funkciju koja ucita podatke i onda se tek da promenljivoj 'city'
-    city = utils.formatBuildingList(city);
 
-    specialTypeData = {};
+    let city = undefined;
+
+    const loadCityData = async () => {
+        let res = await getFunctions.getCityData(id, contract, achievementContract);
+        city = res;
+    }
+    loadCityData()
+
+    let specialTypeData = {};
     const loadOffer = async (type) => {
         let data = await contract.getSpecialBuildingType(type);
         data = {
@@ -561,30 +577,7 @@ async function loadData(contract, achievementContract, id) {
         await delay(50);
     }
 
-    // #region podaci za achievementove
-
-    let keyList = Object.keys(achievements.achievements);
-	let achievementList = [];
-
-	const loadAchievementData = async (key) => {
-		let count = await achievementContract.getAchievementCount(key);
-		let completed = await achievementContract.checkIfCompleted(id, key);
-		achievementList.push({
-			key: key,
-			count: count,
-			completed: completed
-		})
-	}
-
-	for(let i = 0; i < keyList.length; i++) {
-		loadAchievementData(keyList[i]);
-	}
-
-	while(achievementList.length < keyList.length) {
-		await delay(50);
-	}
-
-    // #endregion
+	let achievementList = city.achievementList;
 
     return { city, specialTypeData, achievementList };
 
@@ -654,6 +647,7 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
         await delay(100);
     }
 
+    // setting the money value for the player
     let tx = await contract.devSetMoney(
         id, 
         newMoneyValue, 
@@ -664,10 +658,23 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
         await tx.wait();
     }
     catch(e) {
-        errors.push({ instruction: 'setmoney', error: e, message: 'fail' })
+        errors.push({ instruction: 'setmoney', error: e, message: 'fail' });
     }
 
-    // TODO - treba napraviti da se setuje score nakon izvrsavanja liste instrukcija !!!
+    // setting the score for the player
+    let newScore = newMoneyValue + 7 * incomeModule.calculateIncome(city);
+    tx = await contract.changeScore(
+        id,
+        newScore,
+        { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }    
+    );
+    console.log({tx});
+    try {
+        await tx.wait();
+    }
+    catch(e) {
+        errors.push({ instruction: 'setscore', error: e, message: 'fail' });
+    }
 
     // response
     if(errors.length === 0) return {

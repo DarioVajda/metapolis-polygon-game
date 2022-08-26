@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Profile from '../../components/Profile/Profile';
 
 import Head from 'next/head';
-import Nav from '../../components/Nav';
+import Nav from '../../components/Home/Nav';
 
 const profile = () => {
   const router = useRouter();

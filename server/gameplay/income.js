@@ -131,27 +131,33 @@ function calculate(peopleArg, buildings) {
 
 function calculateIncome(city, achievementsArg) {
 
+    if(!achievementsArg) {
+        achievementsArg = [];
+    }
+    let achievements = {};
+    achievementsArg.forEach((element) => {
+        achievements[element.key] = { 
+            completed: element.completed,
+            rewardType: achievementModule.achievements[element.key].rewardType,
+            rewardValue: achievementModule.achievements[element.key].rewardValue
+        };
+    });
+
+    // #region BOOST EDUCATED
+    let educatedBoost = Object.values(achievements).filter((achievement) => achievement.completed && achievement.rewardType === 'educatedBoost').length
+    // #endregion
+
     let map = mapModule.initializeMap({ normal: city.buildings });
-    let people = peopleModule.countPeople({ normal: city.buildings } , map);
+    let people = peopleModule.countPeople({ normal: city.buildings }, map, educatedBoost);
     let income = calculate(people, { normal: city.buildings });
 
-    if(achievementsArg) {
-        let achievements = {};
-        achievementsArg.forEach((element) => {
-            achievements[element.key] = { 
-                completed: element.completed,
-                rewardType: achievementModule.achievements[element.key].rewardType,
-                rewardValue: achievementModule.achievements[element.key].rewardValue
-            };
-        });
-
-        // taking into consideration the achievements that give an income boost
-        Object.values(achievements).forEach(element => {
-            if(element.completed === true && element.rewardType === achievementModule.rewardTypes.boost) {
-                income *= element.rewardValue;
-            }
-        })
-    }
+    // #region BOOST INCOME:
+    Object.values(achievements).forEach(element => {
+        if(element.completed === true && element.rewardType === achievementModule.rewardTypes.boost) {
+            income *= element.rewardValue;
+        }
+    })
+    // #endregion
 
     return income;
 }

@@ -248,17 +248,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.score {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
 }
 
+.totalValue>span {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    padding-bottom: 0.2em;
+}
+
 .score>span {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--light-text);
     padding-top: 0.5em;
     background-color: transparent;
@@ -353,4 +353,19 @@
 .peopleBarFill:hover>span {
     visibility: visible;
     opacity: 1;
+}
+
+.achievementSection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.achievementBadge {
+    margin: 1em;
+    width: fit-content;
+    height: fit-content;
+    outline: 1px solid rgba(255, 255, 255, 0.08);
+    /* background-color: green;
+    border-radius: 50%; */
 }

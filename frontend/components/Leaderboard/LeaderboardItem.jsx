@@ -6,6 +6,7 @@ import MoneyIcon from '../universal/icons/MoneyIcon';
 import IncomeIcon from '../universal/icons/IncomeIcon';
 import ScoreIcon from '../universal/icons/ScoreIcon';
 import OpenseaIcon from '../universal/icons/OpenseaIcon';
+import Placeholder from '../universal/icons/achievement_icons/Placeholder'
 
 const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
@@ -16,13 +17,6 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     people: false,
     owner: { randomIndex: Math.floor(Math.random() * 33) + 1 }  // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
   });
-
-  // const [data, setData] = useState(false);
-
-  // const [price, setPrice] = useState({});
-  // const [people, setPeople] = useState(false);
-
-  // const [owner, setOwner] = useState({ randomIndex: Math.floor(Math.random() * 33) + 1 }); // { randomIndex: ... } - not loaded, { data... } - contains data about the owner of the NFT
 
   // #region Getting the prices
 
@@ -359,7 +353,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
               </span>
             </div>
             <div className={style.totalValue}>
-              City value: ${1234321}
+              <span>City value:</span>
+              ${1234321}
             </div>
           </div>
           <div className={style.stats}>
@@ -384,6 +379,15 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
                   </div>
                 </div>
               </div>
+            </div>
+            <div className={style.achievementSection}>
+              {
+                data.achievementList && data.achievementList.map((element) => (element.completed || true) && (
+                  <div key={element.id} className={style.achievementBadge}>
+                    <Placeholder size={5} unit='em' />
+                  </div>
+                ))
+              }
             </div>
           </div>
         </div>

@@ -32,11 +32,18 @@ const LeaderboardList = ({nfts}) => {
     // treba da proveri koja je poslednja vrednost u listi koja je ucitana
     // ako je ucitano sve pre ovog grada onda se ucitava ovaj i oznacava se ucitanim na kraju
     // u suprotnom se ceka dok se ne ucita ostalo (ovo bas i ne znam kako da uradim)
+
+    
+    /* CEKANJE (komentarisano)
+    // OVO JE KOMENTARISANO JER DELUJE BOLJE KAD SE NE CEKA, ALI PITANJE JE DA LI JE OVO DOBRO RESENJE U SLUCAJU DA POSTOJI VECI BROJ GRADOVA
     while(loaded.current < index) {
       // console.log('waiting:', index);
       // console.log(loaded.current);
       await delay(index * 50); // da bi se u pocetku na vreme ucitalo sve, a kasnije ce se oni gradovi dole dovoljno brzo ucitati
     }
+    */
+
+
     let data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     loaded.current = index + 1;
     return data;

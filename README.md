@@ -9,7 +9,7 @@ TODO lista:
 - ✓ napraviti funkcije koje isplacuju weth i matic nagrade igracima koji su ispunili odgovarajuci achievement (funkcija za MATIC jos nije proverena, ali trebalo bi da radi)
 - ✓ poraditi na funkciji za racunanje zarade tako da uzima u obzir boostove koji su dobijeni zbog ispunjenih achievementova (uradjeno za educatedBoost i incomeBoost, ali kad se budu dodavali drugi tipovi nagrada dodati i funkcije za njih)
 - ✓ napraviti sistem prodavanja specijalnih gradjevina po ceni koja je proporcionalna broju prodatih gradjevina tog tipa (minimalni procenat koji se vraca je npr. 50%, a maksimalni 100%) - URADJENO, NIJE TESTIRANO, ALI TREBALO BI DA RADI
-- napraviti funkciju koja racuna 'total value' nekog grada (sabira vrednosti svake gradjevine koja je na mapi i specijalnih gradjevina isto, vrednost moze da se racuna po trenutnom najvecem offeru) - SVE PROVERENO OSIM OFFEROVA
+- ✓ napraviti funkciju koja racuna 'total value' nekog grada (sabira vrednosti svake gradjevine koja je na mapi i specijalnih gradjevina isto, vrednost moze da se racuna po trenutnom najvecem offeru) - SVE PROVERENO OSIM OFFEROVA
 - napraviti sve 'loading' screenove
 - napraviti/pronaci ikone za sve achievementove
 - optimizovati leaderboard stranicu, ne treba svaki element liste da se renderuje ispocetka kad se naki drugi expanduje ili collapseuje

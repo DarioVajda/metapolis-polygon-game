@@ -9,6 +9,7 @@ GET requests:
     /count - returns the number of NFTs
     /cities/:id/getincome - the id-th city receives the ingame income - could also be a get request
     /cities/:id/achievements - returns a list of data about all the achievements { 'count' - number of people who completed the achievement, 'completed' - true if the id-th city completed it and false if not }
+    /specialtype/:type - returns data about the special type
 
 
 POST requests:

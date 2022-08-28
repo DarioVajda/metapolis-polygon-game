@@ -6,9 +6,11 @@ import MoneyIcon from '../universal/icons/MoneyIcon';
 import IncomeIcon from '../universal/icons/IncomeIcon';
 import ScoreIcon from '../universal/icons/ScoreIcon';
 import OpenseaIcon from '../universal/icons/OpenseaIcon';
-import Placeholder from '../universal/icons/achievement_icons/Placeholder'
+import Placeholder from '../universal/icons/achievement_icons/Placeholder';
 
-const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts }) => {
+import { cityValue } from '../../../server/gameplay/cityValue';
+
+const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts, specialTypeData }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
 
   const [info, setInfo] = useState({
@@ -46,8 +48,6 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
     res.collection.payment_tokens.forEach((element) => {
       tokens[element.address] = { symbol: element.symbol, price: element.usd_price, decimals: element.decimals }
     })
-
-    if(id === 0) console.log(tokens);
 
     res.seaport_sell_orders.forEach((offer, index) => {
 
@@ -354,7 +354,7 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
             </div>
             <div className={style.totalValue}>
               <span>City value:</span>
-              ${1234321}
+              ${cityValue(data, specialTypeData).toLocaleString('en-US')}
             </div>
           </div>
           <div className={style.stats}>
@@ -382,8 +382,8 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts })
             </div>
             <div className={style.achievementSection}>
               {
-                data.achievementList && data.achievementList.map((element) => (element.completed || true) && (
-                  <div key={element.id} className={style.achievementBadge}>
+                data.achievementList && data.achievementList.map((element, index) => (element.completed || true) && (
+                  <div key={index} className={style.achievementBadge}>
                     <Placeholder size={5} unit='em' />
                   </div>
                 ))

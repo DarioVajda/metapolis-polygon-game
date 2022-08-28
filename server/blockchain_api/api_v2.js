@@ -130,9 +130,8 @@ app.get("/cities/:id/data", async (req, res) => {
 app.get("/specialtype/:type", async (req, res) => {
 	let data = await contract.getSpecialBuildingType(req.params.type);
 	data = {
-		count: data.count,
-		numOfOffers: data.numOfOffers,
-		rarity: data.rarity,
+		count: data.count.toNumber(),
+		rarity: data.rarity.toNumber(),
 		soldOut: data.soldOut,
 		offers: data.offers
 	}

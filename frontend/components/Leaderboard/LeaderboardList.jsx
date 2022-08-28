@@ -4,12 +4,14 @@ import LeaderboardItem from './LeaderboardItem';
 import Separator from './Separator';
 
 import { prizes, getRange, price } from '../utils/prizes';
+import { specialTypes } from '../../../server/gameplay/building_stats';
 
 import style from './leaderboard.module.css';
 
 const LeaderboardList = ({nfts}) => {
   // const [list, setList] = useState(Array(10).fill(-1));
   const [list, setList] = useState(false); // false - not loaded, [...] - list of nfts
+  const [specialTypeData, setSpecialTypeData] = useState({});
   const loaded = useRef(0);
   
   const [expanded, setExpanded] = useState(-1);
@@ -17,6 +19,8 @@ const LeaderboardList = ({nfts}) => {
   const expand = (i) => {
     setExpanded(expanded===i?-1:i);
   }
+
+  // #region loading the data
 
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -49,8 +53,33 @@ const LeaderboardList = ({nfts}) => {
     return data;
   }
 
+  const getSpecialTypeData = async () => {
+    let data = {};
+    const loadType = async (type) => {
+      let res = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
+      data[type] = {
+        count: res.count,
+        offer: res.offers,
+        rarity: res.rarity,
+        soldOut: res.soldOut
+      };
+    }
+    Object.values(specialTypes).forEach(element => {
+      loadType(element.type);
+    })
+
+    while(Object.keys(data).length < Object.keys(specialTypes).length) {
+      await delay(50);
+    }
+
+    setSpecialTypeData(data);
+  }
+  
+  // #endregion
+
   useEffect(() => {
     getList();
+    getSpecialTypeData();
   }, []);
 
   const funkcija = (i) => { 
@@ -80,6 +109,7 @@ const LeaderboardList = ({nfts}) => {
               expand={expand}
               owned={nfts.includes(element)}
               nfts={loaded?list.length:0}
+              specialTypeData={specialTypeData}
             />  
           </div>
         )

@@ -6,6 +6,11 @@ import {
     checkIfActive 
 } from '../../../server/blockchain_api/achievements';
 
+import GreenCityIcon from '../universal/icons/achievement_icons/GreenCityIcon';
+import Placeholder from '../universal/icons/achievement_icons/Placeholder';
+import EducatedCityIcon from '../universal/icons/achievement_icons/EducatedCityIcon';
+import SkyCityIcon from '../universal/icons/achievement_icons/SkyCityIcon';
+
 const rewardTypes = rewardTypesImport;
 
 const achievementsJsx = {
@@ -15,9 +20,20 @@ const achievementsJsx = {
     check4: <>100</>,
 }
 
+const achievementIcons = {
+    greenCity: (props) => <GreenCityIcon {...props} />,
+    educatedCity: (props) => <EducatedCityIcon {...props} />,
+    skyCity: (props) => <SkyCityIcon {...props} />,
+    check4: (props) => <Placeholder {...props} />,
+}
+
 const achievements = achievementsImport;
 Object.keys(achievementsJsx).forEach((element) => {
-    achievements[element] = { ...achievements[element], rewardValueJsx: achievementsJsx[element] }
+    achievements[element] = { 
+        ...achievements[element], 
+        rewardValueJsx: achievementsJsx[element],
+        rewardIcon: achievementIcons[element] 
+    }
 })
 
 export { rewardTypes, achievements, checkIfActive, dateToUnix };

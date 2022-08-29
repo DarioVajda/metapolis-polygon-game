@@ -36,13 +36,9 @@ const AchievementItem = ({ data, count, claimReward }) => {
     }
   }
 
-  // const [achievement, setAchievement] = useState(data);
   let achievement = data;
-  // const [check, setCheck] = useState(achievement.check);
   let check = achievement.check;
-  // const [progressColor, setProgressColor] = useState(getProgressColor(check.value));
   let progressColor = getProgressColor(check.value);
-  // const [completedColor, setCompletedColor] = useState(achievement.count / Math.ceil(count * achievement.percentage) === 1 ? 'red' : 'blue');
   let completedColor = achievement.count / Math.ceil(count * achievement.percentage) === 1 ? 'red' : 'blue';
 
   const rewardIcons = useRef({
@@ -70,7 +66,7 @@ const AchievementItem = ({ data, count, claimReward }) => {
   return (
     <div className={styles.achievementItem} style={itemStyle} >
       <div className={styles.badge} >
-        <Placeholder size={100} unit={'%'} />
+        { achievement.rewardIcon({ size: 100, unit: '%' }) }
       </div>
       <div className={styles.info} >
         <div className={styles.topData}>

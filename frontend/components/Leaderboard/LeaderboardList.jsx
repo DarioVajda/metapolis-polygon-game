@@ -9,7 +9,6 @@ import { specialTypes } from '../../../server/gameplay/building_stats';
 import style from './leaderboard.module.css';
 
 const LeaderboardList = ({nfts}) => {
-  // const [list, setList] = useState(Array(10).fill(-1));
   const [list, setList] = useState(false); // false - not loaded, [...] - list of nfts
   const [specialTypeData, setSpecialTypeData] = useState({});
   const loaded = useRef(0);

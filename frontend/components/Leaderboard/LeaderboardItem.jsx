@@ -10,7 +10,12 @@ import Placeholder from '../universal/icons/achievement_icons/Placeholder';
 
 import { cityValue } from '../../../server/gameplay/cityValue';
 
-const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts, specialTypeData }) => {
+const compareProps = (prev, curr) => {
+  return prev.expanded === curr.expanded && prev.owned === curr.owned
+}
+
+
+const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, owned, nfts, specialTypeData }) => {
   const address = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'; // the address of the contract (for opensea api call)
 
   const [info, setInfo] = useState({
@@ -286,10 +291,12 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts, s
 
   // #endregion
 
-  let data = info.data;
-  let price = info.price;
+  let data   = info.data;
+  let price  = info.price;
   let people = info.people;
-  let owner = info.owner;
+  let owner  = info.owner;
+
+  console.log(id);
 
   return (
     <div className={style.item}>
@@ -394,6 +401,6 @@ const LeaderboardItem = ({ index, id, expanded, loadCity, expand, owned, nfts, s
       </div>
     </div>
   )
-}
+}, compareProps)
 
 export default LeaderboardItem

@@ -11,8 +11,8 @@ TODO lista:
 - ✓ napraviti sistem prodavanja specijalnih gradjevina po ceni koja je proporcionalna broju prodatih gradjevina tog tipa (minimalni procenat koji se vraca je npr. 50%, a maksimalni 100%) - URADJENO, NIJE TESTIRANO, ALI TREBALO BI DA RADI
 - ✓ napraviti funkciju koja racuna 'total value' nekog grada (sabira vrednosti svake gradjevine koja je na mapi i specijalnih gradjevina isto, vrednost moze da se racuna po trenutnom najvecem offeru) - SVE PROVERENO OSIM OFFEROVA
 - ✓ optimizovati leaderboard stranicu, ne treba svaki element liste da se renderuje ispocetka kad se naki drugi expanduje ili collapseuje
+- ✓ napraviti/pronaci ikone za sve achievementove
 - napraviti sve 'loading' screenove
-- napraviti/pronaci ikone za sve achievementove
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

@@ -110,7 +110,7 @@ const MintSection = ({maticMint, wethMint, networkCheck, numOfNFTs}) => {
           Compete for a part of the 
           <span className={style.ethSpan} onClick={() => { if(citiesLeft) openPopup('prizes') } } >
             <EthIcon />
-            300
+            500
           </span>
           prize pool!
         </h2>

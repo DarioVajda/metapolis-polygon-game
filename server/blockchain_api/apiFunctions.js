@@ -88,7 +88,7 @@ specialoffer
 
 const functions = {
     build: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building } = body;
             building.id = -1;
             console.log('build', building);
@@ -145,7 +145,7 @@ const functions = {
         }
     },
     buildspecial: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building, throughOffer } = body;
             building.id = -1;
 
@@ -222,7 +222,7 @@ const functions = {
         }
     },
     upgrade: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building } = body;
 
             let index = city.buildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
@@ -267,7 +267,7 @@ const functions = {
         }
     },
     remove: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building } = body;
             const RETURN_PERCENTAGE = 0.5;
             console.log('remove', building);
@@ -318,7 +318,7 @@ const functions = {
         }
     },
     removespecial: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building, throughOffer, expectedValue } = body;
             const MIN_RETURN_PERCENTAGE = 0.5;
 
@@ -415,7 +415,7 @@ const functions = {
         }
     },
     rotate: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building, rotation } = body;
 
             let index = city.buildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
@@ -450,7 +450,7 @@ const functions = {
         }
     },
     rotatespecial: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { building, rotation } = body;
 
             let index = city.specialBuildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
@@ -485,7 +485,7 @@ const functions = {
         }
     },
     completed: {
-        check: (id, city, specialTypeData, achievementList, body) => {
+        check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
             let { achievement } = body;
 
             // checking if achievement key exists
@@ -505,6 +505,12 @@ const functions = {
 
             // setting the completed field to true
             achievementList.forEach((element, index) => {
+
+                // checking if the max number of people completed the achievement
+                if(element.count > achievements.achievements[achievement].percentage * numOfNfts) {
+                    return false;
+                }
+
                 if(element.key === achievement) {
                     achievementList[i].completed = true;
                 }
@@ -572,25 +578,32 @@ async function loadData(contract, achievementContract, id) {
         loadOffer(element.type);
     });
 
+    let numOfNfts = -1;
+    const loadNumOfNFts = async () => {
+        let res = await contract.getNumOfPlayers();
+        numOfNfts = parseInt(res._hex, 16);
+    }
+    loadNumOfNFts();
+
     // ceka se dok se ne ucitaju svi podaci koji su potrebni
-    while(city === undefined || Object.keys(specialTypeData).length < Object.keys(buildingStats.specialTypes).length) {
+    while(city === undefined || Object.keys(specialTypeData).length < Object.keys(buildingStats.specialTypes).length || numOfNfts === -1) {
         await delay(50);
     }
 
 	let achievementList = city.achievementList;
 
-    return { city, specialTypeData, achievementList };
+    return { city, specialTypeData, achievementList, numOfNfts };
 
 }
 
 const instructionsApi = async (contract, achievementContract, id, instructions) => {
-    let { city, specialTypeData, achievementList } = await loadData(contract, achievementContract, id);
+    let { city, specialTypeData, achievementList, numOfNfts } = await loadData(contract, achievementContract, id);
 
     // #region checks
 
     let temp;
     for(let i = 0; i < instructions.length; i++) {
-        temp = functions[instructions[i].instruction].check(id, city, specialTypeData, achievementList, instructions[i].body);
+        temp = functions[instructions[i].instruction].check(id, city, specialTypeData, achievementList, numOfNfts, instructions[i].body);
         if(temp === false) {
             return {
                 status: 400,

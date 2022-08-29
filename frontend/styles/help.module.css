@@ -14,22 +14,18 @@
 }
 
 .title {
-    display: flex;
-    flex-direction: row;
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 .token {
     position: relative;
-    transition: all .2s ease-in-out;
     width: fit-content;
     background-color: transparent;
-    padding: 0 0.35em;
 }
 
 .token:hover {
-    transform: scale(1.12);
-    /* font-size: 3rem; ovo nije dobro jer se sav tekst ispomera */
-    /* trebam da smislim neki bolji efekat ali i ovo je ok za sad */
+    text-decoration: underline;
 }
 
 .matic {

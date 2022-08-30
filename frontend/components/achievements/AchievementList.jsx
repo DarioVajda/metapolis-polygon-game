@@ -13,7 +13,7 @@ import { achievements, rewardTypes } from './achievements';
 const AchievementList = ({ id, city, closePopup, data, saveData }) => {
 
   useEffect(() => {
-
+    // return;
     let isMounted = true;
 
     const loadData = async () => {
@@ -123,7 +123,15 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
       </div>
       {
         data === false ?
-        <div>Loading screen</div> :
+        <div className={styles.achievementList} >
+          {
+            Object.keys(achievements).map((element, index) => ( 
+              <motion.div layout key={element} style={{ backgroundColor: 'transparent' }} >
+                <AchievementItem />
+              </motion.div>
+            ))
+          }
+        </div> :
         <div className={styles.achievementList} >
         {
           [
@@ -133,7 +141,7 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
             ...data.list.filter((element) => element.count === Math.ceil(data.count * element.percentage) && element.completed === false)
           ].map((item, index) => (
             <motion.div layout key={item.key} style={{ backgroundColor: 'transparent' }} >
-              <AchievementItem data={item} index={index} count={data.count} city={data.city} claimReward={() => { claimReward(item.key) }} />
+              <AchievementItem data={item} count={data.count} claimReward={() => { claimReward(item.key) }} />
             </motion.div>
           ))
         }
@@ -141,7 +149,6 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
       }
     </>
   )
-
 }
 
 export default AchievementList

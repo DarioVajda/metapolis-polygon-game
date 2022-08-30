@@ -12,7 +12,9 @@ TODO lista:
 - ✓ napraviti funkciju koja racuna 'total value' nekog grada (sabira vrednosti svake gradjevine koja je na mapi i specijalnih gradjevina isto, vrednost moze da se racuna po trenutnom najvecem offeru) - SVE PROVERENO OSIM OFFEROVA
 - ✓ optimizovati leaderboard stranicu, ne treba svaki element liste da se renderuje ispocetka kad se naki drugi expanduje ili collapseuje
 - ✓ napraviti/pronaci ikone za sve achievementove
-- napraviti sve 'loading' screenove
+- ✓ napraviti loading screen za achievementove
+- ✓ napraviti loading screen za profile
+- ✓ napraviti loading screen za leaderboard
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

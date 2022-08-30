@@ -14,19 +14,19 @@ const City = ({ id, data }) => {
       </div>
       <div className={styles.citydata}>
         <div className={styles.cityDataLeft}>
-          City #{id}
+          { id !== undefined ? <>City #{id}</> : <></> }
           {
             data.money !== undefined &&
             <div className={styles.money}>
               <MoneyIcon size={1.1} />
-              {data.money.toLocaleString('en-US')}
+              <span>{data.money.toLocaleString('en-US')}</span>
             </div>
           }
           {
             data.income !== undefined &&
             <div className={styles.income}>
               <IncomeIcon size={1.1} />
-              {data.income.toLocaleString('en-US')}
+              <span>{data.income.toLocaleString('en-US')}</span>
             </div>
           }
           {
@@ -42,7 +42,7 @@ const City = ({ id, data }) => {
             data.price ?
             <>
               <div>{data.price.message}</div>
-              <span>{data.price.price} {data.price.token}</span>
+              <span>{Math.round(data.price.price * 100) / 100} {data.price.token}</span>
             </>:
             <></>
           }

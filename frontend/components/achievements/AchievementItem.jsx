@@ -22,7 +22,48 @@ import { useRef } from 'react';
 // INSPIRATION: https://cdn.elearningindustry.com/wp-content/uploads/2018/08/elearning-gamification.png
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+const AchievementItemLoading = ({}) => {
+
+  let explanationDivStyle = { 
+    height: '1em', 
+    marginLeft: 'calc(1em/0.9)',
+    backgroundColor: 'var(--light-text)', 
+    transform: 'scaleY(0.75)' 
+  }  
+
+  return (
+    <div className={styles.achievementItem} style={{opacity: 0.3}} >
+      <div className={styles.badge} >
+        <Placeholder size={100} unit='%' />
+      </div>
+      <div className={styles.info} >
+        <div className={styles.topData}>
+          <div className={styles.title} style={{ ...explanationDivStyle, transform: 'scaleY(0.8)', width: '20%', marginLeft: 0 }} />
+          <div className={styles.prize} style={{ color: 'transparent' }}>
+            {' '}
+          </div>
+        </div>
+        <div style={{ ...explanationDivStyle, width: '70%' }} />
+        <div style={{ ...explanationDivStyle, width: '45%' }} />
+        <div className={styles.bars}>
+          <ProgressBar
+            fill={0.1} 
+            width={100} 
+            widthUnit='%' 
+            height={1.5} 
+            heightUnit='em' 
+            bgColor='var(--lightest-background)' 
+            fillColor='var(--light-text)'
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const AchievementItem = ({ data, count, claimReward }) => {
+
+  if(!data) return <AchievementItemLoading />
 
   const getProgressColor = (value) => {
     if(value > 0.8) {

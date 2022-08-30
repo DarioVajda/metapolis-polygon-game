@@ -47,7 +47,7 @@ const Sort = ({ setSort, sortTypes, currSort }) => {
 const Profile = ({ addr, isOwner }) => {
 
   const [username, setUsername] = useState('username100');
-  const [nftList, setNftList] = useState(false); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
+  const [nftList, setNftList] = useState(Array(6).fill(false)); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
 
   // #region Sorting
 
@@ -281,7 +281,7 @@ const Profile = ({ addr, isOwner }) => {
     loadNfts();
   }, []); 
 
-  if(nftList === false) return (
+  if(nftList === false && false) return (
     <div>screen that shows when loading the NFTs...</div>
   )
   else return (
@@ -355,6 +355,11 @@ const Profile = ({ addr, isOwner }) => {
       <div className={styles.nftlist}>
         {
           nftList.map((element, index) => {
+            if(element === false) return (
+              <div key={index} >
+                <City data={{}} />
+              </div>
+            )
             if(isOwner === false) return (
               <motion.a layout key={element.id} href={`https://opensea.io/assets/${address}/${element.id}`} target='_blank' >
                 <City id={element.id} data={element} />

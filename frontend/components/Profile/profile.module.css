@@ -377,11 +377,7 @@
     font-size: 0.9rem;
 }
 
-.score {
-    padding-left: 0.3em;
-}
-
-.score>span {
+.money>span, .income>span, .score>span {
     padding-left: 0.3em;
 }
 

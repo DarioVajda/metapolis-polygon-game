@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion';
 
 import LeaderboardItem from './LeaderboardItem';
 import Separator from './Separator';
@@ -91,25 +92,31 @@ const LeaderboardList = ({nfts}) => {
     <div className={style.leaderboard}>
       {
         list === false ?
-        <>
-          Loading...
-        </> :
+        Array(10).fill(0).map((_, i) => (
+          <div key={i+10000}>
+            <motion.div layout key={i} >
+              <LeaderboardItem id={-1} index={i} />
+            </motion.div>
+          </div>
+        )) :
         list.map((element, index) =>
-          <div key={index} style={{backgroundColor: 'var(--background)'}}>
+          <div key={index+10000}>
             {
               element !== -1 &&
               <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />
             }
-            <LeaderboardItem 
-              id={element} 
-              index={index} 
-              expanded={index===expanded} 
-              loadCity={loadCity} 
-              expand={expand}
-              owned={nfts.includes(element)}
-              nfts={loaded?list.length:0}
-              specialTypeData={specialTypeData}
-            />  
+            <motion.div layout key={index}>
+              <LeaderboardItem 
+                id={element} 
+                index={index} 
+                expanded={index===expanded} 
+                loadCity={loadCity} 
+                expand={expand}
+                owned={nfts.includes(element)}
+                nfts={loaded?list.length:0}
+                specialTypeData={specialTypeData}
+              />  
+            </motion.div>
           </div>
         )
       }

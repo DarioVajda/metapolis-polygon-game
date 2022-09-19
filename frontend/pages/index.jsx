@@ -210,7 +210,7 @@ export default function Home() {
         <title>City Builder</title>
       </Head>
       <main>
-        <Nav connectWallet={false} />
+        <Nav connectWallet={false} homeScreen={true} />
         <div className={styles.wrapper}>
           <div className={styles.scrollable}>
             <div id="mint">

@@ -1,7 +1,11 @@
 import styles from '../styles/nav.module.css';
 import Link from 'next/link';
 
-const Nav = ({connectWallet}) => {
+import PersonIcon from '../universal/icons/PersonIcon';
+import ThreeLinesIcon from '../universal/icons/ThreeLinesIcon';
+import { useState } from 'react';
+
+const HomeNav = ({connectWallet}) => {
   return (
     <div className={styles.navbar}>
       <Link href="/">
@@ -28,6 +32,62 @@ const Nav = ({connectWallet}) => {
         <></>
       }
     </div>
+  )
+}
+
+const Nav = ({ homeScreen }) => {
+
+  let buttons = [];
+
+  if(homeScreen) {
+    buttons = [
+      { href: '#roadmap',     text: 'Roadmap'     },
+      { href: '#walkthrough', text: 'Walkthrough' },
+      { href: '#faqs',        text: 'FAQs'        },
+      { href: '#about-us',    text: 'About us'    },
+      { href: '/game',        text: 'Game'        },
+    ]
+  }
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <>
+      <div className={`${styles.menuBG} ${menuOpen?'':styles.menuBGClosed}`} onClick={() => setMenuOpen(false)}>
+        <div className={`${styles.menu} ${menuOpen?'':styles.menuClosed}`}>
+          <div>Home</div>
+          <div>Leaderboard</div>
+          <div>Game</div>
+          <div>Profile</div>
+          <div>Theme</div>
+        </div>
+      </div>
+      <div className={styles.navbar}>
+        <div className={styles.buttonsRow}>
+          <div className={styles.menuButton}>
+            <ThreeLinesIcon size={1.5} onClick={() => setMenuOpen(!menuOpen)} />
+            <Link href='/'>
+              <a>City Builder</a>
+            </Link>
+          </div>
+          {
+            buttons.map((element, index) => (
+              <div key={index} className={styles.button}>
+                <Link href={element.href}>
+                  <a className={styles.navButton}>{element.text}</a>
+                </Link>
+              </div>
+            ))
+          }
+          <Link href='/profile'>
+            <div className={styles.profile}>
+              <span>Profile</span>
+              <PersonIcon size={2} />
+            </div>
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
 

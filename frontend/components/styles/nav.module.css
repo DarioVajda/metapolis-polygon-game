@@ -3,15 +3,18 @@
 .navbar {
     position: sticky;
     width: 100%;
-    height: 4em;
+    height: 3.5em;
     background-color: var(--navbar);
     top: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    /* border-bottom: 1px solid var(--text); */
     z-index: 100;
+    font-weight: 600;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; */
 }
 
 .navButton {
@@ -19,6 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 3.5em;
     font-size: 1rem;
     font-weight: 600;
     color: var(--light-text);
@@ -32,6 +36,100 @@
 .homeButton {
     flex-grow: 2;
     font-size: 1.8rem;
-    font-weight: 600;
+    height: calc(3.5em/1.8);
     color: var(--text);
+}
+
+.buttonsRow {
+    flex-grow: 1;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-flow: wrap-reverse;
+    /* overflow: hidden; */
+    /* padding: 0 10%; */
+}
+
+.buttonsRow>div {
+    height: 3.5em;
+    /* outline: 1px solid red; */
+    flex-grow: 1;
+}
+
+.button {
+    margin: 0 0.5em;
+    /* outline: 1px solid rgba(255, 255, 255, 0.102); */
+}
+
+.profile {
+    flex-grow: 1;
+    height: 3.5em;
+    padding-right: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+.profile>span {
+    margin-right: 1em;
+}
+
+.menuButton {
+    padding-left: 1em;
+
+    display: flex;
+    align-items: center;
+    width: 15em;
+    /* outline: 1px solid white; */
+}
+
+.menuButton>a {
+    margin-left: calc(1em/1.4);
+    font-size: 1.4rem;
+    cursor: pointer;
+    /* outline: 1px solid white; */
+}
+
+.menuButton>svg {
+    /* outline: 1px solid white; */
+    cursor: pointer;    
+}
+
+.menuBG {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.35);
+    z-index: 99;
+    transition: all 0.3s ease-in-out;
+}
+
+.menuBGClosed {
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.menu {
+    width: 18em;
+    height: 50vh;
+    background-color: var(--navbar);
+    position: relative;
+    top: 3.5em;
+    padding: 1em;
+
+    transform: translateX(0);
+    transition: all 0.3s ease-in-out;
+}
+
+.menuClosed {
+    transform: translateX(-100%);
+}
+
+.menu>div {
+    padding: 0.3em;
+    font-size: 1.1rem;
 }

@@ -98,16 +98,19 @@
 }
 
 .id {
-    padding-left: min(1em, 2%);
-    min-width: min(10em, 20%);
+    width: 40%;
+    /* padding-left: min(1em, 2%);
+    min-width: min(10em, 20%); */
 }
 
 .money {
-    width: min(12em, 24%);
+    width: 40%;
+    /* width: min(12em, 24%); */
 }
 
 .income {
-    width: min(12em, 24%);
+    width: 100%;
+    /* width: min(12em, 24%); */
 }
 
 .id, .money, .income {
@@ -125,7 +128,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: fit-content;
+    /* width: fit-content; */
 }
 
 .id span {

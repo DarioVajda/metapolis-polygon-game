@@ -314,6 +314,16 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
 
   // #endregion
 
+  // #region Setting the expanded index
+
+  const setExpanded = (index) => {
+    if(info.data) {
+      expand(index)
+    }
+  }
+
+  // #endregion
+
   let data   = info.data;
   let price  = info.price;
   let people = info.people;
@@ -323,7 +333,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
 
   return (
     <div className={style.item}>
-      <div className={`${style.top} ${owned?style.topOwned:''}`} onClick={() => expand(index)}>
+      <div className={`${style.top} ${owned?style.topOwned:''}`} onClick={() => setExpanded(index)}>
         <div className={style.owner}>
           {
             owner.randomIndex === undefined ?
@@ -360,7 +370,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
           </svg>
         </div>
       </div>
-      <div className={`${style.more} ${!expanded&&style.hide}`}>
+      <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
           city
         </div>

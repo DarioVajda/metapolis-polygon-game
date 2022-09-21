@@ -32,7 +32,7 @@ Object.keys(achievementsJsx).forEach((element) => {
     achievements[element] = { 
         ...achievements[element], 
         rewardValueJsx: achievementsJsx[element],
-        rewardIcon: achievementIcons[element] 
+        achievementIcon: achievementIcons[element]
     }
 })
 

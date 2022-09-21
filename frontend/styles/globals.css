@@ -20,4 +20,5 @@ a {
 
 * {
   box-sizing: border-box;
+  transition: none 0.3s linear;
 }

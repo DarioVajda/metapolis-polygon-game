@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 import styles from './hover.module.css';
 
-const Hover = ({ children, info }) => {
+const Hover = ({ children, info, childWidth }) => {
 
   const ref = useRef(null);
   const [size, setSize] = useState();
@@ -46,9 +46,9 @@ const Hover = ({ children, info }) => {
       </div>
       {
         info !== '' &&
-        <div style={{ position: 'relative', height: 0, width: 0, backgroundColor: 'transparent' }} >
-          <div style={{ minWidth: size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent' }} >
-            <div className={styles.hoverItem} style={{ bottom: `${size?size.height+10:0}px`}} >
+        <div style={{ position: 'relative', height: 0, width: 0, backgroundColor: 'transparent', transform: 'translateY(5px)' }} >
+          <div style={{ minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent' }} >
+            <div className={styles.hoverItem} style={{ bottom: `${size?size.height+10:0}px`, transform: `translateY(-100%) translateX(${size?size.width/2:0}px)` }} >
               {info}
             </div>
           </div>  

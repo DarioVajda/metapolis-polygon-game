@@ -8,6 +8,10 @@ import ScoreIcon from '../universal/icons/ScoreIcon';
 import OpenseaIcon from '../universal/icons/OpenseaIcon';
 import Placeholder from '../universal/icons/achievement_icons/Placeholder';
 
+import Hover from '../universal/hover/Hover';
+
+import { achievements } from '../achievements/achievements';
+
 import { cityValue } from '../../../server/gameplay/cityValue';
 
 const compareProps = (prev, curr) => {
@@ -151,6 +155,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
     let _people = calculatePeople(res);
     let _price = await getPrices();
     let _owner = await getOwnerData(res.owner);
+    // console.log({achievementList: res.achievementList})
     setInfo({
       data: res,
       people: _people,
@@ -422,9 +427,11 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
             </div>
             <div className={style.achievementSection}>
               {
-                data.achievementList && data.achievementList.map((element, index) => (element.completed || true) && (
+                data.achievementList && data.achievementList.map((element, index) => (element.completed || true) && ( // kasnije treba skloniti ono '|| true'
                   <div key={index} className={style.achievementBadge}>
-                    <Placeholder size={5} unit='em' />
+                    <Hover info={achievements[element.key].explanation} childWidth='20em' >
+                      { achievements[element.key].achievementIcon({ size:5, unit:'em' }) }
+                    </Hover>
                   </div>
                 ))
               }

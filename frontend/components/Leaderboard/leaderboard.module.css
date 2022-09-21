@@ -144,7 +144,7 @@
     align-items: center;
     justify-content: flex-end;
     padding-right: 1em;
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
 }
 
 .arrow svg {
@@ -156,7 +156,7 @@
 }
 
 .more {
-    transition: all 0.3s ease-in-out;
+    transition: max-height 0.3s ease-in-out, margin-top 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
     max-height: 20em;
     overflow: hidden;
     display: flex;
@@ -328,7 +328,7 @@
     opacity: 0;
     min-width: 20vw;
     visibility: hidden;
-    transition: all 0.2s linear;
+    transition: opacity 0.2s linear;
     top: 140%;
     align-self: center;
     background-color: var(--light-background);
@@ -336,12 +336,14 @@
     padding: 0.5em;
     border-radius: 5px;
     text-align: center;
+    z-index: 100;
 }
 
 .peopleBarFill>span::after {
     content: "";
     position: absolute;
     bottom: 100%;
+    transform: translateY(-1px);
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
@@ -368,7 +370,7 @@
     margin: 1em;
     width: fit-content;
     height: fit-content;
-    outline: 1px solid rgba(255, 255, 255, 0.08);
+    /* outline: 1px solid rgba(255, 255, 255, 0.08); */
     /* background-color: green;
     border-radius: 50%; */
 }

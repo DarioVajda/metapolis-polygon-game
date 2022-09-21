@@ -107,7 +107,7 @@ const AchievementItem = ({ data, count, claimReward }) => {
   return (
     <div className={styles.achievementItem} style={itemStyle} >
       <div className={styles.badge} >
-        { achievement.rewardIcon({ size: 100, unit: '%' }) }
+        { achievement.achievementIcon({ size: 100, unit: '%' }) }
       </div>
       <div className={styles.info} >
         <div className={styles.topData}>

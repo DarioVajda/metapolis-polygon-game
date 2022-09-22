@@ -47,9 +47,10 @@ const Hover = ({ children, info, childWidth }) => {
       {
         info !== '' &&
         <div style={{ position: 'relative', height: 0, width: 0, backgroundColor: 'transparent', transform: 'translateY(5px)' }} >
-          <div style={{ minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent' }} >
+          <div style={{ minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent', transform: 'translateX(50px)' }} >
             <div className={styles.hoverItem} style={{ bottom: `${size?size.height+10:0}px`, transform: `translateY(-100%) translateX(${size?size.width/2:0}px)` }} >
               {info}
+              <div style={{ transform: 'translateX(-50px)' }}></div>
             </div>
           </div>  
         </div>

@@ -125,7 +125,7 @@ const AchievementItem = ({ data, count, claimReward }) => {
         <div className={styles.bars}>
           {
             ( completedPercentage < 1 || achievement.completed === true ) &&
-            <Hover info={check.completed || achievement.completed ? '' : check.message} >
+            <Hover info={check.completed || achievement.completed ? '' : check.message} specialId={achievement.key} >
               <ProgressBar
                 fill={check.value} 
                 width={100} 

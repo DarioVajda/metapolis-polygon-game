@@ -158,7 +158,7 @@
 .more {
     transition: max-height 0.3s ease-in-out, margin-top 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
     max-height: 20em;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: row;
     justify-content: space-around;

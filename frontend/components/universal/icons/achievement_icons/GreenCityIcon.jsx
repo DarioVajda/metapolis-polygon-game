@@ -2,14 +2,14 @@ import React from 'react'
 
 import AchievementFrame from './AchievementFrame';
 
-const GreenCityIcon = ({ size, unit }) => {
+const GreenCityIcon = ({ size, unit, onMouseEnter, onMouseLeave, hoverable }) => {
   
   const wh = `${size>0?size:1}${unit?unit:'em'}`; // Width and Height
 
   const childStyle = { gridColumn: 1, gridRow: 1 }
 
   return (
-    <AchievementFrame wh={wh} backgroundColor='lightgreen' >
+    <AchievementFrame hoverable={hoverable} size={size} unit={unit} backgroundColor='lightgreen' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <svg width={wh} height={wh} viewBox="0 0 64 64" style={{...childStyle, transform: 'scale(0.68) translateY(-15%)'}} >
         <path fill="#947151" d="M25 52.1h14V64H25z"/>
         <path fill="#71a03a" d="M32 34.9L2 55.1s14.5 3.4 30 3.4s30-3.4 30-3.4L32 34.9z"/>

@@ -2,14 +2,18 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 
+import useScrollbarSize from 'react-scrollbar-size';
+
 import styles from './hover.module.css';
 
 const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
 
   const ref = useRef(null);
   const dimensionsDivRef = useRef(null);
+  const scrollBar = useScrollbarSize();
   const [size, setSize] = useState();
   const [edgeOffset, setEdgeOffset] = useState(0);
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     let reloading = false;
@@ -50,39 +54,46 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
   }
 
   const onHover = () => {
+    setEdgeOffset(0);
+    setHover(true);
+    if(childWidth === undefined) {
+      // return;
+    }
     let position = offset(document.querySelector(`#${specialId}`));
     let popupWidth = window.innerWidth - dimensionsDivRef.current.clientWidth;
     
     let left = position.left;
     let right = window.innerWidth - position.left;
 
-    console.log({ left, right, popupWidth });
-    if(left < popupWidth / 2) {
+    // console.log({ left, right, popupWidth });
+    if(left + ref.current.clientWidth / 2 < popupWidth / 2) {
       // console.log('left', left, popupWidth/2);
       setEdgeOffset(popupWidth / 2 - left - ref.current.clientWidth / 2);
     }
-    if(right < popupWidth / 2) {
-      console.log('right', right, popupWidth/2);
-      setEdgeOffset(right - popupWidth / 2 - ref.current.clientWidth / 2);
+    if(right - ref.current.clientWidth / 2 < popupWidth / 2) {
+      // console.log('right', right, popupWidth/2, scrollBar.width);
+      setEdgeOffset(right - popupWidth / 2 - ref.current.clientWidth / 2 - scrollBar.width);
     }
-    console.log(edgeOffset);
+    // console.log(edgeOffset);
+  }
+
+  const notHover = () => {
+    setHover(false);
   }
 
   let _sidePadding = sidePadding ? sidePadding : '0px';
 
-  // JOS TREBA UZETI U OBZIR SIRINU SCROLL BARA I SKONTATI ZASTO SE NE PROMENE VREDNOSTI ZA OFFSET NAKON PROMENE SIRINE EKRANA
-
   return (
     <div className={styles.hoverWrapper} id={specialId}>
       <div ref={dimensionsDivRef} style={ childWidth ? { position: 'fixed', width: `calc(${window.innerWidth}px - ${childWidth} - ${_sidePadding} - ${_sidePadding})` }:{} } />
-      <div style={{width: '100%', backgroundColor: 'transparent', cursor: 'pointer' }} ref={ref}  onMouseEnter={onHover} onClick={() => offset(document.querySelector(`#${specialId}`))}>
-        {children}
+      <div style={{width: '100%', backgroundColor: 'transparent', cursor: 'pointer' }} ref={ref}  onMouseEnter={undefined} onMouseLeave={undefined}>
+        { React.cloneElement(children, { onMouseEnter: onHover, onMouseLeave: notHover }) }
       </div>
       {
         info !== '' &&
-        <div style={{ position: 'relative', height: 0, width: 0, backgroundColor: 'transparent', transform: 'translateY(5px)' }} >
-          <div style={{ minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent', transform: `translateX(${edgeOffset}px)` }} >
-            <div className={styles.hoverItem} style={{ bottom: `${size?size.height+10:0}px`, transform: `translateY(-100%) translateX(${size?size.width/2:0}px)` }} >
+        <div style={{ pointerEvents: 'none', position: 'relative', height: 0, width: 0, backgroundColor: 'transparent', transform: 'translateY(5px)' }} >
+          <div className={hover?styles.hovered:''} style={{ bottom: `${size?size.height+10:0}px`, position: 'relative', minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent', transform: `translateX(${edgeOffset}px)` }} >
+            <div className={styles.hoverItem} style={{ transform: `translateY(-100%) translateX(${size?size.width/2:0}px)` }} >
               {info}
               <div style={{ transform: `translateX(${-edgeOffset}px)` }}></div>
             </div>

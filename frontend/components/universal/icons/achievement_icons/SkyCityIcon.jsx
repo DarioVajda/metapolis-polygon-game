@@ -2,7 +2,7 @@ import React from 'react'
 
 import AchievementFrame from './AchievementFrame';
 
-const SkyCityIcon = ({ size, unit }) => {
+const SkyCityIcon = ({ size, unit, onMouseEnter, onMouseLeave, hoverable }) => {
   
   const wh = `${size>0?size:1}${unit?unit:'em'}`; // Width and Height
 
@@ -10,7 +10,7 @@ const SkyCityIcon = ({ size, unit }) => {
 
   // <svg width={wh} height={wh} viewBox="0 0 32 32" style={{...childStyle, transform: 'scale(0.68) translateY(-15%)'}} >
   return (
-    <AchievementFrame wh={wh} backgroundColor='cornflowerblue' >
+    <AchievementFrame hoverable={hoverable} size={size} unit={unit} backgroundColor='cornflowerblue' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <svg width={wh} height={wh} viewBox="0 0 32 32" style={{...childStyle, transform: 'scale(0.65) translateY(-15%)'}} >
         <g fill="none">
           <path fill="#9B9B9B" d="M2 30h4.032l9.945-2.775L25.922 30H30V9.3A2.3 2.3 0 0 0 27.7 7H4.3A2.3 2.3 0 0 0 2 9.3V30Z"/>

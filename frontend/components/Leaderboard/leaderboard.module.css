@@ -155,17 +155,27 @@
     transform: rotateX(180deg);
 }
 
+
+
 .more {
     transition: max-height 0.3s ease-in-out, margin-top 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
     max-height: 20em;
-    /* overflow: hidden; */
+    overflow: hidden;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
     justify-content: space-around;
     /* flex-wrap: wrap; */
     margin-top: 1em;
     margin-bottom: 1em;
     background-color: transparent;
+
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.more::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 .hide {
@@ -175,8 +185,13 @@
 }
 
 .city {
-    min-height: 20em;
-    min-width: 20em;
+    position: sticky;
+    top: 0;
+
+    height: 20em;
+    /* min-width: 20em; */
+    aspect-ratio: 1/1;
+    align-self: center;
     margin: 0 2em;
     border: 1px solid white;
     background-color: transparent;
@@ -312,6 +327,10 @@
     border-radius: 8px;
 }
 
+.peopleBar:hover {
+    z-index: 1000;
+}
+
 .peopleBarFill {
     /* border-radius: 8px 0 0 8px; */
     border-radius: 8px;
@@ -363,6 +382,8 @@
 .achievementSection {
     display: flex;
     flex-direction: row;
+    /* overflow-y: scroll; */
+    /* overflow-x: scroll; */
     flex-wrap: wrap;
 }
 

@@ -8,7 +8,7 @@
     height: fit-content;
     /* border: 1px solid white; */
     /* border-radius: 50%; */
-    transition: all 0.15s linear;
+    transition: all .3s linear;
     /* width: 100%; */
 }
 
@@ -19,7 +19,7 @@
     background-color: var(--light-background);
     border: 1px solid var(--light-text);
     border-radius: 5px;
-    transition: all 0.15s linear;
+    transition: all .3s linear;
     align-self: center;
     text-align: center;
     padding: 0.5em;
@@ -29,11 +29,14 @@
     z-index: 100000;
 }
 
-.hoverWrapper:hover .hoverItem {
+/* .hoverWrapper:hover .hoverItem {
     visibility: visible;
-    /* border: 1px solid white; */
     opacity: 1;
-    /* transform: translateY(-100%); */
+} */
+
+.hovered .hoverItem {
+    visibility: visible;
+    opacity: 1;
 }
 
 .hoverWrapper .hoverItem>div {
@@ -48,7 +51,7 @@
     border-color: var(--light-text) transparent transparent transparent;
 }
 
-.hoverWrapper>div:hover .hoverItem {
+/* .hoverWrapper>div:hover .hoverItem {
     visibility: hidden;
     opacity: 0;
-}
+} */

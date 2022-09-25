@@ -427,10 +427,10 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
             </div>
             <div className={style.achievementSection}>
               {
-                data.achievementList && data.achievementList.map((element, index) => (element.completed || true) && ( // kasnije treba skloniti ono '|| true'
-                  <div key={index} className={style.achievementBadge}>
-                    <Hover info={achievements[element.key].explanation} childWidth='20em' specialId={element.key} sidePadding={'1.5em'} >
-                      { achievements[element.key].achievementIcon({ size:5, unit:'em' }) }
+                data.achievementList && [...data.achievementList ].map((element, index) => (element.completed || true) && ( // kasnije treba skloniti ono '|| true'
+                  <div key={index} className={style.achievementBadge} style={{zIndex: 10+index}}>
+                    <Hover info={achievements[element.key].explanation} childWidth='20em' specialId={`${element.key}${index}`} sidePadding={'1.5em'} >
+                      { achievements[element.key].achievementIcon({ size:5, unit:'em', hoverable:true }) }
                     </Hover>
                   </div>
                 ))

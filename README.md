@@ -16,8 +16,8 @@ TODO lista:
 - ✓ napraviti loading screen za profile
 - ✓ napraviti loading screen za leaderboard
 - ✓ napraviti achievement badge-ove u leaderboard itemu (da se prikazu oni koji su uradjeni)
-- popraviti da se hover-popupovi ne mogu slucajno naci sa strane skroz pa da se ne vide celi nego da se ogranici njihovo pomeranje do ivice ekrana (sve uraditi u Hover komponenti, takodje promeniti da onaj people bar u leaderboard itemu koristi tu komponentu umesto ovoga sto je sad)
-- napraviti neku animaciju kad se hoveruje preko achievement badge-a ili people bar-a u leaderboard itemu - npr da predje onakav zrak preko njega i da se vrati kad se zavrsi hover (onakav zrak kao kad se completeuje achievement)
+- ✓ popraviti da se hover-popupovi ne mogu slucajno naci sa strane skroz pa da se ne vide celi nego da se ogranici njihovo pomeranje do ivice ekrana (sve uraditi u Hover komponenti)
+- ✓ napraviti neku animaciju kad se hoveruje preko achievement badge-a u leaderboard itemu - npr da predje onakav zrak preko njega i da se vrati kad se zavrsi hover (onakav zrak kao kad se completeuje achievement)
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

@@ -321,9 +321,6 @@
     width: 90%;
     height: 16px;
     background-color: var(--lightest-background);
-}
-
-.peopleBar {
     border-radius: 8px;
 }
 

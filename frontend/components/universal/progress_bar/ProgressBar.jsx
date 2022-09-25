@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ProgressBar = ({ fill, width, widthUnit, height, heightUnit, bgColor, fillColor, children, style }) => {
+const ProgressBar = ({ fill, width, widthUnit, height, heightUnit, bgColor, fillColor, children, style, onMouseEnter, onMouseLeave }) => {
 
   const barStyle = {
     display: 'content',
@@ -36,7 +36,7 @@ const ProgressBar = ({ fill, width, widthUnit, height, heightUnit, bgColor, fill
   }
 
   return (
-    <div style={barStyle} >
+    <div style={barStyle} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div style={fillStyle} >
       </div>
       <div style={childrenStyle}>

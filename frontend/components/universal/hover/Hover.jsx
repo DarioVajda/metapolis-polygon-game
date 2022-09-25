@@ -57,7 +57,7 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
     setEdgeOffset(0);
     setHover(true);
     if(childWidth === undefined) {
-      // return;
+      return;
     }
     let position = offset(document.querySelector(`#${specialId}`));
     let popupWidth = window.innerWidth - dimensionsDivRef.current.clientWidth;

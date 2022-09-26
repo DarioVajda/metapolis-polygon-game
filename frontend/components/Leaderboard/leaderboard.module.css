@@ -8,7 +8,7 @@
     margin: 1em;
     /* border: 1px solid white; */
     border-radius: 2.25em;
-    /* overflow: hidden; */
+    overflow: hidden;
     background-color: var(--light-background);
 }
 
@@ -97,25 +97,10 @@
     border-radius: 50%;
 }
 
-.id {
-    width: 40%;
-    /* padding-left: min(1em, 2%);
-    min-width: min(10em, 20%); */
-}
-
-.money {
-    width: 40%;
-    /* width: min(12em, 24%); */
-}
-
-.income {
-    width: 100%;
-    /* width: min(12em, 24%); */
-}
-
 .id, .money, .income {
     /* text-align: start; */
-    margin: 0 0.5em;
+    flex-grow: 1;
+    margin: 0 0.4em;
     background-color: transparent;
     display: flex;
     flex-direction: row;
@@ -123,7 +108,12 @@
     justify-content: flex-start;
 }
 
+.income {
+    flex-grow: 2;
+}
+
 .id {
+    margin-left: 0.7em;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -134,7 +124,7 @@
 .id span {
     font-size: 1.3em;
     font-weight: 600;
-    padding-right: 1em;
+    padding-right: 0.7em;
 }
 
 .arrow {
@@ -188,11 +178,17 @@
     position: sticky;
     top: 0;
 
+    width: fit-content;
     height: 20em;
-    /* min-width: 20em; */
+    display: flex;
+    align-items: center;
+}
+
+.city>div {
+    height: min(20em, 33vw);
     aspect-ratio: 1/1;
     align-self: center;
-    margin: 0 2em;
+    margin: 0 .5em;
     border: 1px solid white;
     background-color: transparent;
     background-color: rgba(0, 179, 255, 0.08);
@@ -210,29 +206,25 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    flex-wrap: wrap;
     padding: 0.5em;
-    align-items: stretch;
+    align-items: center;
     background-color: transparent;
 }
 
-.price {
+/* .price {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: fit-content;
-    margin: 1px;
     padding: 1em;
     background-color: var(--primary);
     border-radius: 10px;
-    border: 1px solid var(--light-text);
+    outline: 1px solid var(--light-text);
 }
-
 .price:hover {
-    border: 2px solid var(--light-text);
-    margin: 0;
+    outline: 2px solid var(--light-text);
 }
-
 .price:active {
     background-color: var(--primary-bg);
 }
@@ -245,28 +237,49 @@
     align-items: center;
     justify-content: space-between;
 }
-
 .price>span>span {
     margin-left: 0.4em;
 }
-
 .price>div {
     font-size: 1.8rem;
-    background-color: transparent;
-}
+} */
 
-.score, .totalValue {
-    padding: 0 0.5em;
-    margin: 0 0 0 1em;
-    border: 1px solid var(--light-text);
+.score, .totalValue, .price {
+    height: 4em;
+    flex-grow: 1;
+    margin: 0.2em 0.5em;
+    outline: 1px solid var(--light-text);
+    padding: 0.5em;
     font-size: 1.6rem;
-    background-color: var(--lightest-background);
     background-color: var(--primary-bg);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+.price {
+    background-color: var(--primary);
+}
+
+.price>div {
+    font-size: 1.8rem;
+}
+
+.price:hover {
+    outline: 2px solid var(--light-text);
+}
+
+.price>span {
+    display: flex;
+    align-items: center;
+}
+
+.price>span>span {
+    font-size: 1rem;
+    padding-left: 0.5em;
+    color: var(--light-text);
 }
 
 .totalValue>span {
@@ -279,11 +292,9 @@
     font-size: 0.9rem;
     color: var(--light-text);
     padding-top: 0.5em;
-    background-color: transparent;
 }
 
 .score>div {
-    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -294,17 +305,17 @@
 }
 
 .stats {
-    padding: 1em;
+    padding: 0.5em;
     background-color: transparent;
 }
+
 
 .peopleSection {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     height: fit-content;
     width: 100%;
-    /* border: 1px solid red; */
-    /* padding: 1em 0; */
     background-color: transparent;
 }
 
@@ -313,8 +324,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 50%;
+    flex-grow: 1;
+    font-size: 1.2rem;
+    min-width: 13em;
+    padding: .3em 0;
     background-color: transparent;
+
 }
 
 .peopleBar {
@@ -342,9 +357,10 @@
 .peopleBarFill>span {
     position: relative;
     opacity: 0;
-    min-width: 20vw;
+    width: 0;
+    font-size: 0.85rem;
     visibility: hidden;
-    transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear, width 0s linear;
     top: 140%;
     align-self: center;
     background-color: var(--light-background);
@@ -373,6 +389,7 @@
 
 .peopleBarFill:hover>span {
     visibility: visible;
+    width: 11em;
     opacity: 1;
 }
 

@@ -377,13 +377,15 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       </div>
       <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
-          city
+          <div>
+            city
+          </div>
         </div>
         <div className={style.data}>
           <div className={style.dataTop}>
             <a href={`https://opensea.io/assets/${address}/${id}`} target='_blank' className={style.price}>
               <span>
-                <OpenseaIcon size={1.6} />
+                <OpenseaIcon size={1} />
                 <span>{price.message}</span>
               </span>
               <div>{price.price} {price.token}</div>

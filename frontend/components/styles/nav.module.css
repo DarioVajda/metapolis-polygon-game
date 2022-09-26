@@ -54,27 +54,35 @@
 
 .buttonsRow>div {
     height: 3.5em;
-    /* outline: 1px solid red; */
     flex-grow: 1;
 }
 
 .button {
     margin: 0 0.5em;
-    /* outline: 1px solid rgba(255, 255, 255, 0.102); */
 }
 
 .profile {
-    flex-grow: 1;
     height: 3.5em;
     padding-right: 1em;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     cursor: pointer;
+    max-width: 10em;
 }
 
 .profile>span {
-    margin-right: 1em;
+    /* margin-right: 1em; */
+    color: var(--light-text);
+    padding: 0 1em;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile:hover>span {
+    color: var(--text);
 }
 
 .menuButton {
@@ -83,18 +91,15 @@
     display: flex;
     align-items: center;
     width: 15em;
-    /* outline: 1px solid white; */
 }
 
 .menuButton>a {
     margin-left: calc(1em/1.4);
     font-size: 1.4rem;
     cursor: pointer;
-    /* outline: 1px solid white; */
 }
 
 .menuButton>svg {
-    /* outline: 1px solid white; */
     cursor: pointer;    
 }
 

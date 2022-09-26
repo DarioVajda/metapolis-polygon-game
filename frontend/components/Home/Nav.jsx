@@ -130,7 +130,7 @@ const Nav = ({ homeScreen }) => {
           </div>
           <div className={styles.secondaryButtons}>
           {
-            [ ...buttons, { href: '/game', text: 'Game' } ].map((element, index) => (
+            homeScreen && [ ...buttons, { href: '/game', text: 'Game' } ].map((element, index) => (
               <div key={index} className={styles.button}>
                 <Link href={element.href}>
                   <a className={styles.navButton}>{element.text}</a>

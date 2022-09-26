@@ -46,15 +46,32 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    flex-wrap: wrap;
-    flex-flow: wrap-reverse;
+    /* flex-wrap: wrap; */
+    /* flex-flow: wrap-reverse; */
     /* overflow: hidden; */
     /* padding: 0 10%; */
 }
 
 .buttonsRow>div {
     height: 3.5em;
-    flex-grow: 1;
+    /* flex-grow: 1; */
+}
+
+/* Mobile devices */
+.secondaryButtons {
+    display: none;
+}
+
+/* Big screens */
+@media only screen and (min-width: 768px) {
+    .secondaryButtons {
+        flex-grow: 0;
+        width: 30em;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 }
 
 .button {
@@ -63,6 +80,7 @@
 
 .profile {
     height: 3.5em;
+    flex-grow: 1;
     padding-right: 1em;
     display: flex;
     align-items: center;
@@ -87,6 +105,7 @@
 
 .menuButton {
     padding-left: 1em;
+    flex-grow: 2;
 
     display: flex;
     align-items: center;
@@ -118,8 +137,8 @@
 }
 
 .menu {
-    width: 18em;
-    height: 50vh;
+    width: 13em;
+    height: fit-content;
     background-color: var(--navbar);
     position: relative;
     top: 3.5em;
@@ -134,6 +153,53 @@
 }
 
 .menu>div {
-    padding: 0.3em;
-    font-size: 1.1rem;
+    /* padding: 0.3em; */
+    margin-bottom: 0.6em;
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.menu>div a:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+/* Mobile devices */
+.menuHomeButton>div {
+    padding-left: 1em;
+    color: var(--text);
+    font-size: .9rem;
+}
+
+/* Big screens */
+@media only screen and (min-width: 768px) {
+    .menuHomeButton>div {
+        display: none;
+    }
+}
+
+.menuHomeButton>div>div {
+    padding: .2em 0;
+}
+
+.menuHomeButton>div>div:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.toggleTheme {
+    font-size: 1rem;
+    display: flex;
+    height: 1.5em;
+    padding: 0.15em;
+    width: 3em;
+    border-radius: 0.75em;
+    background-color: var(--light-text);
+}
+
+.toggleTheme>div {
+    height: 1.2em;
+    width: 1.2em;
+    border-radius: 50%;
+    background-color: var(--light-background);
 }

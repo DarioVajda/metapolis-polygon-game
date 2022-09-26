@@ -9,7 +9,7 @@ const DevOptions = ({ mintERC20, withdraw }) => {
       <br />
       <br />
       <br />
-      <h4>_________________________________________________________________________________________________</h4>
+      <h4>_____________________</h4>
       <h4>Dev options:</h4>
       <h5 onClick={() => mintERC20()}>Get 1 weth token</h5>
       <h5 onClick={() => withdraw()}>Withdraw</h5>

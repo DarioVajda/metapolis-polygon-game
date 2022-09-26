@@ -20,5 +20,5 @@ a {
 
 * {
   box-sizing: border-box;
-  transition: none 0.3s linear;
+  /* transition: color 0.3s linear, backgorund-color 0.3s linear; */
 }

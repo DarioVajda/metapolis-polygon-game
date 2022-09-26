@@ -109,7 +109,7 @@
     align-items: center;
     cursor: pointer;
     margin: 0 0.3em 0 0.3em;
-    transition: all 0.25s ease-in-out;
+    transition: background-color 0.25s ease-in-out;
 }
 
 .switchWeth {
@@ -127,7 +127,7 @@
     height: 1.2em;
     width: 1.2em;
     background-color: var(--text);
-    transition: all 0.25s ease-in-out;
+    transition: left 0.25s ease-in-out;
 }
 
 .circleMatic {

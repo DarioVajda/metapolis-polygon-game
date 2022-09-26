@@ -18,6 +18,7 @@ TODO lista:
 - ✓ napraviti achievement badge-ove u leaderboard itemu (da se prikazu oni koji su uradjeni)
 - ✓ popraviti da se hover-popupovi ne mogu slucajno naci sa strane skroz pa da se ne vide celi nego da se ogranici njihovo pomeranje do ivice ekrana (sve uraditi u Hover komponenti)
 - ✓ napraviti neku animaciju kad se hoveruje preko achievement badge-a u leaderboard itemu - npr da predje onakav zrak preko njega i da se vrati kad se zavrsi hover (onakav zrak kao kad se completeuje achievement)
+- srediti da bolje izgleda meni koji se pojavi kad stisnes na one 3 crte u navigation baru
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

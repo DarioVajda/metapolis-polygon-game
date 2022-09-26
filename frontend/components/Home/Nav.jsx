@@ -1,6 +1,8 @@
 import styles from '../styles/nav.module.css';
 import Link from 'next/link';
 
+import { motion } from 'framer-motion';
+
 import PersonIcon from '../universal/icons/PersonIcon';
 import ThreeLinesIcon from '../universal/icons/ThreeLinesIcon';
 import { useState } from 'react';
@@ -45,7 +47,6 @@ const Nav = ({ homeScreen }) => {
       { href: '#walkthrough', text: 'Walkthrough' },
       { href: '#faqs',        text: 'FAQs'        },
       { href: '#about-us',    text: 'About us'    },
-      { href: '/game',        text: 'Game'        },
     ]
   }
 
@@ -95,13 +96,28 @@ const Nav = ({ homeScreen }) => {
 
   return (
     <>
-      <div className={`${styles.menuBG} ${menuOpen?'':styles.menuBGClosed}`} onClick={() => {console.log('BG clicked'); toggleMenuOpen(false)}}>
+      <div className={`${styles.menuBG} ${menuOpen?'':styles.menuBGClosed}`} onClick={() => toggleMenuOpen(false)}>
         <div className={`${styles.menu} ${menuOpen?'':styles.menuClosed}`} onClick={e => e.stopPropagation()} >
-          <div>Home</div>
-          <div>Leaderboard</div>
-          <div>Game</div>
-          <div>Profile</div>
-          <div onClick={() => {toggleTheme();}}>Theme</div>
+          <div className={styles.menuHomeButton}>
+            <Link href='/'><a>Home</a></Link>
+            <div>
+            {
+              homeScreen && [ { href: '/', text: 'Mint' }, ...buttons ].map((element, index) => (
+                <div key={index} className={''}>
+                  <Link href={element.href}>
+                    <a onClick={() => toggleMenuOpen(false)}>{element.text}</a>
+                  </Link>
+                </div>
+              ))
+            }
+            </div>
+          </div>
+          <div> <Link href='/leaderboard'><a>Leaderboard</a></Link> </div>
+          <div> <Link href='/game'><a>Game</a></Link> </div>
+          <div> <Link href='/profile'><a>Profile</a></Link> </div>
+          <div onClick={() => toggleTheme()} className={styles.toggleTheme} style={{ justifyContent: theme?'flex-start':'flex-end' }}>
+            <motion.div layout key='toggleTheme' />
+          </div>
         </div>
       </div>
       <div className={styles.navbar}>
@@ -112,8 +128,9 @@ const Nav = ({ homeScreen }) => {
               <a>City Builder</a>
             </Link>
           </div>
+          <div className={styles.secondaryButtons}>
           {
-            buttons.map((element, index) => (
+            [ ...buttons, { href: '/game', text: 'Game' } ].map((element, index) => (
               <div key={index} className={styles.button}>
                 <Link href={element.href}>
                   <a className={styles.navButton}>{element.text}</a>
@@ -121,6 +138,7 @@ const Nav = ({ homeScreen }) => {
               </div>
             ))
           }
+          </div>
           <Link href='/profile'>
             <div className={styles.profile}>
               <span>Profile</span>

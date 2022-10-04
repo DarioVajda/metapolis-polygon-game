@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls, Bounds } from "@react-three/drei";
 import Link from "next/link";
 import Buildings from "../components/game/Buildings";
+import styles from "../components/styles/Game.module.css";
 
 //----COMPONENTS----//
 import Lights from "../components/game/Lights";
@@ -52,44 +53,50 @@ const initCity = async (id) => {
 const gameplay = () => {
   // getIncome(1)
   return (
-    <>
-      <div
-        style={{
-          position: "fixed",
-          height: "90%",
-          width: "90%",
-          margin: "0px",
-          padding: "0px",
-          overflow: "hidden",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <HTMLContent ID={ID} />
-        <WorldCanvas className={"world-canvas"} style={{ backgroundColor: "transparent" }}>
-          <OrbitControls />
-          <Lights />
-          <Grid ID={ID} />
-          <Suspense fallback={null}>
-            <Bounds fit clip observe margin={1}>
-              <Landscape scale={120} position={[-20, -23, 2]} />
-              <FloatingMenu style={{ backgroundColor: "transparent" }} />
-              <Buildings ID={ID}></Buildings>
-              <HoverObject />
-            </Bounds>
-          </Suspense>
-        </WorldCanvas>
-      </div>
+    <div className={styles.columnWrapper}>
       <Link href="/">
         <a>Home</a>
       </Link>{" "}
-      <br />
       <Link href="/leaderboard">
         <a>Leaderboard</a>
       </Link>{" "}
-      <br />
-    </>
+      <div className={styles.rowWrapper}>
+        <div>
+          Lorem ipsum dolor sit amet consectetur <br />
+          adipisicing elit. Totam natus culpa, id
+          <br />
+          voluptatem possimus nihil, laboriosam corrupti quas
+          <br /> dolorem voluptas soluta vitae accusantium quo,
+          <br /> facilis laudantium in. Mollitia, expedita deserunt.
+        </div>
+        <div className={styles.gameContainer}>
+          <HTMLContent ID={ID} />
+          <WorldCanvas style={{ width: "100%", height: "100%", display: "block" }}>
+            <OrbitControls />
+            <Lights />
+            <Grid ID={ID} />
+            <Suspense fallback={null}>
+              <Bounds fit clip observe margin={1}>
+                {/* <Landscape scale={120} position={[-20, -23, 2]} /> */}
+                <FloatingMenu style={{ backgroundColor: "transparent" }} />
+                <Buildings ID={ID}></Buildings>
+                <HoverObject />
+              </Bounds>
+            </Suspense>
+          </WorldCanvas>
+        </div>
+        <div>
+          Lorem ipsum dolor sit amet consectetur <br />
+          adipisicing elit. Totam natus culpa, id
+          <br />
+          voluptatem possimus nihil, laboriosam corrupti quas
+          <br /> dolorem voluptas soluta vitae accusantium quo,
+          <br /> facilis laudantium in. Mollitia, expedita deserunt.
+        </div>
+      </div>
+      Lorem ipsum dolor sit amet consectetur <br />
+      adipisicing elit. Totam natus culpa, id
+    </div>
   );
 };
 ///CAMERA IS BROKEN BECAUSE OF MODELS, THEIR SCALE BREAKS STUFF

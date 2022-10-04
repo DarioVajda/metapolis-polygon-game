@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/Game.module.css";
+import styles from "../../styles/GameUI.module.css";
 import Image from "next/image";
 import educatedPerson from "./educated-person-128.png";
 

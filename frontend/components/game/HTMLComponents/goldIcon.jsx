@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/Game.module.css";
+import styles from "../../styles/GameUI.module.css";
 import gold from "./gold-128.png";
 import Image from "next/image";
 

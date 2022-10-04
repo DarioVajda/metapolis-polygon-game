@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Html } from "@react-three/drei";
-import styles from "../styles/Game.module.css";
+import styles from "../styles/GameUI.module.css";
 import { Group } from "three";
 import { useBuildingStore } from "./BuildingStore";
 import GoldDiv from "./HTMLComponents/goldIcon.jsx";

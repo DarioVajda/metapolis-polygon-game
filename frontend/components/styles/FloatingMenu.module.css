@@ -1,6 +1,107 @@
-.FloatingMenuContainer {
-  /* justify-content: space-between; */
-  /* flex-direction: column; */
-  /* display: flex; */
+.floatingMenuContainer {
+  justify-content: center;
+  display: flex;
+  
+  padding: 10px;
   background-color: transparent;
+}
+
+.floatingMenuContainer__window {
+  width: 400px;
+  background-color: white !important;
+  font-size: 14px;
+  color: black;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+  opacity: 0;
+  transform: scale(0.75);
+  animation-name: floatingMenuContainer__window---open;
+  animation-duration: 0.2s;
+  animation-fill-mode: forwards;
+}
+
+.floatingMenuContainer__titlebar,
+.floatingMenuContainer__content,
+.floatingMenuContainer__buttons{
+  padding: 1.25em;
+}
+
+.floatingMenuContainer__titlebar {
+  background-color: #222222 !important;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.floatingMenuContainer__title{
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.floatingMenuContainer__close{
+  background: none !important;
+  outline: none;
+  border: none;
+  transform: scale(2.5);
+  color: white;
+  transition: color 0.15s;
+}
+
+.floatingMenuContainer__close:hover{
+  color: red;
+  cursor: pointer;
+}
+
+.floatingMenuContainer__content{
+  line-height: 1.8em;
+}
+
+.floatingMenuContainer__buttons{
+  background: #eeeeee !important;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.floatingMenuContainer__button{
+  padding: 0.4em 0.8em;
+  border: 2px solid #009879;
+  border-radius: 5px;
+  background: white !important;
+  color: #009879;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-left: 0.6em;
+  cursor: pointer;
+  outline: none;
+}
+
+.floatingMenuContainer__buttonFill {
+  background: #009879 !important;
+  color: #fff;
+}
+
+.floatingMenuContainer__button:focus{
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.floatingMenuContainer div {
+  background-color: transparent;
+}
+
+@keyframes floatingMenuContainer__window---open{
+  to {
+    opacity: 1;
+  transform: scale(1);
+  }
+}
+
+@keyframes floatingMenuContainer__window--close {
+  from {opacity: 1}
+  to {opacity: 0}
 }

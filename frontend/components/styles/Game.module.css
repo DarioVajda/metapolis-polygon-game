@@ -1,129 +1,35 @@
+.columnWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  flex-basis: 10vw;
+  }
 
-.roundedFixedBtn{
-    position:absolute;
-    text-decoration: none;
-    z-index: 999;
-    pointer-events: all;
-    
-    height: 12%;
-    line-height: 30px;  
-    width: 8%;    
-    font-size:1em;
-    font-weight: 600;
-    /* font-family: Arial, Helvetica, sans-serif; */
-    font-family: 'Work Sans',sans-serif;
-    border-radius: 5%;
-    border:2px solid #3b3b3b60;
-    background-color: #6363639a;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-
-  }
-  .roundedFixedBtnClicked{
-    position:absolute;
-    text-decoration: none;
-    z-index: 999;
-    pointer-events: all;
-
-    height: 12%;
-    line-height: 30px;  
-    width: 8%;    
-    font-size:1em;
-    font-weight: 600;
-    /* font-family: Arial, Helvetica, sans-serif; */
-    font-family: 'Work Sans',sans-serif;
-    border-radius: 5%;
-    border:2px solid #3b3b3b60;
-    background-color: #252525ce;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-  }
-  .container {
-    justify-content: space-between;
-    flex-direction: column;
-    height: 100vh;
-    display: flex;
-    background-color: rgba(255, 255, 255, 0);
-  }
-  .container .btnHolder {
-    justify-content: flex-end;
-    display: flex;
-  }
-  .blog-link {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 1rem;
-    text-decoration: none;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: palevioletred;
-    z-index: 999;
-  }
-  .dataContainer{
-    position:absolute;
-    z-index: 999;
-    
-    height: 8%;
-    width: 8%;    
-    border-radius: 5%;
-    background: none;
-}
-  .dataDiv{
-    position:absolute;
-    text-decoration: none;
-    z-index: 999;
-
-    top: 50%;
-    height: 50%;
-    line-height: 200%;  
-    width: 100%;    
-    font-size:1em;
-    font-weight: 600;
-    border-bottom-left-radius: 5%;
-    border-bottom-right-radius: 5%;
-    background-color: #6363639a;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-}
-.dataTextDiv{
-  position:absolute;
-  text-decoration: none;
-  z-index: 999;
-  
-  height: 50%;
-  width: 100%;    
-  line-height: 200%;  
-  font-size:1em;
-  font-weight: 600;
-  border-top-left-radius: 10%;
-  border-top-right-radius: 10%;
-  background-color: #2222229a;
-  color: white;
-  text-align: center;
-  cursor: pointer;
-}
-.imgDiv{
-  position:absolute;
-  z-index: 999;
-  
-  left:5%;
+.rowWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  width: 100%;
   height: 100%;
-  width: 25%;    
-  padding: 0%;
-  margin:0px;
-  background: none;
-}
-.ammountDiv{
-  position:absolute;
-  z-index: 999;
-  
-  right:5%;
-  height: 100%;
-  width: 65%;    
-  padding: 0%;
-  margin:0px;
-  background: none;
+  flex: 1 1 auto;
+  overflow: hidden;
+  }
+
+
+.gameContainer{
+  flex: 1 1 auto;
+  user-select:none;
+  justify-content: center;
+  align-items: center;
+  /* display: flex; */
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  overflow:hidden;
+  /* z-index: 100000; */
 }

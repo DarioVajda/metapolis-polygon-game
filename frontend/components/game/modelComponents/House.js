@@ -7,7 +7,6 @@ import { useGLTF } from '@react-three/drei'
 
 const House = forwardRef(function House(props,ref) {
   const { nodes, materials } = useGLTF('/house1.glb')
-  console.log(props)
   return (
     <group name="objectGroup" ref={ref} {...props} dispose={null}>
       <mesh receiveShadow geometry={nodes.Plane.geometry} material={materials['grass.001']} scale={[30, 1, 30]} />

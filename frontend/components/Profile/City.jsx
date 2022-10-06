@@ -6,7 +6,23 @@ import MoneyIcon from '../universal/icons/MoneyIcon';
 import IncomeIcon from '../universal/icons/IncomeIcon';
 import ScoreIcon from '../universal/icons/ScoreIcon';
 
+const CityLoading = () => {
+  return (
+    <div className={styles.loadingNftitem}>
+      <div className={styles.loadingCity}></div>
+      <div className={styles.loadingCityData}>
+          <div style={{width: '70%'}} />
+          <div />
+          <div />
+          <div />
+      </div>
+    </div>
+  )
+}
+
 const City = ({ id, data }) => {
+  if(data === false) return <CityLoading />;
+
   return (
     <div className={styles.nftitem}>
       <div className={styles.city}>

@@ -129,22 +129,50 @@ const specialTypes = {
         type: 'stadium',
         count: 1,
         rarity: 10
+    },
+    School: { // nagrada da bude educated boost
+        type: 'school',
+        count: 10,
+        rarity: 5
+    },
+    ShoppingMall: { // nagrada da budu ingame pare npr
+        type: 'shoppingmall',
+        count: 10,
+        rarity: 5
+    },
+    Promenade: { // nagrada da bude novac jer 'se turistima dopada grad zbog setalista'
+        type: 'promenade',
+        count: 20,
+        rarity: 3
+    },
+    TownHall: { // nagrada da bude novac jer 'se turistima dopada grad zbog gradske kuce'
+        type: 'townhall',
+        count: 50,
+        rarity: 2
     }
 }
 
 const specialBuildingDimensions = new Map();
 function initSpecialBuildingDimensions() {
-    specialBuildingDimensions.set(specialTypes.Statue.type, [[1, 1]]);
-    specialBuildingDimensions.set(specialTypes.Fountain.type, [[1, 2]]);
-    specialBuildingDimensions.set(specialTypes.Stadium.type, [[2, 2]]);
+    specialBuildingDimensions.set( specialTypes.Statue.type,         [[1, 1]] );
+    specialBuildingDimensions.set( specialTypes.Fountain.type,       [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.Stadium.type,        [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.School.type,         [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.ShoppingMall.type,   [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.Promenade.type,      [[1, 4]] );
+    specialBuildingDimensions.set( specialTypes.TownHall.type,       [[1, 3]] );
 }
 initSpecialBuildingDimensions();
 
 const specialPrices = new Map();
 function initSpecialPrices() {
-    specialPrices.set(specialTypes.Statue.type, 100000);
-    specialPrices.set(specialTypes.Fountain.type, 80000);
-    specialPrices.set(specialTypes.Stadium.type, 80000);
+    specialPrices.set(specialTypes.Statue.type,         100000  );
+    specialPrices.set(specialTypes.Fountain.type,       80000   );
+    specialPrices.set(specialTypes.Stadium.type,        1000000 );
+    specialPrices.set(specialTypes.School.type,         200000  );
+    specialPrices.set(specialTypes.ShoppingMall.type,   750000  );
+    specialPrices.set(specialTypes.Promenade.type,      400000  );
+    specialPrices.set(specialTypes.TownHall.type,       1250000 );
 }
 initSpecialPrices();
 

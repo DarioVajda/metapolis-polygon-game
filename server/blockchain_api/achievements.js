@@ -18,6 +18,7 @@ const dateToUnix = (dateStr) => {
 
 // #endregion
 
+// TODO implemetirati preview funkciju za extraEducated nagradu
 const rewardTypes = {
     // ingame rewards:
     money: {
@@ -141,6 +142,32 @@ const skyCity = (city) => {
     return r;
 };
 
+const highEducation = (city) => {
+    const MIN_SCHOOLS = 3;
+
+    let buildings = city.specialBuildings;
+    let numOfSchools = 0;
+
+    buildings.forEach(element => {
+        if(element.type === 'school') {
+            numOfSchools += 1;
+        }
+    });
+
+    let completed = numOfSchools >= MIN_SCHOOLS;
+    let message = completed ? 'Achievement completed.' : `Build ${MIN_SCHOOLS - numOfSchools} more schools.`;
+
+    let r = {
+        completed: completed,
+        value: completed ? 1 : numOfSchools / MIN_SCHOOLS,
+        main:  completed ? 'Claim reward' : `${numOfSchools}/${MIN_SCHOOLS}`,
+        message: message
+    };
+
+    return r;
+
+}
+
 const check4 = (city) => ({
     completed: true,
     value: 1,
@@ -168,9 +195,8 @@ const achievements = {
         explanation: 'Have a 60% educated city with a population size of at least 500',
         startDate: '09/24/2021 09:25:32',
         endDate: '10/24/2023 09:25:32',
-        rewardValue: null,
-        // rewardValueJsx: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>,
-        rewardType: rewardTypes.extraEducated.key,
+        rewardValue: 1e6,
+        rewardType: rewardTypes.money.key,
         percentage: 0.05
     },
     skyCity: {
@@ -180,9 +206,18 @@ const achievements = {
         startDate: '09/24/2021 09:25:32',
         endDate: '10/24/2023 09:25:32',
         rewardValue: 500000,
-        // rewardValueJsx: <>500000</>,
         rewardType: rewardTypes.money.key,
         percentage: 0.025
+    },
+    highEducation: {
+        checkFunction: highEducation,
+        title: 'High education',
+        explanation: 'Have at least 3 schools in your city.',
+        startDate: '09/24/2021 09:25:32',
+        endDate: '10/24/2023 09:25:32',
+        rewardValue: null,
+        rewardType: rewardTypes.extraEducated.key,
+        percentage: 0.03
     },
     check4: {
         checkFunction: check4,
@@ -191,7 +226,6 @@ const achievements = {
         startDate: '09/24/2021 09:25:32',
         endDate: '10/24/2023 09:25:32',
         rewardValue: 100,
-        // rewardValueJsx: <>100</>,
         rewardType: rewardTypes.matic.key,
         percentage: 0.005
     },

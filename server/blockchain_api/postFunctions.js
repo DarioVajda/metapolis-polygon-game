@@ -350,7 +350,7 @@ const removespecial = async (body, id) => {
 
 	let building = body.building;
  
-	// TODO treba da se napravi provera da li je postlati building isti kao sto je onaj u contractu
+	// TODO: treba da se napravi provera da li je postlati building isti kao sto je onaj u contractu
 
 	let returnPercentage = 0.25;
 	let value = returnPercentage * buildingStats.specialPrices.get(building.specialType); // treba da se uzme vrednost odgovarajuceg tipa gradjevina

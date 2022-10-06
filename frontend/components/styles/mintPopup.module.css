@@ -41,6 +41,10 @@
     cursor: pointer;
 }
 
+.closeIcon:hover {
+    color: var(--text);
+}
+
 .content::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
 }

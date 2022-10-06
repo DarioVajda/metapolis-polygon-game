@@ -1,0 +1,55 @@
+
+THEMES:
+	- sneg
+	- suma
+	- more
+	- pustinja
+	- svemir (mesec) ***
+	- "vatra"
+
+SPECIAL BUILDINGS:
+	- ...ovo sto postoji
+	- ajfelov toranj
+	- big ben
+	- statua slobode
+	- stonehandge
+	- london eye
+	- piramide ?
+	- element totem *
+	- space station **
+
+ACHIEVEMENTS:
+- element totemi
+	- mora grad da poseduje sve element toteme
+	- nagrada - weth / matic
+- turisticki grad:
+	- mora grad da ima puno kul znamenitosti koje bi turistima bile zanimljive
+	- nagrada - ingame novac
+- lep grad za zivot:
+	- mora da ima setaliste i soping centar da bi gradjani bili sretni
+	- nagrada - productivity boost
+- srecni gradjani:
+	- mora da ima prosecnu produktivnost vecu od x
+	- nagrada - bilo sta
+- eco-friendly grad:
+	- mora grad da ima zagadjenost manju od x
+	- nagrada - neko kul ukrasno drvo koje mozes da zasadis u gradu
+- saburbia
+	- grad mora da ima p procenata gradjana koji zive u kucama i ne sme da ima vise od x zgrada
+	- nagrada - ingame novac ili bilo sta drugo
+
+REWARDS:
+	- ...sve sto je vec implementirano
+	- specijalna gradjevina
+	- population boost (vise ljudi zivi u kucama i zgradama)
+	- ...
+
+
+  * - svaki theme ce imati odgovarajuci element totem, onaj totem koji theme ti imas, mozes da kupis za manje ingame novca nego ostale
+ ** - postoji sansa da dodju vanzemaljci kad igrac dobija zaradu u igrici i da mu daju neki random poklon
+*** - onaj ko ima svemirski theme takodje ima sansu da  mu dodju vanzemaljci i da mu daju neki random poklon svaki put kad prima zaradu u igrici
+
+
+
+
+

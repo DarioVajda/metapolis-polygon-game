@@ -8,6 +8,8 @@ import ScoreIcon from '../universal/icons/ScoreIcon';
 import OpenseaIcon from '../universal/icons/OpenseaIcon';
 import Placeholder from '../universal/icons/achievement_icons/Placeholder';
 
+import City from '../universal/city/City';
+
 import Hover from '../universal/hover/Hover';
 
 import { achievements } from '../achievements/achievements';
@@ -378,7 +380,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
           <div>
-            city
+            { expanded && <City dataArg={data} rotation={5} /> }
           </div>
         </div>
         <div className={style.data}>
@@ -432,7 +434,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
                 data.achievementList && [...data.achievementList ].map((element, index) => (element.completed || true) && ( // kasnije treba skloniti ono '|| true'
                   <div key={index} className={style.achievementBadge} style={{zIndex: 10+index}}>
                     <Hover info={achievements[element.key].explanation} childWidth='20em' specialId={`${element.key}${index}`} sidePadding={'1.5em'} >
-                      { achievements[element.key].achievementIcon({ size:5, unit:'em', hoverable:true }) }
+                      { achievements[element.key].achievementIcon({ size:5, unit:'em', hoverable: true }) }
                     </Hover>
                   </div>
                 ))

@@ -11,7 +11,6 @@ import OpenseaIcon from '../universal/icons/OpenseaIcon';
 import styles from './profile.module.css'
 
 import useScrollbarSize from 'react-scrollbar-size';
-import { id } from 'ethers/lib/utils';
 
 const Sort = ({ setSort, sortTypes, currSort }) => {
 
@@ -47,7 +46,7 @@ const Sort = ({ setSort, sortTypes, currSort }) => {
 const Profile = ({ addr, isOwner }) => {
 
   const [username, setUsername] = useState('username100');
-  const [nftList, setNftList] = useState(Array(6).fill(false)); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
+  const [nftList, setNftList] = useState(Array(10).fill(false)); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
 
   // #region Sorting
 
@@ -281,11 +280,8 @@ const Profile = ({ addr, isOwner }) => {
     loadNfts();
   }, []); 
 
-  if(nftList === false && false) return (
-    <div>screen that shows when loading the NFTs...</div>
-  )
-  else return (
-    <div className={styles.wrapper}>
+  return (
+    <div className={styles.wrapper} style={ nftList && !nftList[0] && false ? { height: 'calc(100vh - 3.5em)', overflow: 'hidden' } : {} } >
       {
         popupOpen.open &&
         <div className={styles.popupBG} onClick={closePopup}>
@@ -351,14 +347,14 @@ const Profile = ({ addr, isOwner }) => {
           {formatAddr()}
         </a>
       </div>
-      <Sort setSort={(newSort) => {setSort(newSort); setNftList(newSort.func(nftList))}} sortTypes={sortTypes} currSort={sort} />
+      <Sort setSort={(newSort) => { setSort(newSort); setNftList(newSort.func(nftList)); }} sortTypes={sortTypes} currSort={sort} />
       <div className={styles.nftlist}>
         {
-          nftList.map((element, index) => {
+          [...nftList].map((element, index) => {
             if(element === false) return (
-              <div key={index} >
-                <City data={{}} />
-              </div>
+              <motion.div layout key={index} >
+                <City data={false} />
+              </motion.div>
             )
             if(isOwner === false) return (
               <motion.a layout key={element.id} href={`https://opensea.io/assets/${address}/${element.id}`} target='_blank' >

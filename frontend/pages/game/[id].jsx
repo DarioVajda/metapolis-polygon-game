@@ -32,19 +32,19 @@ const Gameplay = ({ ID }) => {
         top: '50%',
         transform: 'translate(-50%, -50%)'
       }}>
-          <HTMLContent ID={ID} />
-          <WorldCanvas>
-            <OrbitControls/>
-            <Lights/>
-            <Grid ID={ID} />
-            <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1}>
-                <Landscape scale={120} position={[-20,-23,2]}/>
-                <Buildings ID={ID} />
-                <HoverObject/>
-              </Bounds>
-            </Suspense>
-          </WorldCanvas>
+        <HTMLContent ID={ID} />
+        <WorldCanvas>
+          <OrbitControls/>
+          <Lights/>
+          <Grid ID={ID} />
+          {/* <Suspense fallback={null}> */}
+            <Bounds fit clip margin={1}>
+              <Landscape scale={120} position={[-20,-23,2]}/>
+              <Buildings ID={ID} />
+              <HoverObject/>
+            </Bounds>
+          {/* </Suspense> */}
+        </WorldCanvas>
       </div>
       <Link href="/"><a>Home</a></Link> <br />
       <Link href='/leaderboard'><a>Leaderboard</a></Link> <br />

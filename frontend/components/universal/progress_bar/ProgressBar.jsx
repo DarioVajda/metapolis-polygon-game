@@ -9,6 +9,7 @@ const ProgressBar = ({ fill, width, widthUnit, height, heightUnit, bgColor, fill
     height: `${height?height:10}${heightUnit?heightUnit:'px'}`,
     borderRadius: `${height?height/2:10/2}${heightUnit?heightUnit:'px'}`,
     overflow: 'hidden',
+    cursor: onMouseEnter !== undefined ? 'pointer' : 'default',
     ...style
   }
   

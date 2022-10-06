@@ -54,21 +54,7 @@ const gameplay = () => {
   // getIncome(1)
   return (
     <div className={styles.columnWrapper}>
-      <Link href="/">
-        <a>Home</a>
-      </Link>{" "}
-      <Link href="/leaderboard">
-        <a>Leaderboard</a>
-      </Link>{" "}
       <div className={styles.rowWrapper}>
-        <div>
-          Lorem ipsum dolor sit amet consectetur <br />
-          adipisicing elit. Totam natus culpa, id
-          <br />
-          voluptatem possimus nihil, laboriosam corrupti quas
-          <br /> dolorem voluptas soluta vitae accusantium quo,
-          <br /> facilis laudantium in. Mollitia, expedita deserunt.
-        </div>
         <div className={styles.gameContainer}>
           <HTMLContent ID={ID} />
           <WorldCanvas style={{ width: "100%", height: "100%", display: "block" }}>
@@ -85,17 +71,7 @@ const gameplay = () => {
             </Suspense>
           </WorldCanvas>
         </div>
-        <div>
-          Lorem ipsum dolor sit amet consectetur <br />
-          adipisicing elit. Totam natus culpa, id
-          <br />
-          voluptatem possimus nihil, laboriosam corrupti quas
-          <br /> dolorem voluptas soluta vitae accusantium quo,
-          <br /> facilis laudantium in. Mollitia, expedita deserunt.
-        </div>
       </div>
-      Lorem ipsum dolor sit amet consectetur <br />
-      adipisicing elit. Totam natus culpa, id
     </div>
   );
 };

@@ -86,7 +86,7 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
   return (
     <div className={styles.hoverWrapper} id={specialId}>
       <div ref={dimensionsDivRef} style={ childWidth ? { position: 'fixed', width: `calc(${window.innerWidth}px - ${childWidth} - ${_sidePadding} - ${_sidePadding})` }:{} } />
-      <div style={{width: '100%', backgroundColor: 'transparent', cursor: 'pointer' }} ref={ref}  onMouseEnter={undefined} onMouseLeave={undefined}>
+      <div style={{width: '100%', backgroundColor: 'transparent' }} ref={ref}  onMouseEnter={undefined} onMouseLeave={undefined}>
         { React.cloneElement(children, { onMouseEnter: onHover, onMouseLeave: notHover }) }
       </div>
       {

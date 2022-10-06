@@ -67,6 +67,7 @@
 .nftlist>a, .nftlist>div {
     aspect-ratio: 3/4;
     margin: 0.5em;
+    max-width: 45vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -400,6 +401,50 @@
 .cityDataRight>span {
     font-size: 1.5rem;
     font-weight: 600;
+}
+
+/* #endregion */
+
+/* #region loading data city */
+
+.loadingNftitem {
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--text);
+    background-color: transparent;
+    border-radius: 15px;
+    
+    overflow: hidden;
+}
+
+.loadingCity {
+    width: 100%;
+    aspect-ratio: 1/1;
+
+    background: radial-gradient(var(--light-background), var(--background));
+    opacity: 1;
+}
+
+.loadingCityData {
+    position: relative;
+    height: 27%;
+    width: 100%;
+    background-color: var(--light-background);
+    font-size: 1.3em;
+
+    padding-left: 0.5em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding-bottom: 0.5em;
+}
+
+.loadingCityData>div {
+    height: 25%;
+    width: 50%;
+    background-color: var(--lightest-background);
+    transform: scaleY(0.6);
 }
 
 /* #endregion */

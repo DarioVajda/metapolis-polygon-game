@@ -15,16 +15,19 @@ const rewardTypes = rewardTypesImport;
 
 const achievementsJsx = {
     greenCity: <>+5%</>,
-    educatedCity: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>,
-    skyCity: <>500000</>,
+    educatedCity: <>1,000,000</>,
+    skyCity: <>500,000</>,
     check4: <>100</>,
+    highEducation: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>
 }
 
 const achievementIcons = {
     greenCity: (props) => <GreenCityIcon {...props} />,
-    educatedCity: (props) => <EducatedCityIcon {...props} />,
+    educatedCity: (props) => <Placeholder {...props} />,
     skyCity: (props) => <SkyCityIcon {...props} />,
     check4: (props) => <Placeholder {...props} />,
+    highEducation: (props) => <EducatedCityIcon {...props} />,
+    // highEducation: (props) => <HighEducationIcon {...props} />,
 }
 
 const achievements = achievementsImport;

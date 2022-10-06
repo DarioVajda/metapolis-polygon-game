@@ -12,13 +12,14 @@ import BuildingList from './BuildingList';
 import Landscape from './Landscape';
 import { useRef } from 'react';
 
-const City = ({ id, dataArg, rotation, details }) => {
+const City = ({ id, dataArg, rotation, details, showDelay }) => {
   
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
   }
 
   const [ data, setData ] = useState(dataArg);
+  const [ waited, setWaited ] = useState(false);
 
   const loadData = async () => {
     console.log(`http://localhost:8000/cities/${id}/data`);
@@ -34,7 +35,14 @@ const City = ({ id, dataArg, rotation, details }) => {
     }
 
     let exists = true;
+
+    const initialize = async () => {
+      await delay(showDelay);
+      setWaited(true);
+    }
   
+    initialize();
+
     const update = async () => {
       let r = Math.PI / 12;
       if(rotation === 0) return;
@@ -62,7 +70,7 @@ const City = ({ id, dataArg, rotation, details }) => {
   }
   });
 
-  if(data) return (
+  if(data && waited) return (
     <WorldCanvas rotation={1} >
       <Lights/>
       <group ref={groupRef}>
@@ -72,7 +80,7 @@ const City = ({ id, dataArg, rotation, details }) => {
     </WorldCanvas>
   )
   else return (
-    <>waiting...</>
+    <></>
   )
 
 }

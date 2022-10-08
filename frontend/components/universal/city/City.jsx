@@ -1,7 +1,9 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { OrbitControls, Bounds } from "@react-three/drei"
+
+import styles from './city.module.css';
 
 import WorldCanvas from '../../game/WorldCanvas';
 import Lights from '../../game/Lights';
@@ -10,9 +12,9 @@ import Grid from '../../game/Grid';
 
 import BuildingList from './BuildingList';
 import Landscape from './Landscape';
-import { useRef } from 'react';
+import Render from './Render';
 
-const City = ({ id, dataArg, rotation, details, showDelay }) => {
+const City = ({ id, dataArg, rotation, details, showDelay, fps }) => {
   
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -45,7 +47,6 @@ const City = ({ id, dataArg, rotation, details, showDelay }) => {
 
     const update = async () => {
       let r = Math.PI / 12;
-      if(rotation === 0) return;
 
       while(exists) {
         // break;
@@ -54,11 +55,12 @@ const City = ({ id, dataArg, rotation, details, showDelay }) => {
           continue;
         }
 
-        r += rotation / 1000;
+        r += rotation / 1000 * 2;
         groupRef.current.rotation.y = r;
-        // console.log(groupRef.current.rotation);
+
+        if(rotation === 0) break;
       
-        await delay(10);
+        await delay(20);
       }
     }
 
@@ -71,13 +73,16 @@ const City = ({ id, dataArg, rotation, details, showDelay }) => {
   });
 
   if(data && waited) return (
-    <WorldCanvas rotation={1} >
-      <Lights/>
-      <group ref={groupRef}>
-        <Landscape />
-        <BuildingList data={data} />
-      </group>
-    </WorldCanvas>
+    <div className={styles.city}>
+      <WorldCanvas>
+        <Render fpsMax={fps?fps:30} />
+        <Lights/>
+        <group ref={groupRef}>
+          <Landscape />
+          <BuildingList data={data} />
+        </group>
+      </WorldCanvas>
+    </div>
   )
   else return (
     <></>

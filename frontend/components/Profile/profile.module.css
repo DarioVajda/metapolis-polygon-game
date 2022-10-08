@@ -66,7 +66,7 @@
 
 .nftlist>a, .nftlist>div {
     aspect-ratio: 3/4;
-    margin: 0.5em;
+    margin: .5em;
     max-width: 45vw;
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@
 .nftitem {
     height: 100%;
     width: 100%;
-    border: 1px solid var(--text);
+    outline: 1px solid var(--lightest-background);
     background-color: transparent;
     border-radius: 15px;
     
@@ -87,14 +87,19 @@
     overflow: hidden;
 }
 
-.nftitem {
-    padding: 1px;
+.nftitem:hover {
+    cursor: pointer;
 }
 
-.nftitem:hover {
-    border: 2px solid var(--text);
-    padding: 0px;
+/* TODO treba popraviti ovo sto se nesto cudno zumira kad skrolujes dok hoverujes preko nftitem-a (veoma je cudno) */
+.nftitem:hover>div:first-child {
+    transform: scale(1.08);
 }
+
+/* .nftitem:hover {
+    background-color: var(--light-background);
+    background-color: red;
+} */
 
 /* #region ConnectWallet style  */
 
@@ -248,10 +253,12 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
-    border: 1px solid var(--text);
+    outline: 1px solid var(--lightest-background);
     background-color: var(--light-background);
     z-index: 10;
     cursor: pointer;
+
+    transition: background-color .1s linear;
 }
 
 .sortBtn>span {
@@ -271,7 +278,7 @@
     align-items: stretch;
     flex-direction: column;
     justify-content: flex-start;
-    border: 1px solid white;
+    outline: 1px solid var(--lightest-background);
     border-top: none;
     border-radius: 0 0 10px 10px;
     cursor: pointer;
@@ -288,16 +295,15 @@
 }
 
 .sortOptions>div:hover {
-    background-color: var(--background);
+    background-color: var(--lightest-background);
 }
 
 .sortBtn {
-    padding: 1px;
+    transition: background-color .1s ease-in-out;    
 }
 
 .sortBtn:hover {
-    border: 2px solid var(--text);
-    padding: 0;
+    background-color: var(--lightest-background);
 }
 
 .hidePopup {
@@ -312,10 +318,9 @@
 
 .popupShown:hover {
     border-radius: 10px 10px 0 0;
-    border: 1px solid var(--text);
+    outline: 1px solid var(--lightest-background);
     border-bottom: none;
-    padding: 1px;
-    background-color: var(--background);
+    background-color: var(--lightest-background);
 }
 
 .popupShown>svg {
@@ -340,8 +345,16 @@
 /* #region Item style */
 
 .city {
+    background: radial-gradient(var(--light-background), var(--background));
     width: 100%;
     aspect-ratio: 1/1;
+
+    transition: transform .3s ease-in-out;
+}
+
+.city>div {
+    width: 100%;
+    height: 100%;
 }
 
 .citydata {
@@ -355,6 +368,12 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+
+    transition: background-color .3s ease-in-out;
+}
+
+.nftitem:hover>div {
+    background-color: var(--lightest-background);
 }
 
 .cityDataLeft {
@@ -410,7 +429,7 @@
 .loadingNftitem {
     height: 100%;
     width: 100%;
-    border: 1px solid var(--text);
+    outline: 1px solid var(--lightest-background);
     background-color: transparent;
     border-radius: 15px;
     

@@ -12,10 +12,6 @@
     background-color: var(--light-background);
 }
 
-.item div {
-    /* outline: 1px solid rgba(255, 255, 255, 0.39); */
-}
-
 .top {
     display: flex;
     flex-direction: row;
@@ -152,7 +148,7 @@
 
 
 .more {
-    transition: max-height 0.3s ease-in-out, margin-top 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
+    transition: max-height .3s ease-in-out, margin-top 0.3s ease-in-out, margin-bottom 0.3s ease-in-out;
     max-height: 20em;
     overflow: hidden;
     display: flex;
@@ -197,7 +193,7 @@
     aspect-ratio: 1/1;
     align-self: center;
     margin: 0 .5em;
-    background: radial-gradient(var(--lightest-background), transparent 65%);
+    background: radial-gradient(var(--lightest-background), transparent 70%);
     border-radius: 50%;
 }
 

@@ -11,8 +11,8 @@ const Landscape = ({ props }) => {
         <boxGeometry args={[100, 1, 100]} />
         <meshStandardMaterial color={"lightgreen"} />
       </mesh>
-      <mesh {...props} ref={mesh} position={[0, -2, 0]} >
-        <boxGeometry args={[140, 1, 140]} />
+      <mesh {...props} ref={mesh} position={[0, -12, 0]} >
+        <boxGeometry args={[140, 20, 140]} />
         <meshStandardMaterial color={"green"} />
       </mesh>
     </>

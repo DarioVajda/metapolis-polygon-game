@@ -8,8 +8,9 @@ function WorldCanvas(props){
       {...props}
       shadows
       onCreated={null}
-      camera={{ fov:40, position:[170, 170, 170], near: 0.1, far: 1000, aspect: 1/1 }}
+      camera={{ fov:40, position:[175, 175, 175], near: 0.1, far: 1000, aspect: 1/1 }}
       orthographic={false}
+      frameloop='demand'
     />
   )
 }

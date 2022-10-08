@@ -6,6 +6,12 @@ import MoneyIcon from '../universal/icons/MoneyIcon';
 import IncomeIcon from '../universal/icons/IncomeIcon';
 import ScoreIcon from '../universal/icons/ScoreIcon';
 
+import City from '../universal/city/City';
+
+const compareProps = (prev, curr) => {
+  return prev.id === curr.id && prev.data === curr.data;
+}
+
 const CityLoading = () => {
   return (
     <div className={styles.loadingNftitem}>
@@ -20,13 +26,14 @@ const CityLoading = () => {
   )
 }
 
-const City = ({ id, data }) => {
+const ProfileCity = React.memo(({ id, data, index }) => {
   if(data === false) return <CityLoading />;
 
+  console.log({id, data});
   return (
     <div className={styles.nftitem}>
       <div className={styles.city}>
-        city
+        <City dataArg={data} rotation={0} showDelay={index*300+1000} fps={1e-10} />
       </div>
       <div className={styles.citydata}>
         <div className={styles.cityDataLeft}>
@@ -66,6 +73,6 @@ const City = ({ id, data }) => {
       </div>
     </div>
   )
-}
+}, compareProps);
 
-export default City
+export default ProfileCity

@@ -5,7 +5,7 @@ import ContractAddress from '../../../smart_contracts/contract-address.json';
 
 import { motion } from 'framer-motion';
 
-import City from './City'
+import ProfileCity from './ProfileCity'
 import OpenseaIcon from '../universal/icons/OpenseaIcon';
 
 import styles from './profile.module.css'
@@ -353,17 +353,17 @@ const Profile = ({ addr, isOwner }) => {
           [...nftList].map((element, index) => {
             if(element === false) return (
               <motion.div layout key={index} >
-                <City data={false} />
+                <ProfileCity data={false} index={index} />
               </motion.div>
             )
             if(isOwner === false) return (
               <motion.a layout key={element.id} href={`https://opensea.io/assets/${address}/${element.id}`} target='_blank' >
-                <City id={element.id} data={element} />
+                <ProfileCity id={element.id} data={element} index={index} />
               </motion.a>
             )
             else return (
               <motion.div layout key={element.id} onClick={() => { openPopup(element.id) }}>
-                <City id={element.id} data={element} />
+                <ProfileCity id={element.id} data={element} index={index} />
               </motion.div>
             )
           })

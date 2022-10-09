@@ -11,6 +11,7 @@ function WorldCanvas(props){
       camera={{ fov:40, position:[175, 175, 175], near: 0.1, far: 1000, aspect: 1/1 }}
       orthographic={false}
       frameloop='demand'
+      dpr={4}
     />
   )
 }

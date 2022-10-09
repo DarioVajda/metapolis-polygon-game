@@ -380,7 +380,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
           <div>
-            { expanded && <City dataArg={data} rotation={5} showDelay={300} /> }
+            { expanded && <City dataArg={data} rotation={3} showDelay={300} /> }
           </div>
         </div>
         <div className={style.data}>

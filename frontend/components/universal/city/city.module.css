@@ -13,6 +13,9 @@
     animation-timing-function: linear;
     animation-fill-mode: forwards;
     animation-delay: 1s;
-    transform: translateY(-10%);
     background-color: transparent;
+}
+
+.city canvas {
+    translate: 0 -10%;
 }

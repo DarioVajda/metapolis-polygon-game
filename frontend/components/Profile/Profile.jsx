@@ -350,7 +350,7 @@ const Profile = ({ addr, isOwner }) => {
       <Sort setSort={(newSort) => { setSort(newSort); setNftList(newSort.func(nftList)); }} sortTypes={sortTypes} currSort={sort} />
       <div className={styles.nftlist}>
         {
-          [...nftList].map((element, index) => {
+          [ ...nftList ].map((element, index) => {
             if(element === false) return (
               <motion.div layout key={index} >
                 <ProfileCity data={false} index={index} />

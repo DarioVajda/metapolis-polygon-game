@@ -91,15 +91,13 @@
     cursor: pointer;
 }
 
-/* TODO treba popraviti ovo sto se nesto cudno zumira kad skrolujes dok hoverujes preko nftitem-a (veoma je cudno) */
-.nftitem:hover>div:first-child {
-    transform: scale(1.08);
+.nftitem>.city canvas {
+    transition: scale .3s ease-out;
 }
 
-/* .nftitem:hover {
-    background-color: var(--light-background);
-    background-color: red;
-} */
+.nftitem:hover>.city canvas {
+    scale: 1.08;
+}
 
 /* #region ConnectWallet style  */
 
@@ -292,6 +290,8 @@
     padding-left: 1.5em;
     background-color: var(--light-background);
     border-radius: 10px;
+
+    transition: background-color .1s linear;
 }
 
 .sortOptions>div:hover {
@@ -348,8 +348,6 @@
     background: radial-gradient(var(--light-background), var(--background));
     width: 100%;
     aspect-ratio: 1/1;
-
-    transition: transform .3s ease-in-out;
 }
 
 .city>div {

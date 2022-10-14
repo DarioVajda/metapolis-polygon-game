@@ -57,15 +57,15 @@ const gameplay = () => {
       <div className={styles.rowWrapper}>
         <div className={styles.gameContainer}>
           <HTMLContent ID={ID} />
-          <WorldCanvas style={{ width: "100%", height: "100%", display: "block" }}>
+          <WorldCanvas style={{ width: "100%", height: "100%", display: "block" }} pos={50} frameloop='always' >
             <OrbitControls />
             <Lights />
             <Grid ID={ID} />
             <Suspense fallback={null}>
-              <Bounds fit clip observe margin={1}>
+              <Bounds fit clip margin={1}>
                 {/* <Landscape scale={120} position={[-20, -23, 2]} /> */}
                 <FloatingMenu style={{ backgroundColor: "transparent" }} />
-                <Buildings ID={ID}></Buildings>
+                <Buildings ID={ID} />
                 <HoverObject />
               </Bounds>
             </Suspense>
@@ -78,3 +78,21 @@ const gameplay = () => {
 ///CAMERA IS BROKEN BECAUSE OF MODELS, THEIR SCALE BREAKS STUFF
 
 export default gameplay;
+
+
+
+
+/*
+
+
+PLAN:
+
+- trebaju da se razdvoje 3d komponente na vise grupa
+  - STATICNE - menjaju se jako retko ili nikad (landscape, lista gradjevina, etc.)
+  - DINAMICNE 
+    - menjaju se stalno i potreban je visok fps
+    - svaka ovakva komponenta treba da bude nezavisna jedna od druge
+
+
+*/
+

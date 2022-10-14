@@ -29,7 +29,7 @@ const CityLoading = () => {
 const ProfileCity = React.memo(({ id, data, index }) => {
   if(data === false) return <CityLoading />;
 
-  console.log({id, data});
+  // console.log({id, data});
   return (
     <div className={styles.nftitem}>
       <div className={styles.city}>

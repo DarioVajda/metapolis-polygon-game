@@ -9,11 +9,11 @@ import Link from "next/link"
 import Buildings from '../../components/game/Buildings';
 import Lights from '../../components/game/Lights'
 import WorldCanvas from '../../components/game/WorldCanvas';
-import Landscape from '../../components/game/modelComponents/ValleyLandscape'
 import HTMLContent from '../../components/game/HTMLContent'
 import Grid from '../../components/game/Grid';
 import HoverObject from '../../components/game/HoverObject.jsx';
 
+import Landscape from '../../components/universal/city/Landscape'
 
 
 
@@ -23,8 +23,8 @@ const Gameplay = ({ ID }) => {
   return (
     <>
       <div style={{position: "fixed",
-        height: '90%',
-        width: '90%',
+        height: '100%',
+        width: '100%',
         margin:'0px',
         padding:'0px',
         overflow:'hidden',
@@ -34,7 +34,7 @@ const Gameplay = ({ ID }) => {
       }}>
         <HTMLContent ID={ID} />
         <WorldCanvas>
-          <OrbitControls/>
+          <OrbitControls enableDamping={false} />
           <Lights/>
           <Grid ID={ID} />
           {/* <Suspense fallback={null}> */}

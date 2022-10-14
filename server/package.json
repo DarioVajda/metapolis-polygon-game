@@ -5,6 +5,7 @@
     "express": "^4.17.2",
     "lodash": "^4.17.21",
     "node-fetch": "^3.2.6",
-    "prompt-sync": "^4.1.6"
+    "prompt-sync": "^4.1.6",
+    "puppeteer": "^18.2.1"
   }
 }

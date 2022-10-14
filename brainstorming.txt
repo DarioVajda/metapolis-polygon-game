@@ -6,6 +6,8 @@ THEMES:
 	- pustinja
 	- svemir (mesec) ***
 	- "vatra"
+	- high tech
+	- pixelized world
 
 SPECIAL BUILDINGS:
 	- ...ovo sto postoji

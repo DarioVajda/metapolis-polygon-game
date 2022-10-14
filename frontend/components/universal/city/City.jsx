@@ -14,7 +14,7 @@ import BuildingList from './BuildingList';
 import Landscape from './Landscape';
 import Render from './Render';
 
-const City = ({ id, dataArg, rotation, details, showDelay, fps }) => {
+const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) => {
   
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -74,7 +74,7 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps }) => {
 
   if(data && waited) return (
     <div className={styles.city}>
-      <WorldCanvas>
+      <WorldCanvas pixelRatio={pixelRatio?pixelRatio:[1, 2]} >
         <Render fpsMax={fps?fps:30} />
         <Lights/>
         <group ref={groupRef}>

@@ -30,6 +30,8 @@ TODO lista:
 - omoguciti igracima da prave offerove za specijalne gradjevine
 - kod prodavanja specijalnih gradjevina proveriti da li je gradjevina rasprodata i da li trebaju da se posmatraju offerovi ili se redovno prodaje
 - napraviti provere u severu za to da li je u url-u "id" argument int ili nesto drugo
+- napraviti funkciju koja renderuje grad na serveru i exportuje sliku
+    - konvertovanje html-a u sliku: https://www.wisdomgeek.com/development/web-development/react/how-to-convert-a-react-component-to-an-image/
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

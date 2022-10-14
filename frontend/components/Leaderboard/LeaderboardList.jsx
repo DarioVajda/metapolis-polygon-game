@@ -99,7 +99,8 @@ const LeaderboardList = ({nfts}) => {
             </motion.div>
           </div>
         )) :
-        list.map((element, index) =>
+        // staviti broj u Array() koliko puta zelis da se ponovi lista u leaderboard (ovo je samo privremeno, inace treba da bude samo list.map(...))
+        Array(1).fill(0).reduce((prev, _) => [...prev, ...list], []).map((element, index) =>
           <div key={index+10000}>
             {
               element !== -1 &&

@@ -461,6 +461,7 @@
     height: 25%;
     width: 50%;
     background-color: var(--lightest-background);
+    border-radius: 5px;
     transform: scaleY(0.6);
 }
 

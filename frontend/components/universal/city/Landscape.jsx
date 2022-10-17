@@ -9,7 +9,7 @@ const Landscape = ({ props }) => {
     <>
       <mesh {...props} ref={mesh} position={[0, -1, 0]} >
         <boxGeometry args={[100, 1, 100]} />
-        <meshStandardMaterial color={"lightgreen"} />
+        <meshStandardMaterial color={"darkgray"} />
       </mesh>
       <mesh {...props} ref={mesh} position={[0, -12, 0]} >
         <boxGeometry args={[140, 20, 140]} />

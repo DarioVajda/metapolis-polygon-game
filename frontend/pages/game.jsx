@@ -2,20 +2,20 @@ import React, { useState, useRef, Suspense } from "react";
 import * as THREE from "three";
 import { OrbitControls, Bounds } from "@react-three/drei";
 import Link from "next/link";
-import Buildings from "../components/game/Buildings";
+import Buildings from "../components/game_marko/Buildings";
 import styles from "../components/styles/Game.module.css";
 
 //----COMPONENTS----//
-import Lights from "../components/game/Lights";
-import WorldCanvas from "../components/game/WorldCanvas";
-import Landscape from "../components/game/modelComponents/ValleyLandscape";
-import HTMLContent from "../components/game/HTMLContent";
-import Grid from "../components/game/Grid";
-import HoverObject from "../components/game/HoverObject.jsx";
-import { ID } from "../components/game/GridData";
+import Lights from "../components/game_marko/Lights";
+import WorldCanvas from "../components/game_marko/WorldCanvas";
+import Landscape from "../components/game_marko/modelComponents/ValleyLandscape";
+import HTMLContent from "../components/game_marko/HTMLContent";
+import Grid from "../components/game_marko/Grid";
+import HoverObject from "../components/game_marko/HoverObject.jsx";
+import { ID } from "../components/game_marko/GridData";
 import { ethers } from "ethers";
 import { generateUUID } from "three/src/math/MathUtils";
-import FloatingMenu from "../components/game/FloatingMenu";
+import FloatingMenu from "../components/game_marko/FloatingMenu";
 
 //----CONSTANTS----//
 

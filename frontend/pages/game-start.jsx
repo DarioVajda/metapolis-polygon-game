@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 
 import CityContract from '../../smart_contracts/build/contracts/CityBuilders.json'
 
-import styles from '../components/game/dario/gamestart.module.css'; // ovde ce trebati da se promeni lokacija
+import styles from '../components/game_marko/dario/gamestart.module.css'; // ovde ce trebati da se promeni lokacija
 
 import Nav from '../components/Nav';
 

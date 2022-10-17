@@ -6,9 +6,9 @@ import { OrbitControls, Bounds, MapControls } from "@react-three/drei";
 
 import City from '../components/universal/city/City';
 
-import WorldCanvas from '../components/game/WorldCanvas';
+import WorldCanvas from '../components/game_marko/WorldCanvas';
 import Render from '../components/universal/city/Render';
-import Lights from '../components/game/Lights';
+import Lights from '../components/game_marko/Lights';
 import Landscape from '../components/universal/city/Landscape';
 
 const ThreeTest = () => {

@@ -6,19 +6,20 @@ import {OrbitControls, Bounds} from "@react-three/drei"
 import Link from "next/link"
 
 //----COMPONENTS----//
-import Buildings from '../../components/game/Buildings';
-import Lights from '../../components/game/Lights'
-import WorldCanvas from '../../components/game/WorldCanvas';
-import HTMLContent from '../../components/game/HTMLContent'
-import Grid from '../../components/game/Grid';
-import HoverObject from '../../components/game/HoverObject.jsx';
+import Buildings from '../../components/game_marko/Buildings';
+import Lights from '../../components/game_marko/Lights'
+import WorldCanvas from '../../components/game_marko/WorldCanvas';
+import HTMLContent from '../../components/game_marko/HTMLContent'
+import Grid from '../../components/game_marko/Grid';
+import HoverObject from '../../components/game_marko/HoverObject.jsx';
 
 import Landscape from '../../components/universal/city/Landscape'
 
+import Gameplay from '../../components/game/Gameplay';
 
 
 //MAIN COMPONENT
-const Gameplay = ({ ID }) => {
+const GameplayOld = ({ ID }) => {
   // getIncome(1)
   return (
     <>
@@ -37,13 +38,11 @@ const Gameplay = ({ ID }) => {
           <OrbitControls enableDamping={false} />
           <Lights/>
           <Grid ID={ID} />
-          {/* <Suspense fallback={null}> */}
-            <Bounds fit clip margin={1}>
-              <Landscape scale={120} position={[-20,-23,2]}/>
-              <Buildings ID={ID} />
-              <HoverObject/>
-            </Bounds>
-          {/* </Suspense> */}
+          <Bounds fit clip margin={1}>
+            <Landscape scale={120} position={[-20,-23,2]}/>
+            <Buildings ID={ID} />
+            <HoverObject/>
+          </Bounds>
         </WorldCanvas>
       </div>
       <Link href="/"><a>Home</a></Link> <br />

@@ -5,10 +5,10 @@ import { OrbitControls, Bounds } from "@react-three/drei"
 
 import styles from './city.module.css';
 
-import WorldCanvas from '../../game/WorldCanvas';
-import Lights from '../../game/Lights';
-import Buildings from '../../game/Buildings';
-import Grid from '../../game/Grid';
+import WorldCanvas from '../../game_marko/WorldCanvas';
+import Lights from '../../game_marko/Lights';
+import Buildings from '../../game_marko/Buildings';
+import Grid from '../../game_marko/Grid';
 
 import BuildingList from './BuildingList';
 import Landscape from './Landscape';

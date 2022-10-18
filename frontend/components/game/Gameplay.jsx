@@ -2,7 +2,9 @@ import React from 'react'
 
 import { MapControls } from "@react-three/drei";
 
-import HTMLContent from './HTMLContent';
+import styles from './htmlContent/gameplay.module.css';
+
+import HTMLContent from './htmlContent/HTMLContent';
 import WorldCanvas from './WorldCanvas';
 import Lights from './Lights';
 import Buildings from './Buildings/Buildings';
@@ -13,7 +15,7 @@ import Landscape from '../universal/city/Landscape';
 
 const Gameplay = ({ ID }) => {
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div className={styles.wrapper}>
       <HTMLContent />
       <WorldCanvas position={[0, 250, 200]}>
 

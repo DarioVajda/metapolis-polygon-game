@@ -10,7 +10,7 @@ import Store        from "../../game_marko/modelComponents/Store.js";
 import Office       from "../../game_marko/modelComponents/Office.js";
 import ParkSquare   from "../../game_marko/modelComponents/ParkSquare.js";
 
-import { gridSize, plotSize, Scale } from "../../game/";
+import { gridSize, plotSize, Scale } from "../../game/MapData";
 
 const BuildingList = ({ data }) => {
 

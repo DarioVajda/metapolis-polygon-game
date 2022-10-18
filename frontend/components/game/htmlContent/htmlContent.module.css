@@ -1,0 +1,45 @@
+
+.contentWrapper {
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(255, 0, 0, 0.112); */
+    z-index: 10;
+    pointer-events: none;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.topData {
+    width: 100%;
+    height: fit-content;
+    /* margin-top: 10em; */
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: visibleFill;
+}
+
+.topDataElement {
+    /* font-size: 1rem; */
+    margin: 0.5em;
+    background-color: var(--light-background);
+    outline: 1px solid var(--lightest-background);
+    padding: 0.5em 1em;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.topData>div:last-child {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5em;
+}

@@ -46,12 +46,7 @@ const buildingStore = (set) => ({
   setHover: (x, y) => set( state => ({
     hoverPrev: state.hoverCurr,
     hoverCurr: { x, y },
-    hovering: true
   })),
-  hovering: false,
-  setHovering: (isHovering) => set( state => ({
-    hovering: isHovering
-  }))
   // #endregion
 });
 

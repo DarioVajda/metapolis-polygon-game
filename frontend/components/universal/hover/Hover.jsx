@@ -6,7 +6,7 @@ import useScrollbarSize from 'react-scrollbar-size';
 
 import styles from './hover.module.css';
 
-const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
+const Hover = ({ children, info, childWidth, specialId, sidePadding, underneath }) => {
 
   const ref = useRef(null);
   const dimensionsDivRef = useRef(null);
@@ -83,6 +83,8 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
 
   let _sidePadding = sidePadding ? sidePadding : '0px';
 
+  console.log(`translateX(${-edgeOffset}px)${underneath?` translateY(-${size.height}px`:''}`)
+
   return (
     <div className={styles.hoverWrapper} id={specialId}>
       <div ref={dimensionsDivRef} style={ childWidth ? { position: 'fixed', width: `calc(${window.innerWidth}px - ${childWidth} - ${_sidePadding} - ${_sidePadding})` }:{} } />
@@ -92,10 +94,10 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding }) => {
       {
         info !== '' &&
         <div style={{ pointerEvents: 'none', position: 'relative', height: 0, width: 0, backgroundColor: 'transparent', transform: 'translateY(5px)' }} >
-          <div className={hover?styles.hovered:''} style={{ bottom: `${size?size.height+10:0}px`, position: 'relative', minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent', transform: `translateX(${edgeOffset}px)` }} >
-            <div className={styles.hoverItem} style={{ transform: `translateY(-100%) translateX(${size?size.width/2:0}px)` }} >
+          <div className={hover?styles.hovered:''} style={{ bottom: `${size?size.height+(underneath?-6:10):0}px`, position: 'relative', minWidth: childWidth?childWidth:size?size.width:0, visibility: size?'visible':'hidden', backgroundColor: 'transparent', transform: `translateX(${edgeOffset}px)` }} >
+            <div className={styles.hoverItem} style={{ transform: `translateY(${underneath?'':'-'}100%) translateX(${size?size.width/2:0}px)` }} >
               {info}
-              <div style={{ transform: `translateX(${-edgeOffset}px)` }}></div>
+              <div className={underneath?styles.triangleUnderneath:styles.triangleAbove} style={{ transform: `translateX(${-edgeOffset}px)${underneath?` translateY(-${size.height}px`:''}` }} />
             </div>
           </div>  
         </div>

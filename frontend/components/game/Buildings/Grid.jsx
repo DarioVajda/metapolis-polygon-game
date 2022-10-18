@@ -8,8 +8,6 @@ import { gridSize, plotSize } from '../MapData';
 function GridSquare({ x, y }) {
   const buildMode = useBuildingStore((state) => state.buildMode);
   const setHover = useBuildingStore((state) => state.setHover);
-  const setHovering = useBuildingStore((state) => state.setHovering);
-  const hoverObjectMove = useBuildingStore((state) => state.hoverObjectMove);
 
   const [isHovered, setIsHovered] = useState(false);
   const gridSquareRef = useRef();
@@ -17,8 +15,6 @@ function GridSquare({ x, y }) {
   const onClick = () => { 
     console.log('click') 
   }
-
-  // console.log({x, y});
 
   return (
     <mesh
@@ -30,7 +26,6 @@ function GridSquare({ x, y }) {
       }}
       onPointerOut={(event) => {
         setIsHovered(false);
-        setHovering(false);
       }}
       onClick={onClick}
       position = {[

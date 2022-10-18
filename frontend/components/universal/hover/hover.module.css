@@ -39,7 +39,7 @@
     opacity: 1;
 }
 
-.hoverWrapper .hoverItem>div {
+.triangleAbove {
     content: "";
     position: absolute;
     top: calc(100% + 1px);
@@ -49,6 +49,18 @@
     border-style: solid;
     
     border-color: var(--light-text) transparent transparent transparent;
+}
+
+.triangleUnderneath {
+    content: "";
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    
+    border-color: transparent transparent var(--light-text) transparent;
 }
 
 /* .hoverWrapper>div:hover .hoverItem {

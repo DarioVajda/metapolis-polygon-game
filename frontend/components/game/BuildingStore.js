@@ -81,8 +81,16 @@ const buildingStore = (set) => ({
     selectedBuildingType: { ...state.selectedBuildingType, dimensions: getDimensions(state.selectedBuildingType, arg) }
   })),
   setSelectedBuildingType: (special, type) => set( state => ({
-    selectedBuildingType: { special, type, dimensions: type?getDimensions({ special, type }, 0):[0,0] }
-  }))
+    selectedBuildingType: { special, type, dimensions: type?getDimensions({ special, type }, 0):[0,0] },
+    rotationIndex: 0
+  })),
+  rotationIndex: 0,
+  incrementRotationIndex: () => set( state => ({
+    rotationIndex: state.rotationIndex + 1
+  })),
+  resetRotationIndex: () => set( state => ({
+    rotationIndex: 0
+  })),
   // #endregion
 });
 

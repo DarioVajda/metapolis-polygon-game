@@ -71,7 +71,7 @@ const HTMLContent = () => {
   const setSelectedBuildingType = useBuildingStore(state => state.setSelectedBuildingType);
 
   // ovo je privremeno ovde
-  const changeDimensions = useBuildingStore(state => state.changeDimensions);
+  const incrementRotationIndex = useBuildingStore(state => state.incrementRotationIndex);
 
   const [openedMenu, setOpenedMenu] = useState(null);
 
@@ -129,7 +129,7 @@ const HTMLContent = () => {
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>
-          <button onClick={() => changeDimensions(1)}>
+          <button onClick={incrementRotationIndex}>
             <AchievementFrame backgroundColor='transparent' size={5} unit='em' />
             Achievements
           </button>

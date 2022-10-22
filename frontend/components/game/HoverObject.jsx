@@ -5,15 +5,18 @@ import { buildingTypes } from './modelComponents/BuildingTypes'
 import { gridSize, plotSize, Scale } from "./MapData";
 import { useFrame, useThree } from '@react-three/fiber';
 import { useBuildingStore } from './BuildingStore';
+import { useEffect } from 'react';
 
 const HoverObject = () => {
 
   const ref = useRef();
   const { invalidate } = useThree();
-
+  
   const selectedBuildingType = useBuildingStore(state => state.selectedBuildingType);
   // const setSelectedBuildingType = useBuildingStore(state => state.setSelectedBuildingType);
   const hoverCurr = useBuildingStore(state => state.hoverCurr);
+  const rotationIndex = useBuildingStore(state => state.rotationIndex);
+  const resetRotationIndex = useBuildingStore(state => state.resetRotationIndex);
 
 
   useFrame(() => {
@@ -21,6 +24,7 @@ const HoverObject = () => {
       return;
     }
     
+    // #region movement
     let pos = {
       x: plotSize * hoverCurr.x - (gridSize * plotSize) / 2 + plotSize / 2,
       y: plotSize * hoverCurr.y - (gridSize * plotSize) / 2 + plotSize / 2
@@ -29,21 +33,33 @@ const HoverObject = () => {
       x: pos.x - ref.current.position.x,
       z: pos.y - ref.current.position.z
     }
-    
-    if(Math.abs(d.x) < 0.1 && Math.abs(d.z) < 0.1) {
-      return;
+    if(!(Math.abs(d.x) < 0.1 && Math.abs(d.z) < 0.1)) {  
+      ref.current.position.x = ref.current.position.x + d.x * 0.25;
+      ref.current.position.z = ref.current.position.z + d.z * 0.25;
+      invalidate();
     }
+    // #endregion
 
-    ref.current.position.x = ref.current.position.x + d.x * 0.25;
-    ref.current.position.z = ref.current.position.z + d.z * 0.25;
-    invalidate()
-
-    // ref.current.position.x = ref.current.position.x + deltax;
+    // #region rotation
+    let targetRotation = (rotationIndex) * (Math.PI / 2);
+    let dr = targetRotation - ref.current.rotation.y;
+    if(Math.abs(dr) > 0.01 ) {
+      console.log({ targetRotation, dr})
+      ref.current.rotation.y = ref.current.rotation.y + dr * 0.25;
+      invalidate();
+    }
+    else if(Math.abs(targetRotation - 2 * Math.PI) < 0.01) {
+      ref.current.rotation.y = 0;
+      resetRotationIndex();
+      invalidate();
+    }
+    // #endregion
   })
 
   if(selectedBuildingType.special === null) return <></>;
 
-  console.log(selectedBuildingType.dimensions);
+  invalidate();
+  console.log(rotationIndex);
   return (
     <group ref={ref} rotation={[ 0, 0, 0 ]} position={[0, 0, 0]} >
       {

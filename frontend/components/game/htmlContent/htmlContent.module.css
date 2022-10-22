@@ -160,15 +160,39 @@
 
 .buildingListGroup>button:not(:first-child)>div:last-child>div {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 0 0.5em;
+    padding: 0 .2em;
 }
 
-.buildingListGroup>button:not(:first-child)>div:last-child>div>span:not(:nth-child(2)):hover {
-    transform: scale(1.3);
+.buildingListGroup>button:not(:first-child)>div:last-child>div>button {
+    display: flex;
+    /* justify-content: space-between; */
+
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text);
+
+    align-items: center;
+    height: fit-content;
+    padding: .3em;
+    /* outline: 1px solid red; */
+    border-radius: 50%;
 }
 
+.buildingListGroup>button:not(:first-child)>div:last-child>div>button svg {
+    transform: scale(1.5);
+}
+.buildingListGroup>button:not(:first-child)>div:last-child>div>button:hover {
+    background-color: var(--primary-bg);
+}
+
+.buildingListGroup>button:not(:first-child)>div:last-child>div>span {
+    flex-grow: 1;
+    text-align: center;
+}
 
 .buildingListGroup>button:not(:first-child)>div:last-child>span {
     font-size: 0.9rem;

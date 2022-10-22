@@ -11,7 +11,7 @@ const Separator = ({ data, index, nfts, price }) => {
 
   if(index === data.start /* || index === nfts */) return (
     <div className={styles.separator}>
-      <ArrowIcon size={1.75} direction={true} />
+      <ArrowIcon size={1.75} direction={0} />
       <div className={styles.text}>
         #{data.start}{data.start!=data.end && `-${data.end}`}
       </div>

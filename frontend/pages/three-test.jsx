@@ -116,4 +116,20 @@ Special effects...
 
 */
 
+const Test2 = ({ arg }) => {
+  console.log(arg);
+  return (
+    <span>{arg}</span>
+  )
+}
+
+const Test = () => {
+  return (
+    <div>
+      test
+      <Test2 arg />
+    </div>
+  )
+}
+
 export default ThreeTest

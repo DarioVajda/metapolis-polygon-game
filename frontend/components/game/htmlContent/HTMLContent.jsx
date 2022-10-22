@@ -10,6 +10,7 @@ import MoneyIcon from '../../universal/icons/MoneyIcon';
 import IncomeIcon from '../../universal/icons/IncomeIcon';
 import EducatedCityIcon from '../../universal/icons/achievement_icons/EducatedCityIcon';
 import AchievementFrame from '../../universal/icons/achievement_icons/AchievementFrame';
+import ArrowIcon from '../../universal/icons/ArrowIcon';
 
 import { buildingDimensions } from '../../../../server/gameplay/building_stats';
 
@@ -31,13 +32,25 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
         {
           selected ?
           <div>
-            <span onClick={(e) => changeDimensionsClick(e, 1)}>{'<'}</span>
+            {
+              buildingDimensions.get(element).length > 1 ?
+              <button onClick={(e) => changeDimensionsClick(e, -1)}>
+                <ArrowIcon direction={3} />
+              </button> :
+              <></>
+            }
             <span style={{ fontSize: '.8rem' }}>
-              <span>{element}</span>
+              {element}
               <br />
               {type.dimensions[0]}x{type.dimensions[1]}
             </span>
-            <span onClick={(e) => changeDimensionsClick(e, -1)}>{'>'}</span>
+            {
+              buildingDimensions.get(element).length > 1 ?
+              <button onClick={(e) => changeDimensionsClick(e, 1)}>
+                <ArrowIcon direction={1} />
+              </button> :
+              <></>
+            }
           </div> :
           <div />
         }
@@ -81,7 +94,7 @@ const HTMLContent = () => {
     }
   }
 
-  const normalBuildingButtons = [ 'house', 'building', 'factory', 'office', 'restaurant', 'parking', 'store', 'superMarket', 'park', 'gym' ];
+  const normalBuildingButtons = [ 'house', 'building', 'factory', 'office', 'store', /* 'superMarket', 'gym', */ 'park' ];
   const specialBuildingButtons = [ 'statue', 'fountain', 'stadium', 'school', 'shoppingMall', 'promenade', 'townHall' ];
 
   if(staticData.owner === '0x00') return <></>
@@ -126,7 +139,7 @@ const HTMLContent = () => {
           {
             normalBuildingButtons.map((element, index) => (
               <BuildingButton 
-                  key={index}
+                key={index}
                 special={false} 
                 selected={selectedBuildingType.type === element && !selectedBuildingType.special} 
                 type={selectedBuildingType} 
@@ -140,21 +153,14 @@ const HTMLContent = () => {
           <button onClick={() => changeOpenedMenu('special')}>special</button>
           {
             specialBuildingButtons.map((element, index) => (
-              <button key={index} onClick={() => changeSelectedBuildingType(true, element)} style={selectedBuildingType.type === element && selectedBuildingType.special ? { backgroundColor: 'var(--primary)' }:{}}>
-                {
-                  selectedBuildingType.type === element && selectedBuildingType.special ?
-                  <span>
-                    {element}
-                    <br />
-                    {selectedBuildingType.dimensions[0]}x{selectedBuildingType.dimensions[1]}
-                  </span> :
-                  <span />
-                }
-                {element}
-                <span>
-                  <MoneyIcon /> 123.000
-                </span>
-              </button>
+              <BuildingButton 
+                key={index}
+                special={true} 
+                selected={selectedBuildingType.type === element && selectedBuildingType.special} 
+                type={selectedBuildingType} 
+                changeType={changeSelectedBuildingType} 
+                element={element}
+              />
             ))
           }
         </div>

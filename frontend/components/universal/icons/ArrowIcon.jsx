@@ -1,17 +1,17 @@
 import React from 'react'
 
 const ArrowIcon = ({ size, unit, direction }) => {
-  // direction - true->up, false->down
+  // direction - 0->up, 1->right, 2->down, 3->left
 
   const style = { 
-    transform: `rotateX(${direction?0:180}deg)`,
+    transform: `rotateZ(${direction*90+180}deg)`,
     backgroundColor: 'transparent',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   };
 
-  const wh = `${size}${unit?unit:'em'}`; // Width and Height
+  const wh = `${size?size:1}${unit?unit:'em'}`; // Width and Height
 
   return (
     <div style={style}>

@@ -11,7 +11,7 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding, underneath 
   const ref = useRef(null);
   const dimensionsDivRef = useRef(null);
   const scrollBar = useScrollbarSize();
-  const [size, setSize] = useState();
+  const [size, setSize] = useState({ height: 0, width: 0});
   const [edgeOffset, setEdgeOffset] = useState(0);
   const [hover, setHover] = useState(false);
 
@@ -42,6 +42,12 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding, underneath 
       window.removeEventListener("resize", cb);
     };
   }, []);
+
+  useEffect(() => {
+    if(size.width === ref.current.clientWidth && size.height === ref.current.clientHeight) return;
+
+    setSize({ height: ref.current.clientHeight, width: ref.current.clientWidth });
+  })
 
   // console.log({size})
 
@@ -83,12 +89,12 @@ const Hover = ({ children, info, childWidth, specialId, sidePadding, underneath 
 
   let _sidePadding = sidePadding ? sidePadding : '0px';
 
-  console.log(`translateX(${-edgeOffset}px)${underneath?` translateY(-${size.height}px`:''}`)
+  // console.log(size);
 
   return (
     <div className={styles.hoverWrapper} id={specialId}>
       <div ref={dimensionsDivRef} style={ childWidth ? { position: 'fixed', width: `calc(${window.innerWidth}px - ${childWidth} - ${_sidePadding} - ${_sidePadding})` }:{} } />
-      <div style={{width: '100%', backgroundColor: 'transparent' }} ref={ref}  onMouseEnter={undefined} onMouseLeave={undefined}>
+      <div style={{width: '100%', backgroundColor: 'transparent' }} ref={ref} onMouseEnter={undefined} onMouseLeave={undefined}>
         { React.cloneElement(children, { onMouseEnter: onHover, onMouseLeave: notHover }) }
       </div>
       {

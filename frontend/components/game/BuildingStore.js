@@ -2,6 +2,34 @@ import create from "zustand";
 
 import { devtools } from "zustand/middleware";
 
+import { buildingDimensions } from "../../../server/gameplay/building_stats";
+
+// #region UTILS:
+
+const getDimensions = ({special, type, dimensions}, arg) => {
+  if(special) {
+    return [0, 0];
+  }
+  else {
+    let list = buildingDimensions.get(type);
+    if(arg === 0) {
+      return list[0];
+    }
+    let index;
+    buildingDimensions.get(type).forEach((element, i) => {
+      if(element[0] == dimensions[0] && element[1] == dimensions[1]) {
+        index = i;
+      }
+    })
+    index += arg;
+    index = (index + list.length) % list.length;
+    return list[index];
+  }
+}
+
+// #endregion
+
+
 const buildingStore = (set) => ({
   // #region city data
   staticData: {
@@ -47,6 +75,14 @@ const buildingStore = (set) => ({
     hoverPrev: state.hoverCurr,
     hoverCurr: { x, y },
   })),
+  selectedBuildingType: { special: null, type: null, dimensions: [ 0, 0 ] },
+  changeDimensions: (arg) => set( state => ({
+    // arg: 1 -> next, -1 -> previous
+    selectedBuildingType: { ...state.selectedBuildingType, dimensions: getDimensions(state.selectedBuildingType, arg) }
+  })),
+  setSelectedBuildingType: (special, type) => set( state => ({
+    selectedBuildingType: { special, type, dimensions: type?getDimensions({ special, type }, 0):[0,0] }
+  }))
   // #endregion
 });
 

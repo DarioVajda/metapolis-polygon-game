@@ -35,15 +35,15 @@ const buildingTypes = {
       }
     }
     return (
-      <group key={key} uuid={building.uuid}>
+      <group key={key} uuid={false&&building.uuid}>
         {parkSquares}
       </group>
     );
   },
   building: (props, building) => {
     if (
-      Math.abs(building.start.x - building.end.x) + 1 === 2 ||
-      Math.abs(building.start.y - building.end.y) + 1 === 2
+      building.end.x - building.start.x === 1 &&
+      building.end.y - building.start.y === 1
     ) {
       return <Building {...props} />;
     }

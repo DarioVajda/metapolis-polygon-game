@@ -15,7 +15,7 @@ const Buildings = ({ id }) => {
   const changeDynamicData = useBuildingStore(state => state.changeDynamicData);
 
   const loadData = async () => {
-    console.log(`http://localhost:8000/cities/${id}/data`);
+    // console.log(`http://localhost:8000/cities/${id}/data`);
     let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
 
     setBuildings(_data.buildings);

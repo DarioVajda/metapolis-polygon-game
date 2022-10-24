@@ -34,9 +34,9 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
           <div>
             {
               buildingDimensions.get(element).length > 1 ?
-              <button onClick={(e) => changeDimensionsClick(e, -1)}>
+              <div onClick={(e) => changeDimensionsClick(e, -1)}>
                 <ArrowIcon direction={3} />
-              </button> :
+              </div> :
               <></>
             }
             <span style={{ fontSize: '.8rem' }}>
@@ -46,9 +46,9 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
             </span>
             {
               buildingDimensions.get(element).length > 1 ?
-              <button onClick={(e) => changeDimensionsClick(e, 1)}>
+              <div onClick={(e) => changeDimensionsClick(e, 1)}>
                 <ArrowIcon direction={1} />
-              </button> :
+              </div> :
               <></>
             }
           </div> :

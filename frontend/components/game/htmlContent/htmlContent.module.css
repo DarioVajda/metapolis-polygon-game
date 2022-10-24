@@ -166,7 +166,7 @@
     padding: 0 .2em;
 }
 
-.buildingListGroup>button:not(:first-child)>div:last-child>div>button {
+.buildingListGroup>button:not(:first-child)>div:last-child>div>div {
     display: flex;
     /* justify-content: space-between; */
 
@@ -182,10 +182,10 @@
     border-radius: 50%;
 }
 
-.buildingListGroup>button:not(:first-child)>div:last-child>div>button svg {
+.buildingListGroup>button:not(:first-child)>div:last-child>div>div svg {
     transform: scale(1.5);
 }
-.buildingListGroup>button:not(:first-child)>div:last-child>div>button:hover {
+.buildingListGroup>button:not(:first-child)>div:last-child>div>div:hover {
     background-color: var(--primary-bg);
 }
 

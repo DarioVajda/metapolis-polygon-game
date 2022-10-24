@@ -8,6 +8,7 @@ const buildingDimensions = statsModule.buildingDimensions;
 const specialBuildingDimensions = statsModule.specialBuildingDimensions;
 const mapModule = require('../gameplay/map');
 const mapDimensions = mapModule.mapDimensions;
+const calculateCoordinatesImport = require('../gameplay/coordinates').calculateCoordinates;
 
 // RANDOM FUNCTIONS:
 function random(min, max) {
@@ -91,26 +92,11 @@ function buildingValid(buildings, building) {
 }
 
 function calculateCoordinates(start, end, shape, direction) {
-    if(direction === 0) {
-        end.x = start.x + (shape[0] - 1); // kraj gradjevine ce se nalaziti desno za shape[0]
-        end.y = start.y + (shape[1] - 1); // kraj gradjevine ce se nalaziti dole za shape[1]
-    }
-    else if(direction === 1) {
-        end.y = start.y; // kraj gradjevine ce se nalaziti tamo gde nam je trenutno start.x
-        end.x = start.x + (shape[1] - 1); // kraj gradjevine ce se nalaziti dole za shape[1]
-        start.y = start.y - (shape[0] - 1); // pocetak gradjevine se nalazi za shape[0] levo
-    }
-    else if(direction === 2) {
-        end.x = start.x; // generisane koordinate postaju koordinate kraja gradjevine
-        end.y = start.y; // generisane koordinate postaju koordinate kraja gradjevine
-        start.x = start.x - (shape[0] - 1); // pocetne koordinate se pomeraju za shape[0]
-        start.y = start.y - (shape[1] - 1); // pocetne koordinate se pomeraju za shape[1]
-    }
-    else {
-        end.y = start.y + (shape[0] - 1);
-        end.x = start.x;
-        start.x = start.x - (shape[1] - 1);
-    }
+    let r = calculateCoordinatesImport(shape, direction, start);
+    start.x = r.start.x;
+    start.y = r.start.y;
+    end.x = r.end.x;
+    end.y = r.end.y;
 }
 
 function createBuilding(buildings, type, normal) {
@@ -172,6 +158,10 @@ function generate() {
         [[1, 1]], // statue
         [[1, 9], [2, 1]], // fountain
         [[0, 9], [1, 1]], // stadium
+        [[0, 99], [1, 1]], // school
+        [[0, 99], [1, 1]], // shoppingMall
+        [[0, 1]], // promenade
+        [[0, 1]], // townHall
     ];
     let specialNum = numOfBuildings(specialProbabilities, false);
     for(let i = 0; i < specialNum.length; i++) {

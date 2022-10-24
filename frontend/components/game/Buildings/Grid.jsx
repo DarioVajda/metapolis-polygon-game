@@ -4,10 +4,17 @@ import { useBuildingStore } from '../BuildingStore'
 import { useState, useRef } from 'react';
 
 import { gridSize, plotSize } from '../MapData';
+import { buildingDimensions, specialBuildingDimensions } from '../../../../server/gameplay/building_stats';
+import { calculateCoordinates } from '../../../../server/gameplay/coordinates';
 
 function GridSquare({ x, y }) {
   const buildMode = useBuildingStore((state) => state.buildMode);
   const setHover = useBuildingStore((state) => state.setHover);
+
+  const selectedBuildingType = useBuildingStore(state => state.selectedBuildingType);
+  const rotationIndex = useBuildingStore(state => state.rotationIndex);
+  const buildings = useBuildingStore(state => state.buildings);
+  const specialBuildings = useBuildingStore(state => state.specialBuildings);
 
   const [isHovered, setIsHovered] = useState(false);
   const gridSquareRef = useRef();
@@ -16,11 +23,41 @@ function GridSquare({ x, y }) {
     console.log('click') 
   }
 
+  const overlaps = () => {
+    if(selectedBuildingType.special === null) return false;
+    let dimensions = selectedBuildingType.dimensions;
+    let { start, end } = calculateCoordinates(dimensions, rotationIndex%4, { x, y });
+
+    if(
+      start.x < 0 || 
+      start.y < 0 || 
+      end.x > gridSize-1 || 
+      end.y > gridSize-1
+    ) {
+      return true;
+    }
+
+    let r = false;
+    [ ...buildings, ...specialBuildings ].forEach((building2) => {
+      if(!(
+        start.x           > building2.end.x ||
+        building2.start.x > end.x ||
+        start.y           > building2.end.y ||
+        building2.start.y > end.y
+      )) {
+        r = true;
+      }
+    });
+    return r;
+  }
+
   return (
     <mesh
       ref={gridSquareRef}
       onPointerOver={event => {
         event.stopPropagation();
+        // if(overlaps() && false) return; // ovo treba koristiti ako zelis da se iskljuci zabrana pomeranja
+        if(overlaps()) return;
         setHover(x, y);
         setIsHovered(true);
       }}

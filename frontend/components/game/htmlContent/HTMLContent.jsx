@@ -126,6 +126,9 @@ const HTMLContent = () => {
           </div>
         </Hover>
         <div>Income in 54m</div>
+        <button className={styles.saveBtn}>
+          Save changes
+        </button>
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>

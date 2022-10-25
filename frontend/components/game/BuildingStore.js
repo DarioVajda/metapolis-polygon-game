@@ -57,10 +57,10 @@ const buildingStore = (set) => ({
   changeStaticData: changes => set( state => ({
     staticData: { ...state.staticData, ...changes }
   })),
-  setBuildings: list => set(state => ({
+  setBuildings: list => set( state => ({
     buildings: list
   })),
-  setSpecialBuildings: list => set(state => ({
+  setSpecialBuildings: list => set( state => ({
     specialBuildings: list 
   })),
   changeDynamicData: changes => set( state => ({
@@ -91,6 +91,18 @@ const buildingStore = (set) => ({
   resetRotationIndex: () => set( state => ({
     rotationIndex: 0
   })),
+  // #endregion
+
+  // #region instructions
+  instructions: [],
+  addBuilding: building => set( state => ({
+    buildings: [ ...state.buildings, building ],
+    instructions: [ ...state.instructions, { key: 'build', body: { building }} ]
+  })),
+  addSpecialBuilding: building => set( state => ({
+    buildings: [ ...state.buildings, building ],
+    instructions: [ ...state.instructions, { key: 'buildspecial', body: { building }} ]
+  }))
   // #endregion
 });
 

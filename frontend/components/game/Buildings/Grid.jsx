@@ -7,8 +7,7 @@ import { gridSize, plotSize } from '../MapData';
 import { buildingDimensions, specialBuildingDimensions } from '../../../../server/gameplay/building_stats';
 import { calculateCoordinates } from '../../../../server/gameplay/coordinates';
 
-function GridSquare({ x, y }) {
-  const buildMode = useBuildingStore((state) => state.buildMode);
+function GridSquare({ x, y, occupied }) {
   const setHover = useBuildingStore((state) => state.setHover);
 
   const selectedBuildingType = useBuildingStore(state => state.selectedBuildingType);
@@ -16,12 +15,11 @@ function GridSquare({ x, y }) {
   const buildings = useBuildingStore(state => state.buildings);
   const specialBuildings = useBuildingStore(state => state.specialBuildings);
 
-  const [isHovered, setIsHovered] = useState(false);
-  const gridSquareRef = useRef();
+  const addBuilding = useBuildingStore(state => state.addBuilding);
+  const addSpecialBuilding = useBuildingStore(state => state.addSpecialBuilding);
 
-  const onClick = () => { 
-    console.log('click') 
-  }
+  const [ isHovered, setIsHovered ] = useState(false);
+  const gridSquareRef = useRef();
 
   const overlaps = () => {
     if(selectedBuildingType.special === null) return false;
@@ -50,6 +48,27 @@ function GridSquare({ x, y }) {
     });
     return r;
   }
+  
+  const onClick = () => { 
+    if(overlaps()) return;
+
+    let dimensions = selectedBuildingType.dimensions;
+    let { start, end } = calculateCoordinates(dimensions, rotationIndex%4, { x, y });
+    let building = {
+      start,
+      end,
+      type: selectedBuildingType.type,
+      orientation: rotationIndex % 4 + 1
+    }
+    if(selectedBuildingType.special === false) {
+      building.level = 0;
+      addBuilding(building);
+    }
+    else {
+      addSpecialBuilding(building);
+    }
+    console.log(building);
+  }
 
   return (
     <mesh
@@ -76,9 +95,9 @@ function GridSquare({ x, y }) {
       <boxBufferGeometry attach="geometry" />
       <meshLambertMaterial
         attach="material"
-        color={isHovered ? (buildMode != 2 ? 0x88ff88 : 0xff8888) : "lightgray"}
+        color={isHovered ? 0x88ff88 : "lightgray"}
         transparent
-        opacity={isHovered ? 0.7 : 0.5}
+        opacity={occupied ? 0 : (isHovered ? 0.7 : 0.5)}
       />
     </mesh>
   );
@@ -109,11 +128,9 @@ const Grid = () => {
 
   for(let x = 0; x < gridSize; x++) {
     for(let y = 0; y < gridSize; y++) {
-      if(!occupied[x][y]) {
-        grid.push(
-          <GridSquare x={x} y={y} key={x*gridSize+y} />
-        )
-      }
+      grid.push(
+        <GridSquare x={x} y={y} key={x*gridSize+y} occupied={occupied[x][y]} />
+      )
     }
   }
 

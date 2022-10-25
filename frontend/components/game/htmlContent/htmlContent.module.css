@@ -45,11 +45,27 @@
     margin-left: 0.3em;
 }
 
-.topData>div:last-child {
+.topData>div:nth-child(5) {
     flex-grow: 1;
     display: flex;
     justify-content: flex-end;
     margin: 0.5em;
+}
+
+.saveBtn {
+    margin-left: auto;
+    padding: .5em 1em;
+    background-color: var(--lightest-background);
+    border-radius: 10px;
+    margin-right: .5em;
+    cursor: pointer;
+
+    border: none;
+    color: inherit;
+    font-size: inherit;
+}
+.saveBtn:active {
+    transform: scale(0.97);
 }
 
 .bottomUI {

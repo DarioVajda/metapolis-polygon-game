@@ -12,7 +12,10 @@ import EducatedCityIcon from '../../universal/icons/achievement_icons/EducatedCi
 import AchievementFrame from '../../universal/icons/achievement_icons/AchievementFrame';
 import ArrowIcon from '../../universal/icons/ArrowIcon';
 
-import { buildingDimensions } from '../../../../server/gameplay/building_stats';
+import PopupModule from '../../universal/PopupModule';
+import AchievementList from '../../achievements/AchievementList';
+
+import { buildingDimensions, specialBuildingDimensions } from '../../../../server/gameplay/building_stats';
 
 const BuildingButton = ({ special, selected, type, changeType, element }) => {
 
@@ -23,6 +26,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
     changeDimensions(arg);
   }
 
+  let moreOptions = selected && ((!special && buildingDimensions.get(element).length > 1) || (special && specialBuildingDimensions.get(element).length > 1));
   return (
     <button onClick={() => changeType(special, element)} style={selected ? { backgroundColor: 'var(--primary)' }:{}}>
       <div>
@@ -33,7 +37,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
           selected ?
           <div>
             {
-              buildingDimensions.get(element).length > 1 ?
+              moreOptions ?
               <div onClick={(e) => changeDimensionsClick(e, -1)}>
                 <ArrowIcon direction={3} />
               </div> :
@@ -45,7 +49,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
               {type.dimensions[0]}x{type.dimensions[1]}
             </span>
             {
-              buildingDimensions.get(element).length > 1 ?
+              moreOptions ?
               <div onClick={(e) => changeDimensionsClick(e, 1)}>
                 <ArrowIcon direction={1} />
               </div> :
@@ -62,7 +66,9 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
   )
 }
 
-const HTMLContent = () => {
+const HTMLContent = ({ id }) => {
+
+  const [ achievementPopup, setAchievementPopup ] = useState(false);
 
   const dynamicData = useBuildingStore(state => state.dynamicData);
   const staticData = useBuildingStore(state => state.staticData);
@@ -97,9 +103,14 @@ const HTMLContent = () => {
   const normalBuildingButtons = [ 'house', 'building', 'factory', 'office', 'store', /* 'superMarket', 'gym', */ 'park' ];
   const specialBuildingButtons = [ 'statue', 'fountain', 'stadium', 'school', 'shoppingMall', 'promenade', 'townHall' ];
 
+  console.log(dynamicData);
+
   if(staticData.owner === '0x00') return <></>
   else return (
     <div className={styles.contentWrapper}>
+      <PopupModule open={achievementPopup} width={75} height={85} unit={'%'} >
+        <AchievementList id={id} closePopup={() => setAchievementPopup(false)} />
+      </PopupModule>
       <div className={styles.topData}>
         <Hover info='Money' underneath={true} childWidth='10em' specialId='Money' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
@@ -132,7 +143,7 @@ const HTMLContent = () => {
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>
-          <button onClick={incrementRotationIndex}>
+          <button onClick={() => setAchievementPopup(true)}>
             <AchievementFrame backgroundColor='transparent' size={5} unit='em' />
             Achievements
           </button>

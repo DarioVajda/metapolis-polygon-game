@@ -3,7 +3,7 @@
     width: 100%;
     height: 100%;
     /* background-color: rgba(255, 0, 0, 0.112); */
-    z-index: 10;
+    z-index: 0;
     pointer-events: none;
 
     display: flex;

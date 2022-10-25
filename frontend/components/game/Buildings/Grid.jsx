@@ -4,7 +4,7 @@ import { useBuildingStore } from '../BuildingStore'
 import { useState, useRef } from 'react';
 
 import { gridSize, plotSize } from '../MapData';
-import { buildingDimensions, specialBuildingDimensions } from '../../../../server/gameplay/building_stats';
+import { buildingDimensions, specialBuildingDimensions, buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
 import { calculateCoordinates } from '../../../../server/gameplay/coordinates';
 
 function GridSquare({ x, y, occupied }) {
@@ -62,12 +62,14 @@ function GridSquare({ x, y, occupied }) {
     }
     if(selectedBuildingType.special === false) {
       building.level = 0;
-      addBuilding(building);
+      let price = buildingStats.get(selectedBuildingType.type)[0].cost;
+      console.log(price);
+      addBuilding(building, price);
     }
     else {
-      addSpecialBuilding(building);
+      let price = specialPrices.get(selectedBuildingType.type);
+      addSpecialBuilding(building, price);
     }
-    console.log(building);
   }
 
   return (

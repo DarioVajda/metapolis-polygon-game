@@ -95,14 +95,32 @@ const buildingStore = (set) => ({
 
   // #region instructions
   instructions: [],
-  addBuilding: building => set( state => ({
+  addBuilding: (building, price) => set( state => ( 
+    price > state.dynamicData.money ? 
+    { 
+      error: { message: `Not enough money to build a ${building.type}`, type: 'popup-msg', options: { duration: '2s' } } 
+    } : 
+    {
+      buildings: [ ...state.buildings, building ],
+      instructions: [ ...state.instructions, { key: 'build', body: { building }} ],
+      dynamicData: {
+        ...state.dynamicData,
+        money: state.dynamicData.money - price
+      }
+    }
+  )),
+  addSpecialBuilding: (building, price) => set( state => ( price > state.dynamicData.money ? {} : {
     buildings: [ ...state.buildings, building ],
-    instructions: [ ...state.instructions, { key: 'build', body: { building }} ]
+    instructions: [ ...state.instructions, { key: 'buildspecial', body: { building }} ],
+    dynamicData: {
+      ...state.dynamicData,
+      money: state.dynamicData.money - price
+    }
   })),
-  addSpecialBuilding: building => set( state => ({
-    buildings: [ ...state.buildings, building ],
-    instructions: [ ...state.instructions, { key: 'buildspecial', body: { building }} ]
-  }))
+  // #endregion
+
+  // #region error handling
+  error: {},
   // #endregion
 });
 

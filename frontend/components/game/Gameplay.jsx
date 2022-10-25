@@ -16,8 +16,7 @@ import Landscape from '../universal/city/Landscape';
 const Gameplay = ({ ID }) => {
   return (
     <div className={styles.wrapper}>
-      <HTMLContent />
-      <WorldCanvas position={[0, 250, 200]}>
+      <WorldCanvas position={[0, 250, 200]} >
 
         {/* UTILS */}
         <MapControls maxDistance={400} minDistance={75} enableDamping={false} />
@@ -32,6 +31,7 @@ const Gameplay = ({ ID }) => {
         <FloatingMenu />
 
       </WorldCanvas>
+      <HTMLContent id={ID} />
     </div>
   )
 }

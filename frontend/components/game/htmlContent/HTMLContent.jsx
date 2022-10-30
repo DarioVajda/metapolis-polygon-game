@@ -103,8 +103,6 @@ const HTMLContent = ({ id }) => {
   const normalBuildingButtons = [ 'house', 'building', 'factory', 'office', 'store', /* 'superMarket', 'gym', */ 'park' ];
   const specialBuildingButtons = [ 'statue', 'fountain', 'stadium', 'school', 'shoppingMall', 'promenade', 'townHall' ];
 
-  console.log(dynamicData);
-
   if(staticData.owner === '0x00') return <></>
   else return (
     <div className={styles.contentWrapper}>

@@ -50,6 +50,7 @@ function GridSquare({ x, y, occupied }) {
   }
   
   const onClick = () => { 
+    if(selectedBuildingType.special === null) return;
     if(overlaps()) return;
 
     let dimensions = selectedBuildingType.dimensions;

@@ -96,7 +96,7 @@ function initBuildingStats() {
     ]);
     buildingStats.set(buildingTypes.Gym, [
         { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 10, officeWorkers: 0, range: 3, boost: 1.3},
-        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4, boost: 1.3}
+        { cost: 400000, normalPeople: 0, educatedPeople: 0, manualWorkers: 15, officeWorkers: 0, range: 4, boost: 1.6}
     ]);
 } // funkcija koja inicijalizuje polja u mapi
 initBuildingStats();

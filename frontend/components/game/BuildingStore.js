@@ -31,7 +31,7 @@ const getDimensions = ({special, type, dimensions}, arg) => {
 
 
 const buildingStore = (set) => ({
-  // #region city data
+  // #region City data
   staticData: {
     owner: '0x00',
     created: true,
@@ -68,7 +68,7 @@ const buildingStore = (set) => ({
   })),
   // #endregion
   
-  // #region hovering
+  // #region Hovering
   hoverCurr: { x: 0, y: 0 },
   hoverPrev: { x: 0, y: 0 },
   setHover: (x, y) => set( state => ({
@@ -93,7 +93,7 @@ const buildingStore = (set) => ({
   })),
   // #endregion
 
-  // #region instructions
+  // #region Instructions
   instructions: [],
   addBuilding: (building, price) => set( state => ( 
     price > state.dynamicData.money ? 
@@ -117,6 +117,15 @@ const buildingStore = (set) => ({
       money: state.dynamicData.money - price
     }
   })),
+  // #endregion
+
+  // #region Floating module
+  floatingMenu: null,
+  setFloatingMenu: hm => set( state => (
+    JSON.stringify(hm) === JSON.stringify(state.floatingMenu) ?
+    { floatingMenu: null } : 
+    { floatingMenu: hm   }
+  )),
   // #endregion
 
   // #region error handling

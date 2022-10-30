@@ -21,8 +21,10 @@ function sortMap(map) {
 } // pomocna funkcija koja sortira mapu
 
 function inRange(gym, building) {
-    if(Math.min(Math.abs(gym.start.x - building.end.x), Math.abs(gym.end.x - building.start.x)) <= buildingStats.get(gym.type)[0].range 
-    && Math.min(Math.abs(gym.start.y - building.end.y), Math.abs(gym.end.y - building.start.y)) <= buildingStats.get(gym.type)[0].range) {
+    if(
+        Math.min(Math.abs(gym.start.x - building.end.x), Math.abs(gym.end.x - building.start.x)) <= buildingStats.get(gym.type)[0].range &&
+        Math.min(Math.abs(gym.start.y - building.end.y), Math.abs(gym.end.y - building.start.y)) <= buildingStats.get(gym.type)[0].range
+    ) {
         return true;
     }
     return false;

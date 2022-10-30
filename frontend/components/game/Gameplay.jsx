@@ -9,7 +9,7 @@ import WorldCanvas from './WorldCanvas';
 import Lights from './Lights';
 import Buildings from './Buildings/Buildings';
 import HoverObject from './HoverObject';
-import FloatingMenu from './FloatingMenu';
+import FloatingMenu from './floatingMenu/FloatingMenu';
 
 import Landscape from '../universal/city/Landscape';
 

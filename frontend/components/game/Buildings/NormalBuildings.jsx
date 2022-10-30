@@ -6,7 +6,7 @@ import { gridSize, plotSize, Scale } from "../MapData";
 import { useBuildingStore } from '../BuildingStore';
 import { buildingTypes } from '../modelComponents/BuildingTypes';
 
-const NormalBuildings = () => {
+const NormalBuildings = ({ onClick }) => {
 
   const buildings = useBuildingStore(state => state.buildings);
 
@@ -34,7 +34,8 @@ const NormalBuildings = () => {
         position: position, 
         rotation: [0, rotation, 0] 
       },
-      { ...building, plotSize, gridSize, rotation, key }
+      { ...building, plotSize, gridSize, rotation, key },
+      (ref) => onClick(building, ref)
     );
   });
 }

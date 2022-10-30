@@ -1,0 +1,65 @@
+.wrapper {
+    position: absolute;
+    bottom: calc(100% + 20px);
+    transform: translateX(-50%);
+
+    font-size: 2.5rem;
+    background-color: var(--background);
+    padding: .5em;
+    pointer-events: none;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    min-width: 17em;
+    border-radius: 20px;
+}
+
+.wrapper::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border: 20px solid var(--background);
+    left: calc(50% - 20px);
+    top: 100%;
+    border-color: var(--background) transparent transparent transparent;
+}
+
+.title {
+    padding-bottom: .35em;
+}
+
+.description {
+    font-size: 1.2rem;
+    padding: 1em 0;
+}
+
+.buttons {
+    display: flex;
+    justify-content: start;
+    gap: .5em;
+}
+
+.upgradeButton, .sellButton, .confirmButton, .cancelButton {
+    font-size: 2rem;
+    border: none;
+    color: inherit;
+    padding: 0.2em 0.5em;
+    width: 6em;
+    border-radius: 10px;
+    cursor: pointer;
+    pointer-events: visible;
+}
+
+.upgradeButton {
+    background-color: rgb(13, 169, 13);
+}
+.sellButton {
+    background-color: var(--error);
+}
+
+.confirmButton {
+    background-color: blue;
+}
+.cancelButton {
+    background-color: blueviolet;
+}

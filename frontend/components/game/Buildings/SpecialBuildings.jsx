@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SpecialBuildings = ({ specialBuildings }) => {
+const SpecialBuildings = ({ onClick }) => {
   return (
     <></>
   )

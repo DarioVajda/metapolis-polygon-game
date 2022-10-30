@@ -8,14 +8,32 @@ import Store        from "./Store.js";
 import Office       from "./Office.js";
 import ParkSquare   from "./ParkSquare.js";
 
+import BuildingWrapper from "./BuildingWrapper";
+
 import { Scale } from '../MapData';
 
 const buildingTypes = {
-  house: (props, building) => <House {...props} />, 
-  factory: (props, building) => <Factory {...props} />, 
-  store: (props, building) => <Store {...props} />, 
-  office: (props, building) => <Office {...props} />, 
-  park: (props, building) => {
+  house: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <House {...props} />
+    </BuildingWrapper>
+  ), 
+  factory: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <Factory {...props} />
+    </BuildingWrapper>
+  ), 
+  store: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <Store {...props} />
+    </BuildingWrapper>
+  ), 
+  office: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <Office {...props} />
+    </BuildingWrapper>
+  ), 
+  park: (props, building, onClick) => {
     let parkSquares = [];
     let { plotSize, gridSize, rotation, key } = building;
     for (let i = building.start.x; i <= building.end.x; i++) {
@@ -35,20 +53,30 @@ const buildingTypes = {
       }
     }
     return (
-      <group key={key} uuid={false&&building.uuid}>
-        {parkSquares}
-      </group>
+      <BuildingWrapper key={generateUUID()} onClick={onClick}>
+        <group key={key} uuid={false&&building.uuid}>
+          {parkSquares}
+        </group>
+      </BuildingWrapper>
     );
   },
-  building: (props, building) => {
+  building: (props, building, onClick) => {
     if (
       building.end.x - building.start.x === 1 &&
       building.end.y - building.start.y === 1
     ) {
-      return <Building {...props} />;
+      return (
+        <BuildingWrapper key={generateUUID()} onClick={onClick}>
+          <Building {...props} />
+        </BuildingWrapper>
+      );
     }
     else {
-      return <LongBuilding {...props} />;
+      return (
+        <BuildingWrapper key={generateUUID()} onClick={onClick}>
+          <LongBuilding {...props} />
+        </BuildingWrapper>
+      );
     }
   }
 }

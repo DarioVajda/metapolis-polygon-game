@@ -1,0 +1,66 @@
+.twoBars {
+    display: flex;
+    gap: .5em;
+    justify-content: space-around;
+}
+
+.twoBars>div {
+    /* flex-grow: 1; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: .25em;
+}
+
+.twoBars>div:first-child {
+    width: fit-content;
+    min-width: 7em;
+    /* outline: 1px solid red; */
+}
+
+.twoBars>div>div:last-child {
+    width: 100%;
+    height: .8em;
+    background-color: var(--light-background);
+    border-radius: .4em;
+}
+
+.twoBars>div>div:last-child>div:first-child {
+    background-color: var(--primary-bg);
+    border-radius: .4em;
+    height: 100%;
+
+    transition: width .3s ease-in-out;
+}
+
+.twoBars>div>div:last-child>div:first-child>span {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: .2em;
+    font-size: 1.6rem;
+    color: black;
+}
+
+.twoBars>div>div:last-child>div:nth-child(2) {
+    transform: translateY(-100%);
+    background-color: var(--primary);
+    border-radius: .4em;
+    height: 100%;
+}
+
+.twoBars>div>div:last-child>div:nth-child(2)>span {
+    display: flex;
+    padding-left: .3em;
+    font-size: 1.6rem;
+}
+
+.twoBars>div>div:last-child>span {
+    position: relative;
+    bottom: 2.5em;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.6rem;
+    padding-right: 0.2em;
+
+    transition: opacity .3s ease-in-out
+}

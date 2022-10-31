@@ -6,7 +6,8 @@
     font-size: 2.5rem;
     background-color: var(--background);
     padding: .5em;
-    pointer-events: none;
+    /* pointer-events: none; */
+    border: 2px solid var(--lightest-background);
     user-select: none;
     display: flex;
     flex-direction: column;
@@ -36,11 +37,12 @@
 .buttons {
     display: flex;
     justify-content: start;
+    align-items: stretch;
     gap: .5em;
 }
 
 .upgradeButton, .sellButton, .confirmButton, .cancelButton {
-    font-size: 2rem;
+    font-size: 1.8rem;
     border: none;
     color: inherit;
     padding: 0.2em 0.5em;
@@ -50,16 +52,76 @@
     pointer-events: visible;
 }
 
+.upgradeButton>span, .sellButton>span, .confirmButton>span, .cancelButton>span {
+    display: flex;
+    gap: .1em;
+}
+.upgradeButton>span:last-child, .sellButton>span:last-child, .confirmButton>span:last-child, .cancelButton>span:last-child {
+    font-size: inherit;
+    font-size: 1.4rem;
+}
+
 .upgradeButton {
-    background-color: rgb(13, 169, 13);
+    background-color: rgb(14, 196, 14);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 .sellButton {
     background-color: var(--error);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
+@keyframes confirmButtonAnimation {
+    0% {
+        background-color: rgb(14, 196, 14);
+        transform: scale(1)
+    } 
+    50% {
+        background-color: rgb(13, 169, 13);
+        transform: scale(1.04)
+    }
+    100% {
+        background-color: rgb(14, 196, 14);
+        transform: scale(1)
+    }
+}
+@keyframes cancelButtonAnimation {
+    0% {
+        background-color: red;
+        transform: scale(1)
+    } 
+    50% {
+        background-color: rgb(169, 0, 0);
+        transform: scale(1.04)
+    }
+    100% {
+        background-color: red;
+        transform: scale(1)
+    }
+}
+.confirmButton, .cancelButton {
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
 .confirmButton {
-    background-color: blue;
+    animation-name: confirmButtonAnimation;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 .cancelButton {
-    background-color: blueviolet;
+    animation-name: cancelButtonAnimation;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

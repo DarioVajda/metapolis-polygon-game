@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useRef } from 'react';
+import { useEffect } from 'react';
 
 import styles from './floatingMenu.module.css';
 
@@ -8,38 +9,96 @@ import { useFrame, useThree } from '@react-three/fiber';
 
 import { useBuildingStore } from '../BuildingStore';
 
+import { buildingStats } from '../../../../server/gameplay/building_stats';
 import { menuDataComponents } from './menuDataComponents';
 import { buildingMenuTypes } from './menuData';
+import { formatNumber } from '../../utils/numFormat';
 
-const Buttons = ({ upgrading, setUpgrading, sell, upgrade }) => {
+import ArrowIcon2 from '../../universal/icons/ArrowIcon2';
+import XIcon from '../../universal/icons/XIcon';
+import MoneyIcon from '../../universal/icons/MoneyIcon';
 
-  if(upgrading === false) return (
-    <>
-      <button className={styles.upgradeButton} onClick={() => setUpgrading(true)}>
-        Upgrade
-      </button>
-      <button className={styles.sellButton} onClick={() => sell()}>
-        Sell
-      </button>
-    </>
-  )
-  else return (
-    <>
-      <button className={styles.confirmButton} onClick={() => upgrade} style={{ backgroundColor: 'blue' }}>
-        Confirm
-      </button>
-      <button className={styles.cancelButton} onClick={() => setUpgrading(false)}>
-        Cancel
-      </button>
-    </>
-  )
+const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
+
+  const RETURN_PERCENTAGE = 0.5;
+  let sellValue = RETURN_PERCENTAGE * buildingStats
+    .get(building.type) // dobija se lista levela i podataka o levelima
+    .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
+    .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
+
+  let upgradeValue = buildingStats.get(building.type)[building.level + 1].cost;
+
+  if(building.type === 'building' || building.type === 'park') {
+    let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
+    sellValue *= area;
+    upgradeValue *= area;
+  }
+
+  if(status === 'upgrading') {
+    return (
+      <>
+        <button className={styles.confirmButton} onClick={upgrade} style={{ backgroundColor: 'blue' }}>
+          <span>
+            Confirm
+            <ArrowIcon2 />
+          </span>
+          <span>
+            <MoneyIcon size={0.7} />
+            {upgradeValue}
+          </span>
+        </button>
+        <button className={styles.cancelButton} onClick={() => setStatus(null)}>
+          Cancel
+        </button>
+      </>
+    )
+  }
+  else if(status === 'selling') {
+    return (
+      <>
+        <button className={styles.confirmButton} onClick={sell} style={{ backgroundColor: 'blue' }}>
+          <span>
+            Confirm
+            <XIcon colorArg='var(--text)' />
+          </span>
+          <span>
+            <MoneyIcon size={0.7} />
+            {sellValue}
+          </span>
+        </button>
+        <button className={styles.cancelButton} onClick={() => setStatus(null)}>
+          Cancel
+        </button>
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+        <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
+          Upgrade
+          <span>
+            <MoneyIcon size={0.7} />
+            {formatNumber(upgradeValue)}
+          </span>
+        </button>
+        <button className={styles.sellButton} onClick={() => setStatus('selling')}>
+          Sell
+          <span>
+            <MoneyIcon size={0.7} />
+            {formatNumber(sellValue)}
+          </span>
+        </button>
+      </>
+    )
+  }
 }
 
 const FloatingMenu = () => {
 
   const htmlRef = useRef();
   const [ distanceFactor, setDistanceFactor ] = useState(10);
-  const [ upgrading, setUpgrading ] = useState(false);
+  const [ status, setStatus ] = useState(null);
 
   const floatingMenu = useBuildingStore(state => state.floatingMenu);
 
@@ -57,7 +116,11 @@ const FloatingMenu = () => {
       setDistanceFactor(newDistanceFactor);
       invalidate();
     }
-  })
+  });
+
+  useEffect(() => {
+    setStatus(null);
+  }, floatingMenu);
   // #endregion
 
   if(floatingMenu === null) return <></>;
@@ -76,15 +139,21 @@ const FloatingMenu = () => {
           <span className={styles.title}>
             Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name}
           </span>
-          {/* {menuDataComponents['people']('building', 1, true)} */}
-          {menuDataComponents['workplaces']('factory', 1, true)}
-          {/* {menuDataComponents['boost']('gym', 1, true)} */}
-          {menuDataComponents['decrease']('factory', 1, true)}
+          {/* {menuDataComponents['people']('building', 1, status==='upgrading')} */}
+          {/* {menuDataComponents['boost']('gym', 1, status==='upgrading')} */}
+          {menuDataComponents['workplaces']('factory', 1, status==='upgrading')}
+          {menuDataComponents['decrease']('factory', 1, status==='upgrading')}
           <span className={styles.description}>
             {buildingMenuTypes[floatingMenu.building.type].description}
           </span>
           <div className={styles.buttons}>
-            <Buttons upgrading={upgrading} setUpgrading={setUpgrading} upgrade={() => console.log('upgrade building')} sell={() => console.log('sell building')} />
+            <Buttons 
+              status={status} 
+              building={floatingMenu.building} 
+              setStatus={setStatus} 
+              upgrade={() => console.log('upgrade building')} 
+              sell={() => console.log('sell building')} 
+            />
           </div>
         </div>
       </Html>

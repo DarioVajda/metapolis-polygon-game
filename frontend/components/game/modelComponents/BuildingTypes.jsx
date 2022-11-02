@@ -15,22 +15,22 @@ import { Scale } from '../MapData';
 const buildingTypes = {
   house: (props, building, onClick) => (
     <BuildingWrapper key={generateUUID()} onClick={onClick}>
-      <House {...props} />
+      <House {...props} level={building.level} />
     </BuildingWrapper>
   ), 
   factory: (props, building, onClick) => (
     <BuildingWrapper key={generateUUID()} onClick={onClick}>
-      <Factory {...props} />
+      <Factory {...props} level={building.level} />
     </BuildingWrapper>
   ), 
   store: (props, building, onClick) => (
     <BuildingWrapper key={generateUUID()} onClick={onClick}>
-      <Store {...props} />
+      <Store {...props} level={building.level} />
     </BuildingWrapper>
   ), 
   office: (props, building, onClick) => (
     <BuildingWrapper key={generateUUID()} onClick={onClick}>
-      <Office {...props} />
+      <Office {...props} level={building.level} />
     </BuildingWrapper>
   ), 
   park: (props, building, onClick) => {
@@ -48,6 +48,7 @@ const buildingTypes = {
               plotSize * j - (gridSize * plotSize) / 2 + plotSize / 2,
             ]}
             rotation={[0, rotation, 0]}
+            level={building.level}
           />
         );
       }
@@ -67,14 +68,14 @@ const buildingTypes = {
     ) {
       return (
         <BuildingWrapper key={generateUUID()} onClick={onClick}>
-          <Building {...props} />
+          <Building {...props} level={building.level} />
         </BuildingWrapper>
       );
     }
     else {
       return (
         <BuildingWrapper key={generateUUID()} onClick={onClick}>
-          <LongBuilding {...props} />
+          <LongBuilding {...props} level={building.level} />
         </BuildingWrapper>
       );
     }

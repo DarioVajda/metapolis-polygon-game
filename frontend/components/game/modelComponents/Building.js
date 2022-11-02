@@ -6,10 +6,10 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { forwardRef } from 'react';
 
-const Building = forwardRef(function Building(props,ref) {
+const Building = forwardRef(function Building({level, ...props},ref) {
   const { nodes, materials } = useGLTF('/Building.glb')
   return (
-    <group name="objectGroup" ref={ref} {...props} dispose={null}>
+    <group name="objectGroup" ref={ref} {...props} scale={[props.scale, props.scale * (level*2+1), props.scale]}dispose={null}>
       <mesh
         receiveShadow
         geometry={nodes.Plane001.geometry}

@@ -26,7 +26,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
     .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
 
-  let upgradeValue = buildingStats.get(building.type)[building.level + 1].cost;
+  let upgradeValue = buildingStats.get(building.type)[building.level + 1]?buildingStats.get(building.type)[building.level + 1].cost:0;
 
   if(building.type === 'building' || building.type === 'park') {
     let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
@@ -37,7 +37,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
   if(status === 'upgrading') {
     return (
       <>
-        <button className={styles.confirmButton} onClick={upgrade} style={{ backgroundColor: 'blue' }}>
+        <button className={styles.confirmButton} onClick={() => upgrade(upgradeValue)} style={{ backgroundColor: 'blue' }}>
           <span>
             Confirm
             <ArrowIcon2 />
@@ -101,6 +101,9 @@ const FloatingMenu = () => {
   const [ status, setStatus ] = useState(null);
 
   const floatingMenu = useBuildingStore(state => state.floatingMenu);
+  const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
+  
+  const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
 
   // #region Zoom handling
   const camera = useThree(state => state.camera);
@@ -118,10 +121,17 @@ const FloatingMenu = () => {
     }
   });
 
+  // #endregion
+
   useEffect(() => {
     setStatus(null);
-  }, floatingMenu);
-  // #endregion
+  }, [ floatingMenu ]);
+
+  const upgradeFunc = (price) => {
+    upgradeBuilding(floatingMenu.building, price);
+    setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, level: floatingMenu.building.level + 1 } });
+    setStatus(null);
+  }
 
   if(floatingMenu === null) return <></>;
 
@@ -151,7 +161,7 @@ const FloatingMenu = () => {
               status={status} 
               building={floatingMenu.building} 
               setStatus={setStatus} 
-              upgrade={() => console.log('upgrade building')} 
+              upgrade={upgradeFunc} 
               sell={() => console.log('sell building')} 
             />
           </div>

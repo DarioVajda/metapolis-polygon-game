@@ -32,7 +32,15 @@ const buildingGridElement = (x, y, onClick) => {
       console.log('built');
     },
     removing: async () => {
-      console.log('removing');
+      let time = 0;
+      while(time < 1000) {
+
+        console.log('removing...');
+
+        await delay(100);
+        time += 100;
+      }
+      changeCoordinate(x, y, undefined);
     },
     upgrading: async () => {
       console.log('upgrading');

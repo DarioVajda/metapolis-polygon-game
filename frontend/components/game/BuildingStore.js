@@ -108,6 +108,7 @@ const buildingStore = (set) => ({
   })),
   setSelectedBuildingType: (special, type) => set( state => ({
     selectedBuildingType: { special, type, dimensions: type?getDimensions({ special, type }, 0):[0,0] },
+    floatingMenu: null
     // rotationIndex: 0
   })),
   rotationIndex: 0,
@@ -200,6 +201,25 @@ const buildingStore = (set) => ({
       ...buildingCoordinate
     }
   }),
+  removeBuilding: (building, moneyValue) => set( state => {
+    // preparing to change the value of the x_y field in the state
+    let buildingCoordinate = {};
+    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'removing' };
+
+    // copying the content of the building list, only changing this one level
+    let newList = state.buildings.filter(element => JSON.stringify(element) !== JSON.stringify(building));
+
+    // returning all the changes to the global state
+    return {
+      buildings: newList,
+      instructions: [ ...state.instructions, { key: 'remove', body: { building } } ],
+      dynamicData: {
+        ...state.dynamicData,
+        money: state.dynamicData.money + moneyValue
+      },
+      ...buildingCoordinate
+    }
+  }),
   // #endregion
 
   // #region Floating module
@@ -207,7 +227,7 @@ const buildingStore = (set) => ({
   setFloatingMenu: fm => set( state => (
     JSON.stringify(fm) === JSON.stringify(state.floatingMenu) ?
     { floatingMenu: null } : 
-    { floatingMenu: fm   }
+    { floatingMenu: fm, selectedBuildingType: { special: null, type: null, dimensions: [ 0, 0 ] } }
   )),
   // #endregion
 

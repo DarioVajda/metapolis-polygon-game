@@ -26,7 +26,9 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
     .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
 
-  let upgradeValue = buildingStats.get(building.type)[building.level + 1]?buildingStats.get(building.type)[building.level + 1].cost:0;
+  let upgradeValue = buildingStats.get(building.type) && buildingStats.get(building.type)[building.level + 1] ?
+    buildingStats.get(building.type)[building.level + 1].cost :
+    0;
 
   if(building.type === 'building' || building.type === 'park') {
     let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
@@ -56,7 +58,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
   else if(status === 'selling') {
     return (
       <>
-        <button className={styles.confirmButton} onClick={sell} style={{ backgroundColor: 'blue' }}>
+        <button className={styles.confirmButton} onClick={() => sell(sellValue)} style={{ backgroundColor: 'blue' }}>
           <span>
             Confirm
             <XIcon colorArg='var(--text)' />
@@ -104,6 +106,7 @@ const FloatingMenu = () => {
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
+  const removeBuilding = useBuildingStore(state => state.removeBuilding);
 
   // #region Zoom handling
   const camera = useThree(state => state.camera);
@@ -130,6 +133,12 @@ const FloatingMenu = () => {
   const upgradeFunc = (price) => {
     upgradeBuilding(floatingMenu.building, price);
     setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, level: floatingMenu.building.level + 1 } });
+    setStatus(null);
+  }
+
+  const sellFunc = (moneyValue) => {
+    removeBuilding(floatingMenu.building, moneyValue);
+    setFloatingMenu(null);
     setStatus(null);
   }
 
@@ -162,7 +171,7 @@ const FloatingMenu = () => {
               building={floatingMenu.building} 
               setStatus={setStatus} 
               upgrade={upgradeFunc} 
-              sell={() => console.log('sell building')} 
+              sell={sellFunc} 
             />
           </div>
         </div>

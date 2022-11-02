@@ -158,7 +158,8 @@ const HoverObject = () => {
           }, 
           {
             start: { x: 1, y: 1 },
-            end: { x: selectedBuildingType.dimensions[0], y: selectedBuildingType.dimensions[1] }
+            end: { x: selectedBuildingType.dimensions[0], y: selectedBuildingType.dimensions[1] },
+            level: 0
           }
         )
       }

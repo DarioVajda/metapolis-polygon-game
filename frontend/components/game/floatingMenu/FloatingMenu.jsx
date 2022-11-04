@@ -17,8 +17,9 @@ import { formatNumber } from '../../utils/numFormat';
 import ArrowIcon2 from '../../universal/icons/ArrowIcon2';
 import XIcon from '../../universal/icons/XIcon';
 import MoneyIcon from '../../universal/icons/MoneyIcon';
+import RotateIcon from '../../universal/icons/RotateIcon';
 
-const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
+const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
   const RETURN_PERCENTAGE = 0.5;
   let sellValue = RETURN_PERCENTAGE * buildingStats
@@ -79,19 +80,27 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
   else {
     return (
       <>
-        <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
-          Upgrade
-          <span>
-            <MoneyIcon size={0.7} />
-            {formatNumber(upgradeValue)}
-          </span>
-        </button>
+        {
+          upgradeValue > 0 && (
+            <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
+              Upgrade
+              <span>
+                <MoneyIcon size={0.7} />
+                {formatNumber(upgradeValue)}
+              </span>
+            </button>
+          )
+        }
         <button className={styles.sellButton} onClick={() => setStatus('selling')}>
           Sell
           <span>
             <MoneyIcon size={0.7} />
             {formatNumber(sellValue)}
           </span>
+        </button>
+        <button className={styles.rotateButton} onClick={rotate}>
+          Rotate
+          <RotateIcon />
         </button>
       </>
     )
@@ -106,9 +115,11 @@ const FloatingMenu = () => {
 
   const floatingMenu = useBuildingStore(state => state.floatingMenu);
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
+  const dynamicData = useBuildingStore(state => state.dynamicData);
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
+  const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
 
   // #region Zoom handling
   const camera = useThree(state => state.camera);
@@ -134,6 +145,8 @@ const FloatingMenu = () => {
 
   const upgradeFunc = (price) => {
     upgradeBuilding(floatingMenu.building, price);
+    if(price > dynamicData.money) return;
+    
     setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, level: floatingMenu.building.level + 1 } });
     setStatus(null);
   }
@@ -142,6 +155,17 @@ const FloatingMenu = () => {
     removeBuilding(floatingMenu.building, moneyValue);
     setFloatingMenu(null);
     setStatus(null);
+  }
+
+  const rotateFunc = () => {
+    let d = 1;
+    let { start, end } = floatingMenu.building;
+    if(end.x - start.x !== end.y - start.y) {
+      d = 2;
+    }
+    console.log(d);
+    setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, orientation: (floatingMenu.building.orientation + d)%4 } })
+    rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d)%4);
   }
 
   if(floatingMenu === null) return <></>;
@@ -174,6 +198,7 @@ const FloatingMenu = () => {
               setStatus={setStatus} 
               upgrade={upgradeFunc} 
               sell={sellFunc} 
+              rotate={rotateFunc}
             />
           </div>
         </div>

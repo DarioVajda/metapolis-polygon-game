@@ -221,6 +221,29 @@ const buildingStore = (set) => ({
       ...buildingCoordinate
     }
   }),
+  rotateBuilding: (building, rotation) => set( state => {
+    // preparing to change the value of the x_y field in the state
+    let buildingCoordinate = {};
+    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation }, status: 'rotating' };
+
+    // copying the content of the building list, only changing this one level
+    let newList = state.buildings.map(element => {
+      if(JSON.stringify(element) === JSON.stringify(building)) {
+        return {
+          ...building,
+          orientation: rotation
+        }
+      }
+      return element;
+    })
+
+    // returning all the changes to the global state
+    return {
+      buildings: newList,
+      instructions: [ ...state.instructions, { instruction: 'rotate', body: { building, rotation } } ],
+      ...buildingCoordinate
+    }
+  }),
   // #endregion
 
   // #region Floating module

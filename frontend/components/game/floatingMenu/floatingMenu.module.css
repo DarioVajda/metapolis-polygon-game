@@ -41,7 +41,7 @@
     gap: .5em;
 }
 
-.upgradeButton, .sellButton, .confirmButton, .cancelButton {
+.upgradeButton, .sellButton, .confirmButton, .cancelButton, .rotateButton {
     font-size: 1.8rem;
     border: none;
     color: inherit;
@@ -50,6 +50,9 @@
     border-radius: 10px;
     cursor: pointer;
     pointer-events: visible;
+}
+.upgradeButton:active, .sellButton:active, .confirmButton:active, .cancelButton:active, .rotateButton:active {
+    transform: scale(0.97)
 }
 
 .upgradeButton>span, .sellButton>span, .confirmButton>span, .cancelButton>span {
@@ -76,6 +79,14 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.rotateButton {
+    background-color: var(--primary-variant);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5em;
 }
 
 @keyframes confirmButtonAnimation {

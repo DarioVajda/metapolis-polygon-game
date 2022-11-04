@@ -44,6 +44,9 @@ const buildingGridElement = (x, y, onClick) => {
     },
     upgrading: async () => {
       console.log('upgrading');
+    },
+    rotating: async () => {
+      console.log('rotating');
     }
   }
 

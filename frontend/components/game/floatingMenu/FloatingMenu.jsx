@@ -21,7 +21,8 @@ import RotateIcon from '../../universal/icons/RotateIcon';
 
 const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
-  const RETURN_PERCENTAGE = 0.5;
+  console.log(building);
+  let RETURN_PERCENTAGE = building.id !== undefined ? 0.5 : 1;
   let sellValue = RETURN_PERCENTAGE * buildingStats
     .get(building.type) // dobija se lista levela i podataka o levelima
     .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
@@ -182,7 +183,7 @@ const FloatingMenu = () => {
       >
         <div className={styles.wrapper}>
           <span className={styles.title}>
-            Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name}
+            Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name} {floatingMenu.building.id === undefined ? '*': ''}
           </span>
           {/* {menuDataComponents['people']('building', 1, status==='upgrading')} */}
           {/* {menuDataComponents['boost']('gym', 1, status==='upgrading')} */}

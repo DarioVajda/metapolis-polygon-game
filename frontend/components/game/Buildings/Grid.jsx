@@ -64,6 +64,9 @@ function GridSquare({ x, y, occupied }) {
     if(selectedBuildingType.special === false) {
       building.level = 0;
       let price = buildingStats.get(selectedBuildingType.type)[0].cost;
+      if(selectedBuildingType.type === 'building' || selectedBuildingType.type === 'park') {
+        price *= selectedBuildingType.dimensions[0] * selectedBuildingType.dimensions[1];
+      }
       console.log(price);
       addBuilding(building, price);
     }

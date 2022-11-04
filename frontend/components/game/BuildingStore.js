@@ -224,23 +224,46 @@ const buildingStore = (set) => ({
   rotateBuilding: (building, rotation) => set( state => {
     // preparing to change the value of the x_y field in the state
     let buildingCoordinate = {};
-    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation }, status: 'rotating' };
+    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation===0?4:rotation }, status: 'rotating' };
 
-    // copying the content of the building list, only changing this one level
+    // copying the content of the building list, only changing the orientation
     let newList = state.buildings.map(element => {
       if(JSON.stringify(element) === JSON.stringify(building)) {
         return {
           ...building,
-          orientation: rotation
+          orientation: rotation===0?4:rotation
         }
       }
       return element;
     })
 
+    let isNewInstruction = true;
+    let newInstructions = state.instructions.map(instruction => {
+      if(
+        JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, orientation: instruction.body.building?.orientation }) && 
+        instruction.instruction === 'rotate'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'rotate',
+          body: {
+            building: instruction.body.building,
+            rotation: rotation
+          }
+        }
+      }
+      return instruction;
+    });
+    console.log(newInstructions);
+    newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotate' && instruction.body.building.orientation === instruction.body.rotation))
+    if(isNewInstruction) {
+      newInstructions = [ ...newInstructions, { instruction: 'rotate', body: { building, rotation } } ];
+    }
+
     // returning all the changes to the global state
     return {
       buildings: newList,
-      instructions: [ ...state.instructions, { instruction: 'rotate', body: { building, rotation } } ],
+      instructions: newInstructions,
       ...buildingCoordinate
     }
   }),

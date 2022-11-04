@@ -324,6 +324,8 @@ app.post("/cities/:id/initialize", async (req, res) => {
 });
 
 app.post("/cities/:id/instructions", async (req, res) => {
+	console.log('instructions', 10000);
+	let cityData = await contract.getCityData(req.params.id);
 
 	try {
 		let message = req.body.message;
@@ -332,23 +334,27 @@ app.post("/cities/:id/instructions", async (req, res) => {
 		let signerAddr = ethers.utils.verifyMessage(message, signature);
 		if(signerAddr !== signer) {
 			res.status(400).send("The caller of this function must be the owner of the NFT");
+			console.log("The caller of this function must be the owner of the NFT");
 			return;
 		}
 	}
 	catch(e) {
 		res.status(400).send("Message or signature not sent.");
+		console.log("Message or signature not sent.");
 		return;
 	}
 
 	let instructions = req.body.instructions;
 	if(instructions === undefined || instructions.length === undefined) {
 		res.status(400).send('List of instructions is not sent');
+		console.log('List of instructions is not sent');
 		return;
 	}
 	
 	for(let i = 0; i < instructions.length; i++) {
 		if(!instructions[i].instruction || !instructions[i].body) {
 			res.status(400).send({ error: 'Wrong data format (instructions dont have body or instruction key' });
+			console.log({ error: 'Wrong data format (instructions dont have body or instruction key' });
 			return;
 		}
 	}

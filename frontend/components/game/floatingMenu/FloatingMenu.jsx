@@ -35,7 +35,9 @@ const Buttons = ({ status, setStatus, sell, upgrade, building }) => {
     sellValue *= area;
     upgradeValue *= area;
   }
-
+  
+  // TODO - obavezno obratiti paznju na ovo (brisanje novih gradjevina):
+  // treba da se proveri da li gradjevina sadrzi id, ako sadrzi onda to znaci da gradjevina vec postoji u gradu i da je sacuvana, a ako ne postoji onda moze da se proda po punoj ceni sto bi u sustini ponistilo gradjenje u igrici jer to jos nije sacuvano, ako se u tom slucaju obrise gradjevina onda treba da se skloni ta build instrukcija sa liste umesto da se doda remove instrukcija
   if(status === 'upgrading') {
     return (
       <>

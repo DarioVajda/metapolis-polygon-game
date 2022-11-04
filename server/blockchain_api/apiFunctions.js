@@ -6,6 +6,7 @@ let buildingStats = require('../gameplay/building_stats');
 let incomeModule = require('../gameplay/income');
 let utils = require('./utils');
 let achievements = require('./achievements');
+let getFunctions = require('./getFunctions');
 
 
 /* FUNCTION RULES:

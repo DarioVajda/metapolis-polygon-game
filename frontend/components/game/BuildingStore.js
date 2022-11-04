@@ -33,6 +33,7 @@ const getDimensions = ({special, type, dimensions}, arg) => {
 const buildingStore = (set) => ({
   // #region City data
   staticData: {
+    id: -1,
     owner: '0x00',
     created: true,
     initialized: true,
@@ -133,7 +134,7 @@ const buildingStore = (set) => ({
       newBuildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         buildings: [ ...state.buildings, building ],
-        instructions: [ ...state.instructions, { key: 'build', body: { building } } ],
+        instructions: [ ...state.instructions, { instruction: 'build', body: { building } } ],
         dynamicData: {
           ...state.dynamicData,
           money: state.dynamicData.money - price
@@ -153,7 +154,7 @@ const buildingStore = (set) => ({
       newBuildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         specialBuildings: [ ...state.specialBuildings, building ],
-        instructions: [ ...state.instructions, { key: 'buildspecial', body: { building } } ],
+        instructions: [ ...state.instructions, { instruction: 'buildspecial', body: { building } } ],
         dynamicData: {
           ...state.dynamicData,
           money: state.dynamicData.money - price
@@ -166,12 +167,12 @@ const buildingStore = (set) => ({
     // checking if there is enough money to perform the upgrade
     if(price > state.dynamicData.money) {
       return {
-        error: { message: `Not enough money to upgrade the ${building.type}`, type: 'popup-msg', otions: { duration: '2s' }}
+        error: { message: `Not enough money to upgrade the ${building.type}`, type: 'popup-msg', options: { duration: '2s' }}
       };
     }
     if(building.level + 1 === buildingStats.get(building.type).length) {
       return {
-        error: { message: 'Already at max level', type: 'popup-msg', otions: { duration: '2s' }}
+        error: { message: 'Already at max level', type: 'popup-msg', options: { duration: '2s' }}
       };
     }
 
@@ -193,7 +194,7 @@ const buildingStore = (set) => ({
     // returning all the changes to the global state
     return {
       buildings: newList,
-      instructions: [ ...state.instructions, { key: 'upgrade', body: { building } } ],
+      instructions: [ ...state.instructions, { instruction: 'upgrade', body: { building } } ],
       dynamicData: {
         ...state.dynamicData,
         money: state.dynamicData.money - price
@@ -212,7 +213,7 @@ const buildingStore = (set) => ({
     // returning all the changes to the global state
     return {
       buildings: newList,
-      instructions: [ ...state.instructions, { key: 'remove', body: { building } } ],
+      instructions: [ ...state.instructions, { instruction: 'remove', body: { building } } ],
       dynamicData: {
         ...state.dynamicData,
         money: state.dynamicData.money + moneyValue
@@ -233,6 +234,9 @@ const buildingStore = (set) => ({
 
   // #region error handling
   error: {},
+  setError: e => set( state => ({
+    error: e
+  }))
   // #endregion
 });
 

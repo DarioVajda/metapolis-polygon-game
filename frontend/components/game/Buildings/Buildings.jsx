@@ -23,6 +23,7 @@ const Buildings = ({ id }) => {
     setBuildings(_data.buildings);
     setSpecialBuildings(_data.specialBuildings);
     changeStaticData({
+      id: id,
       owner: _data.owner,
       created: _data.created,
       initialized: _data.initialized,

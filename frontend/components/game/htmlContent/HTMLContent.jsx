@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ethers } from "ethers";
 
 import styles from './htmlContent.module.css';
 
@@ -62,6 +63,62 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
           <MoneyIcon /> 123.000
         </span>
       </div>
+    </button>
+  )
+}
+
+const SaveBtn = ({ id }) => {
+
+  const instructions = useBuildingStore(state => state.instructions);
+  const setError = useBuildingStore(state => state.setError);
+
+  const saveChanges = async () => {
+    if(instructions.length === 0) return;
+
+    if(!window.ethereum) {
+      setError({
+        message: 'User does not have the Metamask extensions installed',
+        type: 'popup-widget'
+      });
+      return;
+    }
+
+    const message = `Save changes in City #${id} (unique ID - ${Math.floor(Math.random()*999999999)})`;
+
+    let signature;
+    try {
+      await window.ethereum.send("eth_requestAccounts");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      signature = await signer.signMessage(message);
+    } 
+    catch (error) {
+      setError({ message: error.message, type: 'pupup-msg' });
+      return;
+    }
+
+    let body = {
+      instructions: instructions, // the list of instructions to be performed
+      message: message, // this is a unique message that is never going to be the same for the same person
+      signature: signature, // this is the signature of the user
+    }
+    console.log(JSON.parse(JSON.stringify(body)));
+    const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(body),
+    });
+    console.log(response);
+  }
+
+  return (
+    <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
+      Save changes
     </button>
   )
 }
@@ -135,9 +192,7 @@ const HTMLContent = ({ id }) => {
           </div>
         </Hover>
         <div>Income in 54m</div>
-        <button className={styles.saveBtn}>
-          Save changes
-        </button>
+        <SaveBtn id={id} />
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>

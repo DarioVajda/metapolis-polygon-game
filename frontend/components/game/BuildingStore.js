@@ -189,12 +189,49 @@ const buildingStore = (set) => ({
         }
       }
       return element;
-    })
+    });
+
+    // checks for the instruction list
+    let isNewInstruction = true;
+    let newInstructions = state.instructions.map(instruction => {
+      // CASE: build + n*upgrade = build(level=n)
+      if(
+        JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, level: instruction.body.building?.level }) && 
+        instruction.instruction === 'build'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'build',
+          body: {
+            building: { ...instruction.body.building, level: instruction.body.building.level + 1 }
+          }
+        }
+      }
+      // CASE: n*upgrade = upgrade(deltaLevel=n)
+      else if(
+        instruction.body.building?.id === building.id &&
+        instruction.instruction === 'upgrade'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'upgarde',
+          body: {
+            building: instruction.body.building,
+            deltaLevel: instruction.body.deltaLevel + 1
+          }
+        }
+      }
+      return instruction;
+    });
+    console.log(newInstructions);
+    if(isNewInstruction) {
+      newInstructions = [ ...newInstructions, { instruction: 'upgrade', body: { building, deltaLevel: 1 } } ];
+    }
 
     // returning all the changes to the global state
     return {
       buildings: newList,
-      instructions: [ ...state.instructions, { instruction: 'upgrade', body: { building } } ],
+      instructions: newInstructions,
       dynamicData: {
         ...state.dynamicData,
         money: state.dynamicData.money - price
@@ -239,6 +276,7 @@ const buildingStore = (set) => ({
 
     let isNewInstruction = true;
     let newInstructions = state.instructions.map(instruction => {
+      // CASE: n*rotate = rotate(n%4)
       if(
         JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, orientation: instruction.body.building?.orientation }) && 
         instruction.instruction === 'rotate'
@@ -248,7 +286,20 @@ const buildingStore = (set) => ({
           instruction: 'rotate',
           body: {
             building: instruction.body.building,
-            rotation: rotation
+            rotation: rotation===0?4:rotation
+          }
+        }
+      }
+      // CASE: build + n*rotate = build(orientation: n%4)
+      else if(
+        JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, orientation: instruction.body.building?.orientation }) &&
+        instruction.instruction === 'build'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'build',
+          body: {
+            building: { ...instruction.body.building, orientation: rotation===0?4:rotation }
           }
         }
       }
@@ -289,3 +340,20 @@ const buildingStore = (set) => ({
 const useBuildingStore = create(devtools(buildingStore));
 
 export { useBuildingStore };
+
+
+/*
+
+brisanje:
+- dodato -> (...upgradeovano) -> obrisano (vratiti full vrednost)
+- upgradeovano -> obrisano (vratiti full vrednost upgradeova i procenat onoga sto je vec postojalo)
+
+upgradeovanje:
+- DONE: dodato -> upgradeovano (promeniti samo level u build instrukciji)
+- DONE: upgradeovano -> upgradeovano (promeniti samo deltaLevel u instrukciji)
+
+rotiranje:
+- DONE: dodato -> rotirano (promeniti samo orientation u build instrukciji)
+- DONE: rotirano -> rotirano (promeniti samo rotation u rotate instrukciji i proveriti da li je vraceno u pocetni polozaj)
+
+*/

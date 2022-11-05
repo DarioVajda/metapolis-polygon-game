@@ -104,6 +104,12 @@ const functions = {
                 console.log('building overlap');
                 return false;
             }
+
+            // proverava se level gradjevine
+            if(building.level >= buildingStats.buildingStats.get(building.type).length) {
+                console.log('building level higher than max level');
+                return false;
+            }
         
             // izvlaci se cena
             let cost = buildingStats.buildingStats
@@ -224,7 +230,7 @@ const functions = {
     },
     upgrade: {
         check: (id, city, specialTypeData, achievementList, numOfNfts, body) => {
-            let { building } = body;
+            let { building, deltaLevel } = body;
 
             let index = city.buildings.reduce((prev, curr, i) => curr.id === building.id ? i : prev, -1);
 
@@ -239,7 +245,16 @@ const functions = {
                 return false;
             }
 
-            let cost = buildingStats.buildingStats.get(building.type)[building.level].cost;
+            // checking max level
+            if(building.level + deltaLevel >= buildingStats.buildingStats.get(building.type).length) {
+                console.log('trying to upgrade too many levels');
+                return false;
+            }
+
+            let cost = buildingStats.buildingStats
+                .get(building.type)
+                .slice(building.level+1, building.level+deltaLevel+1)
+                .reduce((prev, curr) => prev + curr.cost, 0);
             if(building.type === buildingStats.buildingTypes.Building || building.type === buildingStats.buildingTypes.Park) {
                 cost *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
             }
@@ -249,14 +264,24 @@ const functions = {
                 return false;
             }
 
-            city.buildings[index].level++;
+            city.buildings[index].level = city.buildings[index].level + deltaLevel;
             city.money -= cost;
             
             console.log('success');
             return { city, specialTypeData, achievementList };
         },
         save: async (id, contract, specialTypeData, body) => {
-            let { building } = body;
+            let { building, deltaLevel } = body;
+
+            // TODO ovo je privremeno resenje dok ne napravim u smart contractu da moze da se poveca level za vise od 1 samo jednim pozivom funkcije
+            for(let i = 0; i < deltaLevel - 1; i++) {
+                let tempTx = await contract.upgradeBuilding(
+                    id,
+                    building.id,
+                    { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+                );
+                await tempTx.wait();
+            } 
 
             let tx = await contract.upgradeBuilding(
                 id,

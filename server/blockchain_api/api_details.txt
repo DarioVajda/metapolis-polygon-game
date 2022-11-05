@@ -16,7 +16,7 @@ POST requests:
     ** endpoints marked with X should not be used anymore **
     (*) /cities/:id/initialize - { signature: '0x...', message: 'example - Initialize #555 City NFT' }
     X (*) /cities/:id/build - { 
-            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: r, type: "type", level: 0 } 
+            building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: r, type: "type", level: l } 
         }, 1≤r≤4
     X (*) /cities/:id/buildspecial - { 
             building: { start: {x: ..., y: ...}, end: {x: ..., y: ...}, orientation: x, type: "type" },
@@ -30,7 +30,8 @@ POST requests:
                 orientation: x,
                 level: 'l',
                 id: 'buildingId',
-            }
+            },
+            deltaLevel: dl // the number of levels to be upgraded
         }
     X (*) /cities/:id/rotate - { 
             rotation: r, // new rotation of the building, 1≤r≤4

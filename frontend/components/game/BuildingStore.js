@@ -214,7 +214,7 @@ const buildingStore = (set) => ({
       ) {
         isNewInstruction = false;
         return {
-          instruction: 'upgarde',
+          instruction: 'upgrade',
           body: {
             building: instruction.body.building,
             deltaLevel: instruction.body.deltaLevel + 1
@@ -244,13 +244,71 @@ const buildingStore = (set) => ({
     let buildingCoordinate = {};
     buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'removing' };
 
-    // copying the content of the building list, only changing this one level
-    let newList = state.buildings.filter(element => JSON.stringify(element) !== JSON.stringify(building));
+    let newList = state.buildings.filter(element => !(
+      (element.id !== undefined && element.id === building.id) ||
+      JSON.stringify(element) === JSON.stringify({...building, orientation: element.orientation})
+    ));
+    // let newList = state.buildings.filter(element => JSON.stringify(element) !== JSON.stringify(building));
+
+    let newInstructions = state.instructions;
+    if(building.id === undefined) {
+      newInstructions = newInstructions.filter(instruction => !(
+        JSON.stringify(instruction.body.building) === JSON.stringify(building) &&
+        instruction.instruction === 'build'
+      ));
+    }
+    else {
+      let isNewInstruction = true;
+      newInstructions = newInstructions.map(instruction => {
+        if(
+          isNewInstruction &&
+          instruction.body.building.id === building.id &&
+          instruction.instruction === 'upgrade'
+        ) {
+          isNewInstruction = false;  
+          return {
+            instruction: 'remove',
+            body: {
+              building: instruction.body.building
+            }
+          };
+        }
+        return instruction;
+      });
+      newInstructions = newInstructions.map(instruction => {
+        if(
+          isNewInstruction &&
+          instruction.body.building.id === building.id &&
+          instruction.instruction === 'rotate'
+        ) {
+          isNewInstruction = false;  
+          return {
+            instruction: 'remove',
+            body: {
+              building: instruction.body.building
+            }
+          };
+        }
+        return instruction;
+      });
+
+      if(isNewInstruction === false) {
+        console.log(newInstructions);
+        console.log(building);
+        newInstructions = newInstructions.filter(instruction => !(
+          instruction.instruction !== 'remove' && 
+          instruction.body?.building?.id === building.id  
+        ));
+      }
+      else {
+        newInstructions = [ ...newInstructions, { instruction: 'remove', body: { building } } ];
+      }
+    }
 
     // returning all the changes to the global state
     return {
       buildings: newList,
-      instructions: [ ...state.instructions, { instruction: 'remove', body: { building } } ],
+      instructions: newInstructions,
       dynamicData: {
         ...state.dynamicData,
         money: state.dynamicData.money + moneyValue
@@ -265,7 +323,8 @@ const buildingStore = (set) => ({
 
     // copying the content of the building list, only changing the orientation
     let newList = state.buildings.map(element => {
-      if(JSON.stringify(element) === JSON.stringify(building)) {
+      if(JSON.stringify(element) === JSON.stringify({...building, orientation: building.orientation===0?4:building.orientation})) {
+        // console.log(element, building);
         return {
           ...building,
           orientation: rotation===0?4:rotation
@@ -278,7 +337,7 @@ const buildingStore = (set) => ({
     let newInstructions = state.instructions.map(instruction => {
       // CASE: n*rotate = rotate(n%4)
       if(
-        JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, orientation: instruction.body.building?.orientation }) && 
+        instruction.body?.building?.id === building.id && 
         instruction.instruction === 'rotate'
       ) {
         isNewInstruction = false;
@@ -305,7 +364,7 @@ const buildingStore = (set) => ({
       }
       return instruction;
     });
-    console.log(newInstructions);
+    // console.log(newInstructions);
     newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotate' && instruction.body.building.orientation === instruction.body.rotation))
     if(isNewInstruction) {
       newInstructions = [ ...newInstructions, { instruction: 'rotate', body: { building, rotation } } ];
@@ -343,6 +402,8 @@ export { useBuildingStore };
 
 
 /*
+
+TODO instrukcije u frontendu:
 
 brisanje:
 - dodato -> (...upgradeovano) -> obrisano (vratiti full vrednost)

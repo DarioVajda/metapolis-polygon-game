@@ -21,16 +21,35 @@ import RotateIcon from '../../universal/icons/RotateIcon';
 
 const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
-  console.log(building);
+  const instructions = useBuildingStore(state => state.instructions);
+
+  let stats = buildingStats.get(building.type);
+
+  // console.log(building);
   let RETURN_PERCENTAGE = building.id !== undefined ? 0.5 : 1;
-  let sellValue = RETURN_PERCENTAGE * buildingStats
-    .get(building.type) // dobija se lista levela i podataka o levelima
+  let sellValue = stats
     .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
 
-  let upgradeValue = buildingStats.get(building.type) && buildingStats.get(building.type)[building.level + 1] ?
-    buildingStats.get(building.type)[building.level + 1].cost :
-    0;
+  let deltaLevel = 0;
+  instructions.forEach(element => {
+    if(
+      element.instruction === 'upgrade' && 
+      JSON.stringify(building) === JSON.stringify({...element.body.building, orientation: building.orientation, level: building.level}) 
+    ) {
+      console.log(element);
+      deltaLevel = element.body.deltaLevel;
+    }
+  });
+
+  let unsavedSellValue = stats
+    .slice(0, building.level - deltaLevel + 1)
+    .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih levela zajedno koje je gradjevina imala pre ikakvih lokalnih promena
+
+  console.log({deltaLevel, sellValue, unsavedSellValue});
+  sellValue -= unsavedSellValue * (1 - RETURN_PERCENTAGE);
+
+  let upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
 
   if(building.type === 'building' || building.type === 'park') {
     let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
@@ -165,7 +184,7 @@ const FloatingMenu = () => {
     if(end.x - start.x !== end.y - start.y) {
       d = 2;
     }
-    console.log(d);
+    // console.log(d);
     setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, orientation: (floatingMenu.building.orientation + d)%4 } })
     rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d)%4);
   }

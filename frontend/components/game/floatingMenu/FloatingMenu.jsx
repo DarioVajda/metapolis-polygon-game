@@ -37,7 +37,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
       element.instruction === 'upgrade' && 
       JSON.stringify(building) === JSON.stringify({...element.body.building, orientation: building.orientation, level: building.level}) 
     ) {
-      console.log(element);
+      // console.log(element);
       deltaLevel = element.body.deltaLevel;
     }
   });
@@ -46,7 +46,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
     .slice(0, building.level - deltaLevel + 1)
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih levela zajedno koje je gradjevina imala pre ikakvih lokalnih promena
 
-  console.log({deltaLevel, sellValue, unsavedSellValue});
+  // console.log({deltaLevel, sellValue, unsavedSellValue});
   sellValue -= unsavedSellValue * (1 - RETURN_PERCENTAGE);
 
   let upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
@@ -137,10 +137,15 @@ const FloatingMenu = () => {
   const floatingMenu = useBuildingStore(state => state.floatingMenu);
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
   const dynamicData = useBuildingStore(state => state.dynamicData);
+  const instructions = useBuildingStore(state => state.instructions);
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
   const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
+
+  useEffect(() => {
+    setStatus(null);
+  }, [ floatingMenu ]);
 
   // #region Zoom handling
   const camera = useThree(state => state.camera);
@@ -160,9 +165,7 @@ const FloatingMenu = () => {
 
   // #endregion
 
-  useEffect(() => {
-    setStatus(null);
-  }, [ floatingMenu ]);
+  // #region functions
 
   const upgradeFunc = (price) => {
     upgradeBuilding(floatingMenu.building, price);
@@ -189,11 +192,19 @@ const FloatingMenu = () => {
     rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d)%4);
   }
 
+  // #endregion
+
   if(floatingMenu === null) return <></>;
+  
+  let buildingEdited = floatingMenu.building.id === undefined;
+  instructions.forEach(element => {
+    if(element.body.building?.id === floatingMenu.building.id && floatingMenu.building.id !== undefined) {
+      buildingEdited = true;
+    } 
+  })
 
   return (
     <group position={[ 0, 3, 0 ]}>
-      {/* <ZoomHandler ref={htmlRef} /> */}
       <Html
         ref={htmlRef}
         transform
@@ -203,12 +214,15 @@ const FloatingMenu = () => {
       >
         <div className={styles.wrapper}>
           <span className={styles.title}>
-            Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name} {floatingMenu.building.id === undefined ? '*': ''}
+            Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name} {buildingEdited ? '*': ''}
           </span>
-          {/* {menuDataComponents['people']('building', 1, status==='upgrading')} */}
-          {/* {menuDataComponents['boost']('gym', 1, status==='upgrading')} */}
-          {menuDataComponents['workplaces']('factory', 1, status==='upgrading')}
-          {menuDataComponents['decrease']('factory', 1, status==='upgrading')}
+          {
+            buildingMenuTypes[floatingMenu.building.type].properties.map((property, index) => (
+              <div key={index}>
+                {menuDataComponents[property](floatingMenu.building.type, floatingMenu.building.level+1, status==='upgrading')}
+              </div>
+            ))
+          }
           <span className={styles.description}>
             {buildingMenuTypes[floatingMenu.building.type].description}
           </span>

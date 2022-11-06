@@ -4,16 +4,18 @@ import styles from './menuDataComponents.module.css';
 import { buildingStats } from '../../../../server/gameplay/building_stats';
 
 const DataBar = ({postfix, curr, next, max, upgrading, children}) => {
+  // console.log({next});
+  let isMax = next === undefined;
+
   return (
     <div>
       {children}
       <div>
-        <div style={{ width: `${(upgrading?next:curr)/max*100}%` }}>
-        </div>
+        <div style={{ width: `${(upgrading?next:curr)/max*100}%`, visibility: isMax?'hidden':'inherit' }} />
         <div style={{ width: `${curr/max*100}%` }}>
           <span>{curr}{postfix?postfix:''}</span>
         </div>
-        <span style={{ opacity: upgrading?1:0 }}>+{next - curr}{postfix?postfix:''}</span>
+        <span style={{ opacity: upgrading?1:0, visibility: isMax?'hidden':'inherit' }}>+{next - curr}{postfix?postfix:''}</span>
       </div>
     </div>
   )
@@ -41,13 +43,14 @@ const getStats = (type, level) => {
 const menuDataComponents = {
   people: (type, level, upgrading) => {
     let { currStats, nextStats, maxStats } = getStats(type, level);
+    // console.log(getStats(type, level));
 
     return (
       <DataBarWithText text='People' >
-        <DataBar curr={currStats.normalPeople} next={nextStats.normalPeople} max={maxStats.normalPeople} upgrading={upgrading} >
+        <DataBar curr={currStats.normalPeople} next={nextStats?.normalPeople} max={maxStats.normalPeople} upgrading={upgrading} >
           <span>N</span> { /* TODO this is going to be an icon */}
         </DataBar>
-        <DataBar curr={currStats.educatedPeople} next={nextStats.educatedPeople} max={maxStats.educatedPeople} upgrading={upgrading} >
+        <DataBar curr={currStats.educatedPeople} next={nextStats?.educatedPeople} max={maxStats.educatedPeople} upgrading={upgrading} >
           <span>E</span> { /* TODO this is going to be an icon */}
         </DataBar>
       </DataBarWithText>
@@ -58,10 +61,10 @@ const menuDataComponents = {
 
     return (
       <DataBarWithText text='Workpalces' >
-        <DataBar curr={currStats.manualWorkers} next={nextStats.manualWorkers} max={maxStats.manualWorkers} upgrading={upgrading} >
+        <DataBar curr={currStats.manualWorkers} next={nextStats?.manualWorkers} max={maxStats.manualWorkers} upgrading={upgrading} >
           <span>N</span> { /* TODO this is going to be an icon */}
         </DataBar>
-        <DataBar curr={currStats.officeWorkers} next={nextStats.officeWorkers} max={maxStats.officeWorkers} upgrading={upgrading} >
+        <DataBar curr={currStats.officeWorkers} next={nextStats?.officeWorkers} max={maxStats.officeWorkers} upgrading={upgrading} >
           <span>E</span> { /* TODO this is going to be an icon */}
         </DataBar>
       </DataBarWithText>
@@ -72,7 +75,7 @@ const menuDataComponents = {
 
     return (
       <DataBarWithText text='Boost'>
-        <DataBar postfix='%' curr={Math.round((currStats.boost-1)*100)} next={Math.round((nextStats.boost-1)*100)} max={Math.round((maxStats.boost-1)*100)} upgrading={upgrading}>
+        <DataBar postfix='%' curr={Math.round((currStats.boost-1)*100)} next={nextStats?Math.round((nextStats.boost-1)*100):undefined} max={Math.round((maxStats.boost-1)*100)} upgrading={upgrading}>
           <span>B</span> { /* TODO this is going to be an icon */}
         </DataBar>
       </DataBarWithText>
@@ -81,11 +84,11 @@ const menuDataComponents = {
   decrease: (type, level, upgrading) => {
     let { currStats, nextStats, maxStats } = getStats(type, level);
     let curr = -Math.round(currStats.maxDecrease*100);
-    let next = -Math.round(nextStats.maxDecrease*100);
+    let next = -Math.round(nextStats?.maxDecrease*100);
     let max = -Math.round(maxStats.maxDecrease*100);
 
     return (
-      <DataBarWithText text='Polution'>
+      <DataBarWithText text={type==='Factory'?'Polution':'Max Decrease'}>
         <div>
           <span>D</span> { /* TODO this is going to be an icon */}
           <div>

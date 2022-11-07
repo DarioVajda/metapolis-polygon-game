@@ -13,6 +13,7 @@ import { buildingStats } from '../../../../server/gameplay/building_stats';
 import { menuDataComponents } from './menuDataComponents';
 import { buildingMenuTypes } from './menuData';
 import { formatNumber } from '../../utils/numFormat';
+// import { calculateIncome } from '../../../../server/gameplay/income';
 
 import ArrowIcon2 from '../../universal/icons/ArrowIcon2';
 import XIcon from '../../universal/icons/XIcon';
@@ -137,11 +138,14 @@ const FloatingMenu = () => {
   const floatingMenu = useBuildingStore(state => state.floatingMenu);
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
   const dynamicData = useBuildingStore(state => state.dynamicData);
+  const buildings = useBuildingStore(state => state.buildings);
   const instructions = useBuildingStore(state => state.instructions);
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
   const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
+  const changeDynamicData = useBuildingStore(state => state.changeDynamicData);
+  const calculateIncome = useBuildingStore(state => state.calculateIncome);
 
   useEffect(() => {
     setStatus(null);
@@ -173,12 +177,14 @@ const FloatingMenu = () => {
     
     setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, level: floatingMenu.building.level + 1 } });
     setStatus(null);
+    calculateIncome();
   }
 
   const sellFunc = (moneyValue) => {
     removeBuilding(floatingMenu.building, moneyValue);
     setFloatingMenu(null);
     setStatus(null);
+    calculateIncome();
   }
 
   const rotateFunc = () => {

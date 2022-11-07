@@ -131,8 +131,8 @@ function calculate(peopleArg, buildings) {
 
 // #endregion
 
-function calculateIncome(city, achievementsArg) {
-
+// TODO popraviti to sto se broj gradjana lose racuna (verovatno se zgrada ne racuna za svako njeno polje nego samo jedno polje)
+function getDynamicData(city, achievementsArg) {
     if(!achievementsArg) {
         achievementsArg = [];
     }
@@ -152,6 +152,7 @@ function calculateIncome(city, achievementsArg) {
     let map = mapModule.initializeMap({ normal: city.buildings });
     let people = peopleModule.countPeople({ normal: city.buildings }, map, educatedBoost);
     let income = calculate(people, { normal: city.buildings });
+    // console.log(people);
 
     // #region BOOST INCOME:
     Object.values(achievements).forEach(element => {
@@ -161,7 +162,21 @@ function calculateIncome(city, achievementsArg) {
     })
     // #endregion
 
-    return income;
+    let educatedPeople = Array.from(people.educatedPeople.values()).reduce((prev, curr) => prev+curr, 0);
+    let normalPeople = Array.from(people.normalPeople.values()).reduce((prev, curr) => prev+curr, 0);
+
+    return {
+        income, 
+        people: { educatedPeople, normalPeople, manualWorkers: people.manualWorkers, officeWorkers: people.officeWorkers }, 
+        map
+    };
 }
 
+function calculateIncome(city, achievementsArg) {
+    let dynamicData = getDynamicData(city, achievementsArg);
+    return dynamicData.income;
+}
+
+
+exports.getDynamicData = getDynamicData;
 exports.calculateIncome = calculateIncome;

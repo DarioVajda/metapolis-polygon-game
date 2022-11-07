@@ -218,3 +218,28 @@
     align-items: center;
     margin: 0.5em;
 }
+
+.middleUI {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.middleUI>* {
+    pointer-events: all;
+}
+
+.productivityMap {
+    margin: 1em .5em;
+    display: flex;
+    gap: .5em;
+    cursor: pointer;
+}
+
+.productivityMap>input {
+    transform: scale(1.5);
+    cursor: pointer;
+}

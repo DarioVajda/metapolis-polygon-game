@@ -3,6 +3,7 @@ import create from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { buildingDimensions, buildingStats } from "../../../server/gameplay/building_stats";
+import { getDynamicData } from "../../../server/gameplay/income";
 
 // #region UTILS:
 
@@ -54,6 +55,7 @@ const buildingStore = (set) => ({
     achievementList: [],
     income: 0,
     score: 0,
+    map: Array(20).fill(Array(20).fill(1))
   },
   changeStaticData: changes => set( state => ({
     staticData: { ...state.staticData, ...changes }
@@ -90,7 +92,20 @@ const buildingStore = (set) => ({
       ...obj
     }
   }),
-
+  calculateIncome: () => set( state => {
+    let { people, income, map } = getDynamicData({ buildings: state.buildings }, state.dynamicData.achievementList);
+    return {
+      dynamicData: {
+        ...state.dynamicData,
+        income: income,
+        normal: people.normalPeople,
+        educated: people.educatedPeople,
+        normalWorkers: people.manualWorkers,
+        educatedWorkers: people.officeWorkers,
+        map: map
+      }
+    }
+  }),
   // IMPORTANT - there will be entries with the keys with format 'x_y', the value of those entries are objects containing information about the building that has the specified start coordinates and the status of the building (possible values are 'building', 'built', 'removing', 'upgrading',...)
 
   // #endregion
@@ -386,6 +401,13 @@ const buildingStore = (set) => ({
     { floatingMenu: null } : 
     { floatingMenu: fm, selectedBuildingType: { special: null, type: null, dimensions: [ 0, 0 ] } }
   )),
+  // #endregion
+
+  // #region Productivity map
+  showProductivityMap: false,
+  toggleProductivityMap: () => set( state => ({
+    showProductivityMap: !state.showProductivityMap
+  })),
   // #endregion
 
   // #region error handling

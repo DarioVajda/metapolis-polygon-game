@@ -17,9 +17,15 @@ function GridSquare({ x, y, occupied }) {
 
   const addBuilding = useBuildingStore(state => state.addBuilding);
   const addSpecialBuilding = useBuildingStore(state => state.addSpecialBuilding);
+  const calculateIncome = useBuildingStore(state => state.calculateIncome);
+
+  const showProductivityMap = useBuildingStore(state => state.showProductivityMap);
+  const { map } = useBuildingStore(state => state.dynamicData);
 
   const [ isHovered, setIsHovered ] = useState(false);
   const gridSquareRef = useRef();
+
+  // #region Building on click
 
   const overlaps = () => {
     if(selectedBuildingType.special === null) return false;
@@ -69,11 +75,34 @@ function GridSquare({ x, y, occupied }) {
       }
       console.log(price);
       addBuilding(building, price);
+      calculateIncome();
     }
     else {
       let price = specialPrices.get(selectedBuildingType.type);
       addSpecialBuilding(building, price);
     }
+  }
+
+  // #endregion
+
+  const productivityToColor = () => {
+    // if(x === 2 && y === 1) return 'blue';
+    let productivity = map[y][x];
+    // let productivity = map[x][y];
+    
+    let delta = 1.3;
+    if(productivity > delta) return 'green';
+    if(productivity < 1/delta) return 'red';
+    
+    let temp = (Math.log2(productivity)/Math.log2(delta) + 1) / 2;
+    // console.log(temp);
+    let color = 64; // blue is 50%
+
+    color += 256 * Math.floor(temp * 256); // green color calculated based on the productivity
+
+    color += 256**2 * Math.floor((1 - temp) * 256); // red color calculated based on the productivity
+
+    return color;
   }
 
   return (
@@ -101,9 +130,9 @@ function GridSquare({ x, y, occupied }) {
       <boxBufferGeometry attach="geometry" />
       <meshLambertMaterial
         attach="material"
-        color={isHovered ? 0x88ff88 : "lightgray"}
+        color={showProductivityMap ? productivityToColor() : (isHovered ? 0x88dd88 : 0xbbbbbb)}
         transparent
-        opacity={occupied ? 0 : (isHovered ? 0.7 : 0.5)}
+        opacity={occupied ? 0 : (isHovered ? 1 : 0.6)}
       />
     </mesh>
   );

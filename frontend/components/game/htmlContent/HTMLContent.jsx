@@ -16,7 +16,8 @@ import ArrowIcon from '../../universal/icons/ArrowIcon';
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
 
-import { buildingDimensions, specialBuildingDimensions } from '../../../../server/gameplay/building_stats';
+import { buildingDimensions, specialBuildingDimensions, buildingStats } from '../../../../server/gameplay/building_stats';
+import { formatNumber } from '../../utils/numFormat';
 
 const BuildingButton = ({ special, selected, type, changeType, element }) => {
 
@@ -25,6 +26,16 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
   const changeDimensionsClick = (e, arg) => {
     e.stopPropagation();
     changeDimensions(arg);
+  }
+
+  let cost = special ? 123000 : buildingStats.get(element)[0].cost;
+  if(element === 'building' || element === 'park') {
+    if(type.type === element) {
+      cost *= type.dimensions[0] * type.dimensions[1];
+    }
+    else {
+      cost *= buildingDimensions.get(element)[0][0] * buildingDimensions.get(element)[0][1];
+    }
   }
 
   let moreOptions = selected && ((!special && buildingDimensions.get(element).length > 1) || (special && specialBuildingDimensions.get(element).length > 1));
@@ -60,7 +71,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
           <div />
         }
         <span>
-          <MoneyIcon /> 123.000
+          <MoneyIcon /> {formatNumber(cost)}
         </span>
       </div>
     </button>
@@ -102,7 +113,7 @@ const SaveBtn = ({ id }) => {
       message: message, // this is a unique message that is never going to be the same for the same person
       signature: signature, // this is the signature of the user
     }
-    console.log(JSON.parse(JSON.stringify(body)));
+    
     const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
       method: "POST",
       mode: "cors",
@@ -133,8 +144,8 @@ const HTMLContent = ({ id }) => {
   const selectedBuildingType = useBuildingStore(state => state.selectedBuildingType);
   const setSelectedBuildingType = useBuildingStore(state => state.setSelectedBuildingType);
 
-  // ovo je privremeno ovde
-  const incrementRotationIndex = useBuildingStore(state => state.incrementRotationIndex);
+  const toggleProductivityMap = useBuildingStore(state => state.toggleProductivityMap);
+  const showProductivityMap = useBuildingStore(state => state.showProductivityMap);
 
   const [openedMenu, setOpenedMenu] = useState(null);
 
@@ -193,6 +204,12 @@ const HTMLContent = ({ id }) => {
         </Hover>
         <div>Income in 54m</div>
         <SaveBtn id={id} />
+      </div>
+      <div className={styles.middleUI}>
+        <label className={styles.productivityMap}>
+          Productivity Map
+          <input type="checkbox" checked={showProductivityMap} onChange={toggleProductivityMap} />
+        </label>
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>

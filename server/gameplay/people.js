@@ -1,4 +1,5 @@
 const { buildingStats, buildingTypes } = require("./building_stats");
+const { mapDimensions } = require("./map");
 
 function getproductivity(building, map) {
     var productivity = 0;

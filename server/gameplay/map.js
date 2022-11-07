@@ -52,7 +52,7 @@ function buildingEffectMap({type, level, start, end}) {
                         (start.y + end.y) / 2 - j,
                     );
                     if(distanceFromFactory < buildingStats.get(type)[level].radius) {
-                        map[i][j] *= 1 - buildingStats.get(type)[level].maxDecrease * (1 - distanceFromFactory / buildingStats.get(type)[level].radius);
+                        map[j][i] *= 1 - buildingStats.get(type)[level].maxDecrease * (1 - distanceFromFactory / buildingStats.get(type)[level].radius);
                     }
                 }
             }
@@ -173,6 +173,27 @@ function initializeMap({ normal, special }) {
     // console.table(map.map(row => row.map(element => Math.round(element*100)/100)));
     return map;
 }
+
+// #region Testing
+// console.table(
+//     buildingEffectMap({ type: 'factory', level: 0, start: { x: 12, y: 1 }, end: { x: 14, y: 2} })
+//         .map(arr => arr.map(element => 
+//             Math.round(element*100)/100
+//         ))
+// );
+// console.table(
+//     buildingEffectMap({ type: 'park', level: 0, start: { x: 12, y: 1 }, end: { x: 14, y: 2} })
+//         .map(arr => arr.map(element => 
+//             Math.round(element*100)/100
+//         ))
+// );
+// console.table(
+//     buildingEffectMap({ type: 'store', level: 0, start: { x: 12, y: 1 }, end: { x: 12, y: 1} })
+//         .map(arr => arr.map(element => 
+//             Math.round(element*100)/100
+//         ))
+// );
+// #endregion
 
 exports.mapDimensions = mapDimensions;
 exports.buildingEffectMap = buildingEffectMap;

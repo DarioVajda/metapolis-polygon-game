@@ -13,6 +13,7 @@ const Buildings = ({ id }) => {
   const setSpecialBuildings = useBuildingStore(state => state.setSpecialBuildings);
   const changeStaticData = useBuildingStore(state => state.changeStaticData);
   const changeDynamicData = useBuildingStore(state => state.changeDynamicData);
+  const calculateIncome = useBuildingStore(state => state.calculateIncome);
 
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
 
@@ -43,6 +44,7 @@ const Buildings = ({ id }) => {
       income: _data.income,
       score: _data.score,
     });
+    calculateIncome();
   }
 
   useEffect(() => {
@@ -57,7 +59,7 @@ const Buildings = ({ id }) => {
       console.log('NO BUILDING WAS SENT');
     }
 
-    console.log(building, ref);
+    // console.log(building, ref);
     setFloatingMenu({ building, position: ref.current.position});
   }
 

@@ -404,10 +404,13 @@ const buildingStore = (set) => ({
   // #endregion
 
   // #region Productivity map
+  // in case a building is selected and its productivity effect should be displayed then the showProductivityMap value will be the effect map, otherways the value is boolean
   showProductivityMap: false,
-  toggleProductivityMap: () => set( state => ({
-    showProductivityMap: !state.showProductivityMap
-  })),
+  toggleProductivityMap: (selectedMap) => set( state => {
+    return {
+      showProductivityMap: selectedMap !== undefined ? selectedMap : state.showProductivityMap === false
+    }
+  }),
   // #endregion
 
   // #region error handling

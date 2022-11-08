@@ -16,6 +16,7 @@
 }
 
 .wrapper::after {
+    pointer-events: none;
     content: "";
     position: absolute;
     width: 0;
@@ -135,4 +136,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.productivityMap {
+    font-size: 1.6rem;
+    margin: .2em 0 0 0;
+    display: flex;
+    gap: .3em;
+    cursor: pointer;
+}
+
+.productivityMap>input {
+    transform: scale(1.8);
+    cursor: pointer;
 }

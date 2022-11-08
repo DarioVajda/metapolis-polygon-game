@@ -208,7 +208,7 @@ const HTMLContent = ({ id }) => {
       <div className={styles.middleUI}>
         <label className={styles.productivityMap}>
           Productivity Map
-          <input type="checkbox" checked={showProductivityMap} onChange={toggleProductivityMap} />
+          <input type="checkbox" checked={showProductivityMap===true} onChange={() => toggleProductivityMap(!(showProductivityMap===true))} />
         </label>
       </div>
       <div className={styles.bottomUI}>

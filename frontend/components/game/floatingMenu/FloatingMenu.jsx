@@ -13,6 +13,7 @@ import { buildingStats } from '../../../../server/gameplay/building_stats';
 import { menuDataComponents } from './menuDataComponents';
 import { buildingMenuTypes } from './menuData';
 import { formatNumber } from '../../utils/numFormat';
+import { buildingEffectMap } from '../../../../server/gameplay/map';
 // import { calculateIncome } from '../../../../server/gameplay/income';
 
 import ArrowIcon2 from '../../universal/icons/ArrowIcon2';
@@ -144,10 +145,30 @@ const FloatingMenu = () => {
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
   const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
-  const changeDynamicData = useBuildingStore(state => state.changeDynamicData);
   const calculateIncome = useBuildingStore(state => state.calculateIncome);
 
+  const showProductivityMap = useBuildingStore(state => state.showProductivityMap);
+  const toggleProductivityMap = useBuildingStore(state => state.toggleProductivityMap);
+  const map = useRef();
+  const showingProductivityMap = useRef(false);
+
   useEffect(() => {
+    if(floatingMenu === null) {
+      map.current = null;
+      // showingProductivityMap.current = false;
+      toggleProductivityMap(showProductivityMap === true);
+    }
+    else {
+      // showingProductivityMap.current = true;
+      // if(typeof showProductivityMap !== 'boolean') {
+      if(showingProductivityMap.current) {
+        map.current = buildingEffectMap(floatingMenu.building);
+        toggleProductivityMap(map.current);
+      }
+      else {
+        map.current = buildingEffectMap(floatingMenu.building);
+      }
+    }
     setStatus(null);
   }, [ floatingMenu ]);
 
@@ -198,6 +219,15 @@ const FloatingMenu = () => {
     rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d)%4);
   }
 
+  const showSelectedProductivityMap = () => {
+    showingProductivityMap.current = !showingProductivityMap.current;
+    toggleProductivityMap(
+      JSON.stringify(showProductivityMap) === JSON.stringify(map.current) ?
+      undefined : 
+      map.current
+    );
+  }
+
   // #endregion
 
   if(floatingMenu === null) return <></>;
@@ -229,6 +259,14 @@ const FloatingMenu = () => {
               </div>
             ))
           }
+          <label className={styles.productivityMap}>
+            <input 
+              type="checkbox" 
+              checked={JSON.stringify(showProductivityMap) === JSON.stringify(map.current)}
+              onChange={() => showSelectedProductivityMap()} 
+            />
+            Productivity Map
+          </label>
           <span className={styles.description}>
             {buildingMenuTypes[floatingMenu.building.type].description}
           </span>

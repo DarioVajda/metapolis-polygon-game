@@ -7,6 +7,8 @@ import { gridSize, plotSize } from '../MapData';
 import { buildingDimensions, specialBuildingDimensions, buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
 import { calculateCoordinates } from '../../../../server/gameplay/coordinates';
 
+// TODO napraviti animaciju za menjanje boje polja
+
 function GridSquare({ x, y, occupied }) {
   const setHover = useBuildingStore((state) => state.setHover);
 
@@ -85,9 +87,25 @@ function GridSquare({ x, y, occupied }) {
 
   // #endregion
 
+  const rgbToNumber = ([r, g, b]) => {
+    return r*256**2 + g*256 + b;
+  }
+
   const productivityToColor = () => {
-    // if(x === 2 && y === 1) return 'blue';
-    let productivity = map[y][x];
+    if(showProductivityMap === false) {
+      return (isHovered ? 0x88dd88 : 0xbbbbbb);
+    }
+
+    let productivity;
+    // in case a building is selected and its productivity effect should be displayed then the showProductivityMap value will be the effect map, otherways the value is boolean
+    // console.log(showProductivityMap);
+    if(showProductivityMap !== true) {
+      productivity = showProductivityMap[y][x];
+      // productivity = map[y][x];
+    }
+    else {
+      productivity = map[y][x];
+    }
     // let productivity = map[x][y];
     
     let delta = 1.3;
@@ -95,14 +113,27 @@ function GridSquare({ x, y, occupied }) {
     if(productivity < 1/delta) return 'red';
     
     let temp = (Math.log2(productivity)/Math.log2(delta) + 1) / 2;
-    // console.log(temp);
-    let color = 64; // blue is 50%
+    
+    let red   = [ 255, 0  , 64  ];
+    let grey  = [ 187, 187, 187 ];
+    let green = [ 0  , 255, 64  ];
+    // console.log(red.toString(16), grey.toString(16), green.toString(16));
 
-    color += 256 * Math.floor(temp * 256); // green color calculated based on the productivity
+    let color = [0, 0, 0];
+    if(temp > 0.5) {
+      color[0] = (temp - 0.5) * 2 * green[0] + (1 - temp) * 2 * grey[0];
+      color[1] = (temp - 0.5) * 2 * green[1] + (1 - temp) * 2 * grey[1];
+      color[2] = (temp - 0.5) * 2 * green[2] + (1 - temp) * 2 * grey[2];
+    }
+    else {
+      color[0] = (0.5 - temp) * 2 * red[0] + (temp) * 2 * grey[0];
+      color[1] = (0.5 - temp) * 2 * red[1] + (temp) * 2 * grey[1];
+      color[2] = (0.5 - temp) * 2 * red[2] + (temp) * 2 * grey[2];
+    }
+    color = color.map(element => Math.floor(element));
+    // console.log({ x, y, color: rgbToNumber(color).toString(16) });
 
-    color += 256**2 * Math.floor((1 - temp) * 256); // red color calculated based on the productivity
-
-    return color;
+    return rgbToNumber(color);
   }
 
   return (
@@ -130,7 +161,7 @@ function GridSquare({ x, y, occupied }) {
       <boxBufferGeometry attach="geometry" />
       <meshLambertMaterial
         attach="material"
-        color={showProductivityMap ? productivityToColor() : (isHovered ? 0x88dd88 : 0xbbbbbb)}
+        color={productivityToColor()}
         transparent
         opacity={occupied ? 0 : (isHovered ? 1 : 0.6)}
       />

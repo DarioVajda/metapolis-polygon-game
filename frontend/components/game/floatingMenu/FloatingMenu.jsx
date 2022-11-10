@@ -30,7 +30,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
   // console.log(building);
   let RETURN_PERCENTAGE = building.id !== undefined ? 0.5 : 1;
   let sellValue = stats
-    .slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
+    ?.slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
 
   let deltaLevel = 0;
@@ -45,7 +45,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
   });
 
   let unsavedSellValue = stats
-    .slice(0, building.level - deltaLevel + 1)
+    ?.slice(0, building.level - deltaLevel + 1)
     .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih levela zajedno koje je gradjevina imala pre ikakvih lokalnih promena
 
   // console.log({deltaLevel, sellValue, unsavedSellValue});
@@ -171,6 +171,11 @@ const FloatingMenu = () => {
     }
     setStatus(null);
   }, [ floatingMenu ]);
+  useEffect(() => {
+    if(showProductivityMap === true) {
+      showingProductivityMap.current = false;
+    }
+  }, [ showProductivityMap ])
 
   // #region Zoom handling
   const camera = useThree(state => state.camera);
@@ -250,23 +255,27 @@ const FloatingMenu = () => {
       >
         <div className={styles.wrapper}>
           <span className={styles.title}>
-            Level {floatingMenu.building.level+1} {buildingMenuTypes[floatingMenu.building.type].name} {buildingEdited ? '*': ''}
+            {floatingMenu.building.level !== undefined ? `Level ${floatingMenu.building.level+1}` : ''} {buildingMenuTypes[floatingMenu.building.type].name} {buildingEdited ? '*': ''}
           </span>
           {
-            buildingMenuTypes[floatingMenu.building.type].properties.map((property, index) => (
-              <div key={index}>
+            buildingMenuTypes[floatingMenu.building.type].properties?.map((property, index) => (
+              <div key={`${floatingMenu.building.type}-${property}`}>
                 {menuDataComponents[property](floatingMenu.building.type, floatingMenu.building.level+1, status==='upgrading')}
               </div>
             ))
           }
-          <label className={styles.productivityMap}>
-            <input 
-              type="checkbox" 
-              checked={JSON.stringify(showProductivityMap) === JSON.stringify(map.current)}
-              onChange={() => showSelectedProductivityMap()} 
-            />
-            Productivity Map
-          </label>
+          {
+            floatingMenu.building.level !== undefined ?
+            <label className={styles.productivityMap}>
+              <input 
+                type="checkbox" 
+                checked={JSON.stringify(showProductivityMap) === JSON.stringify(map.current)}
+                onChange={() => showSelectedProductivityMap()} 
+              />
+              Productivity Map
+            </label> :
+            <></>
+          }
           <span className={styles.description}>
             {buildingMenuTypes[floatingMenu.building.type].description}
           </span>

@@ -8,6 +8,9 @@ import Store        from "./Store.js";
 import Office       from "./Office.js";
 import ParkSquare   from "./ParkSquare.js";
 
+import Statue       from "./Statue";
+import Fountain     from "./Fountain"; 
+
 import BuildingWrapper from "./BuildingWrapper";
 
 import { Scale } from '../MapData';
@@ -82,4 +85,17 @@ const buildingTypes = {
   }
 }
 
-export { buildingTypes };
+const specialBuildingTypes = {
+  statue: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <Statue {...props} level={building.level} />
+    </BuildingWrapper>
+  ),
+  fountain: (props, building, onClick) => (
+    <BuildingWrapper key={generateUUID()} onClick={onClick}>
+      <Fountain {...props} level={building.level} />
+    </BuildingWrapper>
+  )
+}
+
+export { buildingTypes, specialBuildingTypes };

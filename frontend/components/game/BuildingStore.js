@@ -2,14 +2,14 @@ import create from "zustand";
 
 import { devtools } from "zustand/middleware";
 
-import { buildingDimensions, buildingStats } from "../../../server/gameplay/building_stats";
+import { buildingDimensions, buildingStats, specialBuildingDimensions } from "../../../server/gameplay/building_stats";
 import { getDynamicData } from "../../../server/gameplay/income";
 
 // #region UTILS:
 
 const getDimensions = ({special, type, dimensions}, arg) => {
   if(special) {
-    return [0, 0];
+    return specialBuildingDimensions.get(type)[0];
   }
   else {
     let list = buildingDimensions.get(type);
@@ -63,7 +63,7 @@ const buildingStore = (set) => ({
   setBuildings: list => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      buildingList[`${building.start.x}_${building.start.y}`] = { building, status: 'built' };
+      buildingList[`n_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
     });
 
     return {
@@ -74,7 +74,7 @@ const buildingStore = (set) => ({
   setSpecialBuildings: list => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      // buildingList[`${building.start.x}_${building.start.y}`] = { building, status: 'building' };
+      buildingList[`s_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
     });
 
     return {
@@ -85,9 +85,9 @@ const buildingStore = (set) => ({
   changeDynamicData: changes => set( state => ({
     dynamicData: { ...state.dynamicData, ...changes }
   })),
-  changeCoordinate: (x, y, newValue) => set( state => {
+  changeCoordinate: (x, y, newValue, special) => set( state => {
     let obj = {};
-    obj[`${x}_${y}`] = newValue;
+    obj[`${special?'s':'n'}_${x}_${y}`] = newValue;
     return {
       ...obj
     }
@@ -146,7 +146,7 @@ const buildingStore = (set) => ({
     }
     else {
       let newBuildingCoordinate = {};
-      newBuildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'building' };
+      newBuildingCoordinate[`n_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         buildings: [ ...state.buildings, building ],
         instructions: [ ...state.instructions, { instruction: 'build', body: { building } } ],
@@ -166,7 +166,7 @@ const buildingStore = (set) => ({
     }
     else {
       let newBuildingCoordinate = {};
-      newBuildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'building' };
+      newBuildingCoordinate[`s_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         specialBuildings: [ ...state.specialBuildings, building ],
         instructions: [ ...state.instructions, { instruction: 'buildspecial', body: { building } } ],
@@ -257,7 +257,7 @@ const buildingStore = (set) => ({
   removeBuilding: (building, moneyValue) => set( state => {
     // preparing to change the value of the x_y field in the state
     let buildingCoordinate = {};
-    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building, status: 'removing' };
+    buildingCoordinate[`n_${building.start.x}_${building.start.y}`] = { building, status: 'removing' };
 
     let newList = state.buildings.filter(element => !(
       (element.id !== undefined && element.id === building.id) ||

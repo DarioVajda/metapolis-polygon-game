@@ -8,7 +8,7 @@ import { useBuildingStore } from '../BuildingStore';
 import { buildingTypes } from '../modelComponents/BuildingTypes';
 
 const buildingGridElement = (x, y, onClick) => {
-  const gridElement = useBuildingStore(state => state[`${x}_${y}`]);
+  const gridElement = useBuildingStore(state => state[`n_${x}_${y}`]);
   const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const { building, status } = gridElement || {};
 
@@ -26,7 +26,7 @@ const buildingGridElement = (x, y, onClick) => {
         await delay(100);
         time += 100;
       }
-      changeCoordinate(x, y, { ...gridElement, status: 'built' });
+      changeCoordinate(x, y, { ...gridElement, status: 'built' }, false);
     },
     built: async () => {
       console.log('built');
@@ -40,7 +40,7 @@ const buildingGridElement = (x, y, onClick) => {
         await delay(100);
         time += 100;
       }
-      changeCoordinate(x, y, undefined);
+      changeCoordinate(x, y, undefined, false);
     },
     upgrading: async () => {
       console.log('upgrading');

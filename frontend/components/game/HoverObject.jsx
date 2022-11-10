@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRef } from 'react'
 
-import { buildingTypes } from './modelComponents/BuildingTypes'
+import { buildingTypes, specialBuildingTypes } from './modelComponents/BuildingTypes'
 import { gridSize, plotSize, Scale } from "./MapData";
 import { useFrame, useThree } from '@react-three/fiber';
 import { useBuildingStore } from './BuildingStore';
@@ -146,7 +146,7 @@ const HoverObject = () => {
   return (
     <group ref={ref} rotation={[ 0, 0, 0 ]} position={[0, 0, 0]} >
       {
-        buildingTypes[selectedBuildingType.type](
+        (selectedBuildingType.special?specialBuildingTypes:buildingTypes)[selectedBuildingType.type](
           {
             scale: Scale, 
             position: [

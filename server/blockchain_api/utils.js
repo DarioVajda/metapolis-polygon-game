@@ -72,7 +72,7 @@ function isSpecialBuildingFormat(obj) {
         typeof obj.type !== "string" ||
         typeof obj.orientation !== "number" ||
         typeof obj.id !== 'number' ||
-        Object.values(obj).length !== 6 ||
+        Object.values(obj).length !== 5 ||
         Object.values(obj.start).length !== 2 ||
         Object.values(obj.end).length !== 2
     ) {

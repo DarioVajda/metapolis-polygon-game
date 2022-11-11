@@ -167,7 +167,7 @@ initSpecialBuildingDimensions();
 
 const specialPrices = new Map();
 function initSpecialPrices() {
-    specialPrices.set(specialTypes.Statue.type,         100000  );
+    specialPrices.set(specialTypes.Statue.type,         10  );
     specialPrices.set(specialTypes.Fountain.type,       80000   );
     specialPrices.set(specialTypes.Stadium.type,        1000000 );
     specialPrices.set(specialTypes.School.type,         200000  );

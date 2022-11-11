@@ -106,10 +106,19 @@ const buildingStore = (set) => ({
       }
     }
   }),
-  // IMPORTANT - there will be entries with the keys with format 'x_y', the value of those entries are objects containing information about the building that has the specified start coordinates and the status of the building (possible values are 'building', 'built', 'removing', 'upgrading',...)
+  // IMPORTANT - there will be entries with the keys with format 'n_x_y' or 's_x_y', the value of those entries are objects containing information about the building that has the specified start coordinates and the status of the building (possible values are 'building', 'built', 'removing', 'upgrading',...)
 
   // #endregion
   
+  // #region special buildings data
+  // FIELDS - keys with format 'type_${type}' and values that contain information about the special building type ({ count, rarity, soldOut, offers })
+  changeSpecialBuildingData: (data, type) => set( state => {
+    let newDataField = {};
+    newDataField[`type_${type}`] = data;
+    return { ...newDataField };
+  }),
+  // #endregion
+
   // #region Hovering
   hoverCurr: { x: 0, y: 0 },
   hoverPrev: { x: 0, y: 0 },
@@ -141,7 +150,7 @@ const buildingStore = (set) => ({
   addBuilding: (building, price) => set( state => {
     if(price > state.dynamicData.money) {
       return ({ 
-        error: { message: `Not enough money to build a ${building.type}`, type: 'popup-msg', options: { duration: '2s' } } 
+        popup: { message: `Not enough money to build a ${building.type}`, type: 'popup-msg', options: { duration: '2s' } } 
       });
     }
     else {
@@ -158,10 +167,10 @@ const buildingStore = (set) => ({
       });
     }
   }),
-  addSpecialBuilding: (building, price) => set( state => {
+  addSpecialBuilding: (building, price, throughOffer) => set( state => {
     if(price > state.dynamicData.money) {
       return ({ 
-        error: { message: `Not enough money to build a ${building.type}`, type: 'popup-msg', options: { duration: '2s' } } 
+        popup: { message: `Not enough money to build a ${building.type}`, type: 'popup-msg', options: { duration: '2s' } } 
       });
     }
     else {
@@ -169,7 +178,7 @@ const buildingStore = (set) => ({
       newBuildingCoordinate[`s_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         specialBuildings: [ ...state.specialBuildings, building ],
-        instructions: [ ...state.instructions, { instruction: 'buildspecial', body: { building } } ],
+        instructions: [ ...state.instructions, { instruction: 'buildspecial', body: { building, throughOffer } } ],
         dynamicData: {
           ...state.dynamicData,
           money: state.dynamicData.money - price
@@ -182,18 +191,18 @@ const buildingStore = (set) => ({
     // checking if there is enough money to perform the upgrade
     if(price > state.dynamicData.money) {
       return {
-        error: { message: `Not enough money to upgrade the ${building.type}`, type: 'popup-msg', options: { duration: '2s' }}
+        popup: { message: `Not enough money to upgrade the ${building.type}`, type: 'popup-msg', options: { duration: '2s' }}
       };
     }
     if(building.level + 1 === buildingStats.get(building.type).length) {
       return {
-        error: { message: 'Already at max level', type: 'popup-msg', options: { duration: '2s' }}
+        popup: { message: 'Already at max level', type: 'popup-msg', options: { duration: '2s' }}
       };
     }
 
     // preparing to change the value of the x_y field in the state
     let buildingCoordinate = {};
-    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building: { ...building, level: building.level+1 }, status: 'upgrading' };
+    buildingCoordinate[`n_${building.start.x}_${building.start.y}`] = { building: { ...building, level: building.level+1 }, status: 'upgrading' };
 
     // copying the content of the building list, only changing this one level
     let newList = state.buildings.map(element => {
@@ -334,7 +343,7 @@ const buildingStore = (set) => ({
   rotateBuilding: (building, rotation) => set( state => {
     // preparing to change the value of the x_y field in the state
     let buildingCoordinate = {};
-    buildingCoordinate[`${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation===0?4:rotation }, status: 'rotating' };
+    buildingCoordinate[`n_${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation===0?4:rotation }, status: 'rotating' };
 
     // copying the content of the building list, only changing the orientation
     let newList = state.buildings.map(element => {
@@ -413,10 +422,10 @@ const buildingStore = (set) => ({
   }),
   // #endregion
 
-  // #region error handling
-  error: {},
-  setError: e => set( state => ({
-    error: e
+  // #region popup handling
+  popup: {},
+  setPopup: e => set( state => ({
+    popup: e
   }))
   // #endregion
 });

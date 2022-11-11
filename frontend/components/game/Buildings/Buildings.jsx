@@ -6,6 +6,7 @@ import Grid from './Grid';
 import { useEffect } from 'react';
 
 import { useBuildingStore } from '../BuildingStore';
+import { specialTypes } from '../../../../server/gameplay/building_stats';
 
 const Buildings = ({ id }) => {
 
@@ -14,6 +15,7 @@ const Buildings = ({ id }) => {
   const changeStaticData = useBuildingStore(state => state.changeStaticData);
   const changeDynamicData = useBuildingStore(state => state.changeDynamicData);
   const calculateIncome = useBuildingStore(state => state.calculateIncome);
+  const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
 
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
 
@@ -47,8 +49,21 @@ const Buildings = ({ id }) => {
     calculateIncome();
   }
 
+  const loadSpecialBuildingData = async () => {
+    const loadSingleTypeData = async (_type) => {
+      let _data = await (await fetch(`http://localhost:8000/specialtype/${_type}`)).json();
+
+      changeSpecialBuildingData(_data, _type);
+    }
+    
+    Object.values(specialTypes).forEach(({ type } )=> {
+      loadSingleTypeData(type);
+    });
+  }
+
   useEffect(() => {
     loadData();
+    loadSpecialBuildingData();
   }, []);
 
   const onClick = (building, ref) => {

@@ -16,27 +16,72 @@ import ArrowIcon from '../../universal/icons/ArrowIcon';
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
 
-import { buildingDimensions, specialBuildingDimensions, buildingStats } from '../../../../server/gameplay/building_stats';
+import { buildingDimensions, specialBuildingDimensions, buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
 import { formatNumber } from '../../utils/numFormat';
 
 const BuildingButton = ({ special, selected, type, changeType, element }) => {
 
   const changeDimensions = useBuildingStore(state => state.changeDimensions);
+  const specialTypeData = useBuildingStore(state => state[`type_${type}`]);
+  const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
 
   const changeDimensionsClick = (e, arg) => {
     e.stopPropagation();
     changeDimensions(arg);
   }
 
-  let cost = special ? 123000 : buildingStats.get(element)[0].cost;
+  let _cost = specialTypeData?.soldOut ? '⋅ ⋅ ⋅' : (special ? specialPrices.get(element) : buildingStats.get(element)[0].cost);
   if(element === 'building' || element === 'park') {
     if(type.type === element) {
-      cost *= type.dimensions[0] * type.dimensions[1];
+      _cost *= type.dimensions[0] * type.dimensions[1];
     }
     else {
-      cost *= buildingDimensions.get(element)[0][0] * buildingDimensions.get(element)[0][1];
+      _cost *= buildingDimensions.get(element)[0][0] * buildingDimensions.get(element)[0][1];
     }
   }
+  const [cost, setCost] = useState(_cost);
+
+  const delay = async (time) => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
+  const updateCost = async () => {
+    // play animation changing the cost
+    
+    // wait x amount of time
+    await delay(5000 * (1 + Math.random()));
+
+    // #region get the new cost
+    let _data = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
+    changeSpecialBuildingData(_data, type);
+    let newPrice;
+    if(_data.soldOut) {
+      // finding the highest offer value
+      newPrice = _data.offers.reduce(
+        (prev, curr) => {
+          if(curr.value > prev) {
+            return curr.value;
+          }
+          else {
+            return prev;
+          }
+        },
+        0
+      )
+    }
+    else {
+      newPrice = specialPrices.get(element);
+    }
+    setCost[newPrice];
+    // #endregion
+  }
+
+  useEffect(() => {
+    if(special) {
+      // only calling this function if it is a speical building, because the cost of normal buildings is always fixed
+      updateCost();
+    }
+  }, [ cost ]);
 
   let moreOptions = selected && ((!special && buildingDimensions.get(element).length > 1) || (special && specialBuildingDimensions.get(element).length > 1));
   return (
@@ -71,7 +116,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
           <div />
         }
         <span>
-          <MoneyIcon /> {formatNumber(cost)}
+          <MoneyIcon /> {typeof cost === 'number' ? formatNumber(cost) : cost}
         </span>
       </div>
     </button>
@@ -81,15 +126,15 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
 const SaveBtn = ({ id }) => {
 
   const instructions = useBuildingStore(state => state.instructions);
-  const setError = useBuildingStore(state => state.setError);
+  const setPopup = useBuildingStore(state => state.setPopup);
 
   const saveChanges = async () => {
     if(instructions.length === 0) return;
 
     if(!window.ethereum) {
-      setError({
+      setPopup({
         message: 'User does not have the Metamask extensions installed',
-        type: 'popup-widget'
+        type: 'error-popup-widget'
       });
       return;
     }
@@ -104,7 +149,7 @@ const SaveBtn = ({ id }) => {
       signature = await signer.signMessage(message);
     } 
     catch (error) {
-      setError({ message: error.message, type: 'pupup-msg' });
+      setPopup({ message: error.message, type: 'error-pupup-msg' });
       return;
     }
 
@@ -169,7 +214,7 @@ const HTMLContent = ({ id }) => {
   }
 
   const normalBuildingButtons = [ 'house', 'building', 'factory', 'office', 'store', /* 'superMarket', 'gym', */ 'park' ];
-  const specialBuildingButtons = [ 'statue', 'fountain', 'stadium', 'school', 'shoppingMall', 'promenade', 'townHall' ];
+  const specialBuildingButtons = [ 'statue', 'fountain', 'stadium', 'school', 'shoppingmall', 'promenade', 'townhall' ];
 
   if(staticData.owner === '0x00') return <></>
   else return (

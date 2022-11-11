@@ -81,7 +81,7 @@ function GridSquare({ x, y, occupied }) {
     }
     else {
       let price = specialPrices.get(selectedBuildingType.type);
-      addSpecialBuilding(building, price);
+      addSpecialBuilding(building, price, false);
     }
   }
 

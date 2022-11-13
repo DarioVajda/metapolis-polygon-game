@@ -117,13 +117,13 @@
 .buildingListGroup>button {
     height: 100%;
     aspect-ratio: 7/8;
-    background-color: var(--light-background);
+    background-color: var(--light-background-transparent);
     border: none;
     color: inherit;
     font-size: 1rem;
     padding: 0;
     border-radius: 10px;
-    border: 1px solid var(--lightest-background);
+    border: 1px solid var(--lightest-background-transparent);
     cursor: pointer;
 
     opacity: 0;
@@ -134,7 +134,7 @@
     opacity: 1;
     position: sticky;
     left: 0;
-    background-color: var(--lightest-background);
+    background-color: var(--lightest-background-transparent);
     z-index: 1;
 }
 

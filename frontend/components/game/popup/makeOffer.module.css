@@ -1,0 +1,170 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1em; */
+    height: 100%;
+    width: 100%;
+}
+
+.topData {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    padding: .5em 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent transparent var(--lightest-background) transparent;
+}
+
+.topData>span {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    flex-direction: column;
+    width: fit-content;
+    /* border: 1px solid green; */
+}
+
+.input {
+    display: flex;
+    gap: 1em;
+    /* border: 1px solid red; */
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: .3em 0;
+}
+
+.input>div {
+    display: flex;
+    font-size: 1.2rem;
+    background-color: var(--light-background);
+    outline: 1px solid var(--light-text);
+    border-radius: 5px;
+    padding-left: .4em;
+    /* width: 8em; */
+    max-width: 12em;
+    flex-grow: 10000000;
+}
+
+.input>div>input {
+    font-size: 1.2rem;
+    background-color: transparent;
+    color: var(--light-text);
+    border: none;
+    padding: .4em .5em;
+}
+
+.input>div:has(input:focus) {
+    outline: 2px solid var(--light-text);
+}
+
+.input>div>input:focus {
+    outline: none;
+}
+
+.activeConfirmButton {
+    font-size: 1.5rem;
+    background-color: var(--primary);
+    border: none;
+    color: var(--text);
+    border-radius: 5px;
+    padding: .3em 1em;
+    max-height: 1.8em;
+    max-width: calc(12em * 1.2 / 1.5);
+    flex-grow: 1;
+    cursor: pointer;
+
+    transition: color .15s ease-in-out, background-color .15s ease-in-out;
+}
+.activeConfirmButton:active {
+    scale: .98;
+}
+
+.inactiveConfirmButton {
+    background-color: var(--lightest-background);
+    color: var(--light-text);
+}
+.inactiveConfirmButton:active {
+    scale: 1;
+}
+
+.offerMessage {
+    font-size: .8rem;
+    width: 100%;
+    color: var(--light-text);
+}
+.offerMessage:first-child {
+    margin-top: 1em;
+}
+
+
+.showOffers {
+    margin-top: .5em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* background: linear-gradient(to bottom, transparent, red); */
+    color: var(--light-text);
+    padding-right: .5em;
+    width: fit-content;
+}
+
+.offerList::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+.offerList {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    height: 0;
+    transition: height .5s ease-in-out;
+
+    overflow-y: scroll;
+    width: 8em;
+    margin: 0 0 1em 0;
+    border-radius: 10px;
+}
+.showingAll .offerList {
+    height: 100%;
+}
+
+.offerList>div {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: .3em;
+}
+.offerList>div:nth-child(2n+1) {
+    background-color: var(--lightest-background);
+}
+.offerList>div:nth-child(2n) {
+    background-color: var(--light-background);
+}
+
+.offerList>div:first-child{
+    content: '';
+    width: 100%;
+    height: .5em;
+    /* background-color: transparent; */
+    background: linear-gradient(to bottom, var(--background), transparent);
+    position: sticky;
+    top: 0;
+}
+
+.offerList>div:last-child {
+    content: '';
+    width: 100%;
+    height: .5em;
+    /* background-color: transparent; */
+    background: linear-gradient(to bottom, transparent, var(--background));
+    position: sticky;
+    bottom: 0;
+}

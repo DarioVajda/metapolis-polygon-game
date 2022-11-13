@@ -10,6 +10,7 @@ import Lights from './Lights';
 import Buildings from './Buildings/Buildings';
 import HoverObject from './HoverObject';
 import FloatingMenu from './floatingMenu/FloatingMenu';
+import Popup from './popup/Popup';
 
 import Landscape from '../universal/city/Landscape';
 
@@ -32,6 +33,7 @@ const Gameplay = ({ ID }) => {
 
       </WorldCanvas>
       <HTMLContent id={ID} />
+      <Popup />
     </div>
   )
 }

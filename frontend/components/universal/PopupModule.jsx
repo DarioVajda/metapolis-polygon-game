@@ -25,7 +25,7 @@ const PopupModule = ({ children, open, height, width, unit }) => {
     backgroundColor: 'var(--background)',
     border: '1px solid var(--light-text)',
     borderRadius: '20px',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     padding: '0 1em',
     width: `${width?width:60}${unit?unit:'%'}`,
     height: `${height?height:70}${unit?unit:'%'}`,

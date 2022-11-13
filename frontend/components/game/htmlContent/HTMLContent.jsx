@@ -22,15 +22,17 @@ import { formatNumber } from '../../utils/numFormat';
 const BuildingButton = ({ special, selected, type, changeType, element }) => {
 
   const changeDimensions = useBuildingStore(state => state.changeDimensions);
-  const specialTypeData = useBuildingStore(state => state[`type_${type}`]);
+  const specialTypeData = useBuildingStore(state => state[`type_${element}`]);
   const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
+  const setPopup = useBuildingStore(state => state.setPopup);
 
   const changeDimensionsClick = (e, arg) => {
     e.stopPropagation();
     changeDimensions(arg);
   }
 
-  let _cost = specialTypeData?.soldOut ? '⋅ ⋅ ⋅' : (special ? specialPrices.get(element) : buildingStats.get(element)[0].cost);
+  // console.log({type: element, ...specialTypeData});
+  let _cost = specialTypeData?.soldOut ? 'Make Offer' : (special ? specialPrices.get(element) : buildingStats.get(element)[0].cost);
   if(element === 'building' || element === 'park') {
     if(type.type === element) {
       _cost *= type.dimensions[0] * type.dimensions[1];
@@ -52,8 +54,8 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
     await delay(5000 * (1 + Math.random()));
 
     // #region get the new cost
-    let _data = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
-    changeSpecialBuildingData(_data, type);
+    let _data = await (await fetch(`http://localhost:8000/specialtype/${element}`)).json();
+    changeSpecialBuildingData(_data, element);
     let newPrice;
     if(_data.soldOut) {
       // finding the highest offer value
@@ -79,19 +81,28 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
   useEffect(() => {
     if(special) {
       // only calling this function if it is a speical building, because the cost of normal buildings is always fixed
-      updateCost();
+      // updateCost();
     }
   }, [ cost ]);
 
+  const onClick = () => {
+    if(specialTypeData?.soldOut !== true) {
+      changeType(special, element);
+    } 
+    else {
+      setPopup({ type: 'make-offer', options: { type: element, ...specialTypeData } });
+    }
+  }
+
   let moreOptions = selected && ((!special && buildingDimensions.get(element).length > 1) || (special && specialBuildingDimensions.get(element).length > 1));
   return (
-    <button onClick={() => changeType(special, element)} style={selected ? { backgroundColor: 'var(--primary)' }:{}}>
+    <button onClick={onClick} style={selected ? { backgroundColor: 'var(--primary)' }:{}}>
       <div>
         {element}
       </div>
       <div>
         {
-          selected ?
+          selected && !special ?
           <div>
             {
               moreOptions ?
@@ -113,10 +124,29 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
               <></>
             }
           </div> :
+          special ?
+          <div>
+            <span style={{ fontSize: '.75rem' }}>
+              {
+                specialTypeData?.soldOut === true ?
+                <span style={{ fontSize: '.9rem' }}>Sold out</span> :
+                <>
+                  {element} <br /> 
+                  <span style={{ fontSize: '.9rem' }}>{specialTypeData?.count} left</span>
+                </>
+              }
+            </span>
+          </div> :
           <div />
         }
         <span>
-          <MoneyIcon /> {typeof cost === 'number' ? formatNumber(cost) : cost}
+          {
+            typeof cost === 'number' ? 
+            <>
+              <MoneyIcon /> {formatNumber(cost)}
+            </> : 
+            cost // in this case the cost variable contains the message "Make Offer"
+          }
         </span>
       </div>
     </button>
@@ -149,7 +179,10 @@ const SaveBtn = ({ id }) => {
       signature = await signer.signMessage(message);
     } 
     catch (error) {
-      setPopup({ message: error.message, type: 'error-pupup-msg' });
+      setPopup({ 
+        message: error.message, 
+        type: 'error-pupup-msg' 
+      });
       return;
     }
 
@@ -182,6 +215,7 @@ const SaveBtn = ({ id }) => {
 const HTMLContent = ({ id }) => {
 
   const [ achievementPopup, setAchievementPopup ] = useState(false);
+  const setPopup = useBuildingStore(state => state.setPopup);
 
   const dynamicData = useBuildingStore(state => state.dynamicData);
   const staticData = useBuildingStore(state => state.staticData);
@@ -219,9 +253,9 @@ const HTMLContent = ({ id }) => {
   if(staticData.owner === '0x00') return <></>
   else return (
     <div className={styles.contentWrapper}>
-      <PopupModule open={achievementPopup} width={75} height={85} unit={'%'} >
+      {/* <PopupModule open={achievementPopup} width={75} height={85} unit={'%'} >
         <AchievementList id={id} closePopup={() => setAchievementPopup(false)} />
-      </PopupModule>
+      </PopupModule> */}
       <div className={styles.topData}>
         <Hover info='Money' underneath={true} childWidth='10em' specialId='Money' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
@@ -258,7 +292,8 @@ const HTMLContent = ({ id }) => {
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>
-          <button onClick={() => setAchievementPopup(true)}>
+          {/* <button onClick={() => setAchievementPopup(true)}> */}
+          <button onClick={() => setPopup({ type: 'achievements' })}>
             <AchievementFrame backgroundColor='transparent' size={5} unit='em' />
             Achievements
           </button>

@@ -424,8 +424,8 @@ const buildingStore = (set) => ({
 
   // #region popup handling
   popup: {},
-  setPopup: e => set( state => ({
-    popup: e
+  setPopup: p => set( state => ({
+    popup: p
   }))
   // #endregion
 });

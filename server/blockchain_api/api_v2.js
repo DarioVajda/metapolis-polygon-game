@@ -368,15 +368,18 @@ app.post("/cities/:id/instructions", async (req, res) => {
 app.post("/cities/:id/specialoffer", async (req, res) => {
 
 	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
+	console.log(city);
 
 	// checking if the request was sent from the owner of the NFT
 	let message = req.body.message;
 	let signature = req.body.signature;
-	let signer = cityData.cityOwner;
+	let signer = city.owner;
 	let signerAddr = ethers.utils.verifyMessage(message, signature);
 	if(signerAddr !== signer) {
-		return res.status(400).send("The caller of this function must be the owner of the NFT");
+		res.status(400).send("The caller of this function must be the owner of the NFT");
+		return;
 	}
+	console.log('the caller of the function is the owner of the nft');
 
 	let value = req.body.value; // the value of the offer
 	let type = req.body.type; // the type of special buildings the offer was made for
@@ -388,6 +391,7 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 		res.status(400).send("Not enough money to make the offer");
 		return;
 	}
+	console.log('there is enough money to make the offer');
 
 	let tx = await contract.makeSpecialOffer(
 		type, 
@@ -395,13 +399,16 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 		value, 
 		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);
+	console.log({tx});
 	try {
 		let receipt = await tx.wait();
 		console.log(receipt);
+		console.log('offer made successfully');
 		res.status(200).send("Offer made successfully");
 		return;
 	}
 	catch(e) {
+		console.log('there was an error');
 		console.log(e);
 		res.status(500).send(e);
 		return;

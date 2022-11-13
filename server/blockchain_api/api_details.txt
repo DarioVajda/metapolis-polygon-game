@@ -86,7 +86,7 @@ INSTRUCTION LIST REQUEST:
             ...
         ]
     }
-    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial', 'remove', 'removespecial', 'completed'
+    Instruction keys: 'build', 'buildspecial', 'upgrade', 'rotate', 'rotatespecial', 'remove', 'removespecial', 'completed', 'specialoffer'
 
 DEV OPTIONS:
     /cities/:id/dev/setmoney - { money: m } // m - unsigned int

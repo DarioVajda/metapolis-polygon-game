@@ -93,9 +93,9 @@ async function getCityData(id, contract, achievementContract) {
 
     const getFromAchievementContract = async () => {
         let res = await loadAchievements(id, achievementContract);
-        console.log({res})
+        // console.log({res})
         data.achievementList = res;
-        console.log({achievementList: data.achievementList})
+        // console.log({achievementList: data.achievementList})
     }
 
 
@@ -107,7 +107,7 @@ async function getCityData(id, contract, achievementContract) {
     }
 
     let income = incomeModule.calculateIncome(data.city, data.achievementList);
-    console.log({income, achievementList: data.achievementList});
+    // console.log({income, achievementList: data.achievementList});
 
     return { 
         ...data.city, 

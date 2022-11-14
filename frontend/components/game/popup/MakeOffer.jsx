@@ -17,7 +17,7 @@ const MakeOffer = ({ closePopup, type }) => {
   const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
 
   const [ number, setNumber ] = useState('');
-  const [ showingAll, setShowingAll ] = useState(true);
+  const [ showingAll, setShowingAll ] = useState(false);
 
   const checkChange = (e) => {
     const re = /^[0-9\b]+$/;
@@ -65,6 +65,7 @@ const MakeOffer = ({ closePopup, type }) => {
 
   // calculating how many offers are higher than the money value in the input field
   let above = specialTypeData.offers.reduce((prev, curr) => prev + (curr.value > number ? 1 : 0), 0);
+  let highestOffer = specialTypeData.offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
   return (
     <div className={`${styles.wrapper} ${showingAll?styles.showingAll:''}`}>
       <div className={styles.topData}>
@@ -87,24 +88,47 @@ const MakeOffer = ({ closePopup, type }) => {
           There will be {above} offers with higher priority
         </div>
       </div>
+      <div className={styles.highestOffer}>
+        {
+          specialTypeData.offers.length > 0 ?
+          <>
+            Highest offer is {highestOffer.value}, by the City #{highestOffer.user}
+          </> :
+          <>
+            There are no offers
+          </>
+        }
+      </div>
       <div className={styles.showOffers} onClick={() => setShowingAll(!showingAll)} >
         <ArrowIcon direction={2} size={2} />
-        Show all Offers
+        All Offers
       </div>
       <div className={styles.offerList}>
         <div />
         {
-          Array(41)
+          Array(1)
             .fill(specialTypeData.offers)
             .reduce((prev, curr) => [...prev, ...curr], [])
             .map((element, index) => (
               <div key={index}>
-                {element.value.toLocaleString('en-US')}
+                <span>
+                  City #{element.user}
+                </span>
+                <span>
+                  <MoneyIcon/>
+                  {(element.value).toLocaleString('en-US')}
+                </span>
               </div>
             ))
         }
         <div />
       </div>
+      <div className={styles.explanation} >
+        * When someone sells their {type} through an offer, the HIGHEST available offer is ALWAYS 
+        going to be fulfilled. To boost your chances of getting your offer accepted as fast as possible 
+        make sure bid with a higher price, but always think about the (in-game) economics in the situation!
+      </div>
+      <div />
     </div>
   )
 }

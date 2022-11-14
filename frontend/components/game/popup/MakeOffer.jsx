@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 
+import { ethers } from 'ethers';
+
 import styles from './makeOffer.module.css';
 
 import { useBuildingStore } from '../BuildingStore';
@@ -13,8 +15,11 @@ import { specialPrices } from '../../../../server/gameplay/building_stats';
 
 const MakeOffer = ({ closePopup, type }) => {
 
+  const { id } = useBuildingStore(state => state.staticData);
+  const { money } = useBuildingStore(state => state.dynamicData);
   const specialTypeData = useBuildingStore(state => state[`type_${type}`]);  
   const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
+  const setPopup = useBuildingStore(state => state.setPopup);
 
   const [ number, setNumber ] = useState('');
   const [ showingAll, setShowingAll ] = useState(false);
@@ -61,7 +66,68 @@ const MakeOffer = ({ closePopup, type }) => {
 
   // #endregion
 
-  console.log(showingAll);
+  // #region
+
+  const confirmOffer = async () => {
+    if(number < specialPrices.get(type)) {
+      return;
+    }
+    if(number > money) {
+      return;
+    }
+
+    if(!window.ethereum) {
+      setPopup({
+        message: 'User does not have the Metamask extensions installed',
+        type: 'error-popup-widget'
+      });
+      return;
+    }
+
+    const message = `Make offer for a ${type} as the owner of the City #${id} (unique ID - ${Math.floor(Math.random()*999999999)})`;
+
+    let signature;
+    try {
+      await window.ethereum.send("eth_requestAccounts");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      signature = await signer.signMessage(message);
+    } 
+    catch (error) {
+      setPopup({ 
+        message: error.message, 
+        type: 'error-pupup-msg' 
+      });
+      return;
+    }
+
+    const body = {
+      signature,
+      message,
+      value: number,
+      type
+    };
+
+    const response = await fetch(`http://localhost:8000/cities/${id}/specialoffer`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: { 
+        "Content-Type": "application/json" 
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(body),
+    });
+
+    console.log(response);
+  }
+
+  // #endregion
+
+  // console.log(showingAll);
+  // console.log(number > money);
 
   // calculating how many offers are higher than the money value in the input field
   let above = specialTypeData.offers.reduce((prev, curr) => prev + (curr.value > number ? 1 : 0), 0);
@@ -81,8 +147,12 @@ const MakeOffer = ({ closePopup, type }) => {
             <MoneyIcon />
             <input value={number} placeholder="Enter value..." onChange={checkChange} type="text" />
           </div>
-          {/* <button style={number < specialPrices.get(type) ? { backgroundColor: 'var(--lightest-background)' } : {}}>Confirm</button> */}
-          <button className={`${styles.activeConfirmButton} ${number < specialPrices.get(type) ? styles.inactiveConfirmButton : ''}`}>Confirm</button>
+          <button 
+            className={`${styles.activeConfirmButton} ${number < specialPrices.get(type) || number > money ? styles.inactiveConfirmButton : ''}`}
+            onClick={confirmOffer}
+          >
+            Confirm
+          </button>
         </div>
         <div className={styles.offerMessage}>
           There will be {above} offers with higher priority
@@ -109,6 +179,7 @@ const MakeOffer = ({ closePopup, type }) => {
           Array(1)
             .fill(specialTypeData.offers)
             .reduce((prev, curr) => [...prev, ...curr], [])
+            .sort((a, b) => b.value - a.value)
             .map((element, index) => (
               <div key={index}>
                 <span>

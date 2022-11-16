@@ -10,9 +10,11 @@
     --primary-variant: #40a6ff;
     --primary-dark: #005eb1;
     --primary-bg: #0059a668;
+    --primary-bg-lighter: #0059a648;
     --secondary: #ffba24;
     --secondary-dark: #edaa00;
     --error: #ff0000;
+    --error-light: #dc5555;
     --link: #0000EE;
 
     /* Color values for specific elements */

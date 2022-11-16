@@ -428,7 +428,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 		return res.status(400).send("The caller of this function must be the owner of the NFT");
 	}
 
-	let offerValue = req.body.offerValue;
+	let offerValue = req.body.value;
 	let type = req.body.type;
 	// let data = await contract.getSpecialBuildingType(type);
 	// let id = parseInt(req.params.id);

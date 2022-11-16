@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 
 import { ethers } from 'ethers';
+import { SpinnerCircular } from 'spinners-react';
+import { motion } from 'framer-motion';
 
 import styles from './makeOffer.module.css';
 
@@ -10,6 +12,7 @@ import { useBuildingStore } from '../BuildingStore';
 import XIcon from '../../universal/icons/XIcon';
 import MoneyIcon from '../../universal/icons/MoneyIcon';
 import ArrowIcon from '../../universal/icons/ArrowIcon';
+import TrashIcon from '../../universal/icons/TrashIcon';
 
 import { specialPrices } from '../../../../server/gameplay/building_stats';
 
@@ -23,10 +26,13 @@ const MakeOffer = ({ closePopup, type }) => {
 
   const [ number, setNumber ] = useState('');
   const [ showingAll, setShowingAll ] = useState(false);
+  const [ makingOffer, setMakingOffer ] = useState(false);
+  const [ filterList, setFilterList ] = useState(false);
+  const [ canceling, setCanceling ] = useState([]);
 
   const checkChange = (e) => {
     const re = /^[0-9\b]+$/;
-    if ((e.target.value === '' || re.test(e.target.value)) && e.target.value < 1e9) {
+    if ((e.target.value === '' || re.test(e.target.value)) && e.target.value < 1e9 && (e.target.value != 0 || e.target.value === '')) {
       setNumber(e.target.value);
     }
   }
@@ -75,6 +81,9 @@ const MakeOffer = ({ closePopup, type }) => {
     if(number > money) {
       return;
     }
+    if(makingOffer) {
+      return;
+    }
 
     if(!window.ethereum) {
       setPopup({
@@ -86,6 +95,8 @@ const MakeOffer = ({ closePopup, type }) => {
 
     const message = `Make offer for a ${type} as the owner of the City #${id} (unique ID - ${Math.floor(Math.random()*999999999)})`;
 
+    setMakingOffer(true);
+
     let signature;
     try {
       await window.ethereum.send("eth_requestAccounts");
@@ -94,6 +105,7 @@ const MakeOffer = ({ closePopup, type }) => {
       signature = await signer.signMessage(message);
     } 
     catch (error) {
+      setMakingOffer(false);
       setPopup({ 
         message: error.message, 
         type: 'error-pupup-msg' 
@@ -120,7 +132,65 @@ const MakeOffer = ({ closePopup, type }) => {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(body),
     });
+    setMakingOffer(false);
+    setNumber('');
+    
+    console.log(response);
+  }
 
+  const cancelOffer = async (value, index) => {
+
+    if(!window.ethereum) {
+      setPopup({
+        message: 'User does not have the Metamask extensions installed',
+        type: 'error-popup-widget'
+      });
+      return;
+    }
+
+    const message = `Canceling the offer with value ${value} (unique ID - ${Math.floor(Math.random()*999999999)})`;
+
+    setCanceling([...canceling, index]);
+
+    let signature;
+    try {
+      await window.ethereum.send("eth_requestAccounts");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      signature = await signer.signMessage(message);
+    } 
+    catch (error) {
+      setCanceling(canceling.filter(element => element !== index));
+      setPopup({ 
+        message: error.message, 
+        type: 'error-pupup-msg' 
+      });
+      return;
+    }
+
+    const body = {
+      signature,
+      message,
+      value,
+      type
+    };
+
+    const response = await fetch(`http://localhost:8000/cities/${id}/canceloffer`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: { 
+        "Content-Type": "application/json" 
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(body),
+    });
+
+    // removing the offer from the list of offers that are being canceled
+    setCanceling(canceling.filter(element => element !== index));
+    
     console.log(response);
   }
 
@@ -148,9 +218,13 @@ const MakeOffer = ({ closePopup, type }) => {
             <input value={number} placeholder="Enter value..." onChange={checkChange} type="text" />
           </div>
           <button 
-            className={`${styles.activeConfirmButton} ${number < specialPrices.get(type) || number > money ? styles.inactiveConfirmButton : ''}`}
+            className={`${styles.activeConfirmButton} ${number < specialPrices.get(type) || number > money ? styles.inactiveConfirmButton : ''} ${makingOffer ? styles.progressConfirmButton : ''}`}
             onClick={confirmOffer}
           >
+            {
+              makingOffer &&
+              <SpinnerCircular size='.8em' thickness={200} color='#fff' secondaryColor='transparent' />
+            }
             Confirm
           </button>
         </div>
@@ -169,9 +243,19 @@ const MakeOffer = ({ closePopup, type }) => {
           </>
         }
       </div>
-      <div className={styles.showOffers} onClick={() => setShowingAll(!showingAll)} >
-        <ArrowIcon direction={2} size={2} />
-        All Offers
+      <div className={styles.showOffers}>
+        <div onClick={() => setShowingAll(!showingAll)} >
+          <ArrowIcon direction={2} size={2} />
+          All Offers
+        </div>
+        <label>
+          <input 
+            type="checkbox" 
+            value={filterList}
+            onChange={() => setFilterList(state => !state)}
+          />
+          Filter
+        </label>
       </div>
       <div className={styles.offerList}>
         <div />
@@ -180,17 +264,43 @@ const MakeOffer = ({ closePopup, type }) => {
             .fill(specialTypeData.offers)
             .reduce((prev, curr) => [...prev, ...curr], [])
             .sort((a, b) => b.value - a.value)
-            .map((element, index) => (
-              <div key={index}>
-                <span>
-                  City #{element.user}
-                </span>
-                <span>
-                  <MoneyIcon/>
-                  {(element.value).toLocaleString('en-US')}
-                </span>
-              </div>
-            ))
+            // .filter(element => filterList === false || element.user == id)
+            .map((element, index) => {
+              if(element.user != id && filterList === true) return null;
+              else if(element.user == id) return (
+                <motion.div layout key={`${element.user}_${element.value}`}>
+                  <div className={styles.offerMaker}>
+                    {
+                      !canceling.includes(index) ?
+                      <div onClick={() => cancelOffer(element.value, index)}>
+                        <TrashIcon />
+                      </div> :
+                      <div style={{ transform: 'scale(.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'auto' }}>
+                        <SpinnerCircular size='1em' thickness={200} color='#fff' secondaryColor='transparent' />
+                      </div>
+                    }
+                    <span>
+                      City #{element.user}
+                    </span>
+                    <span>
+                      <MoneyIcon/>
+                      {(element.value).toLocaleString('en-US')}
+                    </span>
+                  </div>
+                </motion.div>
+              )
+              else return (
+                <motion.div layout key={`${element.user}_${element.value}`}>
+                  <span>
+                    City #{element.user}
+                  </span>
+                  <span>
+                    <MoneyIcon/>
+                    {(element.value).toLocaleString('en-US')}
+                  </span>
+                </motion.div>
+              )
+            })
         }
         <div />
       </div>

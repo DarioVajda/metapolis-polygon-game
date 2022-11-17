@@ -9,7 +9,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 
 import { useBuildingStore } from '../BuildingStore';
 
-import { buildingStats } from '../../../../server/gameplay/building_stats';
+import { buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
 import { menuDataComponents } from './menuDataComponents';
 import { buildingMenuTypes } from './menuData';
 import { formatNumber } from '../../utils/numFormat';
@@ -24,40 +24,66 @@ import RotateIcon from '../../universal/icons/RotateIcon';
 const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
   const instructions = useBuildingStore(state => state.instructions);
+  const specialTypeData = useBuildingStore(state => state[`type_${building.type}`]);
 
   let stats = buildingStats.get(building.type);
 
   // console.log(building);
   let RETURN_PERCENTAGE = building.id !== undefined ? 0.5 : 1;
-  let sellValue = stats
-    ?.slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
-    .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
+  let [ sellValue, setSellValue ] = useState(0);
+  let [ upgradeValue, setUpgradeValue ] = useState(0);
+  
+  useEffect(() => {
+    // calculating upgradeValue and sellValue for normal buildings
+    if(building.level !== undefined) {
+      let _sellValue = stats
+        ?.slice(0, building.level+1) // u obzir se uzimaju trenutni level i svi manji
+        .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
 
-  let deltaLevel = 0;
-  instructions.forEach(element => {
-    if(
-      element.instruction === 'upgrade' && 
-      JSON.stringify(building) === JSON.stringify({...element.body.building, orientation: building.orientation, level: building.level}) 
-    ) {
-      // console.log(element);
-      deltaLevel = element.body.deltaLevel;
+      let deltaLevel = 0;
+      instructions.forEach(element => {
+        if(
+          element.instruction === 'upgrade' && 
+          JSON.stringify(building) === JSON.stringify({...element.body.building, orientation: building.orientation, level: building.level}) 
+        ) {
+          // console.log(element);
+          deltaLevel = element.body.deltaLevel;
+        }
+      });
+
+      let unsavedSellValue = stats
+        ?.slice(0, building.level - deltaLevel + 1)
+        .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih levela zajedno koje je gradjevina imala pre ikakvih lokalnih promena
+
+      // console.log({deltaLevel, sellValue, unsavedSellValue});
+      _sellValue -= unsavedSellValue * (1 - RETURN_PERCENTAGE);
+
+      let _upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
+
+      if(building.type === 'building' || building.type === 'park') {
+        let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
+        _sellValue *= area;
+        _upgradeValue *= area;
+      }
+      console.log('normal building', building);
+
+      setSellValue(_sellValue);
+      setUpgradeValue(_upgradeValue);
     }
-  });
-
-  let unsavedSellValue = stats
-    ?.slice(0, building.level - deltaLevel + 1)
-    .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih levela zajedno koje je gradjevina imala pre ikakvih lokalnih promena
-
-  // console.log({deltaLevel, sellValue, unsavedSellValue});
-  sellValue -= unsavedSellValue * (1 - RETURN_PERCENTAGE);
-
-  let upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
-
-  if(building.type === 'building' || building.type === 'park') {
-    let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
-    sellValue *= area;
-    upgradeValue *= area;
-  }
+    else {
+      let _sellValue;
+      if(specialTypeData.soldOut === false) {
+        _sellValue = specialPrices.get(building.type) * RETURN_PERCENTAGE;
+      }
+      else {
+        let highestOffer = specialTypeData.offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
+        _sellValue = highestOffer.value;
+      }
+      console.log('special building', building);
+      
+      setSellValue(_sellValue);
+    }
+  }, [])
   
   // TODO - obavezno obratiti paznju na ovo (brisanje novih gradjevina):
   // treba da se proveri da li gradjevina sadrzi id, ako sadrzi onda to znaci da gradjevina vec postoji u gradu i da je sacuvana, a ako ne postoji onda moze da se proda po punoj ceni sto bi u sustini ponistilo gradjenje u igrici jer to jos nije sacuvano, ako se u tom slucaju obrise gradjevina onda treba da se skloni ta build instrukcija sa liste umesto da se doda remove instrukcija

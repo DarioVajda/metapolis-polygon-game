@@ -17,6 +17,10 @@ TODO lista:
     - ✓ napraviti achievement badge-ove u leaderboard itemu (da se prikazu oni koji su uradjeni)
     - ✓ popraviti da se hover-popupovi ne mogu slucajno naci sa strane skroz pa da se ne vide celi nego da se ogranici njihovo pomeranje do ivice ekrana (sve uraditi u Hover komponenti)
     - ✓ napraviti neku animaciju kad se hoveruje preko achievement badge-a u leaderboard itemu - npr da predje onakav zrak preko njega i da se vrati kad se zavrsi hover (onakav zrak kao kad se completeuje achievement)
+    - ✓ Napraviti "City" komponentu - treba da primi id kao argument i da vrati komponentu sa 3d gradom, treba napraviti opcije za to koliko detaljno da se prikazuje grad, da li da rotira ili da stoji u mestu itd.
+    - ✓ napraviti 3d popup koji se pojavi kad se klikne na gradjevinu (moja ideja je da tamo budu dugmadi za 'info', 'upgrade', 'remove/sell' i 'rotate')
+    - ✓ prilagoditi stvari novom api-u
+    - ✓ omoguciti igracima da prave offerove za specijalne gradjevine
 - srediti da bolje izgleda meni koji se pojavi kad stisnes na one 3 crte u navigation baru
 - Malo zidarski poslovi (achievementovi, specijalne gradjevine itd):
     - BRAINSTORMING - smisliti puno themeova, specijalnih gradjevina, achievementova, nagrada itd.
@@ -24,15 +28,13 @@ TODO lista:
     - implementirati extraEducated preview funkciju u achievements.js fajlu
     - implementirati jos achievementova - da imaju veze sa specijalnim gradjevinama, da bude posebnih achievementova za razlicite themeove itd.
     - implementirati nove vrste nagrada
-- Napraviti "City" komponentu - treba da primi id kao argument i da vrati komponentu sa 3d gradom, treba napraviti opcije za to koliko detaljno da se prikazuje grad, da li da rotira ili da stoji u mestu itd.
-- napraviti 3d popup koji se pojavi kad se klikne na gradjevinu (moja ideja je da tamo budu dugmadi za 'info', 'upgrade', 'remove/sell' i 'rotate')
-- prilagoditi stvari novom api-u
-- omoguciti igracima da prave offerove za specijalne gradjevine
 - kod prodavanja specijalnih gradjevina proveriti da li je gradjevina rasprodata i da li trebaju da se posmatraju offerovi ili se redovno prodaje
 - napraviti provere u severu za to da li je u url-u "id" argument int ili nesto drugo
 - napraviti funkciju koja renderuje grad na serveru i exportuje sliku
-    - konvertovanje html-a u sliku: https://www.wisdomgeek.com/development/web-development/react/how-to-convert-a-react-component-to-an-image/
 - skontati kako se menja providnost objekata u programu i iskoristiti to za animaciju kod gradjenja i prodavanja gradjevina
+- dodati dugme u UI u igrici koje ce prikazati mini verziju leaderboard-a i pored dugmeta da pise koji si na listi (i evenentualno koja ti nagrada sledi i koliko je vremena ostalo do toga)
+- srediti stvari sa dobijanjem zarade i prikazom vremena koje je ostalo do sledece zarade
+- implementirati theme-ove
 
 2. Marko:
 - napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)

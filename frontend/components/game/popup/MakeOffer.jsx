@@ -16,6 +16,24 @@ import TrashIcon from '../../universal/icons/TrashIcon';
 
 import { specialPrices } from '../../../../server/gameplay/building_stats';
 
+const RemoveIcon = ({onClick}) => {
+  const [ canceling, setCanceling ] = useState(false);
+
+  const onClickFunc = () => {
+    onClick(setCanceling);
+  }
+
+  return (
+    canceling === false ?
+    <div onClick={onClickFunc}>
+      <TrashIcon />
+    </div> :
+    <div style={{ transform: 'scale(.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'auto' }}>
+      <SpinnerCircular size='1em' thickness={200} color='#fff' secondaryColor='transparent' />
+    </div>
+  )
+}
+
 const MakeOffer = ({ closePopup, type }) => {
 
   const { id } = useBuildingStore(state => state.staticData);
@@ -28,7 +46,7 @@ const MakeOffer = ({ closePopup, type }) => {
   const [ showingAll, setShowingAll ] = useState(false);
   const [ makingOffer, setMakingOffer ] = useState(false);
   const [ filterList, setFilterList ] = useState(false);
-  const [ canceling, setCanceling ] = useState([]);
+  // const [ canceling, setCanceling ] = useState([]);
 
   const checkChange = (e) => {
     const re = /^[0-9\b]+$/;
@@ -138,7 +156,7 @@ const MakeOffer = ({ closePopup, type }) => {
     console.log(response);
   }
 
-  const cancelOffer = async (value, index) => {
+  const cancelOffer = async (value, setCanceling) => {
 
     if(!window.ethereum) {
       setPopup({
@@ -150,7 +168,8 @@ const MakeOffer = ({ closePopup, type }) => {
 
     const message = `Canceling the offer with value ${value} (unique ID - ${Math.floor(Math.random()*999999999)})`;
 
-    setCanceling([...canceling, index]);
+    // setCanceling([...canceling, value]);
+    setCanceling(true);
 
     let signature;
     try {
@@ -160,11 +179,13 @@ const MakeOffer = ({ closePopup, type }) => {
       signature = await signer.signMessage(message);
     } 
     catch (error) {
-      setCanceling(canceling.filter(element => element !== index));
-      setPopup({ 
-        message: error.message, 
-        type: 'error-pupup-msg' 
-      });
+      // let offerIndex = canceling.indexOf(value);
+      // setCanceling(canceling.filter((element, i) => i !== offerIndex));
+      setCanceling(false);
+      // setPopup({ 
+      //   message: error.message, 
+      //   type: 'error-pupup-msg' 
+      // });
       return;
     }
 
@@ -189,7 +210,8 @@ const MakeOffer = ({ closePopup, type }) => {
     });
 
     // removing the offer from the list of offers that are being canceled
-    setCanceling(canceling.filter(element => element !== index));
+    // let offerIndex = canceling.indexOf(value);
+    // setCanceling(canceling.filter((element, i) => i !== offerIndex));
     
     console.log(response);
   }
@@ -270,15 +292,7 @@ const MakeOffer = ({ closePopup, type }) => {
               else if(element.user == id) return (
                 <motion.div layout key={`${element.user}_${element.value}`}>
                   <div className={styles.offerMaker}>
-                    {
-                      !canceling.includes(index) ?
-                      <div onClick={() => cancelOffer(element.value, index)}>
-                        <TrashIcon />
-                      </div> :
-                      <div style={{ transform: 'scale(.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'auto' }}>
-                        <SpinnerCircular size='1em' thickness={200} color='#fff' secondaryColor='transparent' />
-                      </div>
-                    }
+                    <RemoveIcon onClick={(setCanceling) => cancelOffer(element.value, setCanceling)} />
                     <span>
                       City #{element.user}
                     </span>

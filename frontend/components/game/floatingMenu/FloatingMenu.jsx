@@ -60,7 +60,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
       let _upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
 
-      if(building.type === 'building' || building.type === 'park') {
+      if((building.type === 'building' || building.type === 'park') && _upgradeValue > 0) {
         let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
         _sellValue *= area;
         _upgradeValue *= area;
@@ -83,7 +83,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
       
       setSellValue(_sellValue);
     }
-  }, [])
+  }, [building])
   
   // TODO - obavezno obratiti paznju na ovo (brisanje novih gradjevina):
   // treba da se proveri da li gradjevina sadrzi id, ako sadrzi onda to znaci da gradjevina vec postoji u gradu i da je sacuvana, a ako ne postoji onda moze da se proda po punoj ceni sto bi u sustini ponistilo gradjenje u igrici jer to jos nije sacuvano, ako se u tom slucaju obrise gradjevina onda treba da se skloni ta build instrukcija sa liste umesto da se doda remove instrukcija
@@ -130,7 +130,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
     return (
       <>
         {
-          building.level !== undefined && (
+          building.level !== undefined && stats[building.level + 1] !== undefined && (
             <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
               Upgrade
               <span>

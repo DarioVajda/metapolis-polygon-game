@@ -157,6 +157,7 @@ const SaveBtn = ({ id }) => {
 
   const instructions = useBuildingStore(state => state.instructions);
   const setPopup = useBuildingStore(state => state.setPopup);
+  const resetInstructions = useBuildingStore(state => state.resetInstructions);
 
   const saveChanges = async () => {
     if(instructions.length === 0) return;
@@ -202,6 +203,17 @@ const SaveBtn = ({ id }) => {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(body),
     });
+
+    if(response.status === 200) {
+      resetInstructions(); 
+    }
+    else {
+      setPopup({ 
+        message: 'Failed to save the changes to the city', 
+        type: 'error-pupup-msg' 
+      });
+    }
+
     console.log(response);
   }
 

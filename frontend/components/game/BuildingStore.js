@@ -57,6 +57,10 @@ const buildingStore = (set) => ({
     score: 0,
     map: Array(20).fill(Array(20).fill(1))
   },
+  numOfNfts: 0,
+  setNumOfNfts: n => set( state => ({
+    numOfNfts: n
+  })),
   changeStaticData: changes => set( state => ({
     staticData: { ...state.staticData, ...changes }
   })),
@@ -147,6 +151,9 @@ const buildingStore = (set) => ({
 
   // #region Instructions
   instructions: [],
+  resetInstructions: () => set( state => ({
+    instructions: []
+  })),
   addBuilding: (building, price) => set( state => {
     if(price > state.dynamicData.money) {
       return ({ 

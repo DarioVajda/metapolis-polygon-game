@@ -9,8 +9,15 @@ import XIcon from '../universal/icons/XIcon';
 
 import styles from './achievements.module.css';
 import { achievements, rewardTypes } from './achievements';
+import { useBuildingStore } from '../game/BuildingStore';
 
 const AchievementList = ({ id, city, closePopup, data, saveData }) => {
+
+  const dynamicData = useBuildingStore(state => state.dynamicData);
+  const staticData = useBuildingStore(state => state.staticData);
+  const buildings = useBuildingStore(state => state.buildings);
+  const specialBuildings = useBuildingStore(state => state.specialBuildings);
+  const numOfNfts = useBuildingStore(state => state.numOfNfts);
 
   useEffect(() => {
     // return;
@@ -26,13 +33,17 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
   
       // #region loading functions
       const loadList = async () => {
-        let res = await (await fetch(`http://localhost:8000/cities/${id}/achievements`)).json();
+        // let res = await (await fetch(`http://localhost:8000/cities/${id}/achievements`)).json();
+        let res = dynamicData.achievementList;
         list = [ ...res ];
+        console.log({list});
       }
     
       const loadNumOfNfts = async () => {
-        let res = await (await fetch('http://localhost:8000/count')).json();
-        count = res.count;
+        // let res = await (await fetch('http://localhost:8000/count')).json();
+        let res = numOfNfts;
+        count = res;
+        console.log({count});
       }
     
       const loadCity = async () => {
@@ -42,8 +53,15 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
         }
     
         // podaci o gradu se ucitavaju ako nisu poslati
-        let res = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+        // let res = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+        let res = {
+          ...staticData,
+          ...dynamicData,
+          buildings,
+          specialBuildings
+        }
         cityData = res;
+        console.log({cityData});
       }
       // #endregion
       
@@ -71,6 +89,7 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
 
       // console.log(list);
   
+      console.log({ list: list, count: count, city: cityData });
       if(isMounted === true) saveData({ list: list, count: count, city: cityData });
     }
 
@@ -111,7 +130,7 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
     saveData({ list: list, count: data.count, city: cityData });
   }
 
-  // console.log(data);
+  console.log(data);
 
   return (
     <>

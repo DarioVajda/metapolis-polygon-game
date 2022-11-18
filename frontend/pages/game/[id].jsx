@@ -16,6 +16,7 @@ import HoverObject from '../../components/game_marko/HoverObject.jsx';
 import Landscape from '../../components/universal/city/Landscape'
 
 import Gameplay from '../../components/game/Gameplay';
+import { useBuildingStore } from '../../components/game/BuildingStore';
 
 
 //MAIN COMPONENT
@@ -70,6 +71,8 @@ const game = () => {
   const route = router.query;
   let id;
 
+  const setNumOfNfts = useBuildingStore(state => state.setNumOfNfts);
+
   const [idValidity, setIdValidity] = useState(0); // 0 - loading, 1 - valid, 2 - not valid
 
   const isValidID = async () => {
@@ -83,6 +86,7 @@ const game = () => {
 
     let num = await (await fetch('http://localhost:8000/count')).json();
     num = num.count;
+    setNumOfNfts(num);
 
     if( 
       Object.values(route).length === 1 && 

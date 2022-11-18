@@ -425,10 +425,10 @@ const functions = {
                 );
                 
                 value = offer.value;
-                user = offers[offer.index].user;
+                user = tempOffers[offer.index].user;
             }
 
-            let tx = await contract.removeBuilding(
+            let tx = await contract.removeSpecialBuilding(
                 id,
                 building.id,
                 throughOffer,
@@ -585,14 +585,14 @@ async function loadData(contract, achievementContract, id) {
     const loadOffer = async (type) => {
         let data = await contract.getSpecialBuildingType(type);
         data = {
-			count: data.count,
-			numOfOffers: data.numOfOffers,
-			rarity: data.rarity,
+            count: data.count.toNumber(),
+			numOfOffers: data.numOfOffers.toNumber(),
+			rarity: data.rarity.toNumber(),
 			soldOut: data.soldOut,
 			offers: data.offers
 		}
 		data.offers = data.offers.map((element, index) => ({
-			value: element.value.toNumber(),
+            value: element.value.toNumber(),
 			user: element.user.toNumber(),
 			filled: element.filled,
 			index: index
@@ -624,6 +624,7 @@ async function loadData(contract, achievementContract, id) {
 
 const instructionsApi = async (contract, achievementContract, id, instructions) => {
     let { city, specialTypeData, achievementList, numOfNfts } = await loadData(contract, achievementContract, id);
+    const ogSpecialTypeData = JSON.parse(JSON.stringify(specialTypeData));
 
     // #region checks
 
@@ -675,7 +676,7 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
             tempBody = { ...tempBody, achievementContract };
         }
         
-        let tx = await functions[element.instruction].save(id, contract, specialTypeData, element.body);
+        let tx = await functions[element.instruction].save(id, contract, ogSpecialTypeData, element.body);
         saveFunctionCall(tx, element.instruction, element.body);
         await delay(1e3);
     }
@@ -686,33 +687,35 @@ const instructionsApi = async (contract, achievementContract, id, instructions) 
         await delay(100);
     }
 
-    // setting the money value for the player
-    let tx = await contract.devSetMoney(
-        id, 
-        newMoneyValue, 
-        { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
-    );
-    console.log({tx});
-    try {
-        await tx.wait();
-    }
-    catch(e) {
-        errors.push({ instruction: 'setmoney', error: e, message: 'fail' });
-    }
+    if(errors.length === 0) {
+        // setting the money value for the player
+        let tx = await contract.devSetMoney(
+            id, 
+            newMoneyValue, 
+            { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
+        );
+        console.log({tx});
+        try {
+            await tx.wait();
+        }
+        catch(e) {
+            errors.push({ instruction: 'setmoney', error: e, message: 'fail' });
+        }
 
-    // setting the score for the player
-    let newScore = newMoneyValue + 7 * incomeModule.calculateIncome(city);
-    tx = await contract.changeScore(
-        id,
-        newScore,
-        { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }    
-    );
-    console.log({tx});
-    try {
-        await tx.wait();
-    }
-    catch(e) {
-        errors.push({ instruction: 'setscore', error: e, message: 'fail' });
+        // setting the score for the player
+        let newScore = newMoneyValue + 7 * incomeModule.calculateIncome(city);
+        tx = await contract.changeScore(
+            id,
+            newScore,
+            { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }    
+        );
+        console.log({tx});
+        try {
+            await tx.wait();
+        }
+        catch(e) {
+            errors.push({ instruction: 'setscore', error: e, message: 'fail' });
+        }
     }
 
     // response

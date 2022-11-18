@@ -340,6 +340,68 @@ const buildingStore = (set) => ({
       ...buildingCoordinate
     }
   }),
+  removeSpecialBuilding: (building, moneyValue, throughOffer) => set( state => {
+    // preparing to change the value of the x_y field in the state
+    let buildingCoordinate = {};
+    buildingCoordinate[`s_${building.start.x}_${building.start.y}`] = { building, status: 'removing' };
+
+    let newList = state.specialBuildings.filter(element => !(
+      (element.id !== undefined && element.id === building.id) ||
+      JSON.stringify(element) === JSON.stringify({...building, orientation: element.orientation})
+    ));
+    // let newList = state.specialBuildings.filter(element => JSON.stringify(element) !== JSON.stringify(building));
+
+    let newInstructions = state.instructions;
+    if(building.id === undefined) {
+      newInstructions = newInstructions.filter(instruction => !(
+        JSON.stringify(instruction.body.building) === JSON.stringify(building) &&
+        instruction.instruction === 'buildspecial'
+      ));
+    }
+    else {
+      let isNewInstruction = true;
+      newInstructions = newInstructions.map(instruction => {
+        if(
+          isNewInstruction &&
+          instruction.body.building.id === building.id &&
+          instruction.instruction === 'rotatespecial'
+        ) {
+          isNewInstruction = false;  
+          return {
+            instruction: 'removespecial',
+            body: {
+              building: instruction.body.building,
+              throughOffer
+            }
+          };
+        }
+        return instruction;
+      });
+
+      if(isNewInstruction === false) {
+        console.log(newInstructions);
+        console.log(building);
+        newInstructions = newInstructions.filter(instruction => !(
+          instruction.instruction !== 'removespecial' && 
+          instruction.body?.building?.id === building.id  
+        ));
+      }
+      else {
+        newInstructions = [ ...newInstructions, { instruction: 'removespecial', body: { building, throughOffer } } ];
+      }
+    }
+
+    // returning all the changes to the global state
+    return {
+      specialBuildings: newList,
+      instructions: newInstructions,
+      dynamicData: {
+        ...state.dynamicData,
+        money: state.dynamicData.money + moneyValue
+      },
+      ...buildingCoordinate
+    }
+  }),
   rotateBuilding: (building, rotation) => set( state => {
     // preparing to change the value of the x_y field in the state
     let buildingCoordinate = {};
@@ -392,6 +454,67 @@ const buildingStore = (set) => ({
     newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotate' && instruction.body.building.orientation === instruction.body.rotation))
     if(isNewInstruction) {
       newInstructions = [ ...newInstructions, { instruction: 'rotate', body: { building, rotation } } ];
+    }
+
+    // returning all the changes to the global state
+    return {
+      buildings: newList,
+      instructions: newInstructions,
+      ...buildingCoordinate
+    }
+  }),
+  rotateSpecialBuilding: (building, rotation) => set( state => {
+    // preparing to change the value of the x_y field in the state
+    let buildingCoordinate = {};
+    buildingCoordinate[`s_${building.start.x}_${building.start.y}`] = { building: { ...building, orientation: rotation===0?4:rotation }, status: 'rotating' };
+
+    // copying the content of the building list, only changing the orientation
+    let newList = state.buildings.map(element => {
+      if(JSON.stringify(element) === JSON.stringify({...building, orientation: building.orientation===0?4:building.orientation})) {
+        // console.log(element, building);
+        return {
+          ...building,
+          orientation: rotation===0?4:rotation
+        }
+      }
+      return element;
+    })
+
+    let isNewInstruction = true;
+    let newInstructions = state.instructions.map(instruction => {
+      // CASE: n*rotate = rotate(n%4)
+      if(
+        instruction.body?.building?.id === building.id && 
+        instruction.instruction === 'rotatespecial'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'rotatespecial',
+          body: {
+            building: instruction.body.building,
+            rotation: rotation===0?4:rotation
+          }
+        }
+      }
+      // CASE: build + n*rotate = build(orientation: n%4)
+      else if(
+        JSON.stringify(instruction.body.building) === JSON.stringify({ ...building, orientation: instruction.body.building?.orientation }) &&
+        instruction.instruction === 'buildspecial'
+      ) {
+        isNewInstruction = false;
+        return {
+          instruction: 'buildspecial',
+          body: {
+            building: { ...instruction.body.building, orientation: rotation===0?4:rotation }
+          }
+        }
+      }
+      return instruction;
+    });
+    // console.log(newInstructions);
+    newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotatespecial' && instruction.body.building.orientation === instruction.body.rotation))
+    if(isNewInstruction) {
+      newInstructions = [ ...newInstructions, { instruction: 'rotatespecial', body: { building, rotation } } ];
     }
 
     // returning all the changes to the global state

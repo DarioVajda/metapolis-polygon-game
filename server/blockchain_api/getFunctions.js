@@ -35,7 +35,7 @@ async function loadAchievements(id, achievementContract) {
 		await delay(50);
 	}
 
-    console.log({dataList});
+    // console.log({dataList});
     return dataList
 }
 

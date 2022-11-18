@@ -8,11 +8,9 @@ import { useBuildingStore } from '../BuildingStore';
 import { specialBuildingTypes } from '../modelComponents/BuildingTypes';
 
 const buildingGridElement = (x, y, onClick) => {
-  const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const gridElement = useBuildingStore(state => state[`s_${x}_${y}`]);
+  const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const { building, status } = gridElement || {};
-
-  if(!building) return null; // check if there is a building with x and y start coordinates, if not, null is returned
 
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -42,6 +40,7 @@ const buildingGridElement = (x, y, onClick) => {
         await delay(100);
         time += 100;
       }
+      console.log('removed');
       changeCoordinate(x, y, undefined, true);
     },
     rotating: async () => {
@@ -49,12 +48,16 @@ const buildingGridElement = (x, y, onClick) => {
     }
   }
 
-  // useEffect(() => {
-  //   if(!status) return;
+  useEffect(() => {
 
-  //   statusFunctions[status]();
+    if(!status) return;
 
-  // }, [ status ]);
+    statusFunctions[status]();
+
+  }, [ status ]);
+
+  // check if there is a building with x and y start coordinates, if not, null is returned
+  if(!building) return null; 
 
   // calculating the canvas position and rotation of the building
   let type = building.type;

@@ -110,7 +110,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
   else if(status === 'selling') {
     return (
       <>
-        <button className={styles.confirmButton} onClick={() => sell(sellValue)} style={{ backgroundColor: 'blue' }}>
+        <button className={styles.confirmButton} onClick={() => sell(sellValue, specialTypeData?.soldOut === true)} style={{ backgroundColor: 'blue' }}>
           <span>
             Confirm
             <XIcon colorArg='var(--text)' />
@@ -130,7 +130,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
     return (
       <>
         {
-          upgradeValue > 0 && (
+          building.level !== undefined && (
             <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
               Upgrade
               <span>
@@ -170,7 +170,9 @@ const FloatingMenu = () => {
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
+  const removeSpecialBuilding = useBuildingStore(state => state.removeSpecialBuilding);
   const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
+  const rotateSpecialBuilding = useBuildingStore(state => state.rotateSpecialBuilding);
   const calculateIncome = useBuildingStore(state => state.calculateIncome);
 
   const showProductivityMap = useBuildingStore(state => state.showProductivityMap);
@@ -232,8 +234,14 @@ const FloatingMenu = () => {
     calculateIncome();
   }
 
-  const sellFunc = (moneyValue) => {
-    removeBuilding(floatingMenu.building, moneyValue);
+  const sellFunc = (moneyValue, throughOffer) => {
+    if(floatingMenu.building.level === undefined) {
+      removeSpecialBuilding(floatingMenu.building, moneyValue, throughOffer);
+    }
+    else {
+      removeBuilding(floatingMenu.building, moneyValue);
+    }
+
     setFloatingMenu(null);
     setStatus(null);
     calculateIncome();
@@ -246,8 +254,15 @@ const FloatingMenu = () => {
       d = 2;
     }
     // console.log(d);
+
     setFloatingMenu({ ...floatingMenu, building: { ...floatingMenu.building, orientation: (floatingMenu.building.orientation + d)%4 } })
-    rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d)%4);
+    
+    if(floatingMenu.building.level === undefined) {
+      rotateSpecialBuilding(floatingMenu.building, (floatingMenu.building.orientation + d) % 4);
+    }
+    else {
+      rotateBuilding(floatingMenu.building, (floatingMenu.building.orientation + d) % 4);
+    }
   }
 
   const showSelectedProductivityMap = () => {

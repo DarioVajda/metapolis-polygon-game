@@ -13,6 +13,13 @@ const Store = forwardRef(function Store({level, ...props},ref) {
           color='burlywood'
         />
       </mesh>
+      <mesh scale={[plotSize * 0.2, 1, plotSize * 0.2]} position={[1.5, 3, 4]}>
+        <boxBufferGeometry attach="geometry" />
+        <meshLambertMaterial
+          attach="material"
+          color='yellow'
+        />
+      </mesh>
     </group>
   );
 })

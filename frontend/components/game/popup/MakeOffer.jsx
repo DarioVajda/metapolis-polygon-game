@@ -222,8 +222,10 @@ const MakeOffer = ({ closePopup, type }) => {
   // console.log(number > money);
 
   // calculating how many offers are higher than the money value in the input field
-  let above = specialTypeData.offers.reduce((prev, curr) => prev + (curr.value > number ? 1 : 0), 0);
-  let highestOffer = specialTypeData.offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
+  let offers = specialTypeData.offers.filter(element => element.filled === false);
+  console.log(specialTypeData.offers, offers);
+  let above = offers.reduce((prev, curr) => prev + (curr.value > number ? 1 : 0), 0);
+  let highestOffer = offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
   return (
     <div className={`${styles.wrapper} ${showingAll?styles.showingAll:''}`}>
       <div className={styles.topData}>
@@ -283,7 +285,7 @@ const MakeOffer = ({ closePopup, type }) => {
         <div />
         {
           Array(1)
-            .fill(specialTypeData.offers)
+            .fill(offers)
             .reduce((prev, curr) => [...prev, ...curr], [])
             .sort((a, b) => b.value - a.value)
             // .filter(element => filterList === false || element.user == id)

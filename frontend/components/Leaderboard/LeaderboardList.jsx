@@ -59,7 +59,7 @@ const LeaderboardList = ({nfts}) => {
       let res = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
       data[type] = {
         count: res.count,
-        offer: res.offers,
+        offers: res.offers,
         rarity: res.rarity,
         soldOut: res.soldOut
       };
@@ -72,6 +72,7 @@ const LeaderboardList = ({nfts}) => {
       await delay(50);
     }
 
+    // console.log({specialTypeData: data});
     setSpecialTypeData(data);
   }
   
@@ -100,7 +101,7 @@ const LeaderboardList = ({nfts}) => {
           </div>
         )) :
         // staviti broj u Array() koliko puta zelis da se ponovi lista u leaderboard (ovo je samo privremeno, inace treba da bude samo list.map(...))
-        Array(1).fill(0).reduce((prev, _) => [...prev, ...list], []).map((element, index) =>
+        Array(1).fill(0).reduce((prev, _) => [...prev, ...list], []).map((element, index) => index>0 ? null :
           <div key={index+10000}>
             {
               element !== -1 &&

@@ -10,6 +10,8 @@ const buildingStats = require('./building_stats.js');
 function cityValue(city, specialTypeData) {
     if(!city) return 0;
 
+    console.log({city, specialTypeData});
+
     let value = 0;
 
     city.buildings.forEach((element) => {
@@ -18,16 +20,18 @@ function cityValue(city, specialTypeData) {
             .slice(0, element.level+1) // u obzir se uzimaju trenutni level i svi manji
             .reduce((sum, curr) => sum + curr.cost, 0) // sabira se cena svih dosadasnjih levela zajedno
         
-        if(element.type == buildingStats.buildingTypes.Building) {
+        if(element.type == buildingStats.buildingTypes.Building || element.type == buildingStats.buildingTypes.Park) {
             elementValue *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1);
         }
 
+        console.log(elementValue, element);
         value += elementValue;
     })
 
     city.specialBuildings.forEach((element) => {
         let tempValue;
         let offerIndex = -1;
+        // console.log({specialTypeData});
         if(specialTypeData && specialTypeData[element.type].soldOut === true) {
             specialTypeData[element.type].offers.forEach((offer, index) => {
                 if(offer.filled === false) {
@@ -38,9 +42,14 @@ function cityValue(city, specialTypeData) {
             })
             tempValue = specialTypeData[element.type].offers[offerIndex].value;
         }
+
+        // remove this line if you want to calculate the value of a special building based on the highest offer instead of the original cost
+        offerIndex = -1; 
+        
         if(offerIndex === -1) {
             tempValue = buildingStats.specialPrices.get(element.type);
         }
+        console.log(tempValue, element);
         value += tempValue;
     })
 

@@ -9,6 +9,10 @@ import { rewardTypes } from "../achievements/achievements";
 
 // #region UTILS:
 
+const delay = async (time) => {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 const getDimensions = ({special, type, dimensions}, arg) => {
   if(special) {
     return specialBuildingDimensions.get(type)[0];
@@ -613,9 +617,16 @@ const buildingStore = (set) => ({
   // #endregion
 
   // #region popup handling
-  popup: {},
+  popup: {}, // type, options, message
   setPopup: p => set( state => ({
     popup: p
+  })),
+  errors: [], // message
+  addError: (msg, duration) => set( state => ({
+    errors: [ ...state.errors, { message: msg, duration: duration } ]
+  })),
+  removeError: (msg, duration) => set( state => ({
+    errors: state.errors.filter(element => !(element.message === msg && element.duration === duration)) 
   }))
   // #endregion
 });

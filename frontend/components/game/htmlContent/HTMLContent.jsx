@@ -158,6 +158,7 @@ const SaveBtn = ({ id }) => {
   const instructions = useBuildingStore(state => state.instructions);
   const setPopup = useBuildingStore(state => state.setPopup);
   const resetInstructions = useBuildingStore(state => state.resetInstructions);
+  const addError = useBuildingStore(state => state.addError);
 
   const saveChanges = async () => {
     if(instructions.length === 0) return;
@@ -218,7 +219,8 @@ const SaveBtn = ({ id }) => {
   }
 
   return (
-    <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
+    // <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
+    <button className={styles.saveBtn} onClick={() => addError(`${Math.floor(Math.random() * 999999)}`, 1000*(1+Math.random()))} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
       Save changes
     </button>
   )

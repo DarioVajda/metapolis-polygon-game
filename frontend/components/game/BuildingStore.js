@@ -5,6 +5,8 @@ import { devtools } from "zustand/middleware";
 import { buildingDimensions, buildingStats, specialBuildingDimensions } from "../../../server/gameplay/building_stats";
 import { getDynamicData } from "../../../server/gameplay/income";
 
+import { rewardTypes } from "../achievements/achievements";
+
 // #region UTILS:
 
 const getDimensions = ({special, type, dimensions}, arg) => {
@@ -529,6 +531,64 @@ const buildingStore = (set) => ({
       buildings: newList,
       instructions: newInstructions,
       ...buildingCoordinate
+    }
+  }),
+  completed: (key, city, list) => set( state => {
+    // let list = state.dynamicData.achievementList;
+    let index = list.reduce((prev, curr, index) => prev === -1 && curr.key === key ? index : prev , -1);
+    if(index === -1) {
+      return {};
+    }
+
+    let cityData = city;
+    console.log({ list, key, index });
+    let achievement = list[index];
+
+    // console.log({list});
+
+    let reward = { value: achievement.rewardValue, type: achievement.rewardType };
+    cityData = rewardTypes[reward.type].preview(cityData, reward.value);
+    // poziva se funkcija koja dodaje ovo na listu instrukcija ili odmah cuva na serveru...
+
+    // console.log(list[index]);
+    
+    list[index].count++;
+    list[index].completed = true;
+    list[index].check = {
+      completed: true,
+      main: '',
+      message: '',
+      value: 1
+    }
+    list = list.map(element => ({ ...element, check: element.checkFunction(cityData) }) );
+
+    return {
+      dynamicData: {
+        ...state.dynamicData,
+        specialBuildingCash:  cityData.specialBuildingCash,
+        money:                cityData.money,
+        incomesReceived:      cityData.incomesReceived,
+        buildingId:           cityData.buildingId,
+        sepcialBuildingId:    cityData.sepcialBuildingId,
+        normal:               cityData.normal,
+        educated:             cityData.educated,
+        normalWorkers:        cityData.normalWorkers,
+        educatedWorkers:      cityData.educatedWorkers,
+        income:               cityData.income,
+        score:                cityData.score,
+        achievementList:      list.map(element => ({ 
+          key: element.key, 
+          count: element.count, 
+          completed: element.completed 
+        }))
+      },
+      instructions: [
+        ...state.instructions,
+        { 
+          instruction: 'completed', 
+          body: { achievement: key } 
+        }
+      ]
     }
   }),
   // #endregion

@@ -19,6 +19,8 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
   const specialBuildings = useBuildingStore(state => state.specialBuildings);
   const numOfNfts = useBuildingStore(state => state.numOfNfts);
 
+  const completed = useBuildingStore(state => state.completed);
+
   useEffect(() => {
     // return;
     let isMounted = true;
@@ -98,9 +100,12 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
     return () => {
       isMounted = false;
     }
-  }, []);
+  }, [ dynamicData, buildings, specialBuildings, numOfNfts ]);
 
   const claimReward = (key) => {
+
+    /* old version
+
     let list = [ ...data.list ];
     let index = list.reduce((prev, curr, index) => prev === -1 && curr.key === key ? index : prev, -1);
 
@@ -128,6 +133,10 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
     list = list.map(element => ({ ...element, check: element.checkFunction(cityData) }) );
     
     saveData({ list: list, count: data.count, city: cityData });
+
+    */
+
+    completed(key, data.city, data.list);
   }
 
   console.log(data);

@@ -280,8 +280,13 @@ const functions = {
                     building.id,
                     { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
                 );
-                await tempTx.wait();
-            } 
+                try {
+                    await tempTx.wait();
+                }
+                catch(e) {
+                    return false;
+                }
+            }
 
             let tx = await contract.upgradeBuilding(
                 id,

@@ -60,12 +60,12 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
 
       let _upgradeValue = stats && stats[building.level + 1] ? stats[building.level + 1].cost : 0;
 
-      if((building.type === 'building' || building.type === 'park') && _upgradeValue > 0) {
+      if(building.type === 'building' || building.type === 'park') {
         let area = (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
         _sellValue *= area;
         _upgradeValue *= area;
       }
-      console.log('normal building', building);
+      // console.log('normal building', building);
 
       setSellValue(_sellValue);
       setUpgradeValue(_upgradeValue);

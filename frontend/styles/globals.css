@@ -22,3 +22,13 @@ a {
   box-sizing: border-box;
   /* transition: color 0.3s linear, backgorund-color 0.3s linear; */
 }
+
+#errors {
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(255, 0, 0, 0.151); */
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}

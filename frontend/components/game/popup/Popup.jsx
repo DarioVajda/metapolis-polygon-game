@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { useEffect } from 'react';
+import ReactDom from 'react-dom'
 
 import { useBuildingStore } from '../BuildingStore';
 
@@ -8,6 +9,13 @@ import styles from './popup.module.css';
 import AchievementList from '../../achievements/AchievementList';
 import PopupModule from '../../universal/PopupModule';
 import MakeOffer from './MakeOffer';
+
+const Errors = ({ children }) => {
+  return ReactDom.createPortal(
+    children,
+    document.getElementById('errors')
+  )
+}
 
 const Popup = () => {
 
@@ -56,17 +64,19 @@ const Popup = () => {
         <MakeOffer closePopup={closePopup} type={popup.options?.type} />
       </PopupModule>
 
-      <div className={styles.errorWrapper}>
-        <div 
-          key={errors[0]?.message}
-          className={styles.errorFadeOut}
-          style={{ animationDelay: `${(errors[0] ? errors[0].duration : 200) - 200}ms`, animationDuration: '200ms' }}
-        >
-          <div className={styles.error} style={errors[0] === undefined ? { display: 'none' } : {}}>
-            {errors[0]?.message}
+      <Errors>
+        <div className={styles.errorWrapper}>
+          <div 
+            key={errors[0]?.message}
+            className={styles.errorFadeOut}
+            style={{ animationDelay: `${(errors[0] ? errors[0].duration : 200) - 200}ms`, animationDuration: '200ms' }}
+          >
+            <div className={styles.error} style={errors[0] === undefined ? { display: 'none' } : {}}>
+              {errors[0]?.message}
+            </div>
           </div>
         </div>
-      </div>
+      </Errors>
     </>
   )
 }

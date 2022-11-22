@@ -41,6 +41,7 @@ const MakeOffer = ({ closePopup, type }) => {
   const specialTypeData = useBuildingStore(state => state[`type_${type}`]);  
   const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
   const setPopup = useBuildingStore(state => state.setPopup);
+  const addError = useBuildingStore(state => state.addError);
 
   const [ number, setNumber ] = useState('');
   const [ showingAll, setShowingAll ] = useState(false);
@@ -104,10 +105,10 @@ const MakeOffer = ({ closePopup, type }) => {
     }
 
     if(!window.ethereum) {
-      setPopup({
-        message: 'User does not have the Metamask extensions installed',
-        type: 'error-popup-widget'
-      });
+      addError(
+        'User does not have the Metamask extensions installed',
+        4000
+      );
       return;
     }
 
@@ -124,10 +125,10 @@ const MakeOffer = ({ closePopup, type }) => {
     } 
     catch (error) {
       setMakingOffer(false);
-      setPopup({ 
-        message: error.message, 
-        type: 'error-pupup-msg' 
-      });
+      setPopup(
+        error.message, 
+        4000 
+      );
       return;
     }
 
@@ -159,10 +160,10 @@ const MakeOffer = ({ closePopup, type }) => {
   const cancelOffer = async (value, setCanceling) => {
 
     if(!window.ethereum) {
-      setPopup({
-        message: 'User does not have the Metamask extensions installed',
-        type: 'error-popup-widget'
-      });
+      setPopup(
+        'User does not have the Metamask extensions installed',
+        4000
+      );
       return;
     }
 

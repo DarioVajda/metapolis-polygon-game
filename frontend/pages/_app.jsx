@@ -5,6 +5,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Component {...pageProps} />
       <div id='popup'></div>
+      <div id='errors'></div>
     </>
   )
 }

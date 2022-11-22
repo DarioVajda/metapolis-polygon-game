@@ -163,11 +163,13 @@ const SaveBtn = ({ id }) => {
   const saveChanges = async () => {
     if(instructions.length === 0) return;
 
+    console.log("save changes");
+
     if(!window.ethereum) {
-      setPopup({
-        message: 'User does not have the Metamask extensions installed',
-        type: 'error-popup-widget'
-      });
+      addError(
+        'User does not have the Metamask extensions installed.',
+        4000
+      );
       return;
     }
 
@@ -181,10 +183,10 @@ const SaveBtn = ({ id }) => {
       signature = await signer.signMessage(message);
     } 
     catch (error) {
-      setPopup({ 
-        message: error.message, 
-        type: 'error-pupup-msg' 
-      });
+      addError(
+        error.message, 
+        4000
+      );
       return;
     }
 
@@ -209,18 +211,18 @@ const SaveBtn = ({ id }) => {
       resetInstructions(); 
     }
     else {
-      setPopup({ 
-        message: 'Failed to save the changes to the city', 
-        type: 'error-pupup-msg' 
-      });
+      addError(
+        'Failed to save the changes to the city.', 
+        4000
+      );
     }
 
     console.log(response);
   }
 
   return (
-    // <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
-    <button className={styles.saveBtn} onClick={() => addError(`${Math.floor(Math.random() * 999999)}`, 1000*(1+Math.random()))} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
+    <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
+    {/* <button className={styles.saveBtn} onClick={() => addError(`${Math.floor(Math.random() * 999999)}`, 1000*(1+Math.random()))} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }> */}
       Save changes
     </button>
   )

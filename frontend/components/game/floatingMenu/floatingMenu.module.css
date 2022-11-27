@@ -150,3 +150,29 @@
     transform: scale(1.8);
     cursor: pointer;
 }
+
+
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    /* 40% {
+        opacity: .8;
+    }
+    70% {
+        opacity: .4;
+    } */
+    100% {
+        opacity: 1;
+    }
+}
+
+.buttonSpan {
+    animation-name: fadeIn;
+    animation-timing-function: linear;
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+}

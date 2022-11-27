@@ -9,7 +9,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 
 import { useBuildingStore } from '../BuildingStore';
 
-import { buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
+import { buildingStats, specialPrices, specialTypes } from '../../../../server/gameplay/building_stats';
 import { menuDataComponents } from './menuDataComponents';
 import { buildingMenuTypes } from './menuData';
 import { formatNumber } from '../../utils/numFormat';
@@ -73,13 +73,18 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
     else {
       let _sellValue;
       if(specialTypeData.soldOut === false) {
+        let maxCount = specialTypes[building.type].count;
+        let currCount = specialTypeData.count;
+
+        let MIN_RETURN_PERCENTAGE = 0.5;
+        RETURN_PERCENTAGE = MIN_RETURN_PERCENTAGE + (1 - MIN_RETURN_PERCENTAGE) * (maxCount - currCount) / maxCount;
+
         _sellValue = specialPrices.get(building.type) * RETURN_PERCENTAGE;
       }
       else {
         let highestOffer = specialTypeData.offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
         _sellValue = highestOffer.value;
       }
-      console.log('special building', building);
       
       setSellValue(_sellValue);
     }
@@ -133,7 +138,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
           building.level !== undefined && stats[building.level + 1] !== undefined && (
             <button className={styles.upgradeButton} onClick={() => setStatus('upgrading')}>
               Upgrade
-              <span>
+              <span key={upgradeValue} className={styles.buttonSpan}>
                 <MoneyIcon size={0.7} />
                 {formatNumber(upgradeValue)}
               </span>
@@ -142,7 +147,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
         }
         <button className={styles.sellButton} onClick={() => setStatus('selling')}>
           Sell
-          <span>
+          <span key={sellValue} className={styles.buttonSpan}>
             <MoneyIcon size={0.7} />
             {formatNumber(sellValue)}
           </span>
@@ -174,6 +179,8 @@ const FloatingMenu = () => {
   const rotateBuilding = useBuildingStore(state => state.rotateBuilding);
   const rotateSpecialBuilding = useBuildingStore(state => state.rotateSpecialBuilding);
   const calculateIncome = useBuildingStore(state => state.calculateIncome);
+
+  const popup = useBuildingStore(state => state.popup);
 
   const showProductivityMap = useBuildingStore(state => state.showProductivityMap);
   const toggleProductivityMap = useBuildingStore(state => state.toggleProductivityMap);
@@ -293,6 +300,7 @@ const FloatingMenu = () => {
         sprite
         distanceFactor={distanceFactor}
         position={floatingMenu.position}
+        style={ popup.type ? { display: 'none' } : {} }
       >
         <div className={styles.wrapper}>
           <span className={styles.title}>

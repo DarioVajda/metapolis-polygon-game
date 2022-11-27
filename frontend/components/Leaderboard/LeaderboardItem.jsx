@@ -305,7 +305,8 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       .then(response => response.json())
       .then(response => assetRes = response)
       .catch(err => console.error(err));
-    addr = assetRes.owner.address;
+    // console.log(assetRes);
+    addr = assetRes.top_ownerships[0].owner.address;
 
     let res;
     await fetch(`https://api.opensea.io/user/${addr}`, options)

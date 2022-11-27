@@ -116,37 +116,37 @@ class SpecialBuilding {
 }
 
 const specialTypes = {
-    Statue: {
+    statue: {
         type: 'statue',
         count: 10,
         rarity: 5
     },
-    Fountain: {
+    fountain: {
         type: 'fountain',
         count: 20,
         rarity: 3
     },
-    Stadium: {
+    stadium: {
         type: 'stadium',
         count: 1,
         rarity: 10
     },
-    School: { // nagrada da bude educated boost
+    school: { // nagrada da bude educated boost
         type: 'school',
         count: 10,
         rarity: 5
     },
-    ShoppingMall: { // nagrada da budu ingame pare npr
+    shoppingmall: { // nagrada da budu ingame pare npr
         type: 'shoppingmall',
         count: 10,
         rarity: 5
     },
-    Promenade: { // nagrada da bude novac jer 'se turistima dopada grad zbog setalista'
+    promenade: { // nagrada da bude novac jer 'se turistima dopada grad zbog setalista'
         type: 'promenade',
         count: 20,
         rarity: 3
     },
-    TownHall: { // nagrada da bude novac jer 'se turistima dopada grad zbog gradske kuce'
+    townhall: { // nagrada da bude novac jer 'se turistima dopada grad zbog gradske kuce'
         type: 'townhall',
         count: 50,
         rarity: 2
@@ -155,25 +155,25 @@ const specialTypes = {
 
 const specialBuildingDimensions = new Map();
 function initSpecialBuildingDimensions() {
-    specialBuildingDimensions.set( specialTypes.Statue.type,         [[1, 1]] );
-    specialBuildingDimensions.set( specialTypes.Fountain.type,       [[1, 2]] );
-    specialBuildingDimensions.set( specialTypes.Stadium.type,        [[2, 2]] );
-    specialBuildingDimensions.set( specialTypes.School.type,         [[1, 2]] );
-    specialBuildingDimensions.set( specialTypes.ShoppingMall.type,   [[2, 2]] );
-    specialBuildingDimensions.set( specialTypes.Promenade.type,      [[1, 4]] );
-    specialBuildingDimensions.set( specialTypes.TownHall.type,       [[1, 3]] );
+    specialBuildingDimensions.set( specialTypes.statue.type,         [[1, 1]] );
+    specialBuildingDimensions.set( specialTypes.fountain.type,       [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.stadium.type,        [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.school.type,         [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.shoppingmall.type,   [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.promenade.type,      [[1, 4]] );
+    specialBuildingDimensions.set( specialTypes.townhall.type,       [[1, 3]] );
 }
 initSpecialBuildingDimensions();
 
 const specialPrices = new Map();
 function initSpecialPrices() {
-    specialPrices.set(specialTypes.Statue.type,         10  );
-    specialPrices.set(specialTypes.Fountain.type,       80000   );
-    specialPrices.set(specialTypes.Stadium.type,        1000000 );
-    specialPrices.set(specialTypes.School.type,         200000  );
-    specialPrices.set(specialTypes.ShoppingMall.type,   750000  );
-    specialPrices.set(specialTypes.Promenade.type,      400000  );
-    specialPrices.set(specialTypes.TownHall.type,       1250000 );
+    specialPrices.set(specialTypes.statue.type,         10  );
+    specialPrices.set(specialTypes.fountain.type,       80000   );
+    specialPrices.set(specialTypes.stadium.type,        1000000 );
+    specialPrices.set(specialTypes.school.type,         200000  );
+    specialPrices.set(specialTypes.shoppingmall.type,   750000  );
+    specialPrices.set(specialTypes.promenade.type,      400000  );
+    specialPrices.set(specialTypes.townhall.type,       1250000 );
 }
 initSpecialPrices();
 

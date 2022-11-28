@@ -9,6 +9,7 @@ import styles from './popup.module.css';
 import AchievementList from '../../achievements/AchievementList';
 import PopupModule from '../../universal/PopupModule';
 import MakeOffer from './MakeOffer';
+import DiscardChanges from './DiscardChanges.jsx';
 
 const Errors = ({ children }) => {
   return ReactDom.createPortal(
@@ -65,10 +66,8 @@ const Popup = () => {
       </PopupModule>
 
       {/* Discard changes */}
-      <PopupModule open={popup.type==='discard-changes'} width={50} height={60} unit={'%'} >
-        <div onClick={() => closePopup()}>
-          discard changes
-        </div>
+      <PopupModule open={popup.type==='discard-changes'} width={30} height={30} unit={'%'} >
+        <DiscardChanges closePopup={closePopup} />
       </PopupModule>
 
       {/* Preview changes */}

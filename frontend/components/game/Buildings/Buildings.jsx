@@ -17,6 +17,8 @@ const Buildings = ({ id }) => {
   const calculateIncome = useBuildingStore(state => state.calculateIncome);
   const changeSpecialBuildingData = useBuildingStore(state => state.changeSpecialBuildingData);
 
+  const setUnchangedData = useBuildingStore(state => state.setUnchangedData);
+
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
 
   const loadData = async () => {
@@ -47,6 +49,8 @@ const Buildings = ({ id }) => {
       score: _data.score,
     });
     calculateIncome();
+    
+    setUnchangedData();
   }
 
   const loadSpecialBuildingData = async () => {
@@ -59,6 +63,8 @@ const Buildings = ({ id }) => {
     Object.values(specialTypes).forEach(({ type } )=> {
       loadSingleTypeData(type);
     });
+
+    setUnchangedData();
   }
 
   useEffect(() => {

@@ -120,7 +120,33 @@ const buildingStore = (set) => ({
 
   // #endregion
   
-  // #region special buildings data
+  // #region Unchanged data
+
+  unchangedData: {},
+  setUnchangedData: () => set( state => ({
+    unchangedData: { ...state, unchangedData: undefined }
+  })),
+  reuseUnchangedData: () => set( state => {
+    const s = {};
+    const n = {};
+    for(let x = 0; x < 20; x++) {
+      for(let y = 0; y < 20; y++) {
+        n[`n_${x}_${y}`] = undefined;
+        s[`s_${x}_${y}`] = undefined;
+      }
+    }
+
+    return {
+      ...n,
+      ...s,
+      ...state.unchangedData,
+      unchangedData: { ...state, unchangedData: undefined }
+    }
+  }),
+
+  // #endregion
+
+  // #region Special buildings data
   // FIELDS - keys with format 'type_${type}' and values that contain information about the special building type ({ count, rarity, soldOut, offers })
   changeSpecialBuildingData: (data, type) => set( state => {
     let newDataField = {};

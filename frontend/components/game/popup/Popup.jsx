@@ -64,6 +64,20 @@ const Popup = () => {
         <MakeOffer closePopup={closePopup} type={popup.options?.type} />
       </PopupModule>
 
+      {/* Discard changes */}
+      <PopupModule open={popup.type==='discard-changes'} width={50} height={60} unit={'%'} >
+        <div onClick={() => closePopup()}>
+          discard changes
+        </div>
+      </PopupModule>
+
+      {/* Preview changes */}
+      <PopupModule open={popup.type==='preview-changes'} width={50} height={60} unit={'%'} >
+        <div onClick={() => closePopup()}>
+          preview changes
+        </div>
+      </PopupModule>
+
       <Errors>
         <div className={styles.errorWrapper}>
           <div 

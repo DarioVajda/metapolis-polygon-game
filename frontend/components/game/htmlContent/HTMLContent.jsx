@@ -12,6 +12,8 @@ import IncomeIcon from '../../universal/icons/IncomeIcon';
 import EducatedCityIcon from '../../universal/icons/achievement_icons/EducatedCityIcon';
 import AchievementFrame from '../../universal/icons/achievement_icons/AchievementFrame';
 import ArrowIcon from '../../universal/icons/ArrowIcon';
+import TrashIcon from '../../universal/icons/TrashIcon';
+import EyeIcon from '../../universal/icons/EyeIcon';
 
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
@@ -160,6 +162,8 @@ const SaveBtn = ({ id }) => {
   const resetInstructions = useBuildingStore(state => state.resetInstructions);
   const addError = useBuildingStore(state => state.addError);
 
+  const [ showOptions, setShowOptions ] = useState(false);
+
   const saveChanges = async () => {
     if(instructions.length === 0) return;
 
@@ -220,11 +224,44 @@ const SaveBtn = ({ id }) => {
     console.log(response);
   }
 
+  const toggleShowMoreOptions = (e) => {
+    e.stopPropagation();
+
+    setShowOptions(!showOptions);
+  }
+
+
+  console.log(showOptions);
   return (
-    <button className={styles.saveBtn} onClick={saveChanges} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }>
-    {/* <button className={styles.saveBtn} onClick={() => addError(`${Math.floor(Math.random() * 999999)}`, 1000*(1+Math.random()))} style={ instructions.length>0 ? {backgroundColor: 'var(--primary)'} : {} }> */}
-      Save changes
-    </button>
+    <div className={styles.saveBtnWrapper}>
+      <button 
+        className={styles.saveBtn} 
+        onClick={saveChanges} 
+        // onClick={() => setShowOptions(!showOptions)}
+        style={{ zIndex: 100, backgroundColor: instructions.length>0 ? 'var(--primary)' : '' }}
+      >
+        Save changes
+        <div className={`${styles.showMoreOptions} ${showOptions?styles.showingMoreOptions:''}`} onClick={toggleShowMoreOptions}>
+          <ArrowIcon direction={2} />
+        </div>
+      </button>
+      <button 
+        className={styles.saveBtn} 
+        onClick={() => setPopup({ type: 'discard-changes' })} 
+        style={{ zIndex: 99, transform: showOptions ? 'translateY(110%)' : 'translateY(0)' }}
+      >
+        <TrashIcon />
+        Discard changes
+      </button>
+      <button 
+        className={styles.saveBtn} 
+        onClick={() => setPopup({ type: 'preview-changes' })} 
+        style={{ zIndex: 98, transform: showOptions ? 'translateY(220%)' : 'translateY(0)' }}
+      >
+        <EyeIcon />
+        Preview changes
+      </button>
+    </div>
   )
 }
 

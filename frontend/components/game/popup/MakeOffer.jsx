@@ -224,7 +224,7 @@ const MakeOffer = ({ closePopup, type }) => {
 
   // calculating how many offers are higher than the money value in the input field
   let offers = specialTypeData.offers.filter(element => element.filled === false);
-  console.log(specialTypeData.offers, offers);
+  // console.log(specialTypeData.offers, offers);
   let above = offers.reduce((prev, curr) => prev + (curr.value > number ? 1 : 0), 0);
   let highestOffer = offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
   return (

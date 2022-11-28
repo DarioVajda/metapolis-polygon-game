@@ -18,7 +18,8 @@
 
 .topData {
     width: 100%;
-    height: fit-content;
+    /* height: fit-content; */
+    height: 3.5em;
     /* margin-top: 10em; */
 
     display: flex;
@@ -52,21 +53,71 @@
     margin: 0.5em;
 }
 
+.saveBtnWrapper {
+    display: grid;
+    width: fit-content;
+    margin-right: .5em;
+}
+
+.saveBtnWrapper>button {
+    width: 100%;
+
+    transition: transform .3s ease-in-out;
+}
+
 .saveBtn {
     margin-left: auto;
     padding: .5em 1em;
+    height: 2.5em;
+    /* align-self: flex-start; */
     background-color: var(--lightest-background);
     border-radius: 10px;
     margin-right: .5em;
     cursor: pointer;
 
+    grid-row: 1;
+    grid-column: 1;
+
     border: none;
     color: inherit;
     font-size: inherit;
 }
-.saveBtn:active {
-    transform: scale(0.97);
+.saveBtn:active:not(:has(.showMoreOptions:hover)) {
+    scale: .97;
 }
+
+.saveBtnWrapper>button:not(:first-child) {
+    background-color: var(--light-background);
+}
+
+.saveBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.showMoreOptions {
+    border-radius: 50%;
+    transform: rotateX(0);
+    scale: 1.5;
+
+    transition: transform .3s ease-in-out;
+}
+
+.showMoreOptions>* {
+    scale: 1.3;
+}
+
+.showMoreOptions:hover {
+    /* color: var(--light-background); */
+    color: var(--light-text);
+}
+
+.showingMoreOptions {
+    transform: rotateX(180deg);
+}
+
 
 .bottomUI {
     height: 9em;

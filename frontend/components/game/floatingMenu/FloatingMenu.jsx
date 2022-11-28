@@ -21,7 +21,7 @@ import XIcon from '../../universal/icons/XIcon';
 import MoneyIcon from '../../universal/icons/MoneyIcon';
 import RotateIcon from '../../universal/icons/RotateIcon';
 
-const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
+const Buttons = ({ status, setStatus, sell, upgrade, rotate, building, id }) => {
 
   const instructions = useBuildingStore(state => state.instructions);
   const specialTypeData = useBuildingStore(state => state[`type_${building.type}`]);
@@ -82,7 +82,10 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
         _sellValue = specialPrices.get(building.type) * RETURN_PERCENTAGE;
       }
       else {
-        let highestOffer = specialTypeData.offers.reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
+        let highestOffer = specialTypeData.offers
+          .filter(element => element.user != id && !element.filled)
+          .reduce((prev, curr) => curr.value > prev.value ? curr : prev, { value: 0 });
+        console.log({highestOffer});
         _sellValue = highestOffer.value;
       }
       
@@ -145,11 +148,11 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building }) => {
             </button>
           )
         }
-        <button className={styles.sellButton} onClick={() => setStatus('selling')}>
+        <button className={styles.sellButton} onClick={() => sellValue > 0 ? setStatus('selling') : {}}>
           Sell
           <span key={sellValue} className={styles.buttonSpan}>
             <MoneyIcon size={0.7} />
-            {formatNumber(sellValue)}
+            { sellValue > 0 ? formatNumber(sellValue) : "No offers" }
           </span>
         </button>
         <button className={styles.rotateButton} onClick={rotate}>
@@ -172,6 +175,7 @@ const FloatingMenu = () => {
   const dynamicData = useBuildingStore(state => state.dynamicData);
   const buildings = useBuildingStore(state => state.buildings);
   const instructions = useBuildingStore(state => state.instructions);
+  const staticData = useBuildingStore(state => state.staticData);
   
   const upgradeBuilding = useBuildingStore(state => state.upgradeBuilding);
   const removeBuilding = useBuildingStore(state => state.removeBuilding);
@@ -336,6 +340,7 @@ const FloatingMenu = () => {
               upgrade={upgradeFunc} 
               sell={sellFunc} 
               rotate={rotateFunc}
+              id={staticData.id}
             />
           </div>
         </div>

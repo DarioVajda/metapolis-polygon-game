@@ -66,7 +66,7 @@ const Popup = () => {
       </PopupModule>
 
       {/* Discard changes */}
-      <PopupModule open={popup.type==='discard-changes'} width={30} height={30} unit={'%'} >
+      <PopupModule open={popup.type==='discard-changes'} width={22} height={12} unit={'em'} >
         <DiscardChanges closePopup={closePopup} />
       </PopupModule>
 

@@ -35,14 +35,14 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
   
       // #region loading functions
       const loadList = async () => {
-        // let res = await (await fetch(`http://localhost:8000/cities/${id}/achievements`)).json();
+        // let res = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/achievements`)).json();
         let res = dynamicData.achievementList;
         list = [ ...res ];
         console.log({list});
       }
     
       const loadNumOfNfts = async () => {
-        // let res = await (await fetch('http://localhost:8000/count')).json();
+        // let res = await (await fetch('https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/count')).json();
         let res = numOfNfts;
         count = res;
         console.log({count});
@@ -55,7 +55,7 @@ const AchievementList = ({ id, city, closePopup, data, saveData }) => {
         }
     
         // podaci o gradu se ucitavaju ako nisu poslati
-        // let res = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+        // let res = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`)).json();
         let res = {
           ...staticData,
           ...dynamicData,

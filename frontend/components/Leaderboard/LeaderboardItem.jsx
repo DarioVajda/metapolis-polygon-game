@@ -297,6 +297,8 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
   // #region Profile image
 
   const getOwnerData = async (addr) => {
+    if(!window.ethereum) return;
+  
     const options = {method: 'GET'};
 
     // kasnije nece trebati nista od sledeceg api call-a (nego se koristi prosledjena vrednost od 'addr')

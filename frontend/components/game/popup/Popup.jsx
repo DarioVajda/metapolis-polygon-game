@@ -9,7 +9,8 @@ import styles from './popup.module.css';
 import AchievementList from '../../achievements/AchievementList';
 import PopupModule from '../../universal/PopupModule';
 import MakeOffer from './MakeOffer';
-import DiscardChanges from './DiscardChanges.jsx';
+import DiscardChanges from './DiscardChanges';
+import PreviewChanges from './PreviewChanges';
 
 const Errors = ({ children }) => {
   return ReactDom.createPortal(
@@ -71,10 +72,8 @@ const Popup = () => {
       </PopupModule>
 
       {/* Preview changes */}
-      <PopupModule open={popup.type==='preview-changes'} width={50} height={60} unit={'%'} >
-        <div onClick={() => closePopup()}>
-          preview changes
-        </div>
+      <PopupModule open={popup.type==='preview-changes'} width={40} height={60} unit={'%'} >
+        <PreviewChanges closePopup={closePopup} />
       </PopupModule>
 
       <Errors>

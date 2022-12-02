@@ -197,7 +197,7 @@ const buildingStore = (set) => ({
       newBuildingCoordinate[`n_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
       return ({
         buildings: [ ...state.buildings, building ],
-        instructions: [ ...state.instructions, { instruction: 'build', body: { building } } ],
+        instructions: [ ...state.instructions, { instruction: 'build', body: { building }, price: price } ],
         dynamicData: {
           ...state.dynamicData,
           money: state.dynamicData.money - price
@@ -267,7 +267,8 @@ const buildingStore = (set) => ({
           instruction: 'build',
           body: {
             building: { ...instruction.body.building, level: instruction.body.building.level + 1 }
-          }
+          },
+          price: instruction.price + price
         }
       }
       // CASE: n*upgrade = upgrade(deltaLevel=n)
@@ -281,14 +282,15 @@ const buildingStore = (set) => ({
           body: {
             building: instruction.body.building,
             deltaLevel: instruction.body.deltaLevel + 1
-          }
+          },
+          price: instruction.price + price
         }
       }
       return instruction;
     });
     console.log(newInstructions);
     if(isNewInstruction) {
-      newInstructions = [ ...newInstructions, { instruction: 'upgrade', body: { building, deltaLevel: 1 } } ];
+      newInstructions = [ ...newInstructions, { instruction: 'upgrade', body: { building, deltaLevel: 1 }, price: price } ];
     }
 
     // returning all the changes to the global state
@@ -333,7 +335,8 @@ const buildingStore = (set) => ({
             instruction: 'remove',
             body: {
               building: instruction.body.building
-            }
+            },
+            price: instruction.price - moneyValue
           };
         }
         return instruction;
@@ -349,7 +352,8 @@ const buildingStore = (set) => ({
             instruction: 'remove',
             body: {
               building: instruction.body.building
-            }
+            },
+            price: -moneyValue
           };
         }
         return instruction;
@@ -364,7 +368,7 @@ const buildingStore = (set) => ({
         ));
       }
       else {
-        newInstructions = [ ...newInstructions, { instruction: 'remove', body: { building } } ];
+        newInstructions = [ ...newInstructions, { instruction: 'remove', body: { building }, price: -moneyValue } ];
       }
     }
 
@@ -411,7 +415,8 @@ const buildingStore = (set) => ({
             body: {
               building: instruction.body.building,
               throughOffer
-            }
+            },
+            price: moneyValue
           };
         }
         return instruction;
@@ -426,7 +431,7 @@ const buildingStore = (set) => ({
         ));
       }
       else {
-        newInstructions = [ ...newInstructions, { instruction: 'removespecial', body: { building, throughOffer } } ];
+        newInstructions = [ ...newInstructions, { instruction: 'removespecial', body: { building, throughOffer }, price: moneyValue } ];
       }
     }
 
@@ -471,7 +476,8 @@ const buildingStore = (set) => ({
           body: {
             building: instruction.body.building,
             rotation: rotation===0?4:rotation
-          }
+          },
+          price: 0
         }
       }
       // CASE: build + n*rotate = build(orientation: n%4)
@@ -484,7 +490,8 @@ const buildingStore = (set) => ({
           instruction: 'build',
           body: {
             building: { ...instruction.body.building, orientation: rotation===0?4:rotation }
-          }
+          },
+          price: 0
         }
       }
       return instruction;
@@ -492,7 +499,7 @@ const buildingStore = (set) => ({
     // console.log(newInstructions);
     newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotate' && instruction.body.building.orientation === instruction.body.rotation))
     if(isNewInstruction) {
-      newInstructions = [ ...newInstructions, { instruction: 'rotate', body: { building, rotation } } ];
+      newInstructions = [ ...newInstructions, { instruction: 'rotate', body: { building, rotation }, price: 0 } ];
     }
 
     // returning all the changes to the global state
@@ -532,7 +539,8 @@ const buildingStore = (set) => ({
           body: {
             building: instruction.body.building,
             rotation: rotation===0?4:rotation
-          }
+          },
+          price: 0
         }
       }
       // CASE: build + n*rotate = build(orientation: n%4)
@@ -545,7 +553,8 @@ const buildingStore = (set) => ({
           instruction: 'buildspecial',
           body: {
             building: { ...instruction.body.building, orientation: rotation===0?4:rotation }
-          }
+          },
+          price: 0
         }
       }
       return instruction;
@@ -553,7 +562,7 @@ const buildingStore = (set) => ({
     // console.log(newInstructions);
     newInstructions = newInstructions.filter(instruction => !(instruction.instruction === 'rotatespecial' && instruction.body.building.orientation === instruction.body.rotation))
     if(isNewInstruction) {
-      newInstructions = [ ...newInstructions, { instruction: 'rotatespecial', body: { building, rotation } } ];
+      newInstructions = [ ...newInstructions, { instruction: 'rotatespecial', body: { building, rotation }, price: 0 } ];
     }
 
     // returning all the changes to the global state
@@ -616,7 +625,8 @@ const buildingStore = (set) => ({
         ...state.instructions,
         { 
           instruction: 'completed', 
-          body: { achievement: key } 
+          body: { achievement: key },
+          price: city.money - cityData.money
         }
       ]
     }

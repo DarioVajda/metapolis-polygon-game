@@ -195,7 +195,10 @@ const SaveBtn = ({ id }) => {
     }
 
     let body = {
-      instructions: instructions, // the list of instructions to be performed
+      instructions: instructions.map(e => ({
+        instruction: e.instruction,
+        body: e.body
+      })), // the list of instructions to be performed
       message: message, // this is a unique message that is never going to be the same for the same person
       signature: signature, // this is the signature of the user
     }

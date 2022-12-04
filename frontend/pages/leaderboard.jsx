@@ -70,7 +70,7 @@ const leaderboard = () => {
   }
 
   useEffect(() => {
-    if(window.ethereum.selectedAddress) { // ako je povezana neka adrese onda se ucitavaju podaci za nftove
+    if(window.ethereum && window.ethereum.selectedAddress) { // ako je povezana neka adrese onda se ucitavaju podaci za nftove
       initNftList();
     }
   }, []);

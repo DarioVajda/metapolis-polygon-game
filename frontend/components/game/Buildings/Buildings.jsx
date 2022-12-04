@@ -22,8 +22,8 @@ const Buildings = ({ id }) => {
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
 
   const loadData = async () => {
-    // console.log(`http://localhost:8000/cities/${id}/data`);
-    let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+    // console.log(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`);
+    let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`)).json();
 
     setBuildings(_data.buildings);
     setSpecialBuildings(_data.specialBuildings);
@@ -55,7 +55,7 @@ const Buildings = ({ id }) => {
 
   const loadSpecialBuildingData = async () => {
     const loadSingleTypeData = async (_type) => {
-      let _data = await (await fetch(`http://localhost:8000/specialtype/${_type}`)).json();
+      let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/specialtype/${_type}`)).json();
 
       changeSpecialBuildingData(_data, _type);
     }

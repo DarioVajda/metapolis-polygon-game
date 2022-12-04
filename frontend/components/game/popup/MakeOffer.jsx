@@ -77,7 +77,7 @@ const MakeOffer = ({ closePopup, type }) => {
         }
         
         // loading the new data
-        let _data = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
+        let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/specialtype/${type}`)).json();
         // console.log(_data);
         changeSpecialBuildingData(_data, type);
       }
@@ -139,7 +139,7 @@ const MakeOffer = ({ closePopup, type }) => {
       type
     };
 
-    const response = await fetch(`http://localhost:8000/cities/${id}/specialoffer`, {
+    const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/specialoffer`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -197,7 +197,7 @@ const MakeOffer = ({ closePopup, type }) => {
       type
     };
 
-    const response = await fetch(`http://localhost:8000/cities/${id}/canceloffer`, {
+    const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/canceloffer`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",

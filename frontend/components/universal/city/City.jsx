@@ -24,8 +24,8 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) =>
   const [ waited, setWaited ] = useState(false);
 
   const loadData = async () => {
-    console.log(`http://localhost:8000/cities/${id}/data`);
-    let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+    console.log(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`);
+    let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`)).json();
     setData(_data);
   }
 

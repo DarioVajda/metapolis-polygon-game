@@ -56,7 +56,7 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
     await delay(5000 * (1 + Math.random()));
 
     // #region get the new cost
-    let _data = await (await fetch(`http://localhost:8000/specialtype/${element}`)).json();
+    let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/specialtype/${element}`)).json();
     changeSpecialBuildingData(_data, element);
     let newPrice;
     if(_data.soldOut) {
@@ -203,7 +203,7 @@ const SaveBtn = ({ id }) => {
       signature: signature, // this is the signature of the user
     }
     
-    const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
+    const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/instructions`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",

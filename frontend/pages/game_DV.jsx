@@ -19,7 +19,7 @@ const Game = () => {
 
     let body = JSON.stringify({address: address, message: message, signature: signature});
     console.log(body);
-    const response = await fetch(`http://localhost:8000/cities/${id}/initialize`, {
+    const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/initialize`, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',

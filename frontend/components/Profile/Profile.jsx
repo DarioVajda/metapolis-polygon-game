@@ -198,7 +198,7 @@ const Profile = ({ addr, isOwner }) => {
   }
 
   const loadData = async (id) => {
-    let _data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`)).json();
+    let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     // console.log(_data);
 
     // trebaju da se ucitaju podaci o ceni nft-a na opensea, kao sto je uradjeno na leaderboard-u

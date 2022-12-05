@@ -15,7 +15,7 @@ export default function Buildings({ ID }) {
   const buildings = useBuildingStore((state) => state.buildings);
 
   async function getCityData(id) {
-    let response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`);
+    let response = await fetch(`http://localhost:8000/cities/${id}/data`);
     if (response.ok) {
       let json = await response.json();
       initializeBuildings(json.buildings.map((building) => ({ ...building, uuid: generateUUID() })));

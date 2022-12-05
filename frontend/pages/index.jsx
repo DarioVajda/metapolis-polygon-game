@@ -166,7 +166,7 @@ export default function Home() {
     // console.log(cityContract);
     // let num = await cityContract.totalSupply();
 
-    let num = await (await fetch('https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/count')).json();
+    let num = await (await fetch('http://localhost:8000/count')).json();
     num = num.count;
     // console.log(num);
 

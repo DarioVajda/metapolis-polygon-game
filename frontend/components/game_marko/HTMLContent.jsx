@@ -27,7 +27,7 @@ const getIncome = async (id) => {
 
   let body = JSON.stringify({ params: { id: id }, address: address, message: message, signature: signature });
   console.log(body);
-  const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/getincome`);
+  const response = await fetch(`http://localhost:8000/cities/${id}/getincome`);
   if (response.ok) dataLoaded.current = false; /// need to refresh data if everything went through
 };
 
@@ -56,7 +56,7 @@ const apiSendInstructions = async (id, instructions) => {
     signature: signature,
     message: message,
   });
-  const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/instructions`, {
+  const response = await fetch(`http://localhost:8000/cities/${id}/instructions`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -91,7 +91,7 @@ function HTMLContent({ ID }) {
 
   // #region Getting the data
   async function getCityData(id) {
-    let response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`);
+    let response = await fetch(`http://localhost:8000/cities/${id}/data`);
     if (response.ok) {
       let json = await response.json();
       dataLoaded.current = true;

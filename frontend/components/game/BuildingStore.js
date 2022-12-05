@@ -416,7 +416,7 @@ const buildingStore = (set) => ({
               building: instruction.body.building,
               throughOffer
             },
-            price: moneyValue
+            price: -moneyValue
           };
         }
         return instruction;
@@ -431,7 +431,7 @@ const buildingStore = (set) => ({
         ));
       }
       else {
-        newInstructions = [ ...newInstructions, { instruction: 'removespecial', body: { building, throughOffer }, price: moneyValue } ];
+        newInstructions = [ ...newInstructions, { instruction: 'removespecial', body: { building, throughOffer }, price: -moneyValue } ];
       }
     }
 

@@ -75,7 +75,7 @@
     font-size: 1.2rem;
 }
 
-.change>.message {
+.message {
     font-size: .8rem;
     color: var(--light-text);
 }

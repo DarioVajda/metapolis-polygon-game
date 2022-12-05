@@ -72,7 +72,7 @@ const Popup = () => {
       </PopupModule>
 
       {/* Preview changes */}
-      <PopupModule open={popup.type==='preview-changes'} width={40} height={60} unit={'%'} >
+      <PopupModule open={popup.type==='preview-changes'} width={40} height={50} unit={'%'} >
         <PreviewChanges closePopup={closePopup} />
       </PopupModule>
 

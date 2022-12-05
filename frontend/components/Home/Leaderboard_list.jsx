@@ -11,7 +11,7 @@ const Leaderboard_list = () => {
   const expanded = useRef(-1);
 
   const getCityList = async () => {
-    let list = await (await fetch('https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/leaderboard')).json();
+    let list = await (await fetch('http://localhost:8000/leaderboard')).json();
     console.log('SORTED LIST:', list);
     setCities(list); // sets the city list to an array with IDs sorted by their score
   }

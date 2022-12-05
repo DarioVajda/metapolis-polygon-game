@@ -73,7 +73,7 @@ async function main() {
   //------------------------------------------
   // let body = { money: 10000000 };
   // let id = 12;
-  // const response = await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/dev/setmoney`, {
+  // const response = await fetch(`http://localhost:8000/cities/${id}/dev/setmoney`, {
   //   method: "POST",
   //   mode: "cors",
   //   cache: "no-cache",

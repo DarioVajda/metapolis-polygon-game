@@ -61,11 +61,15 @@ const PreviewChanges = ({ closePopup }) => {
       <div className={styles.content}>
         <div className={styles.first}></div>
         {
+          instructions.length > 0 ?
           instructions
             .sort((a, b) => Math.abs(b.price) - Math.abs(a.price))
             .map((instruction, index) => (
               <Change instruction={instruction} key={index} />
-            ))
+            )) :
+          <div className={styles.message}>
+            No changes were made to the city since the last login.
+          </div>
         }
         <div className={styles.last}></div>
       </div>

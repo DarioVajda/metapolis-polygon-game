@@ -27,7 +27,7 @@ const LeaderboardList = ({nfts}) => {
   }
 
   const getList = async () => {
-    let res = await (await fetch('https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/leaderboard')).json();
+    let res = await (await fetch('http://localhost:8000/leaderboard')).json();
     // console.log(res);
     setList(res.map(element => element.id)); // sets the city list to an array with IDs sorted by their score
   }
@@ -48,7 +48,7 @@ const LeaderboardList = ({nfts}) => {
     */
 
 
-    let data = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/cities/${id}/data`)).json();
+    let data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     loaded.current = index + 1;
     return data;
   }
@@ -56,7 +56,7 @@ const LeaderboardList = ({nfts}) => {
   const getSpecialTypeData = async () => {
     let data = {};
     const loadType = async (type) => {
-      let res = await (await fetch(`https://dariovajda-bookish-winner-49j59r546w43jg4-8000.preview.app.github.dev/specialtype/${type}`)).json();
+      let res = await (await fetch(`http://localhost:8000/specialtype/${type}`)).json();
       data[type] = {
         count: res.count,
         offers: res.offers,

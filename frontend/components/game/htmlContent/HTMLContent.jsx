@@ -14,6 +14,7 @@ import AchievementFrame from '../../universal/icons/achievement_icons/Achievemen
 import ArrowIcon from '../../universal/icons/ArrowIcon';
 import TrashIcon from '../../universal/icons/TrashIcon';
 import EyeIcon from '../../universal/icons/EyeIcon';
+import TrophyIcon from '../../universal/icons/TrophyIcon';
 
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
@@ -345,6 +346,9 @@ const HTMLContent = ({ id }) => {
           Productivity Map
           <input type="checkbox" checked={showProductivityMap===true} onChange={() => toggleProductivityMap(!(showProductivityMap===true))} />
         </label>
+        <button className={styles.leaderboardButton} onClick={() => setPopup({ type: 'leaderboard' })}>
+          <TrophyIcon /> Leaderboard
+        </button>
       </div>
       <div className={styles.bottomUI}>
         <div className={styles.buildingListGroup}>

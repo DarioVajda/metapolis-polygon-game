@@ -57,23 +57,30 @@ const Popup = () => {
   return (
     <>
       {/* Achievements */}
-      <PopupModule open={popup.type==='achievements'} width={75} height={85} unit={'%'} >
+      <PopupModule open={popup.type==='achievements'} width={75} height={85} unit='%' >
         <AchievementList id={staticData.id} closePopup={closePopup} />
       </PopupModule>
 
       {/* Making offers */}
-      <PopupModule open={popup.type==='make-offer'} width={50} height={60} unit={'%'} >
+      <PopupModule open={popup.type==='make-offer'} width={50} height={60} unit='%' >
         <MakeOffer closePopup={closePopup} type={popup.options?.type} />
       </PopupModule>
 
       {/* Discard changes */}
-      <PopupModule open={popup.type==='discard-changes'} width={22} height={12} unit={'em'} >
+      <PopupModule open={popup.type==='discard-changes'} width={22} height={12} unit='em' >
         <DiscardChanges closePopup={closePopup} />
       </PopupModule>
 
       {/* Preview changes */}
-      <PopupModule open={popup.type==='preview-changes'} width={40} height={50} unit={'%'} >
+      <PopupModule open={popup.type==='preview-changes'} width={40} height={50} unit='%' >
         <PreviewChanges closePopup={closePopup} />
+      </PopupModule>
+
+      {/* Leaderboard */}
+      <PopupModule open={popup.type==='leaderboard'} width={60} height={70} unit='%'>
+        <div onClick={closePopup}>
+          Leaderboard
+        </div>
       </PopupModule>
 
       <Errors>

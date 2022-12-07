@@ -2,22 +2,22 @@ const buildingMenuTypes = {
     // #region normal buildings
     house: {
         name: 'House',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'House is a home for a smaller number of people. Higher percentage of them are educated and everyone gets a significant productivity boost from living in a house.',
         properties: [ 'people', 'boost' ],
     },
     building: {
         name: 'Building',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'A building is home for a large number of people. Most of the people are not educated and seek easier jobs with a lower pay.',
         properties: [ 'people' ],
     },
     factory: {
         name: 'Factory',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'Factories offer a large number of workplaces, mostly physical jobs for uneducated people and also has place for some educated office workers. Big factories cause air polution which has a noticable effect on the productivity of people who live nearby.',
         properties: [ 'workplaces', 'decrease' ],
     },
     office: {
         name: 'Office',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'Most of the educated people work in offices. They are eco-conscious and do not negatively affect the quality of life for the people nearby.',
         properties: [ 'workplaces' ],
     },
     restaurant: {
@@ -32,22 +32,22 @@ const buildingMenuTypes = {
     },
     store: {
         name: 'Store',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'Stores are necessary in every city. If people do not have a store nearby, that will have an negative effect on their productivity. A normal store can satisfy everyone in a 2 square radius. There are also a few people who work in every normal store',
         properties: [ 'workplaces', 'decrease' ],
     },
     supermarket: {
         name: 'Supermarket',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'Stores are necessary in every city. If people do not have a store nearby, that will have an negative effect on their productivity. A supermarket can satisfy everyone in a 3 square radius. There are also a few people who work in every supermarket',
         properties: [ 'workplaces', 'decrease' ],
     },
     park: {
         name: 'Park',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'People love living near parks, they also produce oxygen and this results in a significant productivity boost. The range in which a park has an effect is determined by its size.',
         properties: [ 'boost' ],
     },
     gym: {
         name: 'Gym',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        description: 'People have to stay in shape and that is why gyms exist. Their presence boosts the productivity of people nearby. There are also a few people who work in every gym.',
         properties: [ 'workplaces', 'boost' ],
     },
     // #endregion

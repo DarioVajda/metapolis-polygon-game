@@ -279,12 +279,16 @@
     width: 100%;
 }
 
+.middleUI {
+    padding: .5em;
+}
+
 .middleUI>* {
     pointer-events: all;
 }
 
 .productivityMap {
-    margin: 1em .5em;
+    margin: .5em 0;
     display: flex;
     gap: .5em;
     cursor: pointer;
@@ -293,4 +297,25 @@
 .productivityMap>input {
     transform: scale(1.5);
     cursor: pointer;
+}
+
+.leaderboardButton {
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: .5em 1em;
+    color: var(--text);
+    background-color: var(--light-background-transparent);
+
+    display: flex;
+    gap: .5em;
+}
+
+.leaderboardButton:active {
+    scale: .97;
+}
+
+.leaderboardButton>div {
+    scale: 1.25;
 }

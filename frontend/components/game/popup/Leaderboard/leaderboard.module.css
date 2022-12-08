@@ -1,0 +1,96 @@
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.title {
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    
+    padding: .5em 0;
+    border: 1px solid transparent;
+    border-color: transparent transparent var(--light-text) transparent;
+}
+
+.first {
+    min-height: 1em;
+    width: 100%;
+    background: linear-gradient(to top, transparent, var(--background));
+    position: sticky;
+    top: 0;
+}
+.last {
+    min-height: 1em;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, var(--background));
+    position: sticky;
+    bottom: -1px;
+}
+
+
+.list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+.list {
+    /* height: calc(100% - 3.5em); */
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    overflow-y: scroll;
+}
+
+/* #region leaderboard city item */
+
+.city {
+    width: 100%;
+    background-color: var(--light-background);
+    margin: .3em 0;
+    padding: .8em;
+    border-radius: 9999em;
+    display: flex;
+}
+
+.city>span {
+    display: flex;
+    gap: .3em;
+    user-select: none;
+}
+
+.city>span:first-child {
+    min-width: 25%;
+    padding-right: 2em;
+}
+
+.city>div:last-child {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.city>div:last-child>* {
+    scale: 1.1;
+    cursor: pointer;
+    color: var(--text);
+    border-radius: 50%;
+}
+.city>div:last-child>*:hover {
+    color: var(--light-text);
+}
+
+/* #endregion */

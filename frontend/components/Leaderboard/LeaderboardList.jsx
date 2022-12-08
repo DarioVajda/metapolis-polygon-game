@@ -89,6 +89,8 @@ const LeaderboardList = ({nfts}) => {
     return res;
   };
 
+  console.log(list);
+
   return (
     <div className={style.leaderboard}>
       {

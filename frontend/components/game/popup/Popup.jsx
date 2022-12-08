@@ -11,6 +11,7 @@ import PopupModule from '../../universal/PopupModule';
 import MakeOffer from './MakeOffer';
 import DiscardChanges from './DiscardChanges';
 import PreviewChanges from './PreviewChanges';
+import Leaderboard from './Leaderboard/Leaderboard';
 
 const Errors = ({ children }) => {
   return ReactDom.createPortal(
@@ -78,9 +79,7 @@ const Popup = () => {
 
       {/* Leaderboard */}
       <PopupModule open={popup.type==='leaderboard'} width={60} height={70} unit='%'>
-        <div onClick={closePopup}>
-          Leaderboard
-        </div>
+        <Leaderboard closePopup={closePopup} />
       </PopupModule>
 
       <Errors>

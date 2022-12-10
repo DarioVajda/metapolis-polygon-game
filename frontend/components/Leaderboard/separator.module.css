@@ -42,4 +42,10 @@
 
 .eth svg {
     /* transform: scale(1.3); */
+    transform: scale(1);
+}
+
+.miniSeparator {
+    font-size: 1rem;
+    margin: .2em 1em;
 }

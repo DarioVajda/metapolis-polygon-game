@@ -85,7 +85,7 @@ const LeaderboardList = ({nfts}) => {
 
   const funkcija = (i) => { 
     // funkcija koja vraca podatke o range-u
-    let res = getRange(list.length, i);
+    let res = getRange(list.length, i, false);
     return res;
   };
 

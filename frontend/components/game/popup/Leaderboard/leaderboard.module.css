@@ -64,6 +64,8 @@
     padding: .8em;
     border-radius: 9999em;
     display: flex;
+
+    transition: background-color .3s linear;
 }
 
 .city>span {
@@ -73,8 +75,13 @@
 }
 
 .city>span:first-child {
+    scale: 1.3;
+    margin-left: .3em;
+}
+
+.city>span:nth-child(2) {
     min-width: 25%;
-    padding-right: 2em;
+    padding: 0 2em 0 1.5em;
 }
 
 .city>div:last-child {
@@ -91,6 +98,10 @@
 }
 .city>div:last-child>*:hover {
     color: var(--light-text);
+}
+
+.ownedCity {
+    background-color: var(--primary-bg);
 }
 
 /* #endregion */

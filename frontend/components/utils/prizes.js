@@ -52,8 +52,8 @@ const prizes = [
     },
 ];
 
-function getRange(nfts, index) {
-    nfts *= 100; // ovo treba kasnije da se ukloni!!!
+function getRange(nfts, index, dontScale) {
+    if(dontScale === false) nfts *= 100; // ovo treba kasnije da se ukloni!!!
     
     if(nfts < prizes[0].min) return { start: 0, end: 0, prize: 0 }
 

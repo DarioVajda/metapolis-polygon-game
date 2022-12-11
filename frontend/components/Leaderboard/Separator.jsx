@@ -5,10 +5,21 @@ import styles from './separator.module.css'
 import EthIcon from '../universal/icons/EthIcon';
 import ArrowIcon from '../universal/icons/ArrowIcon';
 
-const Separator = ({ data, index, nfts, price, mini }) => {
+const Separator = ({ data, index, nfts, price, mini, end }) => {
 
   // console.log(data, index, nfts, price);
 
+  if(end) return (
+    <div className={`${styles.separator} ${mini?styles.miniSeparator:''}`}>
+      <ArrowIcon size={1.75} direction={2} />
+      <div className={styles.text}>
+        #{data.end+1}-
+      </div>
+      <div className={styles.text}>
+        No reward.
+      </div>
+    </div>
+  )
   if(index === data.start /* || index === nfts */) return (
     <div className={`${styles.separator} ${mini?styles.miniSeparator:''}`}>
       <ArrowIcon size={1.75} direction={2} />

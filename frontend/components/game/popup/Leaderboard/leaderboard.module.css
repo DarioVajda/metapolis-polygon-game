@@ -49,6 +49,7 @@
 
     display: flex;
     flex-direction: column;
+    /* align-items: center; */
 
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -105,3 +106,21 @@
 }
 
 /* #endregion */
+
+.threeDots {
+    align-self: center;
+    font-size: 1.5rem;
+    width: fit-content;
+    padding: .2em 1em;
+    margin: .2em 0;
+    text-align: center;
+    border: 1px solid var(--lightest-background);
+    height: .8em;
+    border-radius: 10000em;
+}
+
+.threeDots>* {
+    color: var(--light-text);
+    position: relative;
+    bottom: 225%;
+}

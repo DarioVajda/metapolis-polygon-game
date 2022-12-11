@@ -73,7 +73,7 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
     // saveData(data.map( element => ({ ...element, owned: nfts.includes(element.id) }) )) // use this in the final version, the following is only for testing
     data = Array(100).fill(data).reduce((prev, curr) => [...prev, ...curr], []);
     saveData(data.map( (element, index) => ({ ...element, owned: nfts.includes(element.id) && index % 100 === 0 }) ))
-    console.log(data.length);
+    console.log({ length: data.length });
   }
 
   // #endregion
@@ -114,14 +114,16 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
           data ?
           data.map((element, index) => {
             let r = [];
+
+            let sepData = separatorFunction(index+1);
             r.push(
               // <div key={`separator${index}`}>{index}</div>
               <Separator 
-                data={separatorFunction(index+1)} 
+                data={sepData} 
                 index={index+1} 
                 nfts={data.length} 
                 price={price} 
-                mini={true} 
+                mini
                 key={`separator${index}`} 
               />
             )
@@ -156,9 +158,23 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
             }
             else if(showedThreeDots.current === false) {
               r.push(
-                <div>...</div>
+                <div key={`etc${index}`} className={styles.threeDots}>
+                  <span>...</span>
+                </div>
               )
               showedThreeDots.current = true;
+            }
+            
+            if(index === sepData.end) {
+              r.push(
+                <Separator 
+                  end 
+                  mini
+                  data={sepData} 
+                  key={`endseparator${index}`} 
+                />
+              );
+              showedThreeDots.current = false;
             }
 
             return r;

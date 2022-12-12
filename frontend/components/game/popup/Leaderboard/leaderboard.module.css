@@ -38,6 +38,12 @@
     bottom: -1px;
 }
 
+.first, .last {
+    display: flex;
+    justify-content: flex-end;
+    z-index: 2;
+}
+
 
 .list::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
@@ -54,6 +60,8 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
     overflow-y: scroll;
+
+    scroll-behavior: smooth;
 }
 
 /* #region leaderboard city item */
@@ -124,3 +132,33 @@
     position: relative;
     bottom: 225%;
 }
+
+/* #region Scrolling buttons */
+
+.upButton, .downButton {
+    border: none;
+    background-color: var(--light-background);
+    border: 1px solid var(--lightest-background);
+    color: var(--text);
+    width: 3em;
+    height: 3em;
+    border-radius: 10000em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scale: .9;
+    cursor: pointer;
+}
+
+.upButton>*, .downButton>* {
+    scale: 3;
+}
+
+.upButton {
+    transform: translateY(20%);
+}
+.downButton {
+    transform: translateY(-100%);
+}
+
+/* #endregion */

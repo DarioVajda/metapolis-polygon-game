@@ -13,12 +13,17 @@ import { prizes, getRange, price } from '../../../utils/prizes';
 import XIcon from '../../../universal/icons/XIcon';
 import ScoreIcon from '../../../universal/icons/ScoreIcon';
 import OpenIcon from '../../../universal/icons/OpenIcon';
+import ArrowIcon from '../../../universal/icons/ArrowIcon';
 
 import Separator from '../../../Leaderboard/Separator';
 
 const Leaderboard = ({ closePopup, data, saveData }) => {
 
   const showedThreeDots = useRef(false);
+
+  const delay = async (time) => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
 
   // #region Loading the NFTs
 
@@ -56,6 +61,7 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
       id = id.toNumber();
       // let _data = await loadData(id);
       // nfts.push({id: id, ..._data});
+      // console.log(id);
       nfts.push(id);
     }
 
@@ -102,14 +108,83 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
     return res;
   };
 
+  // #region scrolling to your nft in the list
+
+  const upButton = async () => {
+    let list = document.getElementById('leaderboardList');
+    // console.log(list);
+
+    // this pixel number indicating where the offset between the bottom of the viewport inside div and its top
+    let bottom = Math.floor(list.scrollTop) - 1; 
+    // console.log({bottom});
+
+    let first;
+    for(let i = data.length - 1; i >= 0; i--) {
+      let element = document.getElementById(`leaderboardItem${i}`);
+      if(!element) continue;
+      
+      let tempTop = element.offsetTop - list.offsetTop - element.clientHeight / 2;
+      // if(data[i].owned) console.log({i, tempTop})
+
+      if(tempTop < bottom + 1 && data[i].owned) {
+        first = i;
+        break;
+      }
+    }
+
+    if(first === undefined) return;
+    
+    let tempElement = document.getElementById(`leaderboardItem${first}`);
+    list.scrollTop = tempElement.offsetTop - list.offsetTop - tempElement.clientHeight / 2;
+
+  }
+
+  const downButton = async () => {
+    let list = document.getElementById('leaderboardList');
+    // console.log(list);
+
+    // this pixel number indicating where the offset between the bottom of the viewport inside div and its top
+    let bottom = Math.ceil(list.scrollTop) + 1; 
+    // console.log({bottom});
+
+    let first;
+    for(let i = 0; i < data.length; i++) {
+      let element = document.getElementById(`leaderboardItem${i}`);
+      if(!element) continue;
+      
+      let tempTop = element.offsetTop - list.offsetTop - element.clientHeight / 2;
+      // if(data[i].owned) console.log({i, tempTop});
+
+      if(tempTop > bottom && data[i].owned) {
+      // if(i === 0) {
+        first = i;
+        break;
+      }
+    }
+
+    if(first === undefined) return;
+    
+    let tempElement = document.getElementById(`leaderboardItem${first}`);
+    // console.log(tempElement);
+    // console.log(tempElement.offsetTop);
+    // list.scrollTop = tempElement.offsetTop - 4 * tempElement.clientHeight;
+    list.scrollTop = tempElement.offsetTop - list.offsetTop - tempElement.clientHeight / 2;
+  }
+
+  // #endregion
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.title}>
         Leaderboard
         <XIcon onClick={closePopup} />
       </div>
-      <div className={styles.list}>
-        <div className={styles.first} />
+      <div className={styles.list} id='leaderboardList'>
+        <div className={styles.first}>
+          <button className={`${styles.upButton} ${false?styles.hideButton:''}`} onClick={upButton}>
+            <ArrowIcon direction={0} />
+          </button>
+        </div>
         {
           data ?
           data.map((element, index) => {
@@ -137,7 +212,7 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
             ) {
               r.push(
                 // <motion.div layout key={index} className={`${styles.city} ${element.owned&&index%100==0?styles.ownedCity:''}`}>
-                <motion.div layout key={index} className={`${styles.city} ${element.owned?styles.ownedCity:''}`}>
+                <motion.div layout key={index} className={`${styles.city} ${element.owned?styles.ownedCity:''}`} id={`leaderboardItem${index}`}>
                   <span>
                     {index + 1}
                   </span>
@@ -190,7 +265,11 @@ const Leaderboard = ({ closePopup, data, saveData }) => {
               </motion.div>
             ))
         }
-        <div className={styles.last} />
+        <div className={styles.last}>
+          <button className={`${styles.downButton} ${false?styles.hideButton:''}`} onClick={downButton}>
+            <ArrowIcon direction={2} />
+          </button>
+        </div>
       </div>
     </div>
   )

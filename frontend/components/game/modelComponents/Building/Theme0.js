@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { forwardRef } from 'react';
 
-const Building = forwardRef(function Building({level, ...props},ref) {
+const Theme0 = forwardRef(function Theme0({level, ...props},ref) {
   const { nodes, materials } = useGLTF('/Building.glb')
   return (
     <group name="objectGroup" ref={ref} {...props} scale={[props.scale, props.scale * (level*2+1), props.scale]}dispose={null}>
@@ -209,4 +209,4 @@ const Building = forwardRef(function Building({level, ...props},ref) {
 });
 
 useGLTF.preload('/Building.glb')
-export default Building;
+export default Theme0;

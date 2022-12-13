@@ -1,15 +1,15 @@
 import { generateUUID } from "three/src/math/MathUtils";
 
-import House        from "./House";
-import Factory      from "./Factory";
-import Building     from "./Building";
-import LongBuilding from "./Building3x1.js";
-import Store        from "./Store.js";
-import Office       from "./Office.js";
-import ParkSquare   from "./ParkSquare.js";
+import House        from "./House/House";
+import Factory      from "./Factory/Factory";
+import Building     from "./Building/Building";
+import Building3x1  from "./Building3x1/Building3x1";
+import Store        from "./Store/Store";
+import Office       from "./Office/Office";
+import ParkSquare   from "./ParkSquare";
 
-import Statue       from "./Statue";
-import Fountain     from "./Fountain"; 
+import Statue       from "./Statue/Statue";
+import Fountain     from "./Fountain/Fountain"; 
 
 import BuildingWrapper from "./BuildingWrapper";
 
@@ -78,7 +78,7 @@ const buildingTypes = {
     else {
       return (
         <BuildingWrapper key={generateUUID()} onClick={onClick}>
-          <LongBuilding {...props} level={building.level} />
+          <Building3x1  {...props} level={building.level} />
         </BuildingWrapper>
       );
     }

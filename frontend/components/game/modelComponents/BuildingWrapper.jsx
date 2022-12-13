@@ -1,7 +1,11 @@
 import React, { useRef } from 'react'
 
+import { useBuildingStore } from '../BuildingStore';
+
 const BuildingWrapper = ({ children, onClick }) => {
   const ref = useRef();
+
+  const { theme } = useBuildingStore(state => state.staticData);
 
   const clicked = useRef(false);
 
@@ -19,7 +23,6 @@ const BuildingWrapper = ({ children, onClick }) => {
     
     clicked.current = true;
 
-    // console.log('suiii', ref.current.position);
     if(onClick) {
       onClick(ref);
     }
@@ -27,9 +30,10 @@ const BuildingWrapper = ({ children, onClick }) => {
     resetOnClick();
   }
 
+  // console.log(theme);
   return (
     <group onClick={onClick?onClickHandler:null}>
-      { React.cloneElement(children, { ref: ref }) }
+      { React.cloneElement(children, { ref: ref, theme: theme }) }
     </group>
   )
 }

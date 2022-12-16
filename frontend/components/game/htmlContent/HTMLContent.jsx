@@ -9,12 +9,13 @@ import { useBuildingStore } from '../BuildingStore';
 import Hover from '../../universal/hover/Hover';
 import MoneyIcon from '../../universal/icons/MoneyIcon';
 import IncomeIcon from '../../universal/icons/IncomeIcon';
-import EducatedCityIcon from '../../universal/icons/achievement_icons/EducatedCityIcon';
 import AchievementFrame from '../../universal/icons/achievement_icons/AchievementFrame';
 import ArrowIcon from '../../universal/icons/ArrowIcon';
 import TrashIcon from '../../universal/icons/TrashIcon';
 import EyeIcon from '../../universal/icons/EyeIcon';
 import TrophyIcon from '../../universal/icons/TrophyIcon';
+import EducatedPersonIcon from '../../universal/icons/EducatedPersonIcon';
+import UneducatedPersonIcon from '../../universal/icons/UneducatedPersonIcon';
 
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
@@ -328,13 +329,13 @@ const HTMLContent = ({ id }) => {
         </Hover>
         <Hover info='Educated' underneath={true} childWidth='10em' specialId='Educated' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
-            <EducatedCityIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
+            <EducatedPersonIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
             <div>{dynamicData.educated}/{dynamicData.educatedWorkers}</div>
           </div>
         </Hover>
         <Hover info='Uneducated' underneath={true} childWidth='10em' specialId='Uneducated' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
-            <EducatedCityIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
+            <UneducatedPersonIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
             <div>{dynamicData.normal}/{dynamicData.normalWorkers}</div>
           </div>
         </Hover>

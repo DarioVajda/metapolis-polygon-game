@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ArrowIcon2 = ({ size, unit }) => {
+const EyeIcon = ({ size, unit }) => {
   const style = { 
     // transform: `rotateZ(${(direction?direction:0)*90}deg)`,
     backgroundColor: 'transparent',
@@ -20,4 +20,4 @@ const ArrowIcon2 = ({ size, unit }) => {
   )
 }
 
-export default ArrowIcon2
+export default EyeIcon

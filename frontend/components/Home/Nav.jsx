@@ -7,6 +7,15 @@ import PersonIcon from '../universal/icons/PersonIcon';
 import ThreeLinesIcon from '../universal/icons/ThreeLinesIcon';
 import { useState } from 'react';
 
+import TwitterIcon from '../universal/icons/TwitterIcon';
+import DiscordIcon from '../universal/icons/DiscordIcon';
+import InstagramIcon from '../universal/icons/InstagramIcon';
+
+import HomeIcon from '../universal/icons/HomeIcon';
+import TrophyIcon2 from '../universal/icons/TrophyIcon2';
+import PersonIcon2 from '../universal/icons/PersonIcon2';
+import GameIcon from '../universal/icons/GameIcon';
+
 const HomeNav = ({connectWallet}) => {
   return (
     <div className={styles.navbar}>
@@ -99,11 +108,14 @@ const Nav = ({ homeScreen }) => {
       <div className={`${styles.menuBG} ${menuOpen?'':styles.menuBGClosed}`} onClick={() => toggleMenuOpen(false)}>
         <div className={`${styles.menu} ${menuOpen?'':styles.menuClosed}`} onClick={e => e.stopPropagation()} >
           <div className={styles.menuHomeButton}>
-            <Link href='/'><a>Home</a></Link>
+            <Link href='/'><a>
+              <HomeIcon />
+              Home
+            </a></Link>
             <div>
             {
               homeScreen && [ { href: '/', text: 'Mint' }, ...buttons ].map((element, index) => (
-                <div key={index} className={''}>
+                <div key={index}>
                   <Link href={element.href}>
                     <a onClick={() => toggleMenuOpen(false)}>{element.text}</a>
                   </Link>
@@ -112,11 +124,42 @@ const Nav = ({ homeScreen }) => {
             }
             </div>
           </div>
-          <div> <Link href='/leaderboard'><a>Leaderboard</a></Link> </div>
-          <div> <Link href='/game'><a>Game</a></Link> </div>
-          <div> <Link href='/profile'><a>Profile</a></Link> </div>
-          <div onClick={() => toggleTheme()} className={styles.toggleTheme} style={{ justifyContent: theme?'flex-start':'flex-end' }}>
-            <motion.div layout key='toggleTheme' />
+          <div>
+            <Link href='/leaderboard'><a>
+              <TrophyIcon2 />
+              Leaderboard
+            </a></Link> 
+          </div>
+          <div> 
+            <Link href='/game'><a>
+              <GameIcon />
+              Game
+            </a></Link> 
+          </div>
+          <div className={styles.profileLink}> 
+            <Link href='/profile'><a>
+              <PersonIcon2 />
+              Profile
+            </a></Link> 
+          </div>
+          <div className={styles.themeButton}>
+            <span>
+              {theme?'Dark':'Light'} Mode
+            </span>
+            <div onClick={() => toggleTheme()} className={styles.toggleTheme} style={{ justifyContent: theme?'flex-start':'flex-end' }}>
+              <motion.div layout key='toggleTheme' />
+            </div>
+          </div>
+          <div className={styles.links}>
+            <a href="https://google.com" target='/blank'>
+              <TwitterIcon size={1.5} />
+            </a>
+            <a href="https://google.com" target='/blank'>
+              <DiscordIcon size={1.5} />
+            </a>
+            <a href="https://google.com" target='/blank'>
+              <InstagramIcon size={1.5} />
+            </a>
           </div>
         </div>
       </div>

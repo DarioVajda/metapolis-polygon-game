@@ -105,6 +105,7 @@
 
 .menuButton {
     padding-left: 1em;
+    margin-left: .5em;
     flex-grow: 2;
 
     display: flex;
@@ -137,19 +138,26 @@
 }
 
 .menu {
-    width: 13em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    gap: .5em;
+    width: 14em;
     height: fit-content;
     background-color: var(--navbar);
     position: relative;
     top: 3.5em;
     padding: 1em;
+    margin-left: 1em;
+
+    border-radius: 0 0 20px 20px;
 
     transform: translateX(0);
     transition: transform 0.3s ease-in-out;
 }
 
 .menuClosed {
-    transform: translateX(-100%);
+    transform: translateY(-100%);
 }
 
 .menu>div {
@@ -157,6 +165,19 @@
     margin-bottom: 0.6em;
     font-size: 1.2rem;
     color: var(--text);
+}
+
+.menu>div a {
+    display: flex;
+    gap: .3em;
+}
+
+.menu>div:not(.links, .profileLink) a svg {
+    scale: .8;
+}
+
+.menu>div:not(.links) a svg {
+    color: var(--light-text);
 }
 
 .menu>div a:hover {
@@ -202,4 +223,15 @@
     width: 1.2em;
     border-radius: 50%;
     background-color: var(--light-background);
+}
+
+.themeButton {
+    display: flex;
+    gap: .5em;
+}
+
+.links {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
 }

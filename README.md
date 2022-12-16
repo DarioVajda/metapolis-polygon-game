@@ -21,6 +21,7 @@ TODO lista:
     - ✓ napraviti 3d popup koji se pojavi kad se klikne na gradjevinu (moja ideja je da tamo budu dugmadi za 'info', 'upgrade', 'remove/sell' i 'rotate')
     - ✓ prilagoditi stvari novom api-u
     - ✓ omoguciti igracima da prave offerove za specijalne gradjevine
+    - ✓ dodati dugme u UI u igrici koje ce prikazati mini verziju leaderboard-a i pored dugmeta da pise koji si na listi (i evenentualno koja ti nagrada sledi i koliko je vremena ostalo do toga)
 - srediti da bolje izgleda meni koji se pojavi kad stisnes na one 3 crte u navigation baru
 - Malo zidarski poslovi (achievementovi, specijalne gradjevine itd):
     - BRAINSTORMING - smisliti puno themeova, specijalnih gradjevina, achievementova, nagrada itd.
@@ -32,7 +33,6 @@ TODO lista:
 - napraviti provere u severu za to da li je u url-u "id" argument int ili nesto drugo
 - napraviti funkciju koja renderuje grad na serveru i exportuje sliku
 - skontati kako se menja providnost objekata u programu i iskoristiti to za animaciju kod gradjenja i prodavanja gradjevina
-- dodati dugme u UI u igrici koje ce prikazati mini verziju leaderboard-a i pored dugmeta da pise koji si na listi (i evenentualno koja ti nagrada sledi i koliko je vremena ostalo do toga)
 - srediti stvari sa dobijanjem zarade i prikazom vremena koje je ostalo do sledece zarade
 - implementirati theme-ove
 

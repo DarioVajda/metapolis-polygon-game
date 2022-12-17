@@ -1,7 +1,16 @@
 .wrapper {
     height: calc(100vh - 4em);
-    width: fit-content;
+    /* width: 50em; */
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* border: 1px solid white; */
+    padding-right: 4em;
+}
+
+.wrapper>div {
+    height: 80%;
+    /* border: 1px solid red; */
+    aspect-ratio: 1/1;
 }

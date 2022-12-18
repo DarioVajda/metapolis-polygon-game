@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber';
 
 const Render = ({ fpsMax }) => {
-  const { gl, invalidate } = useThree()
+  const { gl, invalidate, camera } = useThree()
   const maxTicks = Math.round(60 / fpsMax)
   const ticksCounter = useRef(0)
 
@@ -12,6 +12,10 @@ const Render = ({ fpsMax }) => {
     if (ticksCounter.current > maxTicks) {
       // call invalidate to render a new frame
       invalidate()
+      // console.log({
+      //   position: camera.position,
+      //   rotation: camera.rotation,
+      // });
       ticksCounter.current = 0
     }
   }

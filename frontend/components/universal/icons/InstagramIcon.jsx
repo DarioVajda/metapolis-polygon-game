@@ -16,15 +16,15 @@ const DiscordIcon = ({ size, unit }) => {
       <svg xmlns="http://www.w3.org/2000/svg" width={wh} height={wh} xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 132.004 132">
         <defs>
           <linearGradient id="b">
-            <stop offset="0" stop-color="#3771c8"/>
-            <stop stop-color="#3771c8" offset=".128"/>
-            <stop offset="1" stop-color="#60f" stop-opacity="0"/>
+            <stop offset="0" stopColor="#3771c8"/>
+            <stop stopColor="#3771c8" offset=".128"/>
+            <stop offset="1" stopColor="#60f" stopOpacity="0"/>
           </linearGradient>
           <linearGradient id="a">
-            <stop offset="0" stop-color="#fd5"/>
-            <stop offset=".1" stop-color="#fd5"/>
-            <stop offset=".5" stop-color="#ff543e"/>
-            <stop offset="1" stop-color="#c837ab"/>
+            <stop offset="0" stopColor="#fd5"/>
+            <stop offset=".1" stopColor="#fd5"/>
+            <stop offset=".5" stopColor="#ff543e"/>
+            <stop offset="1" stopColor="#c837ab"/>
           </linearGradient>
           <radialGradient id="c" cx="158.429" cy="578.088" r="65" xlinkHref="#a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 -1.98198 1.8439 0 -1031.402 454.004)" fx="158.429" fy="578.088"/>
           <radialGradient id="d" cx="147.694" cy="473.455" r="65" xlinkHref="#b" gradientUnits="userSpaceOnUse" gradientTransform="matrix(.17394 .86872 -3.5818 .71718 1648.348 -458.493)" fx="147.694" fy="473.455"/>

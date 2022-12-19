@@ -3,6 +3,8 @@ import React from 'react';
 import { useState } from 'react';
 import { useRef } from "react";
 
+import { useFrame, useThree } from '@react-three/fiber';
+
 import { useSpring } from "@react-spring/three";
 import { a } from "@react-spring/three";
 
@@ -10,7 +12,7 @@ import { MapControls } from "@react-three/drei";
 
 import styles from '../../styles/walkthrough.module.css';
 
-import WorldCanvas from './WorldCanvas';
+import WorldCanvas from '../../game/WorldCanvas';
 import Lights from '../../game/Lights';
 
 import BuildingList from '../../universal/city/BuildingList';
@@ -105,7 +107,9 @@ class Scene extends React.Component {
   }
 }
 
-const Group = ({ rotation, position, groupRef }) => {
+const Group = ({ rotation, position, groupRef, city }) => {
+
+  const { gl, invalidate, camera } = useThree()
 
   const { pos, rot } = useSpring({
     pos: `[${position[0]}, ${position[1]}, ${position[2]}]`,
@@ -114,6 +118,7 @@ const Group = ({ rotation, position, groupRef }) => {
 
   const convertPosition = (p) => {
     let r = JSON.parse(p).map(e => -e);
+    invalidate();
     // console.log(r);
     return r;
   }
@@ -128,7 +133,7 @@ const Group = ({ rotation, position, groupRef }) => {
     <a.group ref={groupRef} position={pos.to(pos => convertPosition(pos))} rotation={rot.to(rot => convertRotation(rot))} >
       <Lights />
       <Landscape />
-      <BuildingList data={false?data:{buildings: []}} />
+      <BuildingList data={city} />
     </a.group>
   )
 }
@@ -149,6 +154,12 @@ export default function Walkthrough() {
     [ -Math.PI/3.2, Math.PI/6, 0 ],
     [ 0, 0, 0 ],
     [ -Math.PI/3, Math.PI/4, 0 ],
+  ]
+
+  const city = [
+    JSON.parse('{"buildings":[{"start":{"x":8,"y":9},"end":{"x":8,"y":9},"type":"house","level":0,"orientation":2,"id":1},{"start":{"x":18,"y":16},"end":{"x":18,"y":16},"type":"house","level":0,"orientation":4,"id":2},{"start":{"x":0,"y":1},"end":{"x":1,"y":2},"type":"building","level":0,"orientation":1,"id":3},{"start":{"x":11,"y":1},"end":{"x":12,"y":4},"type":"factory","level":0,"orientation":1,"id":4},{"start":{"x":13,"y":11},"end":{"x":14,"y":12},"type":"office","level":0,"orientation":3,"id":5},{"start":{"x":10,"y":12},"end":{"x":10,"y":12},"type":"store","level":0,"orientation":2,"id":6},{"start":{"x":10,"y":17},"end":{"x":10,"y":17},"type":"store","level":0,"orientation":2,"id":7},{"start":{"x":2,"y":8},"end":{"x":2,"y":8},"type":"house","level":0,"orientation":2,"id":11}],"specialBuildings":[{"start":{"x":17,"y":1},"end":{"x":17,"y":1},"type":"statue","orientation":4,"id":0},{"start":{"x":12,"y":6},"end":{"x":12,"y":7},"type":"fountain","orientation":3,"id":1}],"specialBuildingCash":["statue"],"money":120000,"owner":"0x764cDA7eccc6a94C157742e369b3533D15d047c0","incomesReceived":0,"created":true,"initialized":true,"theme":0,"buildingId":{"type":"BigNumber","hex":"0x0d"},"specialBuildingId":{"type":"BigNumber","hex":"0x02"},"normal":14,"educated":11,"normalWorkers":70,"educatedWorkers":40,"achievementList":[{"key":"skyCity","count":0,"completed":false},{"key":"educatedCity","count":0,"completed":false},{"key":"check4","count":0,"completed":false},{"key":"greenCity","count":0,"completed":false},{"key":"highEducation","count":0,"completed":false}],"income":358216,"score":2627512}'),
+    JSON.parse('{"buildings":[{"start":{"x":11,"y":14},"end":{"x":14,"y":17},"type":"park","level":0,"orientation":4,"id":9},{"start":{"x":18,"y":16},"end":{"x":18,"y":16},"type":"house","level":0,"orientation":4,"id":2},{"start":{"x":0,"y":1},"end":{"x":1,"y":2},"type":"building","level":0,"orientation":1,"id":3},{"start":{"x":11,"y":1},"end":{"x":12,"y":4},"type":"factory","level":0,"orientation":1,"id":4},{"start":{"x":13,"y":11},"end":{"x":14,"y":12},"type":"office","level":0,"orientation":3,"id":5},{"start":{"x":10,"y":12},"end":{"x":10,"y":12},"type":"store","level":0,"orientation":2,"id":6},{"start":{"x":10,"y":17},"end":{"x":10,"y":17},"type":"store","level":0,"orientation":2,"id":7},{"start":{"x":2,"y":8},"end":{"x":2,"y":8},"type":"house","level":0,"orientation":2,"id":11}],"specialBuildings":[{"start":{"x":17,"y":1},"end":{"x":17,"y":1},"type":"statue","orientation":4,"id":0},{"start":{"x":12,"y":6},"end":{"x":12,"y":7},"type":"fountain","orientation":3,"id":1}],"specialBuildingCash":["statue"],"money":120000,"owner":"0x764cDA7eccc6a94C157742e369b3533D15d047c0","incomesReceived":0,"created":true,"initialized":true,"theme":0,"buildingId":{"type":"BigNumber","hex":"0x0d"},"specialBuildingId":{"type":"BigNumber","hex":"0x02"},"normal":14,"educated":11,"normalWorkers":70,"educatedWorkers":40,"achievementList":[{"key":"skyCity","count":0,"completed":false},{"key":"educatedCity","count":0,"completed":false},{"key":"check4","count":0,"completed":false},{"key":"greenCity","count":0,"completed":false},{"key":"highEducation","count":0,"completed":false}],"income":358216,"score":2627512}'),
+    JSON.parse('{"buildings":[{"start":{"x":11,"y":14},"end":{"x":14,"y":17},"type":"park","level":0,"orientation":4,"id":9},{"start":{"x":8,"y":9},"end":{"x":8,"y":9},"type":"house","level":0,"orientation":2,"id":1},{"start":{"x":0,"y":1},"end":{"x":1,"y":2},"type":"building","level":0,"orientation":1,"id":3},{"start":{"x":11,"y":1},"end":{"x":12,"y":4},"type":"factory","level":0,"orientation":1,"id":4},{"start":{"x":13,"y":11},"end":{"x":14,"y":12},"type":"office","level":0,"orientation":3,"id":5},{"start":{"x":10,"y":12},"end":{"x":10,"y":12},"type":"store","level":0,"orientation":2,"id":6},{"start":{"x":10,"y":17},"end":{"x":10,"y":17},"type":"store","level":0,"orientation":2,"id":7},{"start":{"x":2,"y":8},"end":{"x":2,"y":8},"type":"house","level":0,"orientation":2,"id":11}],"specialBuildings":[{"start":{"x":17,"y":1},"end":{"x":17,"y":1},"type":"statue","orientation":4,"id":0},{"start":{"x":12,"y":6},"end":{"x":12,"y":7},"type":"fountain","orientation":3,"id":1}],"specialBuildingCash":["statue"],"money":120000,"owner":"0x764cDA7eccc6a94C157742e369b3533D15d047c0","incomesReceived":0,"created":true,"initialized":true,"theme":0,"buildingId":{"type":"BigNumber","hex":"0x0d"},"specialBuildingId":{"type":"BigNumber","hex":"0x02"},"normal":14,"educated":11,"normalWorkers":70,"educatedWorkers":40,"achievementList":[{"key":"skyCity","count":0,"completed":false},{"key":"educatedCity","count":0,"completed":false},{"key":"check4","count":0,"completed":false},{"key":"greenCity","count":0,"completed":false},{"key":"highEducation","count":0,"completed":false}],"income":358216,"score":2627512}'),
   ]
 
   const rightBtn = () => {
@@ -177,11 +188,15 @@ export default function Walkthrough() {
           </svg>
         </div>
         <div className={styles.canvas}>
-          <WorldCanvas pixelRatio={[1, 2]} position={0}>
+          <WorldCanvas pixelRatio={[1, 1]} position={0}>
             {/* <MapControls maxDistance={400} minDistance={10} enableDamping={false} /> */}
-            <Render fpsMax={30} />
-            {/* <Lights/> */}
-            <Group position={positions[counter%positions.length]} rotation={rotations[counter%rotations.length]} groupRef={groupRef} />
+            <Render fpsMax={1e-5} />
+            <Group 
+              position={positions[counter%positions.length]} 
+              rotation={rotations[counter%rotations.length]} 
+              city={city[counter%city.length]}
+              groupRef={groupRef} 
+            />
           </WorldCanvas>
         </div>
         <div className={styles.btn}  onClick={() => setCounter(counter + 1)}>
@@ -196,7 +211,7 @@ export default function Walkthrough() {
           </svg>
         </div>
       </div>
-      <p>See how every building affects your city to help you develop the winning strategy!</p>
+      {/* <p>See how every building affects your city to help you develop the winning strategy!</p> */}
     </div>
   );
 } 

@@ -19,12 +19,12 @@
 
 .canv {
     width: 100%;
-    height: 70vh;
+    height: 75vh;
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
-    outline: 1px solid var(--lightest-background);
+    /* outline: 1px solid var(--lightest-background); */
 }
 
 .btn {
@@ -53,6 +53,10 @@
 
 .canvas {
     height: 100%;
-    aspect-ratio: 3/2;
-    outline: 1px solid var(--lightest-background);
+    /* aspect-ratio: 3/2; */
+    width: calc(100% - 10em);
+    outline: 3px solid var(--lightest-background);
+    background-color: var(--light-background);
+    border-radius: 20px;
+    overflow: hidden;
 }

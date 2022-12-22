@@ -2,13 +2,13 @@ import React from 'react'
 
 import { generateUUID } from "three/src/math/MathUtils";
 
-import House        from "../../game_marko/modelComponents/House";
-import Factory      from "../../game_marko/modelComponents/Factory";
-import Building     from "../../game_marko/modelComponents/Building";
-import LongBuilding from "../../game_marko/modelComponents/Building3x1.js";
-import Store        from "../../game_marko/modelComponents/Store.js";
-import Office       from "../../game_marko/modelComponents/Office.js";
-import ParkSquare   from "../../game_marko/modelComponents/ParkSquare.js";
+import House        from "../../game/modelComponents/House/House";
+import Factory      from "../../game/modelComponents/Factory/Factory";
+import Building     from "../../game/modelComponents/Building/Building";
+import LongBuilding from "../../game/modelComponents/Building3x1/Building3x1";
+import Store        from "../../game/modelComponents/Store/Store";
+import Office       from "../../game/modelComponents/Office/Office";
+import ParkSquare   from "../../game/modelComponents/ParkSquare";
 
 import { gridSize, plotSize, Scale } from "../../game/MapData";
 

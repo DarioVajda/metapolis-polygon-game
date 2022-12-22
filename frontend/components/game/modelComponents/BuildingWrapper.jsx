@@ -33,7 +33,7 @@ const BuildingWrapper = ({ children, onClick }) => {
   // console.log(theme);
   return (
     <group onClick={onClick?onClickHandler:null}>
-      { React.cloneElement(children, { ref: ref, theme: theme }) }
+      { React.cloneElement(children, { reference: ref, theme: theme }) }
     </group>
   )
 }

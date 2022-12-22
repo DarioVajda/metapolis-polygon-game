@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useBuildingStore } from '../BuildingStore';
 import { specialTypes } from '../../../../server/gameplay/building_stats';
 
-const Buildings = ({ id }) => {
+const Buildings = ({ id, data, showGrid }) => {
 
   const setBuildings = useBuildingStore(state => state.setBuildings);
   const setSpecialBuildings = useBuildingStore(state => state.setSpecialBuildings);
@@ -22,8 +22,14 @@ const Buildings = ({ id }) => {
   const setFloatingMenu = useBuildingStore(state => state.setFloatingMenu);
 
   const loadData = async () => {
-    // console.log(`http://localhost:8000/cities/${id}/data`);
-    let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+    // fetching the data if it was not sent as an argument
+    let _data;
+    if(data) {
+      _data = data;
+    }
+    else {
+      _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
+    }
 
     setBuildings(_data.buildings);
     setSpecialBuildings(_data.specialBuildings);
@@ -69,7 +75,9 @@ const Buildings = ({ id }) => {
 
   useEffect(() => {
     loadData();
-    loadSpecialBuildingData();
+    if(!data) {
+      loadSpecialBuildingData();
+    }
   }, []);
 
   const onClick = (building, ref) => {
@@ -92,7 +100,7 @@ const Buildings = ({ id }) => {
     <group>
       <NormalBuildings onClick={onClick} />
       <SpecialBuildings onClick={onClick} />
-      <Grid onClick={onGridClick} />
+      { showGrid && <Grid onClick={onGridClick} /> }
     </group>
   )
 }

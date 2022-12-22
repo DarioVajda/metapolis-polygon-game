@@ -25,7 +25,7 @@ const Gameplay = ({ ID }) => {
 
         {/* STATIC CONTENT */}
         <Landscape />
-        <Buildings id={ID} />
+        <Buildings id={ID} showGrid />
 
         {/* DYNAMIC CONTENT */}
         <HoverObject />

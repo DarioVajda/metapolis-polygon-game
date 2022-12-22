@@ -2,7 +2,7 @@ import React, { useState, useRef, Suspense } from "react";
 import * as THREE from "three";
 import { OrbitControls, Bounds } from "@react-three/drei";
 import Link from "next/link";
-import Buildings from "../components/game_marko/Buildings";
+// import Buildings from "../components/game_marko/Buildings";
 import styles from "../components/styles/Game.module.css";
 
 //----COMPONENTS----//
@@ -65,7 +65,7 @@ const gameplay = () => {
               <Bounds fit clip margin={1}>
                 {/* <Landscape scale={120} position={[-20, -23, 2]} /> */}
                 <FloatingMenu style={{ backgroundColor: "transparent" }} />
-                <Buildings ID={ID} />
+                {/* <Buildings ID={ID} /> */}
                 <HoverObject />
               </Bounds>
             </Suspense>

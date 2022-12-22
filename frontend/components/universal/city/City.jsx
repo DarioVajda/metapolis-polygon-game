@@ -7,7 +7,7 @@ import styles from './city.module.css';
 
 import WorldCanvas from '../../game_marko/WorldCanvas';
 import Lights from '../../game_marko/Lights';
-import Buildings from '../../game_marko/Buildings';
+// import Buildings from '../../game_marko/Buildings';
 import Grid from '../../game_marko/Grid';
 
 import BuildingList from './BuildingList';

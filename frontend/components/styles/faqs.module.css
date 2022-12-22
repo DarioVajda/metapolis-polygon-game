@@ -21,13 +21,12 @@
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    /* border-top: 1px solid var(--lightest-background); */
+    border-top: 1px solid var(--light-background);
 }
 
 .question span {
     font-weight: 600;
     font-size: 2.5rem;
-    align-self: center;
 }
 
 .answer {
@@ -38,7 +37,7 @@
     max-height: 0;
     padding: 0 4em 0 4em;
 
-    transition-duration: 1s;
+    transition-duration: .25s;
     transition-timing-function: ease-in-out;
 }
 

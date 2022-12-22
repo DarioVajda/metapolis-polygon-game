@@ -1,5 +1,5 @@
 import ViewGL from "./viewgl.js";
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useState } from 'react';
 import { useRef } from "react";
 
@@ -15,7 +15,8 @@ import styles from '../../styles/walkthrough.module.css';
 import WorldCanvas from '../../game/WorldCanvas';
 import Lights from '../../game/Lights';
 
-import BuildingList from '../../universal/city/BuildingList';
+// import BuildingList from '../../universal/city/BuildingList';
+import Buildings from '../../game/Buildings/Buildings'
 import Landscape from '../../universal/city/Landscape';
 import Render from '../../universal/city/Render';
 
@@ -133,7 +134,9 @@ const Group = ({ rotation, position, groupRef, city }) => {
     <a.group ref={groupRef} position={pos.to(pos => convertPosition(pos))} rotation={rot.to(rot => convertRotation(rot))} >
       <Lights />
       <Landscape />
-      <BuildingList data={city} />
+      {/* <BuildingList data={city} /> */}
+      {/* <BuildingList data={{buildings: []}} /> */}
+      <Buildings id={3} data={city} />
     </a.group>
   )
 }
@@ -188,8 +191,7 @@ export default function Walkthrough() {
           </svg>
         </div>
         <div className={styles.canvas}>
-          <WorldCanvas pixelRatio={[1, 1]} position={0}>
-            {/* <MapControls maxDistance={400} minDistance={10} enableDamping={false} /> */}
+          <WorldCanvas pixelRatio={[1, 1]} position={[0, 0, 0]}>
             <Render fpsMax={1e-5} />
             <Group 
               position={positions[counter%positions.length]} 

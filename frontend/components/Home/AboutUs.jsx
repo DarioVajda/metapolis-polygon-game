@@ -12,6 +12,9 @@ const AboutUs = () => {
   const person2 = {
     nickname: "Marennn"
   }
+  const person3 = {
+    nickname: "Zdenja"
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -24,7 +27,9 @@ const AboutUs = () => {
       </p>
       <div className={styles.people}>
         <AboutUsPerson data={person1} />
-        <AboutUsPerson data={person2} />
+        {/* <AboutUsPerson data={person2} /> */}
+        {/* <AboutUsPerson data={person3} /> */}
+        {/* Ostao sam jedini u ovome 😭 */}
       </div>
       <div>
         Jos neki random tekst u sklopu “About us”. Treba da se sredi izgled ovoga i da se smisli sta ce pisati. Na primer nas cilj sa ovim projektom (osim da se iskesiramo, treba nesto sto dobro zvuci) i slicne stvari

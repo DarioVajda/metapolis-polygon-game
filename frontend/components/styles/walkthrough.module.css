@@ -59,4 +59,25 @@
     background-color: var(--light-background);
     border-radius: 20px;
     overflow: hidden;
+    
+    display: grid;
+}
+
+.canvas>div {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.canvas>div:last-child {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.canvas>div:last-child>div {
+    padding: 2em 2em 1em 2em;
+    text-align: justify;
+    /* background-color: var(--light-background); */
+    background: linear-gradient(to bottom, transparent, var(--light-background-transparent) 50%);
 }

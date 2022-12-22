@@ -165,6 +165,11 @@ export default function Walkthrough() {
     JSON.parse('{"buildings":[{"start":{"x":11,"y":14},"end":{"x":14,"y":17},"type":"park","level":0,"orientation":4,"id":9},{"start":{"x":8,"y":9},"end":{"x":8,"y":9},"type":"house","level":0,"orientation":2,"id":1},{"start":{"x":0,"y":1},"end":{"x":1,"y":2},"type":"building","level":0,"orientation":1,"id":3},{"start":{"x":11,"y":1},"end":{"x":12,"y":4},"type":"factory","level":0,"orientation":1,"id":4},{"start":{"x":13,"y":11},"end":{"x":14,"y":12},"type":"office","level":0,"orientation":3,"id":5},{"start":{"x":10,"y":12},"end":{"x":10,"y":12},"type":"store","level":0,"orientation":2,"id":6},{"start":{"x":10,"y":17},"end":{"x":10,"y":17},"type":"store","level":0,"orientation":2,"id":7},{"start":{"x":2,"y":8},"end":{"x":2,"y":8},"type":"house","level":0,"orientation":2,"id":11}],"specialBuildings":[{"start":{"x":17,"y":1},"end":{"x":17,"y":1},"type":"statue","orientation":4,"id":0},{"start":{"x":12,"y":6},"end":{"x":12,"y":7},"type":"fountain","orientation":3,"id":1}],"specialBuildingCash":["statue"],"money":120000,"owner":"0x764cDA7eccc6a94C157742e369b3533D15d047c0","incomesReceived":0,"created":true,"initialized":true,"theme":0,"buildingId":{"type":"BigNumber","hex":"0x0d"},"specialBuildingId":{"type":"BigNumber","hex":"0x02"},"normal":14,"educated":11,"normalWorkers":70,"educatedWorkers":40,"achievementList":[{"key":"skyCity","count":0,"completed":false},{"key":"educatedCity","count":0,"completed":false},{"key":"check4","count":0,"completed":false},{"key":"greenCity","count":0,"completed":false},{"key":"highEducation","count":0,"completed":false}],"income":358216,"score":2627512}'),
   ]
 
+  const messages = [
+    'This is a message explaining something about the game. This is a message explaining something about the game. This is a message explaining something about the game. This is a message explaining something about the game.',
+    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum aliquid animi eaque iusto voluptatibus? Sed officia quo totam culpa, explicabo doloremque, facilis fugit cupiditate repellat vero itaque natus quae velit.'
+  ]
+
   const rightBtn = () => {
     console.log("Right button");
   }
@@ -191,15 +196,22 @@ export default function Walkthrough() {
           </svg>
         </div>
         <div className={styles.canvas}>
-          <WorldCanvas pixelRatio={[1, 1]} position={[0, 0, 0]}>
-            <Render fpsMax={1e-5} />
-            <Group 
-              position={positions[counter%positions.length]} 
-              rotation={rotations[counter%rotations.length]} 
-              city={city[counter%city.length]}
-              groupRef={groupRef} 
-            />
-          </WorldCanvas>
+          <div>
+            <WorldCanvas pixelRatio={[1, 1]} position={[0, 0, 0]}>
+              <Render fpsMax={1e-5} />
+              <Group 
+                position={positions[counter%positions.length]} 
+                rotation={rotations[counter%rotations.length]} 
+                city={city[counter%city.length]}
+                groupRef={groupRef} 
+              />
+            </WorldCanvas>
+          </div>
+          <div>
+            <div>
+              {messages[counter%messages.length]}
+            </div>
+          </div>
         </div>
         <div className={styles.btn}  onClick={() => setCounter(counter + 1)}>
           <svg 

@@ -1,14 +1,15 @@
 import React from 'react'
 
-const ArrowIcon = ({ size, unit, direction }) => {
+const ArrowIcon = ({ size, unit, direction, verticalFlip }) => {
   // direction - 0->up, 1->right, 2->down, 3->left
 
   const style = { 
-    transform: `rotateZ(${(direction?direction:0)*90+180}deg)`,
+    transform: !verticalFlip ? `rotateZ(${(direction?direction:0)*90+180}deg)` : `rotateX(${direction===0?180:0}deg)`,
     backgroundColor: 'transparent',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    transition: !verticalFlip ? '' : 'transform .3s ease-in-out',
   };
 
   const wh = `${size?size:1}${unit?unit:'em'}`; // Width and Height

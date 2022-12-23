@@ -58,16 +58,26 @@ app.use(cors(corsOptions))
 // #region NFT GET requests
 
 app.get("/cities/:id", (req, res) => {
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
 	res.json({
-		name: `City #${req.params.id}`,
+		name: `City #${id}`,
         description: "This is an image of a city that it's owners built",
-        image: `http://localhost:3000/cities/${req.params.id}/image.jpg`, // this is going to be a different url
+        image: `http://localhost:3000/cities/${id}/image.jpg`, // this is going to be a different url
         external_url: `https://docs.openzeppelin.com/contracts/4.x/erc721` // this is going to be something else
     });
 }); // DONE (for now)
 
 app.get("/cities/:id/image.jpg", (req, res) => {
-	console.log(`/cities/${req.params.id}/city-image.jpg`);
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+	
+	console.log(`/cities/${id}/city-image.jpg`);
 	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
 }); // DONE (for now)
 
@@ -123,7 +133,12 @@ app.get("/count", async (req, res) => {
 }); // DONE
 
 app.get("/cities/:id/data", async (req, res) => {
-	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
+	let city = await getFunctions.getCityData(id, contract, achievementContract);
 	res.send(city);
 }); // DONE - have to add the orientation to the smart contract
 
@@ -154,13 +169,19 @@ app.get("/specialtype/:type", async (req, res) => {
 }); // DONE
 
 app.get("/cities/:id/getincome", async (req, res) => {
+	
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
 	// here could be some kind of a check if the player can receive income...
 
-	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
+	let city = await getFunctions.getCityData(id, contract, achievementContract);
 
 	let income = city.income
 
-	let tx = await contract.getIncome(req.params.id, income, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	let tx = await contract.getIncome(id, income, { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	console.log(tx);	
 
 	try {
@@ -174,10 +195,10 @@ app.get("/cities/:id/getincome", async (req, res) => {
 		return;
 	}
 
-	cityData = await contract.getCityData(req.params.id);
+	cityData = await contract.getCityData(id);
 	city = utils.formatBuildingList(cityData);
 
-	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -194,17 +215,22 @@ app.get("/cities/:id/getincome", async (req, res) => {
 // #region POST functions
 
 app.post("/cities/:id/initialize", async (req, res) => {
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
 	if(req.body.address === undefined) {
 		res.status(400).send("Problem with the request");
 		return;
 	}
 
-	if(req.params.id < 0) {
+	if(id < 0) {
 		res.status(400).send("Index is smaller than 0");
 		return;
 	}
 
-	let cityData = await contract.getCityData(req.params.id);
+	let cityData = await contract.getCityData(id);
 
 	let message = req.body.message;
 	let signature = req.body.signature;
@@ -220,7 +246,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 
 	let buildings = generateModule.generateBuildings();
 	let owner = req.body.address;
-	let tokenId = req.params.id;
+	let tokenId = id;
 
 	let tx = await contract.initializeCity(
 		owner, 
@@ -302,14 +328,14 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	// #endregion
 
 	// inicijalizacija scora:
-	cityData = await contract.getCityData(req.params.id);
+	cityData = await contract.getCityData(id);
 	city = utils.formatBuildingList(cityData);
 	console.log(city);
 	
 	let income = incomeModule.calculateIncome(city);
 
 	console.log('new score: ', city.money + 7*income);
-	tx = await contract.changeScore(req.params.id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+	tx = await contract.changeScore(id, city.money + 7*income, { maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
 	try {
 		receipt = await tx.wait();
 		console.log(receipt);
@@ -324,8 +350,14 @@ app.post("/cities/:id/initialize", async (req, res) => {
 });
 
 app.post("/cities/:id/instructions", async (req, res) => {
+
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+	
 	console.log('instructions', 10000);
-	let cityData = await contract.getCityData(req.params.id);
+	let cityData = await contract.getCityData(id);
 
 	try {
 		let message = req.body.message;
@@ -359,7 +391,7 @@ app.post("/cities/:id/instructions", async (req, res) => {
 		}
 	}
 
-	let response = await apiFunctions.instructionsApi(contract, achievementContract, parseInt(req.params.id), instructions);
+	let response = await apiFunctions.instructionsApi(contract, achievementContract, parseInt(id), instructions);
 	console.log(response);
 
 	res.status(response.status).send({ message: response.message, errors: response.errors });
@@ -367,7 +399,12 @@ app.post("/cities/:id/instructions", async (req, res) => {
 
 app.post("/cities/:id/specialoffer", async (req, res) => {
 
-	let city = await getFunctions.getCityData(req.params.id, contract, achievementContract);
+	let id = id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
+	let city = await getFunctions.getCityData(id, contract, achievementContract);
 	console.log(city);
 
 	// checking if the request was sent from the owner of the NFT
@@ -395,7 +432,7 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 
 	let tx = await contract.makeSpecialOffer(
 		type, 
-		req.params.id, 
+		id, 
 		value, 
 		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);
@@ -416,7 +453,12 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 });
 
 app.post("/cities/:id/canceloffer", async (req, res) => {
-	let cityData = await contract.getCityData(req.params.id);
+	let id = req.params.id;
+	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
+		res.status(400).send("bad id was sent");
+	}
+
+	let cityData = await contract.getCityData(id);
 	// let city = utils.formatBuildingList(cityData);
 
 	// checking if the request was sent from the owner of the NFT
@@ -431,7 +473,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 	let offerValue = req.body.value;
 	let type = req.body.type;
 	// let data = await contract.getSpecialBuildingType(type);
-	// let id = parseInt(req.params.id);
+	// let id = parseInt(id);
 	// if(data.offers[offerIndex].user.toNumber() !== id) {
 	// 	console.log("Can't cancel an offer someone else made!");
 	// 	res.status(400).send("Can't cancel an offer someone else made!");
@@ -440,7 +482,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 
 	let tx = await contract.cancelSpecialOffer(
 		type, 
-		req.params.id, 
+		id, 
 		offerValue, 
 		{ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 }
 	);

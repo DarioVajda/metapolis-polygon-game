@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react'
 
+import ArrowIcon from '../universal/icons/ArrowIcon';
+
 import styles from '../styles/faqs.module.css';
 
 const FAQuestion = ({q, a, i}) => {
@@ -14,7 +16,7 @@ const FAQuestion = ({q, a, i}) => {
     <div className={styles.item}>
       <div className={styles.question} onClick={() => setShow(!show)}>
         {i+1}. {q}
-        <span>{show?'-':'+'}</span>
+        <span><ArrowIcon verticalFlip direction={show?0:2} /></span>
       </div>
       {/* <div className={`${styles.answer} ${show?styles.showAnswer:''}`}> */}
       <div className={`${styles.answer} ${show?'':''}`} style={show ? { maxHeight: `${answerRef.current.clientHeight}px`} : {}}>

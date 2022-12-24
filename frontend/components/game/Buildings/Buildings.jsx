@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useBuildingStore } from '../BuildingStore';
 import { specialTypes } from '../../../../server/gameplay/building_stats';
 
-const Buildings = ({ id, data, showGrid }) => {
+const Buildings = ({ id, data, showGrid, prefixID }) => {
 
   const setBuildings = useBuildingStore(state => state.setBuildings);
   const setSpecialBuildings = useBuildingStore(state => state.setSpecialBuildings);
@@ -31,8 +31,8 @@ const Buildings = ({ id, data, showGrid }) => {
       _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     }
 
-    setBuildings(_data.buildings);
-    setSpecialBuildings(_data.specialBuildings);
+    setBuildings(_data.buildings, prefixID);
+    setSpecialBuildings(_data.specialBuildings, prefixID);
     changeStaticData({
       id: id,
       owner: _data.owner,
@@ -98,8 +98,8 @@ const Buildings = ({ id, data, showGrid }) => {
 
   return (
     <group>
-      <NormalBuildings onClick={onClick} />
-      <SpecialBuildings onClick={onClick} />
+      <NormalBuildings onClick={onClick} data={data} prefix={prefixID} />
+      <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} />
       { showGrid && <Grid onClick={onGridClick} /> }
     </group>
   )

@@ -70,10 +70,10 @@ const buildingStore = (set) => ({
   changeStaticData: changes => set( state => ({
     staticData: { ...state.staticData, ...changes }
   })),
-  setBuildings: list => set( state => {
+  setBuildings: (list, prefix) => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      buildingList[`n_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
+      buildingList[`${prefix?prefix:''}n_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
     });
 
     return {
@@ -81,10 +81,10 @@ const buildingStore = (set) => ({
       ...buildingList
     }
   }),
-  setSpecialBuildings: list => set( state => {
+  setSpecialBuildings: (list, prefix) => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      buildingList[`s_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
+      buildingList[`${prefix?prefix:''}s_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
     });
 
     return {

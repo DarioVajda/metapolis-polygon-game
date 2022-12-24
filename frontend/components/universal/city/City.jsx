@@ -7,8 +7,8 @@ import styles from './city.module.css';
 
 import WorldCanvas from '../../game_marko/WorldCanvas';
 import Lights from '../../game_marko/Lights';
-// import Buildings from '../../game_marko/Buildings';
 import Grid from '../../game_marko/Grid';
+import Buildings from '../../game/Buildings/Buildings';
 
 import BuildingList from './BuildingList';
 import Landscape from './Landscape';
@@ -79,7 +79,8 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) =>
         <Lights/>
         <group ref={groupRef}>
           <Landscape />
-          <BuildingList data={data} />
+          {/* <BuildingList data={data} /> */}
+          <Buildings id={3} data={data} prefixID="prefix1_" />
         </group>
       </WorldCanvas>
     </div>

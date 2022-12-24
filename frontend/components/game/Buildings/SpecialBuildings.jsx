@@ -7,8 +7,8 @@ import { gridSize, plotSize, Scale } from "../MapData";
 import { useBuildingStore } from '../BuildingStore';
 import { specialBuildingTypes } from '../modelComponents/BuildingTypes';
 
-const buildingGridElement = (x, y, onClick) => {
-  const gridElement = useBuildingStore(state => state[`s_${x}_${y}`]);
+const buildingGridElement = (x, y, onClick, prefix) => {
+  const gridElement = useBuildingStore(state => state[`${prefix?prefix:''}s_${x}_${y}`]);
   const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const { building, status } = gridElement || {};
 
@@ -85,11 +85,11 @@ const buildingGridElement = (x, y, onClick) => {
   );
 }
 
-const SpecialBuildings = ({ onClick }) => {
+const SpecialBuildings = ({ onClick, prefix }) => {
   let specialBuildingList = [];
   for(let x = 0; x < gridSize; x++) {
     for(let y = 0; y < gridSize; y++) { 
-      specialBuildingList.push(buildingGridElement(x, y, onClick))
+      specialBuildingList.push(buildingGridElement(x, y, onClick, prefix))
     }
   }
   return specialBuildingList;

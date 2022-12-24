@@ -146,9 +146,9 @@ const Nav = ({ homeScreen }) => {
             <span>
               {theme?'Dark':'Light'} Mode
             </span>
-            <div onClick={() => toggleTheme()} className={styles.toggleTheme} style={{ justifyContent: theme?'flex-start':'flex-end' }}>
+            <button onClick={() => toggleTheme()} className={styles.toggleTheme} style={{ justifyContent: theme?'flex-start':'flex-end' }}>
               <motion.div layout key='toggleTheme' />
-            </div>
+            </button>
           </div>
           <div className={styles.links}>
             <a href="https://google.com" target='/blank'>

@@ -61,6 +61,7 @@ app.get("/cities/:id", (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	res.json({
@@ -75,6 +76,7 @@ app.get("/cities/:id/image.jpg", (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 	
 	console.log(`/cities/${id}/city-image.jpg`);
@@ -136,6 +138,7 @@ app.get("/cities/:id/data", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	let city = await getFunctions.getCityData(id, contract, achievementContract);
@@ -173,6 +176,7 @@ app.get("/cities/:id/getincome", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	// here could be some kind of a check if the player can receive income...
@@ -218,6 +222,7 @@ app.post("/cities/:id/initialize", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	if(req.body.address === undefined) {
@@ -354,6 +359,7 @@ app.post("/cities/:id/instructions", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 	
 	console.log('instructions', 10000);
@@ -402,6 +408,7 @@ app.post("/cities/:id/specialoffer", async (req, res) => {
 	let id = id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	let city = await getFunctions.getCityData(id, contract, achievementContract);
@@ -456,6 +463,7 @@ app.post("/cities/:id/canceloffer", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
+		return;
 	}
 
 	let cityData = await contract.getCityData(id);

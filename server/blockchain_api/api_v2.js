@@ -11,6 +11,8 @@ const achievements = require('./achievements');
 const apiFunctions = require('./apiFunctions');
 const getFunctions = require('./getFunctions');
 
+const puppeteer = require('../test/puppeteer');
+
 const addressJSON = require('../../smart_contracts/contract-address.json');
 
 // #region Contract
@@ -72,15 +74,52 @@ app.get("/cities/:id", (req, res) => {
     });
 }); // DONE (for now)
 
-app.get("/cities/:id/image.jpg", (req, res) => {
+app.get("/cities/:id/image.png", async (req, res) => {
 	let id = req.params.id;
 	if(typeof id && (id > 10_000 || id < 0 || id % 1 !== 0)) {
 		res.status(400).send("bad id was sent");
 		return;
 	}
+
+	// Checking if an image is already saved on backend
+	if (fs.existsSync(`../test/images/city_${id}.png`)) {
+		// file exists and it is not neccessary to render it one more time
+	  console.log('file exists and it is neccessary to render');
+  	}	
+	else {
+		console.log('file does not exist and it is neccessary to render');	
+		
+		// getting the data about the city
+		let city = await getFunctions.getCityData(id, contract, achievementContract);
+		console.log(city);
+
+		// checking if the city was created and initialized
+		if(city.created === false) {
+			res.status(400).send('not created');
+		}
+		else if(city.initialized === false) {
+			res.status(400).send('not initialized');
+		}
+
+		// saving the image of the city on the backend
+		let image = await puppeteer.saveImage(city, id, { resolution: 1000 });
+		console.log(image);
+	}
 	
-	console.log(`/cities/${id}/city-image.jpg`);
-	res.sendFile('C:/Users/Dario Vajda/OneDrive/Desktop/nft project/nft/server/blockchain_api/temp_folder/city.jpg');
+	// console.log(`/cities/${id}/city-image`);
+	// console.log(`data:image/jpeg;base64,${image.toString('base64')}`);
+	res.sendFile(`C:/Users/Dario Vajda/OneDrive/Documents/nft/server/test/images/city_${id}.png`);
+
+	return;
+	
+	// #region drugo resenje
+
+	// ovo je druga moguca opcija za resenje problema, ali mislim da je bolje bolje to sto se sad koristi
+	let url = `data:image/jpeg;base64,${image.toString('base64')}`;
+	res.send(`<img src=${url} />`);
+	
+	// #endregion
+
 }); // DONE (for now)
 
 // #endregion

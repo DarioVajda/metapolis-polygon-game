@@ -4,7 +4,7 @@
     "ethers": "^5.5.3",
     "express": "^4.17.2",
     "lodash": "^4.17.21",
-    "node-fetch": "^3.2.6",
+    "node-fetch": "^3.3.0",
     "prompt-sync": "^4.1.6",
     "puppeteer": "^18.2.1"
   }

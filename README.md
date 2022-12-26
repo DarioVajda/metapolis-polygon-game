@@ -26,16 +26,26 @@ TODO lista:
     - ✓ kod prodavanja specijalnih gradjevina proveriti da li je gradjevina rasprodata i da li trebaju da se posmatraju offerovi ili se redovno prodaje
     - ✓ napraviti provere u severu za to da li je u url-u "id" argument int ili nesto drugo
     - ✓ implementirati theme-ove
-- napraviti funkciju koja renderuje grad na serveru i exportuje sliku
-- skontati kako se menja providnost objekata u programu i iskoristiti to za animaciju kod gradjenja i prodavanja gradjevina
-- srediti stvari sa dobijanjem zarade i prikazom vremena koje je ostalo do sledece zarade
+    - ✓ napraviti funkciju koja renderuje grad na serveru i exportuje sliku
+- DOBIJANJE ZARADE i prikaz preostalog vremena
+- ANIMACIJE MODELA u igrici (gradjenje, upgradeovanje, prodavanje,...)
+- srediti LEADERBOARD STRANICU i prikazivanje liste kad ima puno gradova (kao u komponenti koja je u igrici)
+- srediti izlged profile stranice i fetchovati podatke o profulu iz opensea-a
+- manji prioritet: refferal linkovi kod mintovanja NFT-ova
+
+
+
+
+2. Marko:
+- napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)
+- napraviti modele za specijalne gradjevine (za sad postoje u igri samo 'statue', 'fountain' i 'stadium', ali dodavacemo jos)
+
+
+
+
 - Malo zidarski poslovi (achievementovi, specijalne gradjevine itd):
     - BRAINSTORMING - smisliti puno themeova, specijalnih gradjevina, achievementova, nagrada itd.
     - dodati jos vrsta specijalnih gradjevina
     - implementirati extraEducated preview funkciju u achievements.js fajlu
     - implementirati jos achievementova - da imaju veze sa specijalnim gradjevinama, da bude posebnih achievementova za razlicite themeove itd.
     - implementirati nove vrste nagrada
-
-2. Marko:
-- napraviti nove modele za landscape i gradjevine (gradjevine nek ispunjavaju vecinu polja na kojem se nalaze da ne bude previse praznog okolo jer je sad sve previse "prazno" i neka modeli budu vise sareni jer je ovo bezbojnije i sivlje i depresivnije od beograda)
-- napraviti modele za specijalne gradjevine (za sad postoje u igri samo 'statue', 'fountain' i 'stadium', ali dodavacemo jos)

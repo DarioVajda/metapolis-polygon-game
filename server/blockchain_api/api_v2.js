@@ -69,7 +69,7 @@ app.get("/cities/:id", (req, res) => {
 	res.json({
 		name: `City #${id}`,
         description: "This is an image of a city that it's owners built",
-        image: `http://localhost:3000/cities/${id}/image.jpg`, // this is going to be a different url
+        image: `http://localhost:8000/cities/${id}/image.png`, // this is going to be a different url
         external_url: `https://docs.openzeppelin.com/contracts/4.x/erc721` // this is going to be something else
     });
 }); // DONE (for now)
@@ -83,10 +83,13 @@ app.get("/cities/:id/image.png", async (req, res) => {
 
 	// Checking if an image is already saved on backend
 	if (fs.existsSync(`../test/images/city_${id}.png`)) {
+
 		// file exists and it is not neccessary to render it one more time
-	  console.log('file exists and it is neccessary to render');
+	  	console.log('file exists and it is neccessary to render');
   	}	
 	else {
+		
+		// file does not exist and it is neccessary to render it
 		console.log('file does not exist and it is neccessary to render');	
 		
 		// getting the data about the city

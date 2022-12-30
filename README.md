@@ -27,10 +27,10 @@ TODO lista:
     - ✓ napraviti provere u severu za to da li je u url-u "id" argument int ili nesto drugo
     - ✓ implementirati theme-ove
     - ✓ napraviti funkciju koja renderuje grad na serveru i exportuje sliku
+    - ✓ srediti izlged profilne stranice i fetchovati podatke o profulu iz opensea-a
 - DOBIJANJE ZARADE i prikaz preostalog vremena
 - ANIMACIJE MODELA u igrici (gradjenje, upgradeovanje, prodavanje,...)
 - srediti LEADERBOARD STRANICU i prikazivanje liste kad ima puno gradova (kao u komponenti koja je u igrici)
-- srediti izlged profile stranice i fetchovati podatke o profulu iz opensea-a
 - manji prioritet: refferal linkovi kod mintovanja NFT-ova
 
 

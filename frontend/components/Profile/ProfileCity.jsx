@@ -33,7 +33,7 @@ const ProfileCity = React.memo(({ id, data, index }) => {
   return (
     <div className={styles.nftitem}>
       <div className={styles.city}>
-        <City dataArg={data} rotation={0} showDelay={index*300+1000} fps={1e-10} />
+        <City id={id} dataArg={data} rotation={0} showDelay={index*300+1000} fps={1e-10} />
       </div>
       <div className={styles.citydata}>
         <div className={styles.cityDataLeft}>

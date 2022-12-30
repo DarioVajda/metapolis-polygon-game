@@ -45,8 +45,9 @@ const Sort = ({ setSort, sortTypes, currSort }) => {
 
 const Profile = ({ addr, isOwner }) => {
 
-  const [username, setUsername] = useState('username100');
-  const [nftList, setNftList] = useState(Array(10).fill(false)); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
+  const [ username, setUsername ] = useState('username100');
+  const [ nftList, setNftList ] = useState(Array(10).fill(false)); // false - not loaded, [] - empty, [{ id: x, ...}, ...] - indexes of the NFTs the person owns
+  const [ owner, setOwner ] = useState({ randomIndex: Math.floor(Math.random() * 33) + 1 });
 
   // #region Sorting
 
@@ -128,7 +129,7 @@ const Profile = ({ addr, isOwner }) => {
       tokens[element.address] = { symbol: element.symbol, price: element.usd_price, decimals: element.decimals }
     })
 
-    if(id === 0) console.log(tokens);
+    // if(id === 0) console.log(tokens);
 
     res.seaport_sell_orders.forEach((offer, index) => {
 
@@ -167,7 +168,7 @@ const Profile = ({ addr, isOwner }) => {
       .then(response => res = response)
       .catch(err => console.error(err));
       
-    console.log(id, res)
+    // console.log(id, res)
     if(res.listings.length === 0) return { price: 0, token: 0, usdPrice: '', message: '' };
     
     let temp = res.listings[0].base_price / 1e18;
@@ -276,10 +277,48 @@ const Profile = ({ addr, isOwner }) => {
 
   // #endregion
 
+  // #region Getting data about the profile from opensea
+  
+  const getOwnerData = async () => {
+    if(!window.ethereum) return;
+  
+    const options = {method: 'GET'};
+
+    /*
+    // kasnije nece trebati nista od sledeceg api call-a (nego se koristi prosledjena vrednost od 'addr')
+    let assetRes;
+    await fetch(`https://api.opensea.io/api/v1/asset/${address}/${nftList[0]}/`, options)
+      .then(response => response.json())
+      .then(response => assetRes = response)
+      .catch(err => console.error(err));
+    // console.log(assetRes);
+    addr = assetRes.top_ownerships[0].owner.address;
+    */
+    
+    let res;
+    await fetch(`https://api.opensea.io/user/${addr}`, options)
+      .then(response => response.json())
+      .then(response => res = response)
+      .catch(err => console.error(err));
+
+    // console.log('response:', res);
+    
+    setUsername(res.username || 'Unnamed');
+    
+    if(res.success !== false) {
+      setOwner(res);
+    }
+  }
+
+  // #edregion
+
   useEffect(() => {
     loadNfts();
+    getOwnerData();
   }, []); 
 
+
+  // console.log(owner, owner?.account?.profile_img_url);
   return (
     <div className={styles.wrapper} style={ nftList && !nftList[0] && false ? { height: 'calc(100vh - 3.5em)', overflow: 'hidden' } : {} } >
       {
@@ -302,13 +341,13 @@ const Profile = ({ addr, isOwner }) => {
         </div>
       }
       <div className={styles.top}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          className={styles.image}
-        >
-          <g fill="currentColor"><path d="M11 6a3 3 0 1 1-6 0a3 3 0 0 1 6 0z"/><path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></g>
-        </svg>
+        <div className={styles.image} >
+          {
+            owner.randomIndex === undefined ?
+            <img src={owner.account.profile_img_url} /> :
+            <img src={`https://storage.googleapis.com/opensea-static/opensea-profile/${owner.randomIndex}.png`} />
+          } 
+        </div>
       </div>
       <div className={styles.username}>
         <a href={`http://opensea.io/${addr}`} target="_blank" rel="noopener noreferrer">
@@ -347,9 +386,14 @@ const Profile = ({ addr, isOwner }) => {
           {formatAddr()}
         </a>
       </div>
-      <Sort setSort={(newSort) => { setSort(newSort); setNftList(newSort.func(nftList)); }} sortTypes={sortTypes} currSort={sort} />
+      {
+        nftList.length > 0 ?
+        <Sort setSort={(newSort) => { setSort(newSort); setNftList(newSort.func(nftList)); }} sortTypes={sortTypes} currSort={sort} /> :
+        <></>
+      }
       <div className={styles.nftlist}>
         {
+          nftList.length > 0 ?
           [ ...nftList ].map((element, index) => {
             if(element === false) return (
               <motion.div layout key={index} >
@@ -366,7 +410,10 @@ const Profile = ({ addr, isOwner }) => {
                 <ProfileCity id={element.id} data={element} index={index} />
               </motion.div>
             )
-          })
+          }) :
+          <div className={styles.noItems}>
+            No items to display
+          </div>
         }
       </div>
     </div>

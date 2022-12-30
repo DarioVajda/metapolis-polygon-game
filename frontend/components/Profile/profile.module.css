@@ -12,9 +12,19 @@
 .image {
     /* margin-top: 3em; */
     margin-left: min(5%, 2em);
-    width: min(90%, 10em);
-    height: 10em;
-    margin-bottom: -1em;
+    width: min(90%, 12em);
+    height: 12em;
+    margin-bottom: -1.5em;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--background);
+    outline: 1px solid var(--lightest-background);
+}
+
+.image>img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .username {
@@ -64,7 +74,7 @@
     grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
 }
 
-.nftlist>a, .nftlist>div {
+.nftlist>a, .nftlist>div:not(.noItems) {
     aspect-ratio: 3/4;
     margin: .5em;
     max-width: 45vw;
@@ -463,6 +473,23 @@
     background-color: var(--lightest-background);
     border-radius: 5px;
     transform: scaleY(0.6);
+}
+
+/* #endregion */
+
+/* #region no items to show */
+
+.noItems {
+    width: calc(100% - 1em);
+    margin: 2em .5em;
+    font-size: 1.8rem;
+    outline: 1px solid var(--lightest-background);
+    border-radius: 10px;
+    height: 8em;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* #endregion */

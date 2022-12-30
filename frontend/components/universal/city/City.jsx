@@ -80,7 +80,7 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) =>
         <group ref={groupRef}>
           <Landscape />
           {/* <BuildingList data={data} /> */}
-          <Buildings id={3} data={data} prefixID="prefix1_" />
+          <Buildings id={id} data={data} prefixID={`prefix${id}_`} />
         </group>
       </WorldCanvas>
     </div>

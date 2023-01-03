@@ -13,6 +13,10 @@ const LeaderboardList = ({nfts}) => {
   const [list, setList] = useState(false); // false - not loaded, [...] - list of nfts
   const [specialTypeData, setSpecialTypeData] = useState({});
   const loaded = useRef(0);
+  const showedThreeDots = useRef(false);
+
+  const MORE_RANGE = 20;
+  const [ showingMore, setShowingMore ] = useState();
   
   const [expanded, setExpanded] = useState(-1);
 
@@ -29,6 +33,10 @@ const LeaderboardList = ({nfts}) => {
   const getList = async () => {
     let res = await (await fetch('http://localhost:8000/leaderboard')).json();
     // console.log(res);
+
+    // ovo je privremeno
+    res = Array(30).fill(res).reduce((prev, curr) => [...prev, ...curr], []);
+
     setList(res.map(element => element.id)); // sets the city list to an array with IDs sorted by their score
   }
 
@@ -83,13 +91,13 @@ const LeaderboardList = ({nfts}) => {
     getSpecialTypeData();
   }, []);
 
-  const funkcija = (i) => { 
+  const separatorFunction = (i) => { 
     // funkcija koja vraca podatke o range-u
     let res = getRange(list.length, i, false);
     return res;
   };
 
-  console.log(list);
+  // console.log(list);
 
   return (
     <div className={style.leaderboard}>
@@ -103,26 +111,100 @@ const LeaderboardList = ({nfts}) => {
           </div>
         )) :
         // staviti broj u Array() koliko puta zelis da se ponovi lista u leaderboard (ovo je samo privremeno, inace treba da bude samo list.map(...))
-        Array(1).fill(0).reduce((prev, _) => [...prev, ...list], []).map((element, index) =>
-          <div key={index+10000}>
-            {
-              element !== -1 &&
-              <Separator data={funkcija(index+1)} index={index+1} nfts={list.length} price={price} />
-            }
-            <motion.div layout key={index}>
-              <LeaderboardItem 
-                id={element} 
-                index={index} 
-                expanded={index===expanded} 
-                loadCity={loadCity} 
-                expand={expand}
-                owned={nfts.includes(element)}
-                nfts={loaded?list.length:0}
-                specialTypeData={specialTypeData}
-              />  
-            </motion.div>
-          </div>
-        )
+        Array(1).fill(0).reduce((prev, _) => [...prev, ...list], []).map((element, index) => {
+
+          let r = [];
+          
+          let delta = 1;
+          let showingElement = (i) => (
+            i < 50 || 
+            (list
+              .slice(i-delta, i+delta+1)
+              .reduce((prev, curr) => prev || nfts.includes(element) === true, false) && (i % 50 === 10-1 || i % 50 === 11-1 || i % 50 === 12-1)) ||
+            ( showingMore !== undefined && i >= showingMore && i < showingMore + MORE_RANGE)
+          )
+
+          // #region potential three dots
+
+          if(showedThreeDots.current === false && index > 0 && showingElement(index-1) === false) {
+            r.push(
+              <div key={`threeDots${index}`} className={style.threeDots}>
+                <div>
+                  <span>
+                    ...
+                  </span>
+                </div>
+              </div>
+            )
+            showedThreeDots.current = true;
+          }
+
+          // #endregion
+
+          // #region separator
+
+          let sepData = separatorFunction(index+1);
+          if(index + 1 === sepData.start) {
+            r.push(
+              // <div key={`separator${index}`}>{index}</div>
+              <Separator 
+                data={sepData} 
+                index={index+1} 
+                nfts={list.length} 
+                price={price} 
+                key={`separator${index}`} 
+                // func={ shownSeparator }
+              />
+            );
+            showedThreeDots.current = false;
+          }
+          if(index === sepData.end) {
+            r.push(
+              <Separator 
+                end 
+                mini
+                data={sepData} 
+                key={`endseparator${index}`} 
+                // func={ shownSeparator }
+              />
+            );
+            showedThreeDots.current = false;
+          }
+
+          // #endregion
+
+          if(showingElement(index)) {
+            r.push(
+              <motion.div layout key={index}>
+                <LeaderboardItem 
+                  id={element} 
+                  index={index} 
+                  expanded={index===expanded} 
+                  loadCity={loadCity} 
+                  expand={expand}
+                  owned={nfts.includes(element) && index % 50 === 10}
+                  nfts={loaded?list.length:0}
+                  specialTypeData={specialTypeData}
+                />  
+              </motion.div>
+            )
+            showedThreeDots.current = false;
+          }
+          if(!showingElement(index) && showedThreeDots.current === false) {
+            r.push(
+              <div key={`threeDots${index}`} className={style.threeDots}>
+                <div onClick={ () => setShowingMore(index) } >
+                  <span>
+                    ...
+                  </span>
+                </div>
+              </div>
+            )
+            showedThreeDots.current = true;
+          }
+
+          return r;
+        })
       }
     </div>
   )

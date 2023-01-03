@@ -167,7 +167,17 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
   }
 
   useEffect(() => {
+
     getData();
+
+    return () => {
+      setInfo({
+        data: false,
+        price: {},
+        people: false,
+        owner: { randomIndex: Math.floor(Math.random() * 33) + 1 }
+      });
+    };
   }, []);
 
   // #endregion
@@ -339,7 +349,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
   let people = info.people;
   let owner  = info.owner;
 
-  console.log(id);
+  // console.log(id);
 
   return (
     <div className={style.item}>
@@ -383,7 +393,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
           <div>
-            { expanded && <City dataArg={data} rotation={3} showDelay={300} /> }
+            { expanded && <City dataArg={data} rotation={3} showDelay={300} id={id} /> }
           </div>
         </div>
         <div className={style.data}>

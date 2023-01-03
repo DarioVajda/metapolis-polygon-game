@@ -1,14 +1,18 @@
 .leaderboard {
     min-height: 100vh;
-    padding-bottom: 15vh;
     background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    padding: 0 1em;
+    padding-bottom: 15vh;
+    gap: 1em;
 }
 
 .item {
-    margin: 1em;
+    /* margin: 1em; */
     /* border: 1px solid white; */
     border-radius: 2.25em;
-    overflow: hidden;
+    /* overflow: hidden; */
     background-color: var(--light-background);
 }
 
@@ -411,4 +415,28 @@
     /* outline: 1px solid rgba(255, 255, 255, 0.08); */
     /* background-color: green;
     border-radius: 50%; */
+}
+
+.threeDots {
+    width: 100%;
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.threeDots>div {
+    padding: 0 1.5em;
+    font-size: 1.5rem;
+    background-color: var(--lightest-background);
+    color: var(--light-text);
+    border-radius: 10000em;
+    cursor: pointer;
+}
+
+.threeDots>div>* {
+    position: relative;
+    bottom: .25em;
+    letter-spacing: .1em;
+    user-select: none;
 }

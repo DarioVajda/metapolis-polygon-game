@@ -10,7 +10,7 @@ const buildingStats = require('./building_stats.js');
 function cityValue(city, specialTypeData) {
     if(!city) return 0;
 
-    console.log({city, specialTypeData});
+    // console.log({city, specialTypeData});
 
     let value = 0;
 
@@ -24,7 +24,7 @@ function cityValue(city, specialTypeData) {
             elementValue *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1);
         }
 
-        console.log(elementValue, element);
+        // console.log(elementValue, element);
         value += elementValue;
     })
 
@@ -32,7 +32,7 @@ function cityValue(city, specialTypeData) {
         let tempValue;
         let offerIndex = -1;
         // console.log({specialTypeData});
-        if(specialTypeData && specialTypeData[element.type].soldOut === true) {
+        if(specialTypeData && specialTypeData[element.type]?.soldOut === true) {
             specialTypeData[element.type].offers.forEach((offer, index) => {
                 if(offer.filled === false) {
                     if(offerIndex === -1 || offer.value > specialTypeData[element.type].offers[offerIndex].value) {
@@ -49,7 +49,7 @@ function cityValue(city, specialTypeData) {
         if(offerIndex === -1) {
             tempValue = buildingStats.specialPrices.get(element.type);
         }
-        console.log(tempValue, element);
+        // console.log(tempValue, element);
         value += tempValue;
     })
 

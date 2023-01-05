@@ -76,7 +76,7 @@ const leaderboard = () => {
   }, []);
 
   return (
-    <>
+    <div id='leaderboardPage'>
       <title>Leaderboard</title>
       <Nav connectWallet={connectWallet} /> {/* Ovo treba da bude drugaciji navigation bar */}
       <div className={styles.leaderboard}>
@@ -85,7 +85,7 @@ const leaderboard = () => {
           <LeaderboardList nfts={nfts} />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

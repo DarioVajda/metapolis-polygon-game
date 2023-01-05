@@ -2,7 +2,7 @@
 .navbar {
     position: sticky;
     width: 100%;
-    height: 3.5em;
+    height: var(--nav-bar-height);
     background-color: var(--navbar);
     top: 0px;
     z-index: 100;

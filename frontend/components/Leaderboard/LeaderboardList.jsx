@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import LeaderboardItem from './LeaderboardItem';
 import Separator from './Separator';
 
+import ArrowIcon from '../universal/icons/ArrowIcon';
+
 import { prizes, getRange, price } from '../utils/prizes';
 import { specialTypes } from '../../../server/gameplay/building_stats';
 
@@ -97,10 +99,98 @@ const LeaderboardList = ({nfts}) => {
     return res;
   };
 
+  // #region manual scrolling
+  
+  const upButton = () => {
+    // let htmlList = document.getElementById('leaderboardList');
+    let htmlList = window;
+    // console.log(htmlList);
+
+    // this pixel number indicating where the offset between the bottom of the viewport inside div and its top
+    let bottom = Math.ceil(htmlList.scrollY - 1); 
+    // console.log({ bottom });
+    // console.log(document);
+    // console.log(window);
+
+    let first;
+    for(let i = list.length - 1; i >= 0; i--) {
+      let element = document.getElementById(`leaderboardItem${i}`);
+      if(!element) continue;
+      
+      let tempTop = element.offsetTop;
+      
+      let owned = nfts.includes(list[i]) && i % 50 === 10;
+      // console.log(owned);
+
+      // if(owned) console.log({i, tempTop});
+
+      if(tempTop < bottom + element.clientHeight && owned) {
+      // if(i === 0) {
+        first = i;
+        break;
+      }
+    }
+
+    if(first === undefined) return;
+    
+    let tempElement = document.getElementById(`leaderboardItem${first}`);
+    // console.log(tempElement);
+    // console.log(tempElement.offsetTop);
+    // htmlList.scrollTop = tempElement.offsetTop - 4 * tempElement.clientHeight;
+    htmlList.scroll({ top: tempElement.offsetTop - 2 * tempElement.clientHeight / 2 });
+  }
+  
+  // treba skontati kako se ove funkcije koriste
+  const downButton = () => {
+    // let htmlList = document.getElementById('leaderboardList');
+    let htmlList = window;
+    // console.log(htmlList);
+
+    // this pixel number indicating where the offset between the bottom of the viewport inside div and its top
+    let bottom = Math.ceil(htmlList.scrollY + 1); 
+    // console.log({ bottom });
+    // console.log(document);
+    // console.log(window);
+
+    let first;
+    for(let i = 0; i < list.length; i++) {
+      let element = document.getElementById(`leaderboardItem${i}`);
+      if(!element) continue;
+      
+      let tempTop = element.offsetTop;
+      
+      let owned = nfts.includes(list[i]) && i % 50 === 10;
+      // console.log(owned);
+
+      // if(owned) console.log({i, tempTop});
+
+      if(tempTop > bottom + element.clientHeight && owned) {
+      // if(i === 0) {
+        first = i;
+        break;
+      }
+    }
+
+    if(first === undefined) return;
+    
+    let tempElement = document.getElementById(`leaderboardItem${first}`);
+    // console.log(tempElement);
+    // console.log(tempElement.offsetTop);
+    // htmlList.scrollTop = tempElement.offsetTop - 4 * tempElement.clientHeight;
+    htmlList.scroll({ top: tempElement.offsetTop - 2 * tempElement.clientHeight / 2 });
+  }
+
+  // #endregion
+
   // console.log(list);
 
   return (
-    <div className={style.leaderboard}>
+    <div className={style.leaderboard} id={`leaderboardList`}>
+      <div className={style.first}>
+        <button className={`${style.upButton} ${false?style.hideButton:''}`} onClick={upButton}>
+          <ArrowIcon direction={0} />
+        </button>
+      </div>
       {
         list === false ?
         Array(10).fill(0).map((_, i) => (
@@ -175,7 +265,7 @@ const LeaderboardList = ({nfts}) => {
 
           if(showingElement(index)) {
             r.push(
-              <motion.div layout key={index}>
+              <motion.div layout key={index} id={`leaderboardItem${index}`} >
                 <LeaderboardItem 
                   id={element} 
                   index={index} 
@@ -206,6 +296,11 @@ const LeaderboardList = ({nfts}) => {
           return r;
         })
       }
+      <div className={style.last}>
+        <button className={`${style.downButton} ${false?style.hideButton:''}`} onClick={downButton}>
+          <ArrowIcon direction={2} />
+        </button>
+      </div>
     </div>
   )
 }

@@ -440,3 +440,60 @@
     letter-spacing: .1em;
     user-select: none;
 }
+
+/* #region down and up buttons  */
+
+.first, .last {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    z-index: 200;
+    right: .5em;
+}
+
+.first {
+    min-height: 1em;
+    /* width: 100%; */
+    /* background: linear-gradient(to top, transparent, var(--primary-bg)); */
+    /* border: 1px solid red; */
+    transform: translateY(calc(var(--nav-bar-height) + .5rem));
+    top: 0;
+}
+.last {
+    min-height: 1em;
+    /* width: 100%; */
+    /* background: linear-gradient(to bottom, transparent, var(--primary-bg)); */
+    /* border: 1px solid red; */
+    transform: translateY(-.5rem);
+    bottom: 0;
+}
+
+.upButton, .downButton {
+    border: none;
+    background-color: var(--light-background);
+    background-color: var(--primary-bg);
+    border: 1px solid var(--lightest-background);
+    border: 1px solid var(--primary);
+    color: var(--text);
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 10000em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scale: .9;
+    cursor: pointer;
+}
+
+.upButton>*, .downButton>* {
+    scale: 3.5;
+}
+
+/* .upButton {
+    transform: translateY(20%);
+}
+.downButton {
+    transform: translateY(-100%);
+} */
+
+/* #endregion */

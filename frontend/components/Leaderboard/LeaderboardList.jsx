@@ -11,6 +11,64 @@ import { specialTypes } from '../../../server/gameplay/building_stats';
 
 import style from './leaderboard.module.css';
 
+const UpButton = ({ func }) => {
+
+  const [ active, setActive ] = useState(true);
+
+  useEffect(() => {
+
+    const listenerFunc = () => {
+      if(func(true) === false) {
+        if(active === false) setActive(true);
+      }
+      else {
+        if(active === true) setActive(false);
+      }
+    }
+
+    window.addEventListener("scroll", listenerFunc)
+
+    return () => {
+      window.removeEventListener("scroll", listenerFunc);
+    }
+  });
+
+  return (
+    <button className={`${style.upButton} ${active===true?style.inactiveButton:''}`} onClick={func}>
+      <ArrowIcon direction={0} />
+    </button>
+  )
+}
+
+const DownButton = ({ func }) => {
+
+  const [ active, setActive ] = useState(true);
+
+  useEffect(() => {
+
+    const listenerFunc = () => {
+      if(func(true) === false) {
+        if(active === false) setActive(true);
+      }
+      else {
+        if(active === true) setActive(false);
+      }
+    }
+
+    window.addEventListener("scroll", listenerFunc)
+
+    return () => {
+      window.removeEventListener("scroll", listenerFunc);
+    }
+  });
+
+  return (
+    <button className={`${style.downButton} ${active===true?style.inactiveButton:''}`} onClick={func}>
+      <ArrowIcon direction={2} />
+    </button>
+  )
+}
+
 const LeaderboardList = ({nfts}) => {
   const [list, setList] = useState(false); // false - not loaded, [...] - list of nfts
   const [specialTypeData, setSpecialTypeData] = useState({});
@@ -101,7 +159,7 @@ const LeaderboardList = ({nfts}) => {
 
   // #region manual scrolling
   
-  const upButton = () => {
+  const upButton = (dontScroll) => {
     // let htmlList = document.getElementById('leaderboardList');
     let htmlList = window;
     // console.log(htmlList);
@@ -131,7 +189,8 @@ const LeaderboardList = ({nfts}) => {
       }
     }
 
-    if(first === undefined) return;
+    if(first === undefined) return false;
+    if(dontScroll === true) return true;
     
     let tempElement = document.getElementById(`leaderboardItem${first}`);
     // console.log(tempElement);
@@ -141,7 +200,7 @@ const LeaderboardList = ({nfts}) => {
   }
   
   // treba skontati kako se ove funkcije koriste
-  const downButton = () => {
+  const downButton = (dontScroll) => {
     // let htmlList = document.getElementById('leaderboardList');
     let htmlList = window;
     // console.log(htmlList);
@@ -171,7 +230,8 @@ const LeaderboardList = ({nfts}) => {
       }
     }
 
-    if(first === undefined) return;
+    if(first === undefined) return false;
+    if(dontScroll === true) return true;
     
     let tempElement = document.getElementById(`leaderboardItem${first}`);
     // console.log(tempElement);
@@ -187,9 +247,7 @@ const LeaderboardList = ({nfts}) => {
   return (
     <div className={style.leaderboard} id={`leaderboardList`}>
       <div className={style.first}>
-        <button className={`${style.upButton} ${false?style.hideButton:''}`} onClick={upButton}>
-          <ArrowIcon direction={0} />
-        </button>
+        <UpButton func={upButton} />
       </div>
       {
         list === false ?
@@ -297,9 +355,7 @@ const LeaderboardList = ({nfts}) => {
         })
       }
       <div className={style.last}>
-        <button className={`${style.downButton} ${false?style.hideButton:''}`} onClick={downButton}>
-          <ArrowIcon direction={2} />
-        </button>
+        <DownButton func={downButton} />
       </div>
     </div>
   )

@@ -483,6 +483,8 @@
     align-items: center;
     scale: .9;
     cursor: pointer;
+
+    transition: background-color .3s linear, border-color .3s linear;
 }
 
 .upButton>*, .downButton>* {
@@ -495,5 +497,10 @@
 .downButton {
     transform: translateY(-100%);
 } */
+
+.inactiveButton {
+    background-color: var(--light-background-transparent);
+    border-color: var(--lightest-background);
+}
 
 /* #endregion */

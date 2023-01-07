@@ -472,8 +472,10 @@
     border: none;
     background-color: var(--light-background);
     background-color: var(--primary-bg);
+    background-color: var(--primary);
     border: 1px solid var(--lightest-background);
     border: 1px solid var(--primary);
+    border: none;
     color: var(--text);
     width: 3.5em;
     height: 3.5em;
@@ -500,7 +502,8 @@
 
 .inactiveButton {
     background-color: var(--light-background-transparent);
-    border-color: var(--lightest-background);
+    background-color: var(--lightest-background);
+    /* border-color: var(--lightest-background); */
 }
 
 /* #endregion */

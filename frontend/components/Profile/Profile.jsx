@@ -263,16 +263,16 @@ const Profile = ({ addr, isOwner }) => {
 
   const [popupOpen, setPopupOpen] = useState({ open: false, id: -1}); // inace treba da bude false
 
-  const openPopup = (id) => { 
+  const openPopup = (id, isOwner) => { 
     document.body.style.overflow = 'hidden';
     document.body.style.marginRight = `${scrollBar.width}px`;
-    setPopupOpen({ open: true, id: id });
+    setPopupOpen({ open: true, id: id, isOwner: isOwner });
   }
 
   const closePopup = () => {
     document.body.style.overflow = 'visible';
     document.body.style.marginRight = '0';
-    setPopupOpen({ open: false, id: -1 });
+    setPopupOpen({ open: false, id: -1, isOwner: undefined });
   }
 
   // #endregion
@@ -329,8 +329,8 @@ const Profile = ({ addr, isOwner }) => {
               See City #{popupOpen.id}
             </div>
             <div className={styles.linkOptions}>
-              <a className={styles.gameLink} href={`http://localhost:3000/game/${popupOpen.id}`} target='_blank'>
-                Game
+              <a className={styles.gameLink} href={`http://localhost:3000/${popupOpen.isOwner === true ? 'game' : 'preview' }/${popupOpen.id}`} target='_blank'>
+                {popupOpen.isOwner === true ? 'Game' : 'Preview'}
               </a>
               <a className={styles.openseaLink} href={`https://opensea.io/assets/${address}/${popupOpen.id}`} target='_blank'>
                 <OpenseaIcon size={8} />
@@ -400,13 +400,13 @@ const Profile = ({ addr, isOwner }) => {
                 <ProfileCity data={false} index={index} />
               </motion.div>
             )
-            if(isOwner === false) return (
+            if(isOwner === false && false) return (
               <motion.a layout key={element.id} href={`https://opensea.io/assets/${address}/${element.id}`} target='_blank' >
                 <ProfileCity id={element.id} data={element} index={index} />
               </motion.a>
             )
             else return (
-              <motion.div layout key={element.id} onClick={() => { openPopup(element.id) }}>
+              <motion.div layout key={element.id} onClick={() => { openPopup(element.id, isOwner) }}>
                 <ProfileCity id={element.id} data={element} index={index} />
               </motion.div>
             )

@@ -21,7 +21,9 @@ import XIcon from '../../universal/icons/XIcon';
 import MoneyIcon from '../../universal/icons/MoneyIcon';
 import RotateIcon from '../../universal/icons/RotateIcon';
 
-const Buttons = ({ status, setStatus, sell, upgrade, rotate, building, id }) => {
+const Buttons = ({ status, setStatus, sell, upgrade, rotate, building, id, preview }) => {
+
+  if(preview) return null;
 
   const instructions = useBuildingStore(state => state.instructions);
   const specialTypeData = useBuildingStore(state => state[`type_${building.type}`]);
@@ -164,7 +166,7 @@ const Buttons = ({ status, setStatus, sell, upgrade, rotate, building, id }) => 
   }
 }
 
-const FloatingMenu = () => {
+const FloatingMenu = ({ preview }) => {
 
   const htmlRef = useRef();
   const [ distanceFactor, setDistanceFactor ] = useState(10);
@@ -341,6 +343,7 @@ const FloatingMenu = () => {
               sell={sellFunc} 
               rotate={rotateFunc}
               id={staticData.id}
+              preview={preview}
             />
           </div>
         </div>

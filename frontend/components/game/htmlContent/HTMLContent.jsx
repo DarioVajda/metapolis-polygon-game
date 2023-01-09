@@ -157,7 +157,9 @@ const BuildingButton = ({ special, selected, type, changeType, element }) => {
   )
 }
 
-const SaveBtn = ({ id }) => {
+const SaveBtn = ({ id, preview }) => {
+
+  if(preview) return null;
 
   const instructions = useBuildingStore(state => state.instructions);
   const setPopup = useBuildingStore(state => state.setPopup);
@@ -270,7 +272,7 @@ const SaveBtn = ({ id }) => {
   )
 }
 
-const HTMLContent = ({ id }) => {
+const HTMLContent = ({ id, preview }) => {
 
   const [ achievementPopup, setAchievementPopup ] = useState(false);
   const setPopup = useBuildingStore(state => state.setPopup);
@@ -329,20 +331,20 @@ const HTMLContent = ({ id }) => {
         </Hover>
         <Hover info='Educated' underneath={true} childWidth='10em' specialId='Educated' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
-            <EducatedPersonIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
+            <EducatedPersonIcon size={1} unit="em" />
             <div>{dynamicData.educated}/{dynamicData.educatedWorkers}</div>
           </div>
         </Hover>
         <Hover info='Uneducated' underneath={true} childWidth='10em' specialId='Uneducated' sidePadding='0.5em' >
           <div className={styles.topDataElement}>
-            <UneducatedPersonIcon size={1} unit="em" /> {/* TODO This is temporary (make new icons) */} 
+            <UneducatedPersonIcon size={1} unit="em" />
             <div>{dynamicData.normal}/{dynamicData.normalWorkers}</div>
           </div>
         </Hover>
-        <div>Income in 54m</div>
-        <SaveBtn id={id} />
+        <div style={ preview ? { display: 'none' } : {} }>Income in 54m</div> {/* style je tu da sakrije ono sto je nepotrebno kod preview-a */}
+        <SaveBtn id={id} preview={preview} />
       </div>
-      <div className={styles.middleUI}>
+      <div className={styles.middleUI} style={ preview ? { flexDirection: 'column-reverse' } : {} }> {/* style je tu da sakrije ono sto je nepotrebno kod preview-a */}
         <label className={styles.productivityMap}>
           Productivity Map
           <input type="checkbox" checked={showProductivityMap===true} onChange={() => toggleProductivityMap(!(showProductivityMap===true))} />
@@ -351,7 +353,7 @@ const HTMLContent = ({ id }) => {
           <TrophyIcon /> Leaderboard
         </button>
       </div>
-      <div className={styles.bottomUI}>
+      <div className={styles.bottomUI} style={ preview ? { display: 'none' } : {} }> {/* style je tu da sakrije ono sto je nepotrebno kod preview-a */}
         <div className={styles.buildingListGroup}>
           {/* <button onClick={() => setAchievementPopup(true)}> */}
           <button onClick={() => setPopup({ type: 'achievements' })}>

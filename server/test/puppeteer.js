@@ -16,7 +16,7 @@ const saveImage = async (data, id, { resolution } = {}) => {
         width: resolution
     });
 
-    await page.goto(`http://localhost:3000/city/preview?data=${data}`);
+    await page.goto(`http://localhost:3000/preview?data=${data}`);
 
     // page.focus('input');
     // await page.type('input', 'Ovo sam ukucao koristeci node.js program');

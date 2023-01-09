@@ -16,6 +16,11 @@ const profile = () => {
   // false - not loaded, 0 - no one is connected, 0x... - address of the user
 
   const getConnectedUser = async () => {
+    if(!window.ethereum) {
+      setConnectedAddr('0x00');
+      return;
+    }
+
     let account = window.ethereum.selectedAddress; // bira se trenutna adresa ili null ako nije connectovan korisnik
     if(!account){
       console.log({account});

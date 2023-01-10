@@ -136,6 +136,7 @@ function GridSquare({ x, y, occupied }) {
     return rgbToNumber(color);
   }
 
+  if(occupied) return null;
   return (
     <mesh
       ref={gridSquareRef}

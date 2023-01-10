@@ -6,11 +6,14 @@ import { generateUUID } from 'three/src/math/MathUtils';
 import { gridSize, plotSize, Scale } from "../MapData";
 import { useBuildingStore } from '../BuildingStore';
 import { buildingTypes } from '../modelComponents/BuildingTypes';
+import { useThree } from '@react-three/fiber';
 
 const buildingGridElement = (x, y, onClick, prefix) => {
   const gridElement = useBuildingStore(state => state[`${prefix?prefix:''}n_${x}_${y}`]);
   const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const { building, status } = gridElement || {};
+
+  const { invalidate } = useThree();
 
   const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -21,10 +24,11 @@ const buildingGridElement = (x, y, onClick, prefix) => {
       let time = 0;
       while(time < 1000) {
 
-        console.log('building...');
+        // console.log('building...');
+        invalidate();
 
-        await delay(100);
-        time += 100;
+        await delay(30);
+        time += 30;
       }
       changeCoordinate(x, y, { ...gridElement, status: 'built' }, false);
     },

@@ -19,7 +19,7 @@ const Preview = ({ id }) => {
       <WorldCanvas position={[0, 250, 200]} >
 
         {/* UTILS */}
-        <MapControls maxDistance={400} minDistance={75} enableDamping={false} />
+        <MapControls maxDistance={400} minDistance={5} enableDamping={false} />
         <Lights />
 
         {/* STATIC CONTENT */}

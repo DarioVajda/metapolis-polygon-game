@@ -73,7 +73,7 @@ const buildingStore = (set) => ({
   setBuildings: (list, prefix) => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      buildingList[`${prefix?prefix:''}n_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
+      buildingList[`${prefix?prefix:''}n_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
     });
 
     return {
@@ -84,7 +84,7 @@ const buildingStore = (set) => ({
   setSpecialBuildings: (list, prefix) => set( state => {
     let buildingList = {};
     list.forEach(building => {
-      buildingList[`${prefix?prefix:''}s_${building.start.x}_${building.start.y}`] = { building, status: 'built' };
+      buildingList[`${prefix?prefix:''}s_${building.start.x}_${building.start.y}`] = { building, status: 'building' };
     });
 
     return {

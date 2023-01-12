@@ -15,9 +15,9 @@ const Theme0 = ({level, reference, ...props}) => {
  
   const { opacity } = useSpring({
     opacity: 1,
-    from: {
-      opacity: 0
-    }
+    // from: {
+      // opacity: 0
+    // }
   })
   const opacityToMaterial = (opacity, mat) => {
     // console.log(opacity);

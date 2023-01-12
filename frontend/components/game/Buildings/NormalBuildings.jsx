@@ -84,7 +84,8 @@ const buildingGridElement = (x, y, onClick, prefix) => {
       key: key, 
       uuid: building.uuid, 
       position: position, 
-      rotation: [0, rotation, 0] 
+      rotation: [0, rotation, 0],
+      status: gridElement.status
     },
     { ...building, plotSize, gridSize, rotation, key },
     (ref) => onClick(building, ref)

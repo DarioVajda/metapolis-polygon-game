@@ -10,15 +10,15 @@ import { MeshStandardMaterial } from 'three'
 import { useSpring } from '@react-spring/three'
 import { a } from '@react-spring/three'
 
-const Theme0 = ({level, reference, ...props}) => {
+const Theme0 = ({level, reference, status, ...props}) => {
   const { nodes, materials } = useGLTF('/house1.glb')
 
-  const { opacity } = useSpring({
+  const [ { opacity }, springApi ] = useSpring(() => ({
     opacity: 1,
-    from: {
-      opacity: 0
-    }
-  })
+    // from: {
+      // opacity: 0
+    // }
+  }))
 
   const opacityToMaterial = (opacity, mat) => {
     mat.transparent = true;

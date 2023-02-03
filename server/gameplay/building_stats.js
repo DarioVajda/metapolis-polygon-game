@@ -18,6 +18,21 @@ class Building {
     }
 } // klasa koja opisuje jednu gradjevinu
 
+// #region Themes
+
+const themes = [
+    'snow',
+    'forest',
+    'beach',
+    'desert',
+    'space',
+    'fire',
+    'highTech',
+    'pixelized',
+]
+
+// #endregion
+
 // _______________________________________________________________________________________________
 // tipovi gradjevina:
 const buildingTypes = { //zamenio sam ovde neki redosled jbg
@@ -150,18 +165,82 @@ const specialTypes = {
         type: 'townhall',
         count: 50,
         rarity: 2
-    }
+    },
+
+    eifelTower: {
+        type: 'eifelTower',
+        count: 50,
+        rarity: 2
+    },
+    bigBen: {
+        type: 'bigBen',
+        count: 50,
+        rarity: 2
+    },
+    statueOfLiberty: {
+        type: 'statueOfLiberty',
+        count: 50,
+        rarity: 2
+    },
+    stonehenge: {
+        type: 'stonehenge',
+        count: 50,
+        rarity: 2
+    },
+    londonEye: {
+        type: 'londonEye',
+        count: 50,
+        rarity: 2
+    },
+    pyramid: {
+        type: 'pyramid',
+        count: 50,
+        rarity: 2
+    },
+    decorationTree: {
+        type: 'decorationTree',
+        count: 50,
+        rarity: 2
+    },
+    spaceStation: {
+        type: 'spaceStation',
+        count: 50,
+        rarity: 2
+    },
+
+    ...themes.reduce((prev, curr) => {
+        let temp = { ...prev };
+        temp[`${curr}Totem`] = {
+            type: curr,
+            count: 50,
+            rarity: 2
+        };
+        return temp;
+    }, {}),
 }
 
 const specialBuildingDimensions = new Map();
 function initSpecialBuildingDimensions() {
-    specialBuildingDimensions.set( specialTypes.statue.type,         [[1, 1]] );
-    specialBuildingDimensions.set( specialTypes.fountain.type,       [[1, 2]] );
-    specialBuildingDimensions.set( specialTypes.stadium.type,        [[2, 2]] );
-    specialBuildingDimensions.set( specialTypes.school.type,         [[1, 2]] );
-    specialBuildingDimensions.set( specialTypes.shoppingmall.type,   [[2, 2]] );
-    specialBuildingDimensions.set( specialTypes.promenade.type,      [[1, 4]] );
-    specialBuildingDimensions.set( specialTypes.townhall.type,       [[1, 3]] );
+    specialBuildingDimensions.set( specialTypes.statue.type,            [[1, 1]] );
+    specialBuildingDimensions.set( specialTypes.fountain.type,          [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.stadium.type,           [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.school.type,            [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.shoppingmall.type,      [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.promenade.type,         [[1, 4]] );
+    specialBuildingDimensions.set( specialTypes.townhall.type,          [[1, 3]] );
+    
+    specialBuildingDimensions.set( specialTypes.eifelTower.type,        [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.bigBen.type,            [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.statueOfLiberty.type,   [[1, 1]] );
+    specialBuildingDimensions.set( specialTypes.stonehenge.type,        [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.londonEye.type,         [[1, 2]] );
+    specialBuildingDimensions.set( specialTypes.pyramid.type,           [[2, 2]] );
+    specialBuildingDimensions.set( specialTypes.decorationTree.type,    [[1, 1]] );
+    specialBuildingDimensions.set( specialTypes.spaceStation.type,      [[2, 3]] );
+
+    themes.forEach((element) => {
+        specialBuildingDimensions.set(element, [[1, 1]]);
+    })
 }
 initSpecialBuildingDimensions();
 

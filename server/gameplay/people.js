@@ -17,7 +17,9 @@ function sortMap(map) {
     return new Map([...map.entries()].sort((a,b) => b[0] - a[0]));
 } // pomocna funkcija za sortiranje mape po vrednostima kljuceva
 
+// racuna se broj ljudi i radnih mesta
 function countPeople(buildings, map, educatedBoost) {
+
     // funkcija koja pravi 'people' objekat koji sadrzi podatke o ljudima i radnim mestima
     var normalPeople =  new Map(); // mapa gde je kljuc produktivnost, a vrednost broj ljudi sa tom produktivnoscu
     var educatedPeople = new Map(); // mapa gde je kljuc produktivnost, a vrednost broj ljudi sa tom produktivnoscu
@@ -26,22 +28,26 @@ function countPeople(buildings, map, educatedBoost) {
 
     var productivity;
     var temp;
+
     buildings.normal.forEach((element) => {
         productivity = getproductivity(element, map);
         
         let tempNormalPeople = buildingStats.get(element.type)[element.level].normalPeople
         let tempEducatedPeople = buildingStats.get(element.type)[element.level].educatedPeople
 
-        // #region BOOST EDUCATED
+        if(element.type === buildingTypes.Building) {
+            tempNormalPeople *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1);
+            tempEducatedPeople *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1);
+        }
+
+        // #region EDUCATED BOOST
+
         // -+ Math.min(educatedBoost, tempNormalPeople) to reduce the number of normal workers and increase the number of educated workers
         tempNormalPeople -= Math.min(educatedBoost, tempNormalPeople);
         tempEducatedPeople += Math.min(educatedBoost, tempNormalPeople);
+
         // #endregion
 
-        if(element.type === buildingTypes.Building) {
-            tempNormalPeople *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1)
-            tempEducatedPeople *= (element.end.x - element.start.x + 1) * (element.end.y - element.start.y + 1)
-        }
         if(normalPeople.has(productivity)) {
             temp = normalPeople.get(productivity);
             normalPeople.delete(productivity);
@@ -60,9 +66,11 @@ function countPeople(buildings, map, educatedBoost) {
             if(tempEducatedPeople > 0) educatedPeople.set(productivity, tempEducatedPeople);
         }
 
+        // calculating the number of workers
         manualWorkers += buildingStats.get(element.type)[element.level].manualWorkers;
         officeWorkers += buildingStats.get(element.type)[element.level].officeWorkers;
-    }); // racuna se broj ljudi i radnih mesta
+
+    });
     normalPeople = sortMap(normalPeople); // sortiraju se mape
     educatedPeople = sortMap(educatedPeople); // sortiraju se mape
     return {

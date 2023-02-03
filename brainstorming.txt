@@ -1,5 +1,6 @@
 
 THEMES:
+	- default
 	- sneg
 	- suma
 	- more
@@ -11,14 +12,15 @@ THEMES:
 
 SPECIAL BUILDINGS:
 	- ...ovo sto postoji
-	- ajfelov toranj
-	- big ben
-	- statua slobode
-	- stonehandge
-	- london eye
-	- piramide ?
+	- ✓ ajfelov toranj
+	- ✓ big ben
+	- ✓ statua slobode
+	- ✓ stonehandge
+	- ✓ london eye
+	- ✓ piramide ?
 	- element totem *
 	- space station **
+	- ✓ lepo drvo - nagrada za echo-friendly grad achievement
 
 ACHIEVEMENTS:
 - element totemi
@@ -30,13 +32,13 @@ ACHIEVEMENTS:
 - lep grad za zivot:
 	- mora da ima setaliste i soping centar da bi gradjani bili sretni
 	- nagrada - productivity boost
-- srecni gradjani:
+- ✓ srecni gradjani:
 	- mora da ima prosecnu produktivnost vecu od x
-	- nagrada - bilo sta
-- eco-friendly grad:
+	- nagrada - population boost
+- ✓ eco-friendly grad:
 	- mora grad da ima zagadjenost manju od x
 	- nagrada - neko kul ukrasno drvo koje mozes da zasadis u gradu
-- saburbia
+- ✓ saburbia
 	- grad mora da ima p procenata gradjana koji zive u kucama i ne sme da ima vise od x zgrada
 	- nagrada - ingame novac ili bilo sta drugo
 

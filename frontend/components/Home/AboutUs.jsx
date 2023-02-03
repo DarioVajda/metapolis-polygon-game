@@ -32,7 +32,8 @@ const AboutUs = () => {
         {/* Ostao sam jedini u ovome 😭 */}
       </div>
       <div>
-        Jos neki random tekst u sklopu “About us”. Treba da se sredi izgled ovoga i da se smisli sta ce pisati. Na primer nas cilj sa ovim projektom (osim da se iskesiramo, treba nesto sto dobro zvuci) i slicne stvari
+        {/* Jos neki random tekst u sklopu “About us”. Treba da se sredi izgled ovoga i da se smisli sta ce pisati. Na primer nas cilj sa ovim projektom (osim da se iskesiramo, treba nesto sto dobro zvuci) i slicne stvari */}
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem dolores dolor, accusantium, tempora, assumenda omnis suscipit voluptatibus sint nobis perspiciatis iusto a quae repellat tempore aliquam laudantium cum quisquam recusandae?
       </div>
     </div>
   )

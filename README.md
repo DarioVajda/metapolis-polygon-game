@@ -29,7 +29,7 @@ TODO lista:
     - ✓ napraviti funkciju koja renderuje grad na serveru i exportuje sliku
     - ✓ srediti izlged profilne stranice i fetchovati podatke o profulu iz opensea-a
     - ✓ srediti LEADERBOARD STRANICU i prikazivanje liste kad ima puno gradova (kao u komponenti koja je u igrici)
-- DOBIJANJE ZARADE i prikaz preostalog vremena
+    - ✓ DOBIJANJE ZARADE i prikaz preostalog vremena
 - ANIMACIJE MODELA u igrici (gradjenje, upgradeovanje, prodavanje,...)
 - manji prioritet: refferal linkovi kod mintovanja NFT-ova
 

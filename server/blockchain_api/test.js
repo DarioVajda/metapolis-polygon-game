@@ -89,12 +89,12 @@ async function main() {
 
   // Funkcija koja mintuje weth tokene na moju adresu
   // ------------------------------------------
-  console.log('Weth mint');
-  tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'), { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
-  receipt = await tx.wait();
-  var balance = await weth.balanceOf(wallet.address);
-  balance = balance.toString();
-  console.log(balance);
+  // console.log('Weth mint');
+  // tx = await weth.mint(wallet.address, ethers.utils.parseEther('100'), { gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  // receipt = await tx.wait();
+  // var balance = await weth.balanceOf(wallet.address);
+  // balance = balance.toString();
+  // console.log(balance);
 
   // Funkcija koja pokrece zaradu u igri:
   // -------------------------------------------
@@ -109,10 +109,10 @@ async function main() {
 
   // Funkcija koja flippuje sale state
   // ------------------------------------------
-  console.log('Flip sale state');
-  tx = await city.flipSaleState({ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
-  receipt = await tx.wait();
-  console.log(receipt);
+  // console.log('Flip sale state');
+  // tx = await city.flipSaleState({ gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  // receipt = await tx.wait();
+  // console.log(receipt);
 
   // Funkcija koja menja cenu mintovanja
   // ------------------------------------------
@@ -145,15 +145,15 @@ async function main() {
 
   // Funkcija koja salje Marku weth tokene
   // ------------------------------------------
-  console.log('Sharing weth tokens');
-  let markovaAdresa = "0xC40e41385698b12Ead7ea73bD5c6AE4ea836c9fb";
-  tx = await weth.transfer(markovaAdresa, ethers.utils.parseEther("10"), { gasLimit: 1e7, gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
-  receipt = await tx.wait();
-  console.log("receipt:", receipt);
-  balance = await weth.balanceOf(markovaAdresa);
-  // let balance = await weth.balanceOf(markovaAdresa);
-  balance = balance.toString();
-  console.log("balance =", balance);
+  // console.log('Sharing weth tokens');
+  // let markovaAdresa = "0xC40e41385698b12Ead7ea73bD5c6AE4ea836c9fb";
+  // tx = await weth.transfer(markovaAdresa, ethers.utils.parseEther("10"), { gasLimit: 1e7, gasLimit: 1e6, maxPriorityFeePerGas: 50e9, maxFeePerGas: (50e9)+16 });
+  // receipt = await tx.wait();
+  // console.log("receipt:", receipt);
+  // balance = await weth.balanceOf(markovaAdresa);
+  // // let balance = await weth.balanceOf(markovaAdresa);
+  // balance = balance.toString();
+  // console.log("balance =", balance);
 
   // Funkcija koja withdrawuje sve sa contracta na moju adresu
   // ------------------------------------------
@@ -192,3 +192,28 @@ async function main() {
 }
 
 main();
+
+async function receivingIncome() {
+  let tx;
+  let receipt;
+
+  tx = await game.startGameIncome();
+  receipt = await tx.wait();
+  console.log(receipt);
+
+}
+
+// receivingIncome();
+
+async function changePayPeriod() {
+  let tx;
+  let receipt;
+
+  tx = await game.changePayPeriod(86400);
+  receipt = await tx.wait();
+  console.log(receipt);
+
+}
+
+// changePayPeriod();
+

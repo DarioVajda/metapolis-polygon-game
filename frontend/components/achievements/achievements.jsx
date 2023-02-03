@@ -18,7 +18,10 @@ const achievementsJsx = {
     educatedCity: <>1,000,000</>,
     skyCity: <>500,000</>,
     check4: <>100</>,
-    highEducation: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>
+    highEducation: <div style={{fontSize:'1.2rem',backgroundColor:'transparent'}}>BOOST</div>,
+    productivePeople: <>REWARD</>,
+    ecoFriendlyCity: <>REWARD</>,
+    suburbia: <>REWARD</>,
 }
 
 const achievementIcons = {
@@ -27,6 +30,9 @@ const achievementIcons = {
     skyCity: (props) => <SkyCityIcon {...props} />,
     check4: (props) => <Placeholder {...props} />,
     highEducation: (props) => <EducatedCityIcon {...props} />,
+    productivePeople: (props) => <Placeholder {...props} />,
+    ecoFriendlyCity: (props) => <Placeholder {...props} />,
+    suburbia: (props) => <Placeholder {...props} />,
     // highEducation: (props) => <HighEducationIcon {...props} />,
 }
 

@@ -53,10 +53,10 @@ const PreviewChanges = ({ closePopup }) => {
   const instructions = useBuildingStore(state => state.instructions);
 
   return (
-    <div onClick={() => closePopup()} className={styles.wrapper} >
+    <div className={styles.wrapper} >
       <div className={styles.title}>
         Changes
-        <XIcon />
+        <XIcon onClick={() => closePopup()} />
       </div>
       <div className={styles.content}>
         <div className={styles.first}></div>

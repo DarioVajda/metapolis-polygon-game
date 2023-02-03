@@ -197,7 +197,7 @@ export default function Walkthrough() {
         </div>
         <div className={styles.canvas}>
           <div>
-            <WorldCanvas pixelRatio={[1, 1]} position={[0, 0, 0]}>
+            <WorldCanvas pixelRatio={false?[1, 1]:1} position={[0, 0, 0]}>
               <Render fpsMax={1e-5} />
               <Group 
                 position={positions[counter%positions.length]} 

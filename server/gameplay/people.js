@@ -2,6 +2,7 @@ const { buildingStats, buildingTypes } = require("./building_stats");
 const { mapDimensions } = require("./map");
 
 function getproductivity(building, map) {
+    // console.table(map.map(row => row.map(x => Math.round(x * 100)/100)));
     var productivity = 0;
     for(let i = building.start.x; i <= building.end.x; i++) {
         for(let j = building.start.y; j <= building.end.y; j++) {

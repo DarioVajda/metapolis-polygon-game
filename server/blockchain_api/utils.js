@@ -14,7 +14,8 @@ function contains(array, element) {
     return r;
 } // pomocna funkcija koja proverava da li niz nizova sa 2 elementa sadrzi niz sa 2 elementa sa nekim konkretnim vrednostima
 
-function isBuildingFormat(obj) {
+function isBuildingFormat(obj, mapDimensions) {
+    let md = mapDimensions || { x: 20, y: 20 };
     // proverava se da li je format gradjevine ispravan, ako se budu menjala neka polja u klasi building onda ce i ovaj kod morati da se promeni malo
     if (
         obj.start === undefined ||
@@ -47,11 +48,11 @@ function isBuildingFormat(obj) {
 
     // provera da li su sve koordinate unutar mape:
     let coordinatesValid = true;
-    if ((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < 20) === false) {
+    if ((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < md.x) === false) {
         coordinatesValid = false;
     }
 
-    if ((0 && obj.start.y <= obj.end.y && obj.end.y < 20) === false) {
+    if ((0 <= obj.start.y && obj.start.y <= obj.end.y && obj.end.y < md.y) === false) {
         coordinatesValid = false;
     }
 
@@ -93,10 +94,10 @@ function isSpecialBuildingFormat(obj) {
 
     // provera da li su sve koordinate unutar mape:
     let coordinatesValid = true;
-    if ((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < 20) === false) {
+    if ((0 <= obj.start.x && obj.start.x <= obj.end.x && obj.end.x < md.x) === false) {
         coordinatesValid = false;
     }
-    if ((0 <= obj.start.y && obj.start.y <= obj.end.y && obj.end.y < 20) === false) {
+    if ((0 <= obj.start.y && obj.start.y <= obj.end.y && obj.end.y < md.y) === false) {
         coordinatesValid = false;
     }
     // return coordinatesValid && typeValid; // vratice se true samo ako su oba uslova ispunjena
@@ -198,8 +199,10 @@ function formatBuildingList(data) {
     city.created = data.cityCreated;
     city.initialized = data.initialized;
     city.theme = data.theme;
-    city.buildingId = data.buildingId,
-    city.specialBuildingId = data.specialBuildingId;
+    city.buildingId = parseInt(data.buildingId, 16),
+    city.specialBuildingId = parseInt(data.specialBuildingId, 16);
+
+    city.dimensions = data.dimensions || { x: 20, y: 20 };
 
     let people = calculatePeople(city);
 

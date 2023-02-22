@@ -572,7 +572,7 @@ app.post("/cities/:id/build", async (req, res) => {
 		cost *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
 	}
 	
-	if(utils.isBuildingFormat(building) === false) {
+	if(utils.isBuildingFormat(building, city.dimensions) === false) {
 		res.status(400).send("Bad format!");
 		return;
 	}
@@ -652,7 +652,7 @@ app.post("/cities/:id/buildspecial", async (req, res) => {
 	}
 
 	// checking the format of the building
-	if(utils.isSpecialBuildingFormat(building) == false) {
+	if(utils.isSpecialBuildingFormat(building, city.dimensions) == false) {
 		res.status(400).send("Bad format!");
 		return;
 	}
@@ -777,7 +777,7 @@ app.post("/cities/:id/upgrade", async (req, res) => {
 		return;
 	}
 
-	if(utils.isBuildingFormat(building) /* && utils.isSameBuilding(building, city.buildings[index]) */ ) {
+	if(utils.isBuildingFormat(building, city.dimensions) /* && utils.isSameBuilding(building, city.buildings[index]) */ ) {
 		let tx = await contract.upgradeBuilding(
 			req.params.id,
 			cost,
@@ -844,7 +844,7 @@ app.post("/cities/:id/remove", async (req, res) => {
 		value *= (building.end.x - building.start.x + 1) * (building.end.y - building.start.y + 1);
 	}
 	
-	if(utils.isBuildingFormat(building)) {
+	if(utils.isBuildingFormat(building, city.dimensions)) {
 
 		console.log({id: req.params.id, value});
 		let tx = await contract.removeBuilding(

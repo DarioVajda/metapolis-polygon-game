@@ -79,8 +79,8 @@ const buildingStats = new Map();
 function initBuildingStats() {
     // Sve ovo je u funkciji da bi program bio lepsi, a kasnije se poziva da se sve ovo izvrsi
     buildingStats.set(buildingTypes.Factory, [
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 8, maxDecrease: 0.2},
-        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 8, maxDecrease: 0.1}
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 50, officeWorkers: 15, radius: 15, maxDecrease: 0.2},
+        { cost: 2000000, normalPeople: 0, educatedPeople: 0, manualWorkers: 70, officeWorkers: 30, radius: 15, maxDecrease: 0.1}
     ]);
     buildingStats.set(buildingTypes.Office, [
         { cost: 1500000, normalPeople: 0, educatedPeople: 0, manualWorkers: 0, officeWorkers: 25},

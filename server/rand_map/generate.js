@@ -219,4 +219,5 @@ function generate() {
 
 // #endregion
 
+exports.doOverlap = doOverlap;
 exports.generateBuildings = generate;

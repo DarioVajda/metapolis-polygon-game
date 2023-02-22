@@ -151,7 +151,7 @@ function getDynamicData(city, achievementsArg) {
 
     // #endregion
 
-    let map = mapModule.initializeMap({ normal: city.buildings });
+    let map = mapModule.initializeMap({ normal: city.buildings }, city.dimensions);
     let people = peopleModule.countPeople({ normal: city.buildings }, map, educatedBoost);
     let income = calculate(people, { normal: city.buildings });
 

@@ -71,6 +71,7 @@ async function loadAchievements(id, achievementContract) {
  *      theme: Number,
  *      buildingId: Number,
  *      specialBuildingId: Number,
+ *      dimensions: {x: Number, y: Number},
  *      normal: Number,
  *      educated: Number,
  *      normalWorkers: Number,

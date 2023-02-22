@@ -2,7 +2,7 @@
 THEMES:
 	- default
 	- sneg
-	- suma
+	- suma (mozda je ovo isto sto i default)
 	- more
 	- pustinja
 	- svemir (mesec) ***

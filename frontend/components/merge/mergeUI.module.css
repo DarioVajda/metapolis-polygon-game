@@ -1,0 +1,105 @@
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.city {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    /* outline: 1px solid white; */
+}
+.leftCity {
+    align-items: flex-start;
+}
+.rightCity {
+    align-items: flex-end;
+}
+
+.city>* {
+    margin-bottom: 0;
+}
+
+.cityTitle {
+    font-size: 1.5rem;
+    margin: .5em;
+    margin-bottom: .2em;
+}
+
+.mergeButton {
+    margin-top: .5em;
+    font-size: 1.5rem;
+    padding: .3em 1em;
+    background-color: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: background-color .2s ease-in-out, color .2s ease-in-out;
+
+    display: flex;
+    gap: .4em;
+}
+.mergeButton:active {
+    background-color: var(--primary-dark);
+}
+.mergeButton>*:last-child {
+    transform: translateY(.1em) scale(1.25);
+}
+
+.mergeButtonInactive {
+    background-color: var(--lightest-background);
+    color: var(--light-text);
+}
+.mergeButtonInactive:active {
+    background-color: var(--lightest-background);
+    opacity: .8;
+}
+
+/* #region Choose city */
+
+.chooseCity {
+    background-color: var(--primary);
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    user-select: none;
+
+    display: flex;
+    gap: .5em;
+    
+    transition: background-color .25s ease-in-out;
+
+    font-size: 1.25rem;
+    border-radius: 10px;
+    
+    padding: .35em .8em;
+    margin: 0 .7em;
+    margin-top: .3em;
+}
+.chooseCity:active {
+    background-color: var(--primary-dark);
+}
+
+.chooseCity>*:last-child {
+    transform: translateY(.05em) scale(1.1);
+}
+
+.addButtonInactive {
+    background-color: var(--lightest-background);
+    color: var(--light-text);
+}
+.addButtonInactive:active {
+    background-color: var(--lightest-background);
+    opacity: .8;
+}
+/* #endregion */

@@ -8,6 +8,7 @@ const PopupModule = ({ children, open, height, width, unit }) => {
   const [cash, setCash] = useState(false);
 
   const scrollBar = useScrollbarSize();
+  // console.log({scrollBar}, window.visualViewport.width < window.Width)
 
   const wrapperStyle = {
     position: 'absolute',
@@ -46,7 +47,7 @@ const PopupModule = ({ children, open, height, width, unit }) => {
   }
   
   document.body.style.overflow = 'hidden';
-  document.body.style.marginRight = `${scrollBar.width}px`;
+  document.body.style.marginRight = window.visualViewport.width < window.Width ? `${scrollBar.width}px` : '0px';
 
   return ReactDom.createPortal(
     <div style={wrapperStyle} >

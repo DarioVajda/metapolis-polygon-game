@@ -1,0 +1,115 @@
+
+.chooseCity {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+
+    margin-top: .5em;
+
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+.text {
+    font-size: .8rem;
+    color: var(--light-text);
+}
+
+.list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+.list {
+    margin-top: .5em;
+    height: calc(100% - 4.5rem);
+    width: 100%;
+    /* border: 2px solid red; */
+
+    overflow-y: scroll;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.list>div:first-child {
+    z-index: 10;
+    pointer-events: none;
+    background: -webkit-linear-gradient(var(--background), transparent);
+    position: sticky;
+    top: 0;
+    height: 1.5em;
+    width: 100%;
+}
+.list>div:last-child {
+    z-index: 10;
+    pointer-events: none;
+    background: -webkit-linear-gradient(transparent, var(--background));
+    position: sticky;
+    bottom: 0;
+    height: 1.5em;
+    width: 100%;
+}
+
+/* #region cityChoice */
+
+.cityChoice {
+    display: flex;
+    justify-content: flex-start;
+    height: fit-content;
+    align-items: center;
+
+    border-radius: 10px;
+    border: 1px solid var(--lightest-background);
+    background-color: var(--light-background);
+    padding: 1em min(5%, 3em);
+    margin: 1em;
+
+    transition: background-color .15s ease-in-out;
+    
+    cursor: pointer;
+}
+
+.cityChoice>img {
+    width: 50%;
+    max-width: 15em;
+    aspect-ratio: 1/1;
+    transition: scale .2s ease-in-out;
+}
+
+.cityChoice:hover {
+    background-color: var(--lightest-background);
+}
+.cityChoice:hover>img {
+    scale: 1.15;
+}
+
+.info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-direction: column;
+
+    font-size: 1.5rem;
+
+    padding: 1em;
+    gap: .5em;
+
+    /* border: 1px solid red; */
+    width: 100%;
+}
+
+.info>span:not(:first-child) {
+    font-size: 1.2rem;
+    display: flex;
+    gap: .3em;
+}
+
+/* #endregion */

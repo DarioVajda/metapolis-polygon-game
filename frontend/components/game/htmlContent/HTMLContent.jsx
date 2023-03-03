@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { ethers } from "ethers";
 
-import styles from './htmlContent.module.css';
+import styles from './htmlContent.module.css';  
 
 import { useBuildingStore } from '../BuildingStore';
 
@@ -19,6 +19,8 @@ import UneducatedPersonIcon from '../../universal/icons/UneducatedPersonIcon';
 
 import PopupModule from '../../universal/PopupModule';
 import AchievementList from '../../achievements/AchievementList';
+
+import { cityInfo } from './cityInfo';
 
 import { buildingDimensions, specialBuildingDimensions, buildingStats, specialPrices } from '../../../../server/gameplay/building_stats';
 import { formatNumber } from '../../utils/numFormat';
@@ -317,30 +319,19 @@ const HTMLContent = ({ id, preview }) => {
         <AchievementList id={id} closePopup={() => setAchievementPopup(false)} />
       </PopupModule> */}
       <div className={styles.topData}>
-        <Hover info='Money' underneath={true} childWidth='10em' specialId='Money' sidePadding='0.5em' >
-          <div className={styles.topDataElement}>
-            <MoneyIcon /> 
-            <div>{dynamicData.money.toLocaleString('en-US')}</div>
-          </div>
+        <Hover info='Educated' underneath={true} childWidth='10em' specialId='Educated' sidePadding='0.5em' >
+          {cityInfo.money(dynamicData)}
         </Hover>
         <Hover info='Income' underneath={true} childWidth='10em' specialId='Income' sidePadding='0.5em' >
-          <div className={styles.topDataElement}>
-            <IncomeIcon /> 
-            <div>{dynamicData.income.toLocaleString('en-US')}</div>
-          </div>
+          {cityInfo.income(dynamicData)}
         </Hover>
         <Hover info='Educated' underneath={true} childWidth='10em' specialId='Educated' sidePadding='0.5em' >
-          <div className={styles.topDataElement}>
-            <EducatedPersonIcon size={1} unit="em" />
-            <div>{dynamicData.educated}/{dynamicData.educatedWorkers}</div>
-          </div>
+          {cityInfo.educated(dynamicData)}
         </Hover>
         <Hover info='Uneducated' underneath={true} childWidth='10em' specialId='Uneducated' sidePadding='0.5em' >
-          <div className={styles.topDataElement}>
-            <UneducatedPersonIcon size={1} unit="em" />
-            <div>{dynamicData.normal}/{dynamicData.normalWorkers}</div>
-          </div>
+          {cityInfo.normal(dynamicData)}
         </Hover>
+
         <div style={ preview ? { display: 'none' } : {} }>Income in 54m</div> {/* style je tu da sakrije ono sto je nepotrebno kod preview-a */}
         <SaveBtn id={id} preview={preview} />
       </div>

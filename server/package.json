@@ -6,6 +6,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.0",
     "prompt-sync": "^4.1.6",
-    "puppeteer": "^18.2.1"
+    "puppeteer": "^18.2.1",
+    "replace-color": "^2.3.0"
   }
 }

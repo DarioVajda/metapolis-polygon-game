@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { useEffect } from 'react';
+import { useState } from 'react';
 import ReactDom from 'react-dom'
 
 import { useBuildingStore } from '../BuildingStore';
@@ -12,12 +13,21 @@ import MakeOffer from './MakeOffer';
 import DiscardChanges from './DiscardChanges';
 import PreviewChanges from './PreviewChanges';
 import Leaderboard from './Leaderboard/Leaderboard';
+import ChooseCity from '../../merge/ChooseCity';
 
 const Errors = ({ children }) => {
-  return ReactDom.createPortal(
+
+  const [ show, setShow ] = useState(false);
+
+  useEffect(() => {
+    if(typeof window === 'object') setShow(true);
+  }, []);
+
+  if(show) return ReactDom.createPortal(
     children,
     document.getElementById('errors')
   )
+  else return null;
 }
 
 const Popup = () => {
@@ -53,7 +63,7 @@ const Popup = () => {
 
   }, [ errors ]);
 
-  console.log(popup, errors);
+  // console.log(popup, errors);
 
   return (
     <>
@@ -80,6 +90,11 @@ const Popup = () => {
       {/* Leaderboard */}
       <PopupModule open={popup.type==='leaderboard'} width={60} height={70} unit='%'>
         <Leaderboard closePopup={closePopup} />
+      </PopupModule>
+
+      {/* Choose City */}
+      <PopupModule open={popup.type==='choose-city'} width={60} height={80} unit='%'>
+        <ChooseCity closePopup={closePopup} first={popup.first} nfts={popup.nfts} />
       </PopupModule>
 
       <Errors>

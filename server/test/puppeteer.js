@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const replaceColor = require('replace-color')
 
 const delay = async (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -26,9 +27,24 @@ const saveImage = async (data, id, { resolution } = {}) => {
     const res = await page.screenshot({path: `../test/images/city_${id}.png`});
     console.log(res);
 
+    let jimpObject = await replaceColor({
+        image: `../test/images/city_${id}.png`,
+        colors: {
+            type: 'hex',
+            targetColor: '#000000',
+            replaceColor: '#00000000'
+        }
+    })
+    jimpObject.write(`../test/images/city_${id}.png`, (err) => {
+        if (err) return console.log(err)
+    })
+    
+    console.log('made the background transparent');
+    
     await browser.close();
 
-    return res;
+    return;
+    // return res;
 }
 
 // const resolution = 1000;

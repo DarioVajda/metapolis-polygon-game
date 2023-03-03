@@ -85,7 +85,7 @@ app.get("/cities/:id/image.png", async (req, res) => {
 	if (fs.existsSync(`../test/images/city_${id}.png`)) {
 
 		// file exists and it is not neccessary to render it one more time
-	  	console.log('file exists and it is neccessary to render');
+	  	console.log('file exists and it is not neccessary to render');
   	}	
 	else {
 		
@@ -105,11 +105,11 @@ app.get("/cities/:id/image.png", async (req, res) => {
 		}
 
 		// saving the image of the city on the backend
-		let image = await puppeteer.saveImage(city, id, { resolution: 1000 });
-		console.log(image);
+		await puppeteer.saveImage(city, id, { resolution: 2000 });
+		console.log("image saved");
 	}
 	
-	// console.log(`/cities/${id}/city-image`);
+	console.log(`/cities/${id}/city-image`);
 	// console.log(`data:image/jpeg;base64,${image.toString('base64')}`);
 	res.sendFile(`C:/Users/Dario Vajda/OneDrive/Documents/nft/server/test/images/city_${id}.png`);
 

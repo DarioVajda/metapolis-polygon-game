@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useBuildingStore } from '../BuildingStore';
 import { specialTypes } from '../../../../server/gameplay/building_stats';
 
-const Buildings = ({ id, data, showGrid, prefixID }) => {
+const Buildings = ({ id, data, showGrid, prefixID, offset }) => {
 
   const setBuildings = useBuildingStore(state => state.setBuildings);
   const setSpecialBuildings = useBuildingStore(state => state.setSpecialBuildings);
@@ -39,6 +39,7 @@ const Buildings = ({ id, data, showGrid, prefixID }) => {
       created: _data.created,
       initialized: _data.initialized,
       theme: _data.theme,
+      dimensions: _data.dimensions,
     });
     changeDynamicData({
       specialBuildingCash: _data.specialBuildingCash,
@@ -98,8 +99,8 @@ const Buildings = ({ id, data, showGrid, prefixID }) => {
 
   return (
     <group>
-      <NormalBuildings onClick={onClick} data={data} prefix={prefixID} />
-      <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} />
+      <NormalBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
+      <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
       { showGrid && <Grid onClick={onGridClick} /> }
     </group>
   )

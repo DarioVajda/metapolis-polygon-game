@@ -8,7 +8,8 @@ import { useBuildingStore } from '../BuildingStore';
 import { buildingTypes } from '../modelComponents/BuildingTypes';
 import { useThree } from '@react-three/fiber';
 
-const buildingGridElement = (x, y, onClick, prefix) => {
+const buildingGridElement = (x, y, onClick, prefix, offset, dimensions) => {
+
   const gridElement = useBuildingStore(state => state[`${prefix?prefix:''}n_${x}_${y}`]);
   const changeCoordinate = useBuildingStore(state => state.changeCoordinate);
   const { building, status } = gridElement || {};
@@ -67,12 +68,12 @@ const buildingGridElement = (x, y, onClick, prefix) => {
 
   // calculating the canvas position and rotation of the building
   let type = building.type;
-  const posX = (building.start.x + building.end.x) / 2;
-  const posY = (building.start.y + building.end.y) / 2;
+  const posX = (offset !== undefined ? offset.x : 0) + (building.start.x + building.end.x) / 2;
+  const posY = (offset !== undefined ? offset.y : 0) + (building.start.y + building.end.y) / 2;
   const position = [
-    plotSize * posX - (gridSize * plotSize) / 2 + plotSize / 2,
+    plotSize * posX - (dimensions.x * plotSize) / 2 + plotSize / 2,
     0,
-    plotSize * posY - (gridSize * plotSize) / 2 + plotSize / 2,
+    plotSize * posY - (dimensions.y * plotSize) / 2 + plotSize / 2,
   ];
   const rotation = (Math.PI / 2) * (building.orientation - 1);
 
@@ -87,16 +88,19 @@ const buildingGridElement = (x, y, onClick, prefix) => {
       rotation: [0, rotation, 0],
       status: gridElement.status
     },
-    { ...building, plotSize, gridSize, rotation, key },
+    { ...building, plotSize, dimensions, rotation, key },
     (ref) => onClick(building, ref)
   );
 }
 
-const NormalBuildings = ({ onClick, prefix }) => {
+const NormalBuildings = ({ onClick, prefix, offset }) => {
+
+  const { dimensions } = useBuildingStore(state => state.staticData);
+
   let buildingList = [];
-  for(let x = 0; x < gridSize; x++) {
-    for(let y = 0; y < gridSize; y++) { 
-      buildingList.push(buildingGridElement(x, y, onClick, prefix))
+  for(let x = 0; x < dimensions.x; x++) {
+    for(let y = 0; y < dimensions.y; y++) { 
+      buildingList.push(buildingGridElement(x, y, onClick, prefix, offset, dimensions))
     }
   }
   return buildingList;

@@ -1,8 +1,10 @@
 import React from 'react'
 
+import styles from './mergeLandscape.module.css';
+
 const MergeLandscape = () => {
   return (
-    <div style={{ height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className={styles.wrapper}>
       Landscape
     </div>
   )

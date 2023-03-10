@@ -38,7 +38,7 @@ const buildingTypes = {
   ), 
   park: (props, building, onClick) => {
     let parkSquares = [];
-    let { plotSize, gridSize, rotation, key } = building;
+    let { plotSize, dimensions, rotation, key } = building;
     for (let i = building.start.x; i <= building.end.x; i++) {
       for (let j = building.start.y; j <= building.end.y; j++) {
         parkSquares.push(
@@ -46,9 +46,9 @@ const buildingTypes = {
             scale={Scale}
             key={generateUUID()}
             position={[
-              plotSize * i - (gridSize * plotSize) / 2 + plotSize / 2,
+              plotSize * i - (dimensions.x * plotSize) / 2 + plotSize / 2,
               0,
-              plotSize * j - (gridSize * plotSize) / 2 + plotSize / 2,
+              plotSize * j - (dimensions.y * plotSize) / 2 + plotSize / 2,
             ]}
             rotation={[0, rotation, 0]}
             level={building.level}

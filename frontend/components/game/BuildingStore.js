@@ -45,6 +45,7 @@ const buildingStore = (set) => ({
     created: true,
     initialized: true,
     theme: 0,
+    dimensions: { x: 20, y: 20 }
   },
   buildings: [],
   specialBuildings: [],

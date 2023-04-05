@@ -5,6 +5,8 @@ import SpecialBuildings from './SpecialBuildings';
 import Grid from './Grid';
 import { useEffect } from 'react';
 
+import { plotSize } from '../MapData';
+
 import { useBuildingStore } from '../BuildingStore';
 import { specialTypes } from '../../../../server/gameplay/building_stats';
 
@@ -26,13 +28,19 @@ const Buildings = ({ id, data, showGrid, prefixID, offset }) => {
     let _data;
     if(data) {
       _data = data;
+      // console.log(data);
     }
-    else {
+    else if(id !== undefined) {
       _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
     }
 
+    // console.log(data, _data);
+
     setBuildings(_data.buildings, prefixID);
     setSpecialBuildings(_data.specialBuildings, prefixID);
+
+    // console.log('buildings', {dimensions: _data.dimensions});
+
     changeStaticData({
       id: id,
       owner: _data.owner,
@@ -75,11 +83,14 @@ const Buildings = ({ id, data, showGrid, prefixID, offset }) => {
   }
 
   useEffect(() => {
+
+    if(!data && id === undefined) return;
+
     loadData();
     if(!data) {
       loadSpecialBuildingData();
     }
-  }, []);
+  }, [ data, id ]);
 
   const onClick = (building, ref) => {
     if(!ref) {
@@ -97,8 +108,13 @@ const Buildings = ({ id, data, showGrid, prefixID, offset }) => {
 
   }
 
+  console.log(offset);
+  let x = (offset !== undefined && offset.x !== undefined) ? offset.x : 0;
+  let y = (offset !== undefined && offset.y !== undefined) ? offset.y : 0;
+  let r = (offset !== undefined && offset.r !== undefined) ? offset.r : 0;
+
   return (
-    <group>
+    <group position={[ plotSize * x, 0, plotSize * y ]} rotation={offset?.r !== undefined ? [ 0, offset.r * Math.PI/2, 0 ] : [ 0, 0, 0 ]}>
       <NormalBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
       <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
       { showGrid && <Grid onClick={onGridClick} /> }

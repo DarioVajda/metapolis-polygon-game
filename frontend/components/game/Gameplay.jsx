@@ -13,11 +13,15 @@ import FloatingMenu from './floatingMenu/FloatingMenu';
 import Popup from './popup/Popup';
 
 import Landscape from '../universal/city/Landscape';
+import { useBuildingStore } from './BuildingStore';
 
 const Gameplay = ({ ID }) => {
+
+  const { dimensions } =  useBuildingStore(state => state.staticData);
+
   return (
     <div className={styles.wrapper}>
-      <WorldCanvas position={[0, 250, 200]} >
+      <WorldCanvas position={[0, 250, 200]} dimensions={dimensions} >
 
         {/* UTILS */}
         <MapControls maxDistance={400} minDistance={75} enableDamping={false} />
@@ -25,7 +29,7 @@ const Gameplay = ({ ID }) => {
 
         {/* STATIC CONTENT */}
         <Landscape />
-        <Buildings id={ID} showGrid />
+        <Buildings id={ID} offset={{x:0,y:0,r:0}} showGrid />
 
         {/* DYNAMIC CONTENT */}
         <HoverObject />

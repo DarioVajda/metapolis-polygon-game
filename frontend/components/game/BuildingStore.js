@@ -664,8 +664,30 @@ const buildingStore = (set) => ({
   })),
   removeError: (msg, duration) => set( state => ({
     errors: state.errors.filter(element => !(element.message === msg && element.duration === duration)) 
-  }))
+  })),
   // #endregion
+
+  // #region mergint two cities
+
+  mergeCity1: false,
+  setMergeCity1: data => set( _ => ({
+    mergeCity1: data
+  })),
+  mergeCity2: false,
+  setMergeCity2: data => set( _ => ({
+    mergeCity2: data
+  })),
+  mergePos1: { x: 0, y: 0, r: 0 },
+  setMergePos1: pos => set( _ => ({
+    mergePos1: pos
+  })),
+  mergePos2: { x: 0, y: 0, r: 0 },
+  setMergePos2: pos => set( _ => ({
+    mergePos2: pos
+  })),
+
+  // #endregion
+
 });
 
 const useBuildingStore = create(devtools(buildingStore));

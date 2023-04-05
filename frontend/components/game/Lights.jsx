@@ -10,7 +10,7 @@ function Lights(){
         <directionalLight 
           ref={mesh}
           castShadow
-          intensity={0.5} 
+          intensity={0.4} 
           position={[200,400,200]} 
           shadow-camera-bottom={-500} 
           shadow-camera-left={-500} 

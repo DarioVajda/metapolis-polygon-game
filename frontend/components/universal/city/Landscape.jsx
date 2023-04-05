@@ -1,18 +1,25 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-const Landscape = ({ props }) => {
+import { plotSize } from "../../game/MapData";
+
+const Landscape = ({ props, dimensions }) => {
   const mesh = useRef();
-  // useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
+
+  const dim = dimensions || { x: 20, y: 20 }
 
   return (
     <>
-      <mesh {...props} ref={mesh} position={[0, -1, 0]} >
-        <boxGeometry args={[100, 1, 100]} />
+      <mesh {...props} ref={mesh} position={[(dim.x-1)/2*plotSize, -1, (dim.y-1)/2*plotSize]} >
+        <boxGeometry args={[ dim.x * plotSize, 1, dim.y * plotSize ]} />
         <meshStandardMaterial color={"darkgray"} />
       </mesh>
-      <mesh {...props} ref={mesh} position={[0, -12, 0]} >
-        <boxGeometry args={[140, 20, 140]} />
+      {/* <mesh {...props} ref={mesh} position={[0, 1, 0]} >
+        <boxGeometry args={[ 1, 1, 1 ]} />
+        <meshStandardMaterial color={"red"} />
+      </mesh> */}
+      <mesh {...props} ref={mesh} position={[(dim.x-1)/2*plotSize, -12, (dim.y-1)/2*plotSize]} >
+        <boxGeometry args={[ dim.x * plotSize + 40, 20, dim.y * plotSize + 40]} />
         <meshStandardMaterial color={"green"} />
       </mesh>
     </>

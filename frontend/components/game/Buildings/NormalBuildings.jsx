@@ -68,12 +68,14 @@ const buildingGridElement = (x, y, onClick, prefix, offset, dimensions) => {
 
   // calculating the canvas position and rotation of the building
   let type = building.type;
-  const posX = (offset !== undefined ? offset.x : 0) + (building.start.x + building.end.x) / 2;
-  const posY = (offset !== undefined ? offset.y : 0) + (building.start.y + building.end.y) / 2;
+  const posX = (building.start.x + building.end.x) / 2;
+  const posY = (building.start.y + building.end.y) / 2;
   const position = [
-    plotSize * posX - (dimensions.x * plotSize) / 2 + plotSize / 2,
+    // plotSize * posX - (dimensions.x * plotSize) / 2 + plotSize / 2,
+    plotSize * posX,
     0,
-    plotSize * posY - (dimensions.y * plotSize) / 2 + plotSize / 2,
+    // plotSize * posY - (dimensions.y * plotSize) / 2 + plotSize / 2,
+    plotSize * posY,
   ];
   const rotation = (Math.PI / 2) * (building.orientation - 1);
 

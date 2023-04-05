@@ -37,6 +37,15 @@ const buildingTypes = {
     </BuildingWrapper>
   ), 
   park: (props, building, onClick) => {
+    return (
+      <BuildingWrapper key={generateUUID()} onClick={onClick}>
+        <ParkSquare 
+          {...props} 
+          level={building.level} 
+          scale={[Scale*(building.end.x-building.start.x+1), Scale, Scale*(building.end.y-building.start.y+1)]} 
+        />
+      </BuildingWrapper>
+    )
     let parkSquares = [];
     let { plotSize, dimensions, rotation, key } = building;
     for (let i = building.start.x; i <= building.end.x; i++) {

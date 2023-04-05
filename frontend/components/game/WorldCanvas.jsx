@@ -1,8 +1,12 @@
 import { Canvas } from "@react-three/fiber";
-
 import { Suspense } from "react";
 
-function WorldCanvas({ style, pixelRatio, position, frameloop, children}){
+import { plotSize } from "./MapData";
+
+function WorldCanvas({ style, pixelRatio, position, frameloop, dimensions, children}){
+
+  let dim = dimensions || { x: 20, y: 20 };
+  let offset = [ -(dim.x-1) * plotSize / 2, 0, -(dim.y-1) * plotSize / 2 ];
 
   const pos = position !== undefined ? position : [0, 200, 0];
   // const pos = position?position:[175, 175, 175];
@@ -20,7 +24,9 @@ function WorldCanvas({ style, pixelRatio, position, frameloop, children}){
       style={style}
     >
       <Suspense fallback={null} r3f>
-        {children}
+        <group position={offset}>
+          {children}
+        </group>
       </Suspense>
     </Canvas>
   )

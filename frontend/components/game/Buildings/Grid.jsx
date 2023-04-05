@@ -152,9 +152,11 @@ function GridSquare({ x, y, occupied }) {
       }}
       onClick={onClick}
       position = {[
-        plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2,
+        // plotSize * x - (gridSize * plotSize) / 2 + plotSize / 2,
+        plotSize * x,
         0,
-        plotSize * y - (gridSize * plotSize) / 2 + plotSize / 2,
+        // plotSize * y - (gridSize * plotSize) / 2 + plotSize / 2,
+        plotSize * y,
       ]}
       scale={[plotSize * 0.9, 0.5, plotSize * 0.9]}
       key={`${x},${y}`}

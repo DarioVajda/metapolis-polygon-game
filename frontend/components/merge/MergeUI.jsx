@@ -19,7 +19,7 @@ import { useBuildingStore } from '../game/BuildingStore';
 const City = ({ data, id, left, setPopup }) => {
 
   let canOpenPopup = setPopup(true);
-  // console.log({canOpenPopup});
+  // console.log({ data, id });
 
   if(id === undefined) {
     return (
@@ -38,7 +38,7 @@ const City = ({ data, id, left, setPopup }) => {
       </div>
     )
   }
-  else if(!data) {
+  else if(id !== data.id) {
     return (
       <div className={`${styles.city} ${left?styles.leftCity:styles.rightCity}`}>
         Loading the data...
@@ -71,15 +71,25 @@ const MergeButton = ({ id1, id2 }) => {
   )
 }
 
-const MergeUI = ({ id1, id2 }) => {
+const MergeUI = ({ id1, id2, addr }) => {
   
   const [ nfts, setNfts ] = useState(false) // false - not loaded, [ ... ] the ids of the cities that the person owns
 
-  const [ data1, setData1 ] = useState(false); // false - not loaded, {...CityData} - loaded
-  const [ data2, setData2 ] = useState(false); // false - not loaded, {...CityData} - loaded
+  // const [ data1, setData1 ] = useState(false); // false - not loaded, {...CityData} - loaded
+  // const [ data2, setData2 ] = useState(false); // false - not loaded, {...CityData} - loaded
+
+  const data1 = useBuildingStore(state => state.mergeCity1);
+  const setData1 = useBuildingStore(state => state.setMergeCity1);
+  const setMergePos1 = useBuildingStore(state => state.setMergePos1);
+
+  const data2 = useBuildingStore(state => state.mergeCity2);
+  const setData2 = useBuildingStore(state => state.setMergeCity2);
+  const setMergePos2 = useBuildingStore(state => state.setMergePos2);
 
   const popup = useBuildingStore(state => state.popup);
   const setPopup = useBuildingStore(state => state.setPopup);
+
+  // console.log({data1, data2});
 
   // console.log(id1, id2);
 
@@ -114,6 +124,7 @@ const MergeUI = ({ id1, id2 }) => {
       let id;
       id = await city.tokenOfOwnerByIndex(addr, i);
       id = id.toNumber();
+      console.log('loadNFT', `http://localhost:8000/cities/${id}/data`);
       let _data = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
       _nfts.push({id: id, ..._data});
     }
@@ -123,7 +134,8 @@ const MergeUI = ({ id1, id2 }) => {
     }
 
     while(_nfts.length < numOfNFTs) {
-      console.log('waiting...', _nfts.length, numOfNFTs, _nfts);
+      // console.log('waiting...', _nfts.length, numOfNFTs, _nfts);
+      console.log('waiting...', _nfts.length, numOfNFTs);
       await delay(250);
     }
     
@@ -133,8 +145,9 @@ const MergeUI = ({ id1, id2 }) => {
 
   useEffect(() => {
     // loading the NFTs  
+    if(addr === 0) return;
     loadNfts();  
-  }, []);
+  }, [ addr ]);
   
   // #endregion
 
@@ -142,13 +155,14 @@ const MergeUI = ({ id1, id2 }) => {
 
   const fetchData = async (id) => {
     let res = await (await fetch(`http://localhost:8000/cities/${id}/data`)).json();
-    console.log(id, res);
+    // console.log(id, res);
 
     if(id === id1) {
-      setData1(res);
+      setData1({ ...res, id });
+      setMergePos2({ x: res.dimensions.x, y: 0 })
     }
     else if(id === id2) {
-      setData2(res);
+      setData2({ ...res, id });
     }
   }
 
@@ -156,10 +170,10 @@ const MergeUI = ({ id1, id2 }) => {
 
     setPopup({});
 
-    if(id1 !== undefined && data1 === false) {
+    if(id1 !== undefined && data1.id !== id1) {
       fetchData(id1);
     }
-    if(id2 !== undefined && data2 === false) {
+    if(id2 !== undefined && data2.id !== id2) {
       fetchData(id2);
     }
   }, [ id1, id2 ]);

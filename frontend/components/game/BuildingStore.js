@@ -180,6 +180,11 @@ const buildingStore = (set) => ({
   resetRotationIndex: () => set( state => ({
     rotationIndex: 0
   })),
+
+  controlsEnabled: true,
+  setControlsEnabled: e => set( state => ({
+    controlsEnabled: e
+  })),
   // #endregion
 
   // #region Instructions
@@ -685,6 +690,10 @@ const buildingStore = (set) => ({
   setMergePos2: pos => set( _ => ({
     mergePos2: pos
   })),
+  selectedCity: true,
+  switchSelectedCity: (selected) => set( state => ({
+    selectedCity: selected !== undefined ? selected : !state.selectedCity
+  }))
 
   // #endregion
 

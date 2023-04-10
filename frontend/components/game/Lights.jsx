@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const shadowMapSize = [1024,1024]
+const shadowMapSize = [256,256]
 
 function Lights(){
     const mesh = useRef()

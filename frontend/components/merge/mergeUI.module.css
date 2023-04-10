@@ -6,6 +6,8 @@
     flex-direction: row;
     height: 100%;
     width: 100%;
+    z-index: 100;
+    pointer-events: none;
 }
 
 .city {
@@ -25,6 +27,7 @@
 
 .city>* {
     margin-bottom: 0;
+    pointer-events: all;
 }
 
 .cityTitle {
@@ -48,6 +51,8 @@
 
     display: flex;
     gap: .4em;
+
+    pointer-events: all;
 }
 .mergeButton:active {
     background-color: var(--primary-dark);

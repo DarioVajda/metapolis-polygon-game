@@ -26,6 +26,8 @@ const MergeCity = ({ first, city, dim }) => {
   const pos = useBuildingStore(state => first ? state.mergePos1 : state.mergePos2);
   const setPos = useBuildingStore(state => first ? state.setMergePos1 : state.setMergePos2);
   
+  console.log(hoverCurr, first?'first':'second');
+
   const move = (x, y) => {
     setPos({ x: pos.x + x, y: pos.y + y, r: pos.r });
   }
@@ -97,7 +99,8 @@ const MergeCity = ({ first, city, dim }) => {
 const Controls = () => {
   const controlsEnabled = useBuildingStore(state => state.controlsEnabled);
   return (
-    <MapControls maxDistance={400} minDistance={75} enableDamping={false} enabled={controlsEnabled} />
+    // <MapControls maxDistance={400} minDistance={50} enableDamping={false} enabled={controlsEnabled||true} />
+    <MapControls maxDistance={400} minDistance={50} enableDamping={false} enabled={controlsEnabled} />
   )
 }
 

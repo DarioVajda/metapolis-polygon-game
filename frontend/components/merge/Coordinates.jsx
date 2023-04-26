@@ -12,11 +12,11 @@ const Coordinates = ({ dimensions }) => {
   const changeHover = (x, y) => {
 
     if(controlsEnabled) {
-      console.log('controls are not enabled');
+      // console.log('controls are not enabled');
       return;
     }
 
-    console.log('hovering', x, y);
+    // console.log('hovering', x, y);
     setHover(x, y);
   }
 

@@ -317,8 +317,8 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       .then(response => response.json())
       .then(response => assetRes = response)
       .catch(err => console.error(err));
-    // console.log(assetRes);
-    addr = assetRes.top_ownerships[0].owner.address;
+      addr = assetRes.top_ownerships[0].owner.address;
+      console.log(id, addr);
 
     let res;
     await fetch(`https://api.opensea.io/user/${addr}`, options)
@@ -326,6 +326,10 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       .then(response => res = response)
       .catch(err => console.error(err));
 
+    if(!res.account) {
+      console.log('doslo je do greske');
+      return { randomIndex: Math.floor(Math.random() * 33) + 1 };
+    }
     // console.log(id, 'response:', res);
 
     // setOwner(res.account);

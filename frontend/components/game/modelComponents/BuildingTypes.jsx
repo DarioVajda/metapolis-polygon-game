@@ -94,6 +94,44 @@ const buildingTypes = {
   }
 }
 
+
+// const buildingTypes = {
+//   house: (props, building, onClick) => (
+//     <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//       <Statue {...props} level={building.level} />
+//     </BuildingWrapper>
+//   ), 
+//   factory: (props, building, onClick) => (
+//     <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//       <Statue {...props} level={building.level} />
+//     </BuildingWrapper>
+//   ), 
+//   store: (props, building, onClick) => (
+//     <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//       <Statue {...props} level={building.level} />
+//     </BuildingWrapper>
+//   ), 
+//   office: (props, building, onClick) => (
+//     <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//       <Statue {...props} level={building.level} />
+//     </BuildingWrapper>
+//   ), 
+//   park: (props, building, onClick) => {
+//     return (
+//       <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//         <Statue {...props} level={building.level} />
+//       </BuildingWrapper>
+//     )
+//   },
+//   building: (props, building, onClick) => {
+//     return (
+//       <BuildingWrapper key={generateUUID()} onClick={onClick}>
+//         <Statue {...props} level={building.level} />
+//       </BuildingWrapper>
+//     )
+//   }
+// }
+
 const specialBuildingTypes = {
   statue: (props, building, onClick) => (
     <BuildingWrapper key={generateUUID()} onClick={onClick}>

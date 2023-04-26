@@ -108,15 +108,15 @@ const Buildings = ({ id, data, showGrid, prefixID, offset }) => {
 
   }
 
-  console.log(offset);
+  // console.log(offset);
   let x = (offset !== undefined && offset.x !== undefined) ? offset.x : 0;
   let y = (offset !== undefined && offset.y !== undefined) ? offset.y : 0;
   let r = (offset !== undefined && offset.r !== undefined) ? offset.r : 0;
 
   return (
     <group position={[ plotSize * x, 0, plotSize * y ]} rotation={offset?.r !== undefined ? [ 0, offset.r * Math.PI/2, 0 ] : [ 0, 0, 0 ]}>
-      <NormalBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
-      <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} offset={offset} />
+      <NormalBuildings onClick={onClick} data={data} prefix={prefixID} />
+      <SpecialBuildings onClick={onClick} data={data} prefix={prefixID} />
       { showGrid && <Grid onClick={onGridClick} /> }
     </group>
   )

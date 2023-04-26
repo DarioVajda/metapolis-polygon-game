@@ -26,8 +26,6 @@ const MergeCity = ({ first, city, dim }) => {
   const pos = useBuildingStore(state => first ? state.mergePos1 : state.mergePos2);
   const setPos = useBuildingStore(state => first ? state.setMergePos1 : state.setMergePos2);
   
-  console.log(hoverCurr, first?'first':'second');
-
   const move = (x, y) => {
     setPos({ x: pos.x + x, y: pos.y + y, r: pos.r });
   }
@@ -110,7 +108,7 @@ const MergeLandscape = () => {
   const city2 = useBuildingStore(state => state.mergeCity2);
 
   let d = !city1 || !city2 ? 20 : Math.max(city1.dimensions.x, city1.dimensions.y) + Math.max(city2.dimensions.x, city2.dimensions.y);
-  console.log({d});
+  // console.log({d});
   let dimensions = { x: d, y: d };
 
   return (

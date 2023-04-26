@@ -19,12 +19,14 @@ const Gameplay = ({ ID }) => {
 
   const { dimensions } =  useBuildingStore(state => state.staticData);
 
+  console.log(window.devicePixelRatio);
+
   return (
     <div className={styles.wrapper}>
-      <WorldCanvas position={[0, 250, 200]} dimensions={dimensions} >
+      <WorldCanvas position={[0, 250, 200]} dimensions={dimensions} pixelRatio={window.devicePixelRatio} >
 
         {/* UTILS */}
-        <MapControls maxDistance={400} minDistance={75} enableDamping={false} />
+        <MapControls maxDistance={400} minDistance={20} enableDamping={false} />
         <Lights />
 
         {/* STATIC CONTENT */}

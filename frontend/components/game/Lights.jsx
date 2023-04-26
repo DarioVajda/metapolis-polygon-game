@@ -6,11 +6,11 @@ function Lights(){
     const mesh = useRef()
     return(
       <>
-        <ambientLight intensity={0.15} />
+        <ambientLight intensity={0.8} />
         <directionalLight 
           ref={mesh}
           castShadow
-          intensity={0.4} 
+          intensity={2} 
           position={[200,400,200]} 
           shadow-camera-bottom={-500} 
           shadow-camera-left={-500} 

@@ -1,7 +1,7 @@
 import React from 'react'
  
-
 import Theme0 from './Theme0'
+import Theme1 from './Theme1'
 
 const House = ({ theme, reference, ...arg }) => {
 
@@ -11,8 +11,8 @@ const House = ({ theme, reference, ...arg }) => {
   )
 
   // other cases (will be added later when new models are added)
-  else return (
-    <Theme0 {...arg} reference={reference} />
+  else if(theme === 1) return (
+    <Theme1 {...arg} reference={reference} />
   )
 }
 

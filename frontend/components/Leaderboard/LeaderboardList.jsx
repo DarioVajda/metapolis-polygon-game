@@ -95,7 +95,7 @@ const LeaderboardList = ({nfts}) => {
     // console.log(res);
 
     // ovo je privremeno
-    res = Array(30).fill(res).reduce((prev, curr) => [...prev, ...curr], []);
+    res = Array(3).fill(res).reduce((prev, curr) => [...prev, ...curr], []);
 
     setList(res.map(element => element.id)); // sets the city list to an array with IDs sorted by their score
   }

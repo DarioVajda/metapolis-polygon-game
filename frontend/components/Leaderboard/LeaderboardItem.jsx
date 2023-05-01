@@ -326,7 +326,7 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       .then(response => res = response)
       .catch(err => console.error(err));
 
-    if(!res.account) {
+    if(!res?.account) {
       console.log('doslo je do greske');
       return { randomIndex: Math.floor(Math.random() * 33) + 1 };
     }
@@ -397,7 +397,11 @@ const LeaderboardItem = React.memo(({ index, id, expanded, loadCity, expand, own
       <div className={`${style.more} ${!expanded?style.hide:''}`}>
         <div className={style.city}>
           <div>
-            { expanded && <City dataArg={data} rotation={3} showDelay={300} id={id} /> }
+            { 
+              expanded && 
+              // <City dataArg={data} rotation={3} showDelay={300} id={id} /> 
+              <img src={`http://localhost:8000/cities/${id}/image.png`} alt="city" />
+            }
           </div>
         </div>
         <div className={style.data}>

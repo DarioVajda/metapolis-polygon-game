@@ -177,9 +177,14 @@
     margin-top: 0em;
     margin-bottom: 0em;
 }
-
+/* 
 .hide .city>div>* {
     display: none;
+} */
+
+.city>div>img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .city {

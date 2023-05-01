@@ -110,8 +110,8 @@ const HoverObject = () => {
     
     // #region movement
     let pos = {
-      x: plotSize * hoverCurr.x - (gridSize * plotSize) / 2 + plotSize / 2,
-      y: plotSize * hoverCurr.y - (gridSize * plotSize) / 2 + plotSize / 2
+      x: plotSize * hoverCurr.x,
+      y: plotSize * hoverCurr.y
     };
     let d = {
       x: pos.x - ref.current.position.x,

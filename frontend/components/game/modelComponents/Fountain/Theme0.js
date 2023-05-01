@@ -10,6 +10,8 @@ import { a } from '@react-spring/three'
 
 const Theme0 = ({level, reference, ...props}) => {
  
+  const { nodes, materials } = useGLTF("/Fontana.gltf");
+
   const { opacity } = useSpring({
     opacity: 1,
     // from: {
@@ -24,24 +26,44 @@ const Theme0 = ({level, reference, ...props}) => {
     return mat;
   }
 
+  const scale = 2.45;
+
   return (
-    <group name="objectGroup" ref={reference} {...props} scale={1} dispose={null}>
-      <a.mesh scale={[plotSize * 0.95, 3, plotSize * 0.95 * 2]} position={[0, 1.5, 0]} >
-        <boxBufferGeometry attach="geometry" />
-        <a.meshLambertMaterial
-          attach="material"
-          color='burlywood'
-        />
-      </a.mesh>
-      <a.mesh scale={[plotSize * 0.2, 1, plotSize * 0.2]} position={[1.5, 3, 4]}>
-        <boxBufferGeometry attach="geometry" />
-        <a.meshLambertMaterial
-          attach="material"
-          color='yellow'
-        />
-      </a.mesh>
+    <group name="objectGroup" ref={reference} {...props} rotation={[ 0, Math.PI/2, 0 ]} scale={[ scale, scale, scale ]} dispose={null}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Baza_1x1004.geometry}
+        material={nodes.Baza_1x1004.material}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Plane028.geometry}
+        material={materials.VODA}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Plane028_1.geometry}
+        material={materials.FONTANA}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cube027.geometry}
+        material={materials["spratovi.001"]}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cube027_1.geometry}
+        material={materials["tamni crep.001"]}
+      />
     </group>
   );
 }
+
+useGLTF.preload("/Fontana.gltf");
 
 export default Theme0

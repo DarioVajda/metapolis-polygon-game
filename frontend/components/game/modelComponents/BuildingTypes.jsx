@@ -7,6 +7,7 @@ import Building3x1  from "./Building3x1/Building3x1";
 import Store        from "./Store/Store";
 import Office       from "./Office/Office";
 import ParkSquare   from "./ParkSquare";
+import Park         from './Park/Park';
 
 import Statue       from "./Statue/Statue";
 import Fountain     from "./Fountain/Fountain"; 
@@ -37,6 +38,15 @@ const buildingTypes = {
     </BuildingWrapper>
   ), 
   park: (props, building, onClick) => {
+    return (
+      <BuildingWrapper key={generateUUID()} onClick={onClick}>
+        <Park
+          {...props}
+          level={0}
+          dimensions={{x: building.end.x - building.start.x + 1, y: building.end.y - building.start.y + 1 }} 
+        />
+      </BuildingWrapper>
+    )
     return (
       <BuildingWrapper key={generateUUID()} onClick={onClick}>
         <ParkSquare 

@@ -30,7 +30,7 @@ const Theme0 = ({ reference, ...props}) => {
   const scale = 2.45;
 
   return (
-    <group name="objectGroup" ref={reference} {...props} rotation={[ 0, Math.PI/2, 0 ]} scale={[scale, scale, scale]} dispose={null}>
+    <group name="objectGroup" ref={reference} {...props} rotation={[ props?.rotation[0], props?.rotation[1]+Math.PI/2, props?.rotation[2] ]} scale={[scale, scale, scale]} dispose={null}>
       <group scale={[3, 1, 1]}>
         <mesh
           castShadow

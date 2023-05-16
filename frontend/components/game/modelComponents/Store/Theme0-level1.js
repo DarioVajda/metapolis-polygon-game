@@ -176,5 +176,5 @@ const Theme0 = ({level, reference, ...props}) => {
   );
 }
 
-useGLTF.preload('/Store.gltf')
+useGLTF.preload('/Shop.gltf')
 export default Theme0

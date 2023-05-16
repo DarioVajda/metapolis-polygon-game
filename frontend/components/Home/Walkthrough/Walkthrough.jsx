@@ -8,6 +8,8 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useSpring } from "@react-spring/three";
 import { a } from "@react-spring/three";
 
+import { plotSize } from "../../game/MapData.js";
+
 import { MapControls } from "@react-three/drei";
 
 import styles from '../../styles/walkthrough.module.css';
@@ -132,11 +134,13 @@ const Group = ({ rotation, position, groupRef, city }) => {
   return (
     // <a.group ref={groupRef} position={pos.to(pos => convertPosition(pos))} rotation={[-Math.PI/2.8, Math.PI/6, 0]} >
     <a.group ref={groupRef} position={pos.to(pos => convertPosition(pos))} rotation={rot.to(rot => convertRotation(rot))} >
-      <Lights />
-      <Landscape />
-      {/* <BuildingList data={city} /> */}
-      {/* <BuildingList data={{buildings: []}} /> */}
-      <Buildings id={3} data={city} />
+      <group position={[ -10 * plotSize, 0, -10 * plotSize]}>
+        <Lights />
+        <Landscape />
+        {/* <BuildingList data={city} /> */}
+        {/* <BuildingList data={{buildings: []}} /> */}
+        <Buildings id={3} data={city} prefixID='walkthrough' />
+      </group>
     </a.group>
   )
 }
@@ -148,15 +152,15 @@ export default function Walkthrough() {
   const [ counter, setCounter ] = useState(0);
 
   const positions = [
-    [ 0, 200, 20 ],
-    [ 0, 200, 0 ],
-    [ 30, 60, 10 ],
+    [ 0, 0, 0 ],
+    [ -50, -50, -50 ],
+    // [ 30, 60, 10 ],
   ]
 
   const rotations = [
-    [ -Math.PI/3.2, Math.PI/6, 0 ],
     [ 0, 0, 0 ],
-    [ -Math.PI/3, Math.PI/4, 0 ],
+    [ Math.PI/12, Math.PI*13/12, 0 ],
+    // [ -Math.PI/3, Math.PI/4, 0 ],
   ]
 
   const city = [
@@ -197,7 +201,7 @@ export default function Walkthrough() {
         </div>
         <div className={styles.canvas}>
           <div>
-            <WorldCanvas pixelRatio={false?[1, 1]:1} position={[0, 0, 0]}>
+            <WorldCanvas pixelRatio={false?[1, 1]:1} position={[ 100, 100, 100 ]}>
               <Render fpsMax={1e-5} />
               <Group 
                 position={positions[counter%positions.length]} 

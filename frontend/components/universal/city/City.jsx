@@ -5,8 +5,10 @@ import { OrbitControls, Bounds } from "@react-three/drei"
 
 import styles from './city.module.css';
 
-import WorldCanvas from '../../game_marko/WorldCanvas';
-import Lights from '../../game_marko/Lights';
+import { plotSize } from '../../game/MapData';
+
+import WorldCanvas from '../../game/WorldCanvas';
+import Lights from '../../game/Lights';
 import Grid from '../../game_marko/Grid';
 import Buildings from '../../game/Buildings/Buildings';
 
@@ -46,6 +48,7 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) =>
     initialize();
 
     const update = async () => {
+      // let r = 0;
       let r = Math.PI / 12;
 
       while(exists) {
@@ -72,15 +75,19 @@ const City = ({ id, dataArg, rotation, details, showDelay, fps, pixelRatio }) =>
   }
   });
 
+  console.log({dataArg});
+
   if(data && waited) return (
     <div className={styles.city}>
-      <WorldCanvas pixelRatio={pixelRatio?pixelRatio:[1, 2]} >
+      <WorldCanvas position={[0, 220, 220]} pixelRatio={window.devicePixelRatio} >
         <Render fpsMax={fps?fps:30} />
         <Lights/>
-        <group ref={groupRef}>
-          <Landscape />
-          {/* <BuildingList data={data} /> */}
-          <Buildings id={id} data={data} prefixID={`prefix${id}_`} />
+        <group ref={groupRef} position={[ dataArg.dimensions.x * plotSize / 2, 0, dataArg.dimensions.y * plotSize / 2]}>
+          <group position={[ -dataArg.dimensions.x * plotSize / 2, 0, -dataArg.dimensions.y * plotSize / 2]}>
+            <Landscape />
+            {/* <BuildingList data={data} /> */}
+            <Buildings id={id} data={data} prefixID={`prefix${id}_`} />
+          </group>
         </group>
       </WorldCanvas>
     </div>

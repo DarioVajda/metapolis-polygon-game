@@ -17,6 +17,7 @@ const saveImage = async (data, id, { resolution } = {}) => {
         width: resolution
     });
 
+    console.log(`http://localhost:3000/preview?data=${data}`);
     await page.goto(`http://localhost:3000/preview?data=${data}`);
 
     // page.focus('input');

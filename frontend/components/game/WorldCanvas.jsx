@@ -17,7 +17,7 @@ function WorldCanvas({ style, pixelRatio, position, frameloop, dimensions, child
       shadows
       onCreated={null}
       // camera={{ fov:40, position: pos, near: 0.1, far: 1000, aspect: 1/1, rotation: [ -Math.PI/2, 0, 0 ] }}
-      camera={{ fov:40, position: pos, near: 0.1, far: 1000, aspect: 1/1, rotation: [ -Math.PI/2, 0, 0 ] }}
+      camera={{ fov:40, position: pos, near: 0.1, far: 1000, aspect: 1/1 }}
       orthographic={false}
       frameloop={frloop}
       dpr={pixelRatio?pixelRatio:1}
